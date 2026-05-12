@@ -3,35 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vancouver Route Pro</title>
+    <title>Carrier Route Lookup</title>
     <style>
         :root { --usps: #004b87; --red: #da291c; }
         body { font-family: sans-serif; background: #f0f2f5; padding: 15px; margin: 0; }
         .container { max-width: 450px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { color: var(--usps); border-bottom: 2px solid var(--red); padding-bottom: 8px; margin-top: 0; }
+        label { display: block; margin-top: 15px; font-weight: bold; font-size: 0.85em; color: #666; }
+        select, input { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         
-        label { display: block; margin-top: 15px; font-weight: bold; font-size: 0.8em; color: #666; }
-        select, input { 
-            width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 8px; 
-            font-size: 16px; box-sizing: border-box; 
-        }
-        
-        /* The "Suggestion List" styling - replaces the ugly dropdown */
-        #suggestionBox { 
-            background: white; border: 1px solid #ccc; border-top: none; 
-            max-height: 200px; overflow-y: auto; display: none; 
-            border-radius: 0 0 8px 8px;
-        }
-        .suggestion-item { padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; }
-        .suggestion-item:last-child { border-bottom: none; }
+        /* The list of street results */
+        .suggestion-list { border: 1px solid #ddd; border-top: none; background: white; max-height: 250px; overflow-y: auto; display: none; margin-top: -2px; border-radius: 0 0 8px 8px; }
+        .suggestion-item { padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 15px; }
         .suggestion-item:active { background: #eef2f7; }
 
-        .route-card { 
-            margin-top: 20px; padding: 15px; background: #f8f9fa; 
-            border-left: 5px solid var(--usps); border-radius: 8px; 
-        }
-        .route-id { font-size: 1.8em; font-weight: bold; color: var(--usps); }
-        .reset-btn { width: 100%; background: #555; color: white; border: none; padding: 12px; border-radius: 8px; margin-top: 20px; font-weight: bold; }
+        .route-card { margin-top: 20px; padding: 15px; background: #eef2f7; border-radius: 8px; border-left: 6px solid var(--usps); }
+        .reset-btn { width: 100%; background: #444; color: white; border: none; padding: 12px; border-radius: 8px; margin-top: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -39,107 +26,90 @@
 <div class="container">
     <h2>Route Finder</h2>
 
-    <label>SELECT ZIP CODE</label>
-    <select id="zipCode" onchange="clearStreet()">
-        <option value="">-- Select Vancouver ZIP --</option>
-        <option value="98660">98660</option>
+    <label>1. SELECT ZIP CODE</label>
+    <select id="zipCode" onchange="clearAll()">
+        <option value="">-- Choose ZIP --</option>
         <option value="98661">98661</option>
-        <option value="98662">98662</option>
-        <option value="98663">98663</option>
-        <option value="98664">98664</option>
-        <option value="98665">98665</option>
-        <option value="98666">98666</option>
-        <option value="98668">98668</option>
+        <option value="98660">98660</option>
         <option value="98682">98682</option>
         <option value="98683">98683</option>
-        <option value="98684">98684</option>
-        <option value="98685">98685</option>
-        <option value="98686">98686</option>
     </select>
 
-    <label>START TYPING STREET</label>
+    <label>2. START TYPING STREET NAME</label>
     <input type="text" id="streetInput" placeholder="e.g. 86th" autocomplete="off" oninput="handleSearch()">
-    <div id="suggestionBox"></div>
+    <div id="suggestionList" class="suggestion-list"></div>
 
-    <div id="resultArea"></div>
+    <div id="results"></div>
 
-    <button class="reset-btn" onclick="resetAll()">RESET / CLEAR</button>
+    <button class="reset-btn" onclick="location.reload()">RESET EVERYTHING</button>
 </div>
 
 <script>
-    // DATASET: I've added examples for multiple ZIPs. 
-    // You will need to add your full list from the EDDM tool here.
-    const allData = {
-        "98660": [
-            { name: "86th Avenue", range: "100-900", route: "C012" },
-            { name: "Main Street", range: "500-1200", route: "C001" }
-        ],
+    // TEST DATA - We need to add the rest of the Vancouver list here
+    const database = {
         "98661": [
-            { name: "86th Street", range: "400-1100", route: "C022" },
-            { name: "Mill Plain Blvd", range: "100-5000", route: "C010" }
+            { name: "86th Avenue", range: "100-800", route: "C012" },
+            { name: "86th Street", range: "200-1500", route: "C044" },
+            { name: "Mill Plain Blvd", range: "500-4000", route: "C010" }
         ],
-        "98682": [
-            { name: "NE 162nd Ave", range: "2000-4000", route: "C082" }
+        "98660": [
+            { name: "Columbia St", range: "100-1200", route: "C001" },
+            { name: "Washington St", range: "100-2500", route: "C005" }
         ]
-        // Add more ZIPs and their streets here...
     };
 
     const zipInput = document.getElementById('zipCode');
     const streetInput = document.getElementById('streetInput');
-    const sugBox = document.getElementById('suggestionBox');
-    const resArea = document.getElementById('resultArea');
+    const suggestBox = document.getElementById('suggestionList');
+    const resDiv = document.getElementById('results');
 
     function handleSearch() {
         const zip = zipInput.value;
-        const val = streetInput.value.toLowerCase();
-        sugBox.innerHTML = "";
-        resArea.innerHTML = "";
+        const query = streetInput.value.toLowerCase();
+        
+        suggestBox.innerHTML = "";
+        resDiv.innerHTML = "";
 
-        if (!zip || val.length < 1) {
-            sugBox.style.display = "none";
+        if (!zip || query.length < 1) {
+            suggestBox.style.display = "none";
             return;
         }
 
-        const streets = allData[zip] || [];
-        const matches = streets.filter(s => s.name.toLowerCase().startsWith(val));
+        const zipStreets = database[zip] || [];
+        const matches = zipStreets.filter(s => s.name.toLowerCase().includes(query));
 
         if (matches.length > 0) {
-            sugBox.style.display = "block";
-            matches.forEach(m => {
+            suggestBox.style.display = "block";
+            matches.forEach(item => {
                 const div = document.createElement('div');
                 div.className = "suggestion-item";
-                div.innerText = m.name;
-                div.onclick = () => selectStreet(m);
-                sugBox.appendChild(div);
+                div.innerText = item.name;
+                div.onclick = () => showFinal(item);
+                suggestBox.appendChild(div);
             });
         } else {
-            sugBox.style.display = "none";
+            suggestBox.style.display = "none";
         }
     }
 
-    function selectStreet(match) {
-        streetInput.value = match.name;
-        sugBox.style.display = "none";
-        resArea.innerHTML = `
+    function showFinal(item) {
+        streetInput.value = item.name;
+        suggestBox.style.display = "none";
+        resDiv.innerHTML = `
             <div class="route-card">
                 <div style="font-size: 0.8em; color: #666;">CARRIER ROUTE</div>
-                <div class="route-id">${match.route}</div>
-                <hr style="border:0; border-top: 1px solid #ccc; margin: 10px 0;">
-                <strong>${match.name}</strong><br>
-                Range: ${match.range}
+                <div style="font-size: 1.8em; font-weight: bold; color: #004b87;">${item.route}</div>
+                <hr style="border:0; border-top:1px solid #ccc; margin: 10px 0;">
+                <strong>${item.name}</strong><br>
+                Range: ${item.range}
             </div>
         `;
     }
 
-    function clearStreet() {
+    function clearAll() {
         streetInput.value = "";
-        sugBox.style.display = "none";
-        resArea.innerHTML = "";
-    }
-
-    function resetAll() {
-        zipInput.selectedIndex = 0;
-        clearStreet();
+        suggestBox.style.display = "none";
+        resDiv.innerHTML = "";
     }
 </script>
 
