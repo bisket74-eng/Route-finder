@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- CRITICAL: This line tells the phone NOT to zoom out -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vancouver Route Finder</title>
     <style>
@@ -12,26 +13,26 @@
             --bg-color: #f4f7f9;
         }
 
-        body {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        /* Prevent the phone from bouncing or zooming in on inputs */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
             background-color: var(--bg-color);
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
         }
 
-        /* OFFICIAL USPS HEADER */
+        /* HEADER SECTION */
         .header {
             background-color: var(--usps-blue);
-            padding: 20px 15px;
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            position: sticky;
-            top: 0;
-            z-index: 2000;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         .logo-row {
@@ -40,14 +41,14 @@
             margin-bottom: 5px;
         }
 
-        .usps-eagle { height: 40px; margin-right: 12px; }
+        .usps-eagle { height: 45px; margin-right: 10px; }
 
         .usps-signature {
             color: white;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 900;
             font-style: italic;
-            letter-spacing: -4px;
+            letter-spacing: -3px;
             line-height: 0.8;
             font-family: "Arial Black", sans-serif;
             transform: skewX(-5deg);
@@ -57,8 +58,7 @@
             color: white;
             margin: 8px 0 0 0;
             font-size: 0.8rem;
-            letter-spacing: 3px;
-            font-weight: 700;
+            letter-spacing: 2px;
             text-transform: uppercase;
             opacity: 0.8;
         }
@@ -69,10 +69,12 @@
             width: 100%;
         }
 
+        /* MAIN APP AREA */
         .container {
-            padding: 15px;
-            max-width: 480px;
-            margin: 10px auto 0;
+            width: 92%; /* Uses most of the phone width */
+            max-width: 500px;
+            margin: 15px auto;
+            box-sizing: border-box;
         }
 
         .input-row {
@@ -81,6 +83,7 @@
             align-items: flex-end;
             margin-bottom: 20px;
             position: relative;
+            width: 100%;
         }
 
         .input-wrapper {
@@ -90,76 +93,80 @@
 
         label {
             display: block;
-            margin-bottom: 4px;
-            font-size: 0.7rem;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
             font-weight: bold;
-            color: #555;
+            color: #444;
             text-transform: uppercase;
         }
 
+        /* LARGER INPUTS FOR MOBILE FINGERS */
         select, input {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: 2px solid #bbb;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 18px; /* 18px prevents iOS from auto-zooming on focus */
             box-sizing: border-box;
             background: white;
+            color: #000;
         }
 
-        /* CIRCULAR BUTTONS */
+        /* LARGE ROUND BUTTONS */
         .btn-circle {
-            width: 60px;
-            height: 60px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
             border: none;
             font-weight: 900;
-            font-size: 0.55rem;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            font-size: 0.6rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             text-transform: uppercase;
-            line-height: 1;
-            padding: 5px;
+            line-height: 1.1;
         }
 
         .reset-all { background-color: var(--usps-red); color: white; }
-        .reset-street { background-color: var(--usps-yellow); color: #111; }
-        .btn-circle:active { transform: scale(0.9); }
+        .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* THE FIX: Suggestion Box appears ABOVE the input */
+        /* GIANT PICK LIST ITEMS FOR MOBILE */
         .suggestion-box {
             background: white;
-            border: 2px solid var(--usps-blue);
-            border-radius: 12px;
-            max-height: 200px;
+            border: 3px solid var(--usps-blue);
+            border-radius: 15px;
+            max-height: 250px;
             overflow-y: auto;
             display: none;
             position: absolute;
-            bottom: 105%; /* Sits exactly above the label */
+            bottom: 105%; /* Pops up ABOVE the keyboard */
             left: 0;
             right: 0;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
-            z-index: 3000;
+            box-shadow: 0 -8px 25px rgba(0,0,0,0.3);
+            z-index: 9999;
         }
 
         .suggestion-item {
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 16px;
-            font-weight: 700;
+            padding: 20px; /* Big touch target */
+            border-bottom: 1px solid #eee;
+            font-size: 1.1rem;
+            font-weight: 800;
             color: var(--usps-blue);
+        }
+
+        .suggestion-item:active {
+            background-color: #f0f0f0;
         }
 
         /* RESULT CARDS */
         .result-card {
             background: white;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 18px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             margin-top: 10px;
             display: flex;
             justify-content: space-between;
@@ -167,20 +174,20 @@
             border: 1px solid #ddd;
         }
 
-        .range-display { font-size: 1.5rem; font-weight: 900; color: #111; line-height: 1; }
-        .street-display { font-size: 0.9rem; color: #444; font-weight: 600; margin-top: 2px; }
+        .range-display { font-size: 1.7rem; font-weight: 900; color: #000; }
+        .street-display { font-size: 1rem; color: #555; font-weight: 700; margin-top: 2px; }
 
         .route-side {
             background-color: var(--usps-blue);
             color: white;
-            padding: 8px 10px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 12px;
             text-align: center;
-            min-width: 65px;
+            min-width: 75px;
         }
 
-        .route-side .lbl { font-size: 0.5rem; font-weight: bold; display: block; }
-        .route-side .num { font-size: 1.5rem; font-weight: 900; display: block; }
+        .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; margin-bottom: 2px; }
+        .route-side .num { font-size: 1.7rem; font-weight: 900; display: block; }
     </style>
 </head>
 <body>
@@ -204,7 +211,12 @@
                 <select id="zipCode" onchange="clearStreetOnly()">
                     <option value="">Select ZIP...</option>
                     <option value="98662">98662 (Demo)</option>
+                    <option value="98660">98660</option>
                     <option value="98661">98661</option>
+                    <option value="98663">98663</option>
+                    <option value="98664">98664</option>
+                    <option value="98665">98665</option>
+                    <option value="98682">98682</option>
                 </select>
             </div>
             <button class="btn-circle reset-all" onclick="fullAppReset()">RESET ALL</button>
@@ -214,7 +226,7 @@
         <div class="input-row">
             <div class="input-wrapper">
                 <label>Street Name</label>
-                <!-- SUGGESTION BOX IS NOW ABOVE THIS INPUT -->
+                <!-- SUGGESTION BOX ABOVE -->
                 <div id="suggestionBox" class="suggestion-box"></div>
                 <input type="text" id="streetInput" placeholder="Start typing..." autocomplete="off" oninput="handleSearch()">
             </div>
