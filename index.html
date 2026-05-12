@@ -29,10 +29,9 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* STYLIZED COOL HEADER */
         .header {
             background-color: var(--usps-blue);
-            padding: 20px 15px;
+            padding: 18px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -41,36 +40,32 @@
 
         .usps-signature {
             color: white;
-            font-size: 2.2rem; /* Scaled down slightly */
+            font-size: 2rem;
             font-weight: 900;
             font-style: italic;
             letter-spacing: -3px;
             line-height: 0.8;
             font-family: "Arial Black", sans-serif;
             transform: skewX(-5deg);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .vancouver-text {
             color: white;
-            font-size: 1.6rem; /* Prominent second line */
+            font-size: 1.5rem;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 5px;
         }
 
         .route-finder-cool {
             margin-top: 2px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             color: var(--usps-yellow);
-            background: linear-gradient(90deg, rgba(255,222,0,0) 0%, rgba(255,222,0,1) 50%, rgba(255,222,0,0) 100%);
-            -webkit-background-clip: text;
-            /* text-shadow for "cool" factor */
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
         .header-accent {
@@ -80,16 +75,16 @@
         }
 
         .input-container {
-            padding: 15px;
+            padding: 12px;
             max-width: 450px;
             margin: 0 auto;
         }
 
         .input-row {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: flex-end;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             position: relative;
         }
 
@@ -97,8 +92,8 @@
 
         label {
             display: block;
-            margin-bottom: 4px;
-            font-size: 0.8rem;
+            margin-bottom: 3px;
+            font-size: 0.75rem;
             font-weight: bold;
             color: #333;
             text-transform: uppercase;
@@ -106,38 +101,36 @@
 
         select, input {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border: 2px solid #bbb;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 18px;
             box-sizing: border-box;
             background: white;
         }
 
         .btn-action {
-            height: 52px;
-            width: 95px;
-            border-radius: 10px;
+            height: 48px;
+            width: 90px;
+            border-radius: 8px;
             border: none;
             font-weight: 900;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
         }
 
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* SCROLLING RESULT AREA */
         #resultArea {
-            height: calc(100vh - 380px); /* Adjusted for larger header */
+            height: calc(100vh - 320px); 
             overflow-y: auto;
             padding: 10px 15px;
             -webkit-overflow-scrolling: touch;
         }
 
-        /* BOTTOM SPACER: This fix allows the last card to scroll all the way up */
         .scroll-spacer {
-            height: 250px; 
+            height: 80px; 
             width: 100%;
         }
 
@@ -145,7 +138,7 @@
             background: white;
             border: 3px solid var(--usps-blue);
             border-radius: 12px;
-            max-height: 220px;
+            max-height: 235px; 
             overflow-y: scroll;
             display: none;
             position: absolute;
@@ -174,18 +167,18 @@
 
         .result-card {
             background: white;
-            border-radius: 12px;
-            padding: 18px;
+            border-radius: 10px;
+            padding: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid #ccc;
         }
 
-        .range-display { font-size: 1.6rem; font-weight: 900; color: #000; }
-        .street-display { font-size: 0.95rem; color: #555; font-weight: 700; }
+        .range-display { font-size: 1.4rem; font-weight: 900; color: #000; }
+        .street-display { font-size: 0.85rem; color: #555; font-weight: 700; }
 
         .route-side {
             background-color: var(--usps-blue);
@@ -193,11 +186,11 @@
             padding: 8px;
             border-radius: 8px;
             text-align: center;
-            min-width: 75px;
+            min-width: 70px;
         }
 
         .route-side .lbl { font-size: 0.55rem; font-weight: bold; display: block; }
-        .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
+        .route-side .num { font-size: 1.4rem; font-weight: 900; display: block; }
     </style>
 </head>
 <body>
@@ -205,7 +198,7 @@
     <div class="sticky-top">
         <div class="header">
             <span class="usps-signature">USPS</span>
-            <div class="vancouver-text">Vancouver, WA</div>
+            <div class="vancouver-text">VANCOUVER, WA</div>
             <div class="route-finder-cool">ROUTE FINDER</div>
         </div>
         <div class="header-accent"></div>
@@ -216,7 +209,18 @@
                     <label>Zip Code</label>
                     <select id="zipCode" onchange="clearStreetOnly()">
                         <option value="">Select ZIP...</option>
-                        <option value="98662">98662 (Full Test)</option>
+                        <option value="98660">98660</option>
+                        <option value="98661">98661</option>
+                        <option value="98662">98662 (Demo Data)</option>
+                        <option value="98663">98663</option>
+                        <option value="98664">98664</option>
+                        <option value="98665">98665</option>
+                        <option value="98668">98668</option>
+                        <option value="98682">98682</option>
+                        <option value="98683">98683</option>
+                        <option value="98684">98684</option>
+                        <option value="98685">98685</option>
+                        <option value="98686">98686</option>
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -226,22 +230,31 @@
                 <div class="input-wrapper">
                     <label>Street Name</label>
                     <div id="suggestionBox" class="suggestion-box"></div>
-                    <input type="text" id="streetInput" placeholder="Type street name..." autocomplete="off" oninput="handleSearch()">
+                    <input type="text" id="streetInput" placeholder="Start typing street..." autocomplete="off" oninput="handleSearch()">
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
             </div>
         </div>
     </div>
 
-    <!-- INTERNAL SCROLL AREA -->
     <div id="resultArea">
         <div id="cardContainer"></div>
-        <div class="scroll-spacer"></div> <!-- Allows last card to reach top -->
+        <div class="scroll-spacer"></div>
     </div>
 
     <script>
         const database = {
             "98662": [
+                { name: "1st Street", results: [{ range: "100 - 998", route: "C001" }] },
+                { name: "18th Circle", results: [{ range: "1800 - 1899", route: "C018" }] },
+                { name: "187th Avenue", results: [
+                    { range: "101 - 899 (Odd)", route: "C042" },
+                    { range: "102 - 898 (Even)", route: "C043" }
+                ]},
+                { name: "188th Street", results: [
+                    { range: "1000 - 1500", route: "C050" },
+                    { range: "1501 - 2200", route: "C051" }
+                ]},
                 { name: "189th Street", results: [
                     { range: "100-998 (Even)", route: "C001" },
                     { range: "101-999 (Odd)", route: "C002" },
