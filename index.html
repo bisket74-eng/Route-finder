@@ -5,98 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vancouver Route Finder</title>
     <style>
-        :root {
-            --usps-blue: #004b87;
-            --usps-red: #da291c;
-            --usps-yellow: #ffde00;
-            --bg-color: #f4f7f9;
-        }
-
-        html, body {
-            margin: 0; padding: 0; height: 100%;
-            background-color: var(--bg-color);
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            overflow: hidden;
-        }
-
-        #banner-wrap { transition: all 0.2s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        :root { --usps-blue: #004b87; --usps-red: #da291c; --usps-yellow: #ffde00; --bg-color: #f4f7f9; }
+        html, body { margin: 0; padding: 0; height: 100%; background-color: var(--bg-color); font-family: sans-serif; overflow: hidden; }
+        #banner-wrap { transition: 0.3s; cursor: pointer; }
         body.searching #banner-wrap { display: none; }
-
-        .header {
-            background-color: var(--usps-blue);
-            padding: 18px 15px;
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-        }
-
-        .usps-signature {
-            color: white; font-size: 2rem; font-weight: 900; font-style: italic;
-            letter-spacing: -3px; line-height: 0.8; font-family: "Arial Black", sans-serif;
-            transform: skewX(-5deg); margin-bottom: 4px;
-        }
-
+        .header { background-color: var(--usps-blue); padding: 18px 15px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .usps-signature { color: white; font-size: 2rem; font-weight: 900; font-style: italic; letter-spacing: -3px; line-height: 0.8; transform: skewX(-5deg); margin-bottom: 4px; }
         .vancouver-text { color: white; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; }
         .route-finder-cool { margin-top: 2px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: var(--usps-yellow); }
         .header-accent { height: 6px; background-color: var(--usps-red); width: 100%; }
-
-        #adminPanel { 
-            display: none; background: white; padding: 15px; border: 3px dashed var(--usps-blue); 
-            margin: 10px; border-radius: 12px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px;
-            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        #dataInput { width: 100%; height: 120px; margin: 10px 0; font-size: 10px; border: 1px solid #ccc; }
-
+        
+        #adminPanel { display: none; background: white; padding: 15px; border: 3px dashed var(--usps-blue); margin: 10px; border-radius: 12px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        #dataInput { width: 100%; height: 150px; margin: 10px 0; font-size: 12px; border: 2px solid var(--usps-blue); border-radius: 8px; }
+        
         .sticky-controls { position: sticky; top: 0; z-index: 3000; background-color: var(--bg-color); padding: 10px; }
         .input-container { max-width: 450px; margin: 0 auto; position: relative; }
         .input-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 12px; }
         .input-wrapper { flex: 1; position: relative; }
         label { display: block; margin-bottom: 3px; font-size: 0.75rem; font-weight: bold; color: #333; text-transform: uppercase; }
-
-        select, input {
-            width: 100%; padding: 12px; border: 2px solid #bbb; border-radius: 8px;
-            font-size: 18px; box-sizing: border-box; background: white; color: #000;
-        }
-        input:disabled { background: #eee; cursor: not-allowed; border-color: #ddd; }
-
-        .btn-action { height: 48px; width: 90px; border-radius: 8px; border: none; font-weight: 900; font-size: 0.6rem; text-transform: uppercase; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #bbb; border-radius: 8px; font-size: 18px; box-sizing: border-box; background: white; color: #000; }
+        
+        .btn-action { height: 48px; width: 90px; border-radius: 8px; border: none; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
         .reset-zip { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
-
-        .suggestion-box {
-            background: #e5e5e5; border: 2px solid var(--usps-blue); border-top: none;
-            border-radius: 0 0 12px 12px; height: 235px; max-height: 235px; overflow-y: auto;
-            display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999;
-            padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        
+        #backToListBtn { 
+            display: none; width: 100%; background: var(--usps-blue); color: white; 
+            margin-bottom: 12px; padding: 14px; border-radius: 8px; font-weight: 900; 
+            text-transform: uppercase; border: none; font-size: 0.85rem; cursor: pointer;
+            border-bottom: 4px solid var(--usps-red); box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .suggestion-item {
-            height: 48px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center;
-            background: white; margin-bottom: 4px; border-radius: 6px; border-bottom: 2px solid #ccc;
-            font-size: 1.1rem; font-weight: 900; color: var(--usps-blue);
-        }
-
+        .suggestion-box { background: #e5e5e5; border: 2px solid var(--usps-blue); border-top: none; border-radius: 0 0 12px 12px; height: 260px; max-height: 260px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .suggestion-item { height: 48px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; background: white; margin-bottom: 4px; border-radius: 6px; border-bottom: 2px solid #ccc; font-size: 1.1rem; font-weight: 900; color: var(--usps-blue); }
         .zip-badge-small { font-size: 0.7rem; background: var(--usps-blue); color: white; padding: 2px 6px; border-radius: 4px; }
-
+        
         #resultArea { padding: 10px 15px; height: calc(100vh - 150px); overflow-y: auto; }
-        .result-card {
-            background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc;
-        }
-
+        .result-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card-left { flex: 1; }
         .zip-tag { display: inline-block; font-size: 0.7rem; font-weight: 800; background: var(--usps-blue); color: white; padding: 2px 8px; border-radius: 4px; margin-bottom: 5px; }
-        .range-display { font-size: 1.5rem; font-weight: 900; display: block; }
+        .range-display { font-size: 1.5rem; font-weight: 900; display: block; color: #000; }
         .street-display { font-size: 0.8rem; color: #666; font-weight: bold; }
+        
         .route-side { background-color: var(--usps-blue); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 80px; }
         .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
         .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
     </style>
 </head>
 <body>
-
     <div id="adminPanel">
-        <h3 style="color:var(--usps-blue); margin:0;">Paste Data</h3>
-        <textarea id="dataInput" placeholder="Paste Row 3 down from Excel..."></textarea>
-        <button onclick="savePastedData()" style="width:100%; padding:12px; border-radius:8px; border:none; background:var(--usps-blue); color:white; font-weight:bold;">SAVE</button>
+        <h3 style="color:var(--usps-blue); margin:0;">Master Data Paste</h3>
+        <textarea id="dataInput" placeholder="Paste Row 3 down from Excel here..."></textarea>
+        <button onclick="savePastedData()" style="width:100%; padding:15px; border-radius:8px; border:none; background:var(--usps-blue); color:white; font-weight:bold;">SAVE DATA</button>
         <button onclick="document.getElementById('adminPanel').style.display='none'" style="display:block; width:100%; margin-top:8px; padding:8px; background:#666; color:white; border-radius:8px; border:none; font-size:0.7rem;">CLOSE</button>
     </div>
 
@@ -125,13 +85,12 @@
                         <option value="98685">98685</option><option value="98686">98686</option>
                     </select>
                 </div>
-                <button class="btn-action reset-zip" onclick="resetZipSelection()">Reset<br>Zip</button>
+                <button class="btn-action reset-zip" onclick="resetZipSelection()">Reset</button>
             </div>
-
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>2. Street Name</label>
-                    <input type="text" id="streetInput" placeholder="Select ZIP first..." disabled autocomplete="off" oninput="handleSearch()" onfocus="enterFocus()" onblur="exitFocus()">
+                    <input type="text" id="streetInput" placeholder="Select ZIP first..." disabled autocomplete="off" oninput="handleSearch()" onfocus="handleSearch()">
                     <div id="suggestionBox" class="suggestion-box"></div>
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
@@ -139,94 +98,78 @@
         </div>
     </div>
 
-    <div id="resultArea"><div id="cardContainer"></div></div>
+    <div id="resultArea">
+        <button id="backToListBtn" onclick="reopenSuggestions()">⬅ Back to Street List</button>
+        <div id="cardContainer"></div>
+    </div>
 
     <script>
         let database = {};
+        let lastUserTyping = ""; 
 
         window.onload = () => {
             const saved = localStorage.getItem('vancouverData');
-            if (saved) database = JSON.parse(saved);
+            if (saved) { try { database = JSON.parse(saved); } catch(e) {} }
         };
 
         function secretKnock() {
             if (!window.knockCount) window.knockCount = 0;
             window.knockCount++;
             clearTimeout(window.knockTimer);
-            if (window.knockCount === 5) {
-                document.getElementById('adminPanel').style.display = 'block';
-                window.knockCount = 0;
-            }
+            if (window.knockCount === 5) { document.getElementById('adminPanel').style.display = 'block'; window.knockCount = 0; }
             window.knockTimer = setTimeout(() => { window.knockCount = 0; }, 500);
         }
 
         function savePastedData() {
             const input = document.getElementById('dataInput').value;
             if (!input) return;
-            const lines = input.trim().split('\n');
+            const lines = input.split('\n');
             const newDatabase = {};
             let count = 0;
-
             lines.forEach(line => {
                 const cells = line.split('\t');
                 if (cells.length < 8) return;
-                const zip = String(cells[7] || "").trim();
-                const prefix = String(cells[3] || "").trim();
-                const name = String(cells[4] || "").trim();
-                const suffix = String(cells[5] || "").trim();
-                const postDir = String(cells[6] || "").trim();
-                const fullName = [prefix, name, suffix, postDir].filter(Boolean).join(" ");
-                const range = String(cells[0] || "") + (cells[1] ? "-" + cells[1] : "");
-                const route = String(cells[8] || "").trim();
-
-                if (zip && name && zip.startsWith('986')) {
-                    if (!newDatabase[zip]) newDatabase[zip] = [];
-                    let street = newDatabase[zip].find(s => s.displayName.toUpperCase() === fullName.toUpperCase());
-                    if (!street) {
-                        street = { searchName: name.toUpperCase(), displayName: fullName, results: [] };
-                        newDatabase[zip].push(street);
-                    }
-                    street.results.push({ range: range, route: route });
-                    count++;
+                const zip = cells[7]?.trim();
+                const name = cells[4]?.trim();
+                if (!zip || !name || !zip.startsWith('986')) return;
+                if (!newDatabase[zip]) newDatabase[zip] = [];
+                const fullName = [cells[3], cells[4], cells[5], cells[6]].filter(Boolean).map(s => s.trim()).join(" ");
+                let street = newDatabase[zip].find(s => s.displayName === fullName);
+                if (!street) {
+                    street = { searchName: name.toUpperCase(), displayName: fullName, results: [] };
+                    newDatabase[zip].push(street);
                 }
+                street.results.push({ range: cells[0] + (cells[1] ? "-" + cells[1] : ""), route: cells[8]?.trim() });
+                count++;
             });
-
-            if (count > 0) {
-                database = newDatabase;
-                localStorage.setItem('vancouverData', JSON.stringify(database));
-                alert("Success! " + count + " rows loaded.");
-                location.reload();
-            }
+            database = newDatabase;
+            localStorage.setItem('vancouverData', JSON.stringify(newDatabase));
+            alert("Success! " + count + " rows saved.");
+            document.getElementById('adminPanel').style.display = 'none';
         }
 
         const zipIn = document.getElementById('zipCode');
         const strIn = document.getElementById('streetInput');
         const sugBox = document.getElementById('suggestionBox');
         const cardCont = document.getElementById('cardContainer');
+        const backBtn = document.getElementById('backToListBtn');
 
-        // FIXED: Picks up the Zip change and unlocks the Street Input
         function handleZipChange() {
-            if(zipIn.value !== "") {
-                strIn.disabled = false;
-                strIn.placeholder = "Start typing name...";
-                strIn.focus();
-                if(strIn.value !== "") handleSearch();
-            } else {
-                strIn.disabled = true;
-                strIn.placeholder = "Select ZIP first...";
-                sugBox.style.display = "none";
-                cardCont.innerHTML = "";
-            }
+            if(zipIn.value !== "") { strIn.disabled = false; strIn.placeholder = "Start typing..."; strIn.focus(); }
+            else { resetZipSelection(); }
         }
-
-        function enterFocus() { document.body.classList.add('searching'); }
-        function exitFocus() { setTimeout(() => { if(strIn.value === "") document.body.classList.remove('searching'); }, 200); }
 
         function handleSearch() {
             const selectedZip = zipIn.value;
             const val = strIn.value.toUpperCase().trim();
-            sugBox.innerHTML = ""; cardCont.innerHTML = "";
+            if (val.length > 0) {
+                document.body.classList.add('searching');
+                if(!val.includes(" ")) { lastUserTyping = strIn.value; }
+            }
+            sugBox.innerHTML = "";
+            backBtn.style.display = "none";
             if (val.length < 1) { sugBox.style.display = "none"; return; }
+            
             let allMatches = [];
             const zipsToSearch = (selectedZip === "ALL") ? Object.keys(database) : [selectedZip];
             zipsToSearch.forEach(zip => {
@@ -235,10 +178,12 @@
                     matches.forEach(m => { allMatches.push({ ...m, zip: zip }); });
                 }
             });
+
             if (allMatches.length > 0) {
                 sugBox.style.display = "block";
                 const unique = [...new Map(allMatches.map(item => [item.displayName + item.zip, item])).values()];
-                unique.slice(0, 40).forEach(item => {
+                unique.sort((a,b) => a.displayName.localeCompare(b.displayName));
+                unique.slice(0, 50).forEach(item => {
                     const div = document.createElement('div');
                     div.className = "suggestion-item";
                     div.innerHTML = `<span>${item.displayName}</span> <span class="zip-badge-small">${item.zip}</span>`;
@@ -250,8 +195,9 @@
 
         function selectStreet(item) {
             strIn.value = item.displayName;
-            sugBox.style.display = "none";
+            sugBox.style.display = "none"; 
             cardCont.innerHTML = "";
+            backBtn.style.display = "block";
             item.results.forEach(res => {
                 const card = document.createElement('div');
                 card.className = "result-card";
@@ -261,19 +207,9 @@
             document.activeElement.blur();
         }
 
-        function clearStreetOnly() { 
-            strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; strIn.focus(); 
-        }
-
-        function resetZipSelection() {
-            zipIn.selectedIndex = 0;
-            strIn.value = "";
-            strIn.disabled = true;
-            strIn.placeholder = "Select ZIP first...";
-            sugBox.style.display = "none";
-            cardCont.innerHTML = "";
-            document.body.classList.remove('searching');
-        }
+        function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; strIn.value = lastUserTyping; handleSearch(); strIn.focus(); }
+        function clearStreetOnly() { lastUserTyping = ""; strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; strIn.focus(); }
+        function resetZipSelection() { zipIn.selectedIndex = 0; lastUserTyping = ""; strIn.value = ""; strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; document.body.classList.remove('searching'); }
     </script>
 </body>
 </html>
