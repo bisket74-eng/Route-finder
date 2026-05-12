@@ -19,10 +19,9 @@
             height: 100%;
             background-color: var(--bg-color);
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        /* HEADER Focus Mode */
         #banner-wrap { transition: all 0.2s ease; }
         body.searching #banner-wrap { display: none; }
 
@@ -53,15 +52,6 @@
             text-transform: uppercase;
         }
 
-        .route-finder-cool {
-            margin-top: 2px;
-            font-size: 0.9rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--usps-yellow);
-        }
-
         .header-accent { height: 6px; background-color: var(--usps-red); width: 100%; }
 
         .sticky-controls {
@@ -70,12 +60,11 @@
             z-index: 3000;
             background-color: var(--bg-color);
             padding: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .input-container { max-width: 450px; margin: 0 auto; position: relative; }
         .input-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 12px; }
-        .input-wrapper { flex: 1; }
+        .input-wrapper { flex: 1; position: relative; }
 
         label { display: block; margin-bottom: 3px; font-size: 0.75rem; font-weight: bold; color: #333; text-transform: uppercase; }
 
@@ -94,21 +83,20 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* OVERLAY FIX - NO WHITE BOXING */
+        /* THE "STRIPED" PICK LIST */
         .suggestion-box {
-            background: white;
-            border: 4px solid var(--usps-blue);
-            border-radius: 12px;
-            /* Exactly 6.5 items high */
-            max-height: 351px; 
+            background: transparent; /* No big white box background */
+            /* Height for 5.5 items (54px rows + small 4px gaps) */
+            height: 310px; 
+            max-height: 310px; 
             overflow-y: auto;
             display: none;
             position: absolute;
             top: 100%; 
             left: 0;
             right: 0;
-            z-index: 9999; /* Float over everything */
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            z-index: 9999;
+            padding-top: 5px;
         }
 
         .suggestion-item {
@@ -116,21 +104,28 @@
             padding: 0 20px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #ddd;
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--usps-blue);
             background: white;
+            margin-bottom: 4px; /* Creates the "Lined" or "Striped" look */
+            border-radius: 4px;
+            border-bottom: 3px solid #ddd; /* Adds weight to the line */
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--usps-blue);
+            box-sizing: border-box;
         }
 
-        .suggestion-box::-webkit-scrollbar { width: 16px; }
+        .suggestion-item:active {
+            background: var(--usps-yellow);
+        }
+
+        .suggestion-box::-webkit-scrollbar { width: 14px; }
         .suggestion-box::-webkit-scrollbar-thumb {
             background: var(--scroll-blue);
-            border: 3px solid #000;
             border-radius: 10px;
+            border: 2px solid var(--usps-blue);
         }
 
-        #resultArea { padding: 10px 15px; }
+        #resultArea { padding: 10px 15px; height: calc(100vh - 150px); overflow-y: auto; }
         .result-card {
             background: white;
             border-radius: 10px;
@@ -167,10 +162,10 @@
                     <label>Zip Code</label>
                     <select id="zipCode" onchange="clearStreetOnly()">
                         <option value="">Select ZIP...</option>
+                        <option value="98662">98662 (Trial Data)</option>
                         <option value="98660">98660</option>
                         <option value="98661">98661</option>
-                        <option value="98662">98662 (Full Test)</option>
-                        <option value="98686">98686</option>
+                        <option value="98665">98665</option>
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -179,8 +174,7 @@
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Street Name</label>
-                    <input type="text" id="streetInput" placeholder="Type street name..." autocomplete="off" oninput="handleSearch()" onfocus="enterFocus()" onblur="exitFocus()">
-                    <!-- BOX IS NOW NESTED INSIDE WRAPPER FOR OVERLAY -->
+                    <input type="text" id="streetInput" placeholder="Start typing street..." autocomplete="off" oninput="handleSearch()" onfocus="enterFocus()" onblur="exitFocus()">
                     <div id="suggestionBox" class="suggestion-box"></div>
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
@@ -195,23 +189,20 @@
             "98662": [
                 { name: "1st Street", results: [{ range: "100-998", route: "C001" }] },
                 { name: "18th Circle", results: [{ range: "1800-1899", route: "C018" }] },
-                { name: "180th Street", results: [{ range: "18000", route: "C080" }] },
-                { name: "181st Street", results: [{ range: "18100", route: "C081" }] },
-                { name: "182nd Street", results: [{ range: "18200", route: "C082" }] },
-                { name: "183rd Street", results: [{ range: "18300", route: "C083" }] },
-                { name: "184th Street", results: [{ range: "18400", route: "C084" }] },
-                { name: "185th Circle", results: [{ range: "18500", route: "C085" }] },
+                { name: "180th Street", results: [{ range: "18000-18099", route: "C080" }] },
+                { name: "181st Street", results: [{ range: "18100-18199", route: "C081" }] },
+                { name: "182nd Street", results: [{ range: "18200-18299", route: "C082" }] },
+                { name: "183rd Street", results: [{ range: "18300-18399", route: "C083" }] },
+                { name: "184th Street", results: [{ range: "18400-18499", route: "C084" }] },
+                { name: "185th Circle", results: [{ range: "18500-18599", route: "C085" }] },
+                { name: "186th Avenue", results: [{ range: "18600-18699", route: "C086" }] },
+                { name: "187th Avenue", results: [{ range: "18700-18799", route: "C087" }] },
+                { name: "188th Street", results: [{ range: "18800-18899", route: "C088" }] },
                 { name: "189th Street", results: [
                     { range: "100-500", route: "C001" },
-                    { range: "501-999", route: "C010" },
                     { range: "1000-1500", route: "C022" },
-                    { range: "1501-2000", route: "C033" },
                     { range: "2001-2500", route: "C044" },
-                    { range: "2501-3000", route: "C055" },
-                    { range: "3001-3500", route: "C066" },
-                    { range: "3501-4000", route: "C077" },
-                    { range: "4001-5000", route: "C099" },
-                    { range: "5001-6000", route: "C105" }
+                    { range: "4001-5000", route: "C099" }
                 ]}
             ]
         };
