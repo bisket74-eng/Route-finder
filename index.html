@@ -20,10 +20,9 @@
             -webkit-text-size-adjust: 100%;
         }
 
-        /* LARGER, CLEANER BANNER */
         .header {
             background-color: var(--usps-blue);
-            padding: 35px 15px; /* Increased padding for bigger banner */
+            padding: 35px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -33,7 +32,7 @@
 
         .usps-signature {
             color: white;
-            font-size: 3.5rem; /* Big USPS Letters */
+            font-size: 3.5rem;
             font-weight: 900;
             font-style: italic;
             letter-spacing: -4px;
@@ -56,7 +55,7 @@
             height: 8px;
             background-color: var(--usps-red);
             width: 100%;
-            margin-bottom: 30px; /* Moves content down further */
+            margin-bottom: 30px;
         }
 
         .container {
@@ -89,13 +88,12 @@
             padding: 16px;
             border: 2px solid #bbb;
             border-radius: 10px;
-            font-size: 18px; /* High visibility, no zoom */
+            font-size: 18px;
             box-sizing: border-box;
             background: white;
             color: #000;
         }
 
-        /* BUTTONS */
         .btn-action {
             height: 55px;
             width: 90px;
@@ -112,13 +110,13 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* GIANT SUGGESTION BOX - FLOATS ABOVE */
+        /* SCROLLABLE SUGGESTION BOX */
         .suggestion-box {
             background: white;
             border: 3px solid var(--usps-blue);
             border-radius: 12px;
-            max-height: 250px;
-            overflow-y: auto;
+            max-height: 250px; /* Limits the height so it doesn't cover the whole screen */
+            overflow-y: auto; /* This creates the scroll function */
             display: none;
             position: absolute;
             bottom: 105%; 
@@ -126,6 +124,8 @@
             right: 0;
             z-index: 5000;
             box-shadow: 0 -8px 20px rgba(0,0,0,0.2);
+            /* Smooth scrolling for mobile */
+            -webkit-overflow-scrolling: touch; 
         }
 
         .suggestion-item {
@@ -136,7 +136,6 @@
             color: var(--usps-blue);
         }
 
-        /* RESULT CARDS */
         .result-card {
             background: white;
             border-radius: 12px;
@@ -174,13 +173,12 @@
     <div class="header-accent"></div>
 
     <div class="container">
-        <!-- ZIP ROW -->
         <div class="input-row">
             <div class="input-wrapper">
                 <label>Zip Code</label>
                 <select id="zipCode" onchange="clearStreetOnly()">
                     <option value="">Select ZIP...</option>
-                    <option value="98662">98662 (Test Me)</option>
+                    <option value="98662">98662 (Demo)</option>
                     <option value="98661">98661</option>
                     <option value="98660">98660</option>
                 </select>
@@ -188,7 +186,6 @@
             <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
         </div>
 
-        <!-- STREET ROW -->
         <div class="input-row">
             <div class="input-wrapper">
                 <label>Street Name</label>
@@ -204,12 +201,17 @@
     <script>
         const database = {
             "98662": [
-                { name: "1st Street", results: [{ range: "100-500", route: "C001" }] },
-                { name: "18th Street", results: [{ range: "1000-1800", route: "C018" }] },
+                { name: "180th Street", results: [{ range: "18000-18099", route: "C080" }] },
+                { name: "181st Street", results: [{ range: "18100-18199", route: "C081" }] },
+                { name: "182nd Street", results: [{ range: "18200-18299", route: "C082" }] },
+                { name: "183rd Street", results: [{ range: "18300-18399", route: "C083" }] },
+                { name: "184th Street", results: [{ range: "18400-18499", route: "C084" }] },
+                { name: "185th Circle", results: [{ range: "18500-18599", route: "C085" }] },
+                { name: "186th Avenue", results: [{ range: "18600-18699", route: "C086" }] },
                 { name: "187th Street", results: [{ range: "18700-18799", route: "C087" }] },
                 { name: "188th Street", results: [{ range: "18800-18899", route: "C088" }] },
                 { name: "189th Street", results: [{ range: "18900-18999", route: "C089" }] },
-                { name: "Burton Road", results: [{ range: "100-1500", route: "C012" }] }
+                { name: "18th Street", results: [{ range: "1000-1800", route: "C018" }] }
             ]
         };
 
@@ -223,10 +225,8 @@
             const val = strIn.value.toLowerCase();
             sugBox.innerHTML = "";
             resArea.innerHTML = "";
-            
             if (!zip || val.length < 1) { sugBox.style.display = "none"; return; }
 
-            // Filter logic: Checks if the street name starts with whatever you've typed
             const matches = (database[zip] || []).filter(s => s.name.toLowerCase().startsWith(val));
 
             if (matches.length > 0) {
