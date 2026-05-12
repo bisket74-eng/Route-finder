@@ -22,10 +22,7 @@
 
         .header {
             background-color: var(--usps-blue);
-            padding: 20px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding: 15px;
             text-align: center;
         }
 
@@ -34,24 +31,18 @@
             font-size: 2rem;
             font-weight: 900;
             font-style: italic;
-            letter-spacing: -3px;
-            line-height: 0.8;
             font-family: "Arial Black", sans-serif;
             transform: skewX(-5deg);
         }
 
         .vancouver-text {
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 900;
             text-transform: uppercase;
         }
 
-        .header-accent {
-            height: 6px;
-            background-color: var(--usps-red);
-            width: 100%;
-        }
+        .header-accent { height: 6px; background-color: var(--usps-red); width: 100%; }
 
         .sticky-controls {
             position: sticky;
@@ -62,26 +53,10 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .input-container { max-width: 450px; margin: 0 auto; }
-
-        .input-row {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-            margin-bottom: 10px;
-            position: relative;
-        }
-
+        .input-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 10px; }
         .input-wrapper { flex: 1; position: relative; }
 
-        label {
-            display: block;
-            margin-bottom: 2px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #333;
-            text-transform: uppercase;
-        }
+        label { display: block; font-size: 0.75rem; font-weight: bold; color: #333; text-transform: uppercase; }
 
         select, input {
             width: 100%;
@@ -94,25 +69,20 @@
             color: #000;
         }
 
-        .btn-action {
-            height: 48px;
-            width: 90px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 900;
-            font-size: 0.6rem;
-            text-transform: uppercase;
-        }
-
+        .btn-action { height: 48px; width: 85px; border-radius: 8px; border: none; font-weight: 900; font-size: 0.6rem; text-transform: uppercase; }
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* THE 5.5 ITEM SLICE */
+        /* THE "GUARANTEED SLICE" BOX */
         .suggestion-box {
             background: white;
-            border: 3px solid var(--usps-blue);
+            border: 4px solid var(--usps-blue); /* Thicker border for visibility */
             border-radius: 12px;
-            max-height: 295px; /* ADJUSTED FOR 5 FULL + 0.5 OF 6th */
+            
+            /* MATH: 6.5 items * 54px = 351px */
+            height: 351px; 
+            max-height: 351px;
+            
             overflow-y: scroll;
             display: none;
             position: absolute;
@@ -120,32 +90,33 @@
             left: 0;
             right: 0;
             z-index: 5000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             -webkit-overflow-scrolling: touch;
         }
 
-        .suggestion-box::-webkit-scrollbar { width: 14px; }
-        .suggestion-box::-webkit-scrollbar-thumb {
-            background: var(--scroll-blue);
-            border: 2px solid #333;
-            border-radius: 10px;
-        }
-        .suggestion-box::-webkit-scrollbar-track { background: #444; }
-
         .suggestion-item {
-            padding: 18px 20px;
-            border-bottom: 1px solid #eee;
+            /* FIXED HEIGHT IS THE KEY */
+            height: 54px; 
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
             font-size: 1.2rem;
             font-weight: 800;
             color: var(--usps-blue);
-            line-height: 1; 
+            box-sizing: border-box;
+            white-space: nowrap;
         }
 
-        #resultArea {
-            padding: 10px 15px;
-            min-height: 100vh;
+        /* BRIGHT SCROLLBAR */
+        .suggestion-box::-webkit-scrollbar { width: 16px; }
+        .suggestion-box::-webkit-scrollbar-thumb {
+            background: var(--scroll-blue);
+            border: 3px solid #000;
+            border-radius: 10px;
         }
 
+        #resultArea { padding: 10px 15px; }
         .result-card {
             background: white;
             border-radius: 10px;
@@ -157,18 +128,8 @@
             align-items: center;
             border: 1px solid #ccc;
         }
-
-        .range-display { font-size: 1.4rem; font-weight: 900; color: #000; }
-        
-        .route-side {
-            background-color: var(--usps-blue);
-            color: white;
-            padding: 8px;
-            border-radius: 8px;
-            text-align: center;
-            min-width: 70px;
-        }
-        .route-side .lbl { font-size: 0.5rem; display: block; font-weight: bold; }
+        .range-display { font-size: 1.4rem; font-weight: 900; }
+        .route-side { background-color: var(--usps-blue); color: white; padding: 8px; border-radius: 8px; text-align: center; min-width: 70px; }
         .route-side .num { font-size: 1.4rem; font-weight: 900; }
 
         .kb-buffer { height: 180px; }
@@ -176,13 +137,11 @@
 </head>
 <body>
 
-    <div id="banner">
-        <div class="header">
-            <span class="usps-signature">USPS</span>
-            <div class="vancouver-text">VANCOUVER, WA</div>
-        </div>
-        <div class="header-accent"></div>
+    <div class="header">
+        <span class="usps-signature">USPS</span>
+        <div class="vancouver-text">VANCOUVER, WA</div>
     </div>
+    <div class="header-accent"></div>
 
     <div class="sticky-controls">
         <div class="input-container">
@@ -191,10 +150,15 @@
                     <label>Zip Code</label>
                     <select id="zipCode" onchange="clearStreetOnly()">
                         <option value="">Select ZIP...</option>
-                        <option value="98662">98662 (Trial Data)</option>
-                        <option value="98661">98661</option>
                         <option value="98660">98660</option>
-                        <!-- Other ZIPs omitted for brevity -->
+                        <option value="98661">98661</option>
+                        <option value="98662">98662 (Trial Data)</option>
+                        <option value="98663">98663</option>
+                        <option value="98664">98664</option>
+                        <option value="98665">98665</option>
+                        <option value="98682">98682</option>
+                        <option value="98683">98683</option>
+                        <option value="98684">98684</option>
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -211,9 +175,7 @@
         </div>
     </div>
 
-    <div id="resultArea">
-        <div id="cardContainer"></div>
-    </div>
+    <div id="resultArea"><div id="cardContainer"></div></div>
 
     <script>
         const database = {
@@ -249,9 +211,7 @@
         const sugBox = document.getElementById('suggestionBox');
         const cardCont = document.getElementById('cardContainer');
 
-        function slideUp() {
-            window.scrollTo({ top: 120, behavior: 'smooth' });
-        }
+        function slideUp() { window.scrollTo({ top: 120, behavior: 'smooth' }); }
 
         function handleSearch() {
             const zip = zipIn.value;
@@ -272,9 +232,6 @@
                     div.onclick = () => selectStreet(item);
                     sugBox.appendChild(div);
                 });
-                const buffer = document.createElement('div');
-                buffer.className = "kb-buffer";
-                sugBox.appendChild(buffer);
             } else { sugBox.style.display = "none"; }
         }
 
@@ -294,18 +251,8 @@
             document.activeElement.blur();
         }
 
-        function clearStreetOnly() {
-            strIn.value = "";
-            sugBox.style.display = "none";
-            cardCont.innerHTML = "";
-            strIn.focus();
-        }
-
-        function fullAppReset() {
-            zipIn.selectedIndex = 0;
-            clearStreetOnly();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        function clearStreetOnly() { strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; strIn.focus(); }
+        function fullAppReset() { zipIn.selectedIndex = 0; clearStreetOnly(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
     </script>
 </body>
 </html>
