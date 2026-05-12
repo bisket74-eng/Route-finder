@@ -9,20 +9,28 @@
             --usps-blue: #004b87;
             --usps-red: #da291c;
             --usps-yellow: #ffde00;
+            --scroll-blue: #82caff;
             --bg-color: #f4f7f9;
         }
 
         html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
+            overflow: hidden; 
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
         }
 
-        /* HEADER SECTION */
+        .sticky-top {
+            position: relative;
+            z-index: 1000;
+            background-color: var(--bg-color);
+        }
+
         .header {
             background-color: var(--usps-blue);
-            padding: 20px 15px;
+            padding: 18px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -38,6 +46,7 @@
             line-height: 0.8;
             font-family: "Arial Black", sans-serif;
             transform: skewX(-5deg);
+            margin-bottom: 4px;
         }
 
         .vancouver-text {
@@ -45,7 +54,6 @@
             font-size: 1.5rem;
             font-weight: 900;
             text-transform: uppercase;
-            margin-top: 5px;
         }
 
         .route-finder-cool {
@@ -55,6 +63,7 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             color: var(--usps-yellow);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
         .header-accent {
@@ -63,26 +72,21 @@
             width: 100%;
         }
 
-        /* STICKY SEARCH CONTROLS */
-        .sticky-controls {
-            position: sticky;
-            top: 0;
-            z-index: 2000;
-            background-color: var(--bg-color);
+        .input-container {
             padding: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            max-width: 450px;
+            margin: 0 auto;
         }
-
-        .input-container { max-width: 450px; margin: 0 auto; }
 
         .input-row {
             display: flex;
             gap: 10px;
             align-items: flex-end;
             margin-bottom: 12px;
+            position: relative;
         }
 
-        .input-wrapper { flex: 1; }
+        .input-wrapper { flex: 1; position: relative; }
 
         label {
             display: block;
@@ -95,94 +99,108 @@
 
         select, input {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border: 2px solid #bbb;
             border-radius: 8px;
             font-size: 18px;
             box-sizing: border-box;
             background: white;
-            color: #000;
         }
 
         .btn-action {
-            height: 52px;
+            height: 48px;
             width: 90px;
             border-radius: 8px;
             border: none;
             font-weight: 900;
             font-size: 0.6rem;
             text-transform: uppercase;
-            flex-shrink: 0;
         }
 
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* KIOSK LIST ITEMS */
-        #mainContentArea {
-            padding: 10px 15px;
-            max-width: 450px;
-            margin: 0 auto;
+        /* FLOATING PICK LIST - ABOVE KEYBOARD */
+        .suggestion-box {
+            background: white;
+            border: 3px solid var(--usps-blue);
+            border-radius: 12px;
+            max-height: 240px; 
+            overflow-y: scroll;
+            display: none;
+            position: absolute;
+            bottom: 105%; /* Pops up ABOVE the input bar */
+            left: 0;
+            right: 0;
+            z-index: 5000;
+            box-shadow: 0 -8px 20px rgba(0,0,0,0.3);
+            -webkit-overflow-scrolling: touch;
         }
 
-        .list-item {
-            background: white;
-            padding: 20px;
+        .suggestion-box::-webkit-scrollbar { width: 14px; }
+        .suggestion-box::-webkit-scrollbar-thumb {
+            background: var(--scroll-blue);
+            border: 2px solid #333;
             border-radius: 10px;
-            margin-bottom: 10px;
-            border: 2px solid var(--usps-blue);
-            font-size: 1.25rem;
+        }
+        .suggestion-box::-webkit-scrollbar-track { background: #444; }
+
+        .suggestion-item {
+            padding: 18px 20px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.2rem;
             font-weight: 800;
             color: var(--usps-blue);
-            box-shadow: 0 4px 0px var(--usps-blue); /* Hard shadow for "Cool" look */
         }
 
-        .list-item:active { transform: translateY(2px); box-shadow: none; }
+        #resultArea {
+            height: calc(100vh - 320px); 
+            overflow-y: auto;
+            padding: 10px 15px;
+            -webkit-overflow-scrolling: touch;
+        }
 
-        /* RESULT CARDS */
+        .scroll-spacer { height: 100px; }
+
         .result-card {
             background: white;
             border-radius: 10px;
             padding: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid #ccc;
         }
 
-        .range-display { font-size: 1.6rem; font-weight: 900; color: #000; }
-        .street-display { font-size: 0.95rem; color: #555; font-weight: 700; }
+        .range-display { font-size: 1.4rem; font-weight: 900; color: #000; }
+        .street-display { font-size: 0.85rem; color: #555; font-weight: 700; }
 
         .route-side {
             background-color: var(--usps-blue);
             color: white;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
             text-align: center;
-            min-width: 80px;
+            min-width: 70px;
         }
 
-        .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
-        .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
-
-        /* KEYBOARD BUFFER */
-        .spacer { height: 350px; } 
+        .route-side .lbl { font-size: 0.5rem; font-weight: bold; display: block; }
+        .route-side .num { font-size: 1.4rem; font-weight: 900; display: block; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <span class="usps-signature">USPS</span>
-        <div class="vancouver-text">VANCOUVER, WA</div>
-        <div class="route-finder-cool">ROUTE FINDER</div>
-    </div>
-    <div class="header-accent"></div>
+    <div class="sticky-top">
+        <div class="header">
+            <span class="usps-signature">USPS</span>
+            <div class="vancouver-text">VANCOUVER, WA</div>
+            <div class="route-finder-cool">ROUTE FINDER</div>
+        </div>
+        <div class="header-accent"></div>
 
-    <div class="sticky-controls">
         <div class="input-container">
-            <!-- FULL ZIP LIST RESTORED -->
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Zip Code</label>
@@ -190,7 +208,7 @@
                         <option value="">Select ZIP...</option>
                         <option value="98660">98660</option>
                         <option value="98661">98661</option>
-                        <option value="98662">98662 (Demo Data)</option>
+                        <option value="98662">98662 (Trial Data)</option>
                         <option value="98663">98663</option>
                         <option value="98664">98664</option>
                         <option value="98665">98665</option>
@@ -205,10 +223,10 @@
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
             </div>
 
-            <!-- STREET SEARCH -->
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Street Name</label>
+                    <div id="suggestionBox" class="suggestion-box"></div>
                     <input type="text" id="streetInput" placeholder="Start typing street..." autocomplete="off" oninput="handleSearch()">
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
@@ -216,9 +234,10 @@
         </div>
     </div>
 
-    <!-- TRIAL CONTENT AREA -->
-    <div id="mainContentArea"></div>
-    <div class="spacer"></div>
+    <div id="resultArea">
+        <div id="cardContainer"></div>
+        <div class="scroll-spacer"></div>
+    </div>
 
     <script>
         const database = {
@@ -237,51 +256,49 @@
                 { name: "189th Street", results: [
                     { range: "100-500 (Even)", route: "C001" },
                     { range: "101-499 (Odd)", route: "C002" },
-                    { range: "501-999", route: "C010" },
                     { range: "1000-1500", route: "C022" },
                     { range: "1501-2000", route: "C033" },
                     { range: "2001-2500", route: "C044" },
                     { range: "2501-3000", route: "C055" },
                     { range: "3001-3500", route: "C066" },
                     { range: "3501-4000", route: "C077" },
-                    { range: "4001-5000", route: "C099" }
+                    { range: "4001-5000", route: "C099" },
+                    { range: "5001-6000", route: "C105" }
                 ]}
             ]
         };
 
         const zipIn = document.getElementById('zipCode');
         const strIn = document.getElementById('streetInput');
-        const mainArea = document.getElementById('mainContentArea');
+        const sugBox = document.getElementById('suggestionBox');
+        const cardCont = document.getElementById('cardContainer');
 
         function handleSearch() {
             const zip = zipIn.value;
             const val = strIn.value.toLowerCase();
-            mainArea.innerHTML = "";
-            
-            if (!zip || val.length < 1) return;
-
-            // Auto-scroll header away
-            if (window.scrollY < 40) {
-                window.scrollTo({ top: 120, behavior: 'smooth' });
-            }
+            sugBox.innerHTML = "";
+            cardCont.innerHTML = "";
+            if (!zip || val.length < 1) { sugBox.style.display = "none"; return; }
 
             let matches = (database[zip] || []).filter(s => s.name.toLowerCase().startsWith(val));
             matches.sort((a, b) => a.name.length - b.name.length || a.name.localeCompare(b.name));
 
             if (matches.length > 0) {
+                sugBox.style.display = "block";
                 matches.forEach(item => {
                     const div = document.createElement('div');
-                    div.className = "list-item";
+                    div.className = "suggestion-item";
                     div.innerText = item.name;
                     div.onclick = () => selectStreet(item);
-                    mainArea.appendChild(div);
+                    sugBox.appendChild(div);
                 });
-            }
+            } else { sugBox.style.display = "none"; }
         }
 
         function selectStreet(item) {
             strIn.value = item.name;
-            mainArea.innerHTML = "";
+            sugBox.style.display = "none";
+            cardCont.innerHTML = "";
             item.results.forEach(res => {
                 const card = document.createElement('div');
                 card.className = "result-card";
@@ -295,22 +312,22 @@
                         <span class="num">${res.route}</span>
                     </div>
                 `;
-                mainArea.appendChild(card);
+                cardCont.appendChild(card);
             });
-            // Auto-hide keyboard
             document.activeElement.blur();
         }
 
         function clearStreetOnly() {
             strIn.value = "";
-            mainArea.innerHTML = "";
+            sugBox.innerHTML = "";
+            sugBox.style.display = "none";
+            cardCont.innerHTML = "";
             strIn.focus();
         }
 
         function fullAppReset() {
             zipIn.selectedIndex = 0;
             clearStreetOnly();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
