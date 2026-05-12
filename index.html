@@ -14,9 +14,7 @@
         }
 
         html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
+            margin: 0; padding: 0; height: 100%;
             background-color: var(--bg-color);
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             overflow: hidden;
@@ -28,141 +26,63 @@
         .header {
             background-color: var(--usps-blue);
             padding: 18px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
         }
 
         .usps-signature {
-            color: white;
-            font-size: 2rem;
-            font-weight: 900;
-            font-style: italic;
-            letter-spacing: -3px;
-            line-height: 0.8;
-            font-family: "Arial Black", sans-serif;
-            transform: skewX(-5deg);
+            color: white; font-size: 2rem; font-weight: 900; font-style: italic;
+            letter-spacing: -3px; line-height: 0.8; font-family: "Arial Black", sans-serif;
+            transform: skewX(-5deg); margin-bottom: 4px;
         }
 
-        .vancouver-text {
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-
-        .route-finder-cool {
-            margin-top: 2px;
-            font-size: 0.9rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--usps-yellow);
-        }
-
+        .vancouver-text { color: white; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; }
+        .route-finder-cool { margin-top: 2px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: var(--usps-yellow); }
         .header-accent { height: 6px; background-color: var(--usps-red); width: 100%; }
 
-        .sticky-controls {
-            position: sticky;
-            top: 0;
-            z-index: 3000;
-            background-color: var(--bg-color);
-            padding: 10px;
-        }
-
+        .sticky-controls { position: sticky; top: 0; z-index: 3000; background-color: var(--bg-color); padding: 10px; }
         .input-container { max-width: 450px; margin: 0 auto; position: relative; }
+        
         .input-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 12px; }
         .input-wrapper { flex: 1; position: relative; }
 
         label { display: block; margin-bottom: 3px; font-size: 0.75rem; font-weight: bold; color: #333; text-transform: uppercase; }
 
         select, input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #bbb;
-            border-radius: 8px;
-            font-size: 18px;
-            box-sizing: border-box;
-            background: white;
-            color: #000;
+            width: 100%; padding: 12px; border: 2px solid #bbb; border-radius: 8px;
+            font-size: 18px; box-sizing: border-box; background: white; color: #000;
         }
+        input:disabled { background: #eee; cursor: not-allowed; border-color: #ddd; }
 
         .btn-action { height: 48px; width: 90px; border-radius: 8px; border: none; font-weight: 900; font-size: 0.6rem; text-transform: uppercase; }
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
         .suggestion-box {
-            background: #e5e5e5; 
-            border: 2px solid var(--usps-blue); 
-            border-top: none;
-            border-radius: 0 0 12px 12px;
-            height: 235px; 
-            max-height: 235px; 
-            overflow-y: auto;
-            display: none;
-            position: absolute;
-            top: 100%; 
-            left: 0;
-            right: 0;
-            z-index: 9999;
-            padding: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: #e5e5e5; border: 2px solid var(--usps-blue); border-top: none;
+            border-radius: 0 0 12px 12px; height: 235px; max-height: 235px; overflow-y: auto;
+            display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999;
+            padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .suggestion-item {
-            height: 48px; 
-            padding: 0 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            margin-bottom: 4px; 
-            border-radius: 6px;
-            border-bottom: 2px solid #ccc; 
-            font-size: 1.1rem;
-            font-weight: 900;
-            color: var(--usps-blue);
-            box-sizing: border-box;
+            height: 48px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center;
+            background: white; margin-bottom: 4px; border-radius: 6px; border-bottom: 2px solid #ccc;
+            font-size: 1.1rem; font-weight: 900; color: var(--usps-blue); box-sizing: border-box;
         }
 
-        .zip-badge-small {
-            font-size: 0.7rem;
-            background: var(--usps-blue);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
+        .zip-badge-small { font-size: 0.7rem; background: var(--usps-blue); color: white; padding: 2px 6px; border-radius: 4px; }
         .suggestion-item:active { background: var(--usps-yellow); }
 
         #resultArea { padding: 10px 15px; height: calc(100vh - 150px); overflow-y: auto; }
         .result-card {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #ccc;
+            background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc;
         }
 
         .card-left { flex: 1; }
-        .zip-tag { 
-            display: inline-block;
-            font-size: 0.7rem; 
-            font-weight: 800; 
-            background: var(--usps-blue); 
-            color: white; 
-            padding: 2px 8px; 
-            border-radius: 4px;
-            margin-bottom: 5px;
-        }
-        .range-display { font-size: 1.5rem; font-weight: 900; color: #000; display: block; }
+        .zip-tag { display: inline-block; font-size: 0.7rem; font-weight: 800; background: var(--usps-blue); color: white; padding: 2px 8px; border-radius: 4px; margin-bottom: 5px; }
+        .range-display { font-size: 1.5rem; font-weight: 900; display: block; }
         .street-display { font-size: 0.8rem; color: #666; font-weight: bold; }
-
         .route-side { background-color: var(--usps-blue); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 80px; }
         .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
         .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
@@ -183,9 +103,10 @@
         <div class="input-container">
             <div class="input-row">
                 <div class="input-wrapper">
-                    <label>Zip Code</label>
+                    <label>1. Zip Code</label>
                     <select id="zipCode" onchange="handleZipChange()">
-                        <option value="">Search All ZIPs</option>
+                        <option value="">Select a Zip...</option>
+                        <option value="ALL">--- ALL ZIPs ---</option>
                         <option value="98660">98660</option>
                         <option value="98661">98661</option>
                         <option value="98662">98662</option>
@@ -205,8 +126,8 @@
 
             <div class="input-row">
                 <div class="input-wrapper">
-                    <label>Street Name</label>
-                    <input type="text" id="streetInput" placeholder="Start typing street..." autocomplete="off" oninput="handleSearch()" onfocus="enterFocus()" onblur="exitFocus()">
+                    <label>2. Street Name</label>
+                    <input type="text" id="streetInput" placeholder="Select ZIP first..." disabled autocomplete="off" oninput="handleSearch()" onfocus="enterFocus()" onblur="exitFocus()">
                     <div id="suggestionBox" class="suggestion-box"></div>
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
@@ -228,22 +149,7 @@
                 { name: "182nd Street", results: [{ range: "18200-18299", route: "C082" }] },
                 { name: "183rd Street", results: [{ range: "18300-18399", route: "C083" }] },
                 { name: "184th Street", results: [{ range: "18400-18499", route: "C084" }] },
-                { name: "185th Circle", results: [{ range: "18500-18599", route: "C085" }] },
-                { name: "186th Avenue", results: [{ range: "18600-18699", route: "C086" }] },
-                { name: "187th Avenue", results: [{ range: "18700-18799", route: "C087" }] },
-                { name: "188th Street", results: [{ range: "18800-18899", route: "C088" }] },
-                { name: "189th Street", results: [
-                    { range: "100-500", route: "C001" },
-                    { range: "501-999", route: "C010" },
-                    { range: "1000-1500", route: "C022" },
-                    { range: "1501-2000", route: "C033" },
-                    { range: "2001-2500", route: "C044" },
-                    { range: "2501-3000", route: "C055" },
-                    { range: "3001-3500", route: "C066" },
-                    { range: "3501-4000", route: "C077" },
-                    { range: "4001-5000", route: "C099" },
-                    { range: "5001-6000", route: "C105" }
-                ]}
+                { name: "189th Street", results: [{ range: "100-500", route: "C001" }, { range: "1000-2000", route: "C022" }, { range: "4001-5000", route: "C099" }] }
             ],
             "98682": [{ name: "Main Street", results: [{ range: "1000-2000", route: "C042" }] }],
             "98684": [{ name: "189th Avenue", results: [{ range: "200-800", route: "C084" }] }],
@@ -255,19 +161,29 @@
         const sugBox = document.getElementById('suggestionBox');
         const cardCont = document.getElementById('cardContainer');
 
+        function handleZipChange() {
+            if(zipIn.value !== "") {
+                strIn.disabled = false;
+                strIn.placeholder = "Start typing street...";
+                strIn.focus();
+                if(strIn.value !== "") handleSearch();
+            } else {
+                strIn.disabled = true;
+                strIn.placeholder = "Select ZIP first...";
+            }
+        }
+
         function enterFocus() { document.body.classList.add('searching'); }
         function exitFocus() { setTimeout(() => { if(strIn.value === "") document.body.classList.remove('searching'); }, 200); }
-        function handleZipChange() { strIn.focus(); if(strIn.value !== "") handleSearch(); }
 
         function handleSearch() {
             const selectedZip = zipIn.value;
             const val = strIn.value.toLowerCase();
-            sugBox.innerHTML = "";
-            cardCont.innerHTML = "";
+            sugBox.innerHTML = ""; cardCont.innerHTML = "";
             if (val.length < 1) { sugBox.style.display = "none"; return; }
 
             let allMatches = [];
-            const zipsToSearch = selectedZip ? [selectedZip] : Object.keys(database);
+            const zipsToSearch = (selectedZip === "ALL") ? Object.keys(database) : [selectedZip];
 
             zipsToSearch.forEach(zip => {
                 if(database[zip]) {
@@ -281,8 +197,8 @@
                 allMatches.forEach(item => {
                     const div = document.createElement('div');
                     div.className = "suggestion-item";
-                    const zipBadge = selectedZip ? "" : `<span class="zip-badge-small">${item.zip}</span>`;
-                    div.innerHTML = `<span>${item.name}</span> ${zipBadge}`;
+                    const badge = (selectedZip === "ALL") ? `<span class="zip-badge-small">${item.zip}</span>` : "";
+                    div.innerHTML = `<span>${item.name}</span> ${badge}`;
                     div.onclick = () => selectStreet(item);
                     sugBox.appendChild(div);
                 });
@@ -292,25 +208,22 @@
         function selectStreet(item) {
             strIn.value = item.name;
             sugBox.style.display = "none";
-            cardCont.innerHTML = "";
             item.results.forEach(res => {
                 const card = document.createElement('div');
                 card.className = "result-card";
-                card.innerHTML = `
-                    <div class="card-left">
-                        <span class="zip-tag">ZIP: ${item.zip}</span>
-                        <span class="range-display">${res.range}</span>
-                        <span class="street-display">${item.name}</span>
-                    </div>
-                    <div class="route-side"><span class="lbl">ROUTE</span><span class="num">${res.route}</span></div>
-                `;
+                card.innerHTML = `<div class="card-left"><span class="zip-tag">ZIP: ${item.zip}</span><span class="range-display">${res.range}</span><span class="street-display">${item.name}</span></div><div class="route-side"><span class="lbl">ROUTE</span><span class="num">${res.route}</span></div>`;
                 cardCont.appendChild(card);
             });
             document.activeElement.blur();
         }
 
-        function clearStreetOnly() { strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; document.body.classList.remove('searching'); strIn.focus(); }
-        function fullAppReset() { zipIn.selectedIndex = 0; clearStreetOnly(); document.body.classList.remove('searching'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        function clearStreetOnly() { strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; strIn.focus(); }
+        function fullAppReset() { 
+            zipIn.selectedIndex = 0; strIn.disabled = true; strIn.value = ""; 
+            strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; 
+            cardCont.innerHTML = ""; document.body.classList.remove('searching');
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }
     </script>
 </body>
 </html>
