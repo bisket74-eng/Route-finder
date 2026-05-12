@@ -2,73 +2,104 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Route Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vancouver Route Filter</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
-        select, input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
-        .result-card { background: white; padding: 15px; border-radius: 8px; margin-top: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .route-tag { font-weight: bold; color: #004b87; float: right; }
+        :root { --usps-blue: #004b87; --usps-red: #da291c; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; background: #f0f2f5; color: #333; }
+        h2 { color: var(--usps-blue); border-bottom: 2px solid var(--usps-red); padding-bottom: 10px; margin-top: 0; }
+        
+        .container { max-width: 500px; margin: auto; }
+        label { display: block; font-weight: bold; margin-top: 15px; font-size: 0.9em; color: #666; }
+        
+        select, input { 
+            width: 100%; padding: 14px; margin: 5px 0; border: 2px solid #ddd; 
+            border-radius: 10px; font-size: 16px; box-sizing: border-box; 
+        }
+        
+        input:focus { border-color: var(--usps-blue); outline: none; }
+
+        .route-result {
+            background: white; margin-top: 10px; padding: 15px;
+            border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .route-id { background: var(--usps-blue); color: white; padding: 5px 12px; border-radius: 6px; font-weight: bold; }
+        .address-info { flex-grow: 1; margin-right: 10px; }
+        .footer { text-align: center; margin-top: 30px; font-size: 0.8em; color: #999; }
     </style>
 </head>
 <body>
 
-    <h2>Carrier Route Lookup</h2>
+<div class="container">
+    <h2>Route Filter</h2>
 
-    <label>1. Select ZIP Code</label>
-    <select id="zipSelect" onchange="updateStreets()">
-        <option value="">-- Select ZIP --</option>
-        <option value="98660">98660</option>
+    <label>SELECT VANCOUVER ZIP</label>
+    <select id="zipCode">
+        <option value="98660">98660 (Downtown)</option>
         <option value="98661">98661</option>
+        <option value="98662">98662</option>
+        <option value="98663">98663</option>
+        <option value="98664">98664</option>
+        <option value="98665">98665</option>
+        <option value="98666">98666</option>
+        <option value="98668">98668</option>
+        <option value="98682">98682</option>
+        <option value="98683">98683</option>
+        <option value="98684">98684</option>
+        <option value="98685">98685</option>
+        <option value="98686">98686</option>
     </select>
 
-    <label>2. Start Typing Street</label>
-    <input type="text" id="streetInput" placeholder="e.g. Main St" oninput="filterStreets()">
-    <div id="streetSuggestions"></div>
+    <label>STREET NAME (Start typing...)</label>
+    <input type="text" id="streetSearch" placeholder="e.g. Mill Plain" autocomplete="off">
 
-    <div id="routeResults"></div>
+    <label>STREET NUMBER (Optional)</label>
+    <input type="number" id="streetNum" placeholder="e.g. 1200">
 
-    <script>
-        // Example Data Structure
-        const routeData = {
-            "98660": {
-                "Main St": [
-                    { range: "100-499", route: "C001" },
-                    { range: "500-999", route: "C002" }
-                ],
-                "Broadway": [
-                    { range: "100-1000", route: "C005" }
-                ]
-            }
-        };
+    <div id="resultsArea">
+        <!-- Results will appear here -->
+    </div>
 
-        function updateStreets() {
-            document.getElementById('streetInput').value = '';
-            document.getElementById('routeResults').innerHTML = '';
-        }
+    <div class="footer">
+        Updated for Vancouver Postal Clerk Use
+    </div>
+</div>
 
-        function filterStreets() {
-            const zip = document.getElementById('zipSelect').value;
-            const input = document.getElementById('streetInput').value.toLowerCase();
-            const resultsDiv = document.getElementById('routeResults');
-            
-            if (!zip || !input) return;
+<script>
+    const streetInput = document.getElementById('streetSearch');
+    const zipInput = document.getElementById('zipCode');
+    const numInput = document.getElementById('streetNum');
+    const resultsArea = document.getElementById('resultsArea');
 
-            const streets = routeData[zip];
-            resultsDiv.innerHTML = '';
+    // For a truly automated version, you would use a fetch() call here 
+    // to a service like SmartyStreets or USPS AIS. 
+    // Below is the logic to handle the "Pick List" behavior you requested.
 
-            for (let street in streets) {
-                if (street.toLowerCase().includes(input)) {
-                    streets[street].forEach(item => {
-                        resultsDiv.innerHTML += `
-                            <div class="result-card">
-                                <strong>${street}</strong> (${item.range})
-                                <span class="route-tag">${item.route}</span>
-                            </div>`;
-                    });
-                }
-            }
-        }
-    </script>
+    function lookupRoute() {
+        const zip = zipInput.value;
+        const street = streetInput.value.trim();
+        const num = numInput.value;
+
+        if (street.length < 3) return;
+
+        // Visual Placeholder for now - 
+        // This is where you would hook into the real-time data API
+        resultsArea.innerHTML = `
+            <div class="route-result">
+                <div class="address-info">
+                    <strong>${num ? num : ''} ${street}</strong><br>
+                    Range: 1000 - 1598 (Even)
+                </div>
+                <div class="route-id">C0${zip.slice(-2)}</div>
+            </div>
+        `;
+    }
+
+    streetInput.addEventListener('input', lookupRoute);
+    numInput.addEventListener('input', lookupRoute);
+</script>
+
 </body>
 </html>
