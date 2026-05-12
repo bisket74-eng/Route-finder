@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- CRITICAL: This line tells the phone NOT to zoom out -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vancouver Route Finder</title>
     <style>
@@ -10,195 +9,175 @@
             --usps-blue: #004b87;
             --usps-red: #da291c;
             --usps-yellow: #ffde00;
-            --bg-color: #f4f7f9;
+            --bg-color: #ffffff;
         }
 
-        /* Prevent the phone from bouncing or zooming in on inputs */
+        /* Lock the screen to prevent any weird zooming or scrolling */
         html, body {
-            overflow-x: hidden;
             width: 100%;
-            position: relative;
-            background-color: var(--bg-color);
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg-color);
+            font-family: "Arial Black", Gadget, sans-serif;
+            -webkit-text-size-adjust: 100%;
         }
 
-        /* HEADER SECTION */
+        /* GIANT TOP THIRD HEADER */
         .header {
             background-color: var(--usps-blue);
-            padding: 20px 0;
+            height: 30vh; /* Takes up nearly 1/3 of the screen */
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .logo-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .usps-eagle { height: 45px; margin-right: 10px; }
+        .usps-eagle { height: 80px; margin-bottom: 10px; }
 
         .usps-signature {
             color: white;
-            font-size: 2.5rem;
+            font-size: 4rem; /* Massive USPS Text */
             font-weight: 900;
             font-style: italic;
-            letter-spacing: -3px;
+            letter-spacing: -5px;
             line-height: 0.8;
-            font-family: "Arial Black", sans-serif;
             transform: skewX(-5deg);
         }
 
         .header h1 {
             color: white;
-            margin: 8px 0 0 0;
-            font-size: 0.8rem;
+            margin: 15px 0 0 0;
+            font-size: 1.2rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            opacity: 0.8;
         }
 
         .header-accent {
-            height: 6px;
+            height: 12px;
             background-color: var(--usps-red);
             width: 100%;
         }
 
-        /* MAIN APP AREA */
+        /* LARGE SEARCH AREA */
         .container {
-            width: 92%; /* Uses most of the phone width */
-            max-width: 500px;
-            margin: 15px auto;
+            padding: 20px;
             box-sizing: border-box;
         }
 
         .input-row {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: flex-end;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             position: relative;
-            width: 100%;
         }
 
-        .input-wrapper {
-            flex: 1;
-            position: relative;
-        }
+        .input-wrapper { flex: 1; position: relative; }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #444;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #111;
             text-transform: uppercase;
         }
 
-        /* LARGER INPUTS FOR MOBILE FINGERS */
+        /* INPUTS - Set to 20px to stop auto-zoom */
         select, input {
             width: 100%;
-            padding: 16px;
-            border: 2px solid #bbb;
-            border-radius: 12px;
-            font-size: 18px; /* 18px prevents iOS from auto-zooming on focus */
-            box-sizing: border-box;
+            padding: 20px;
+            border: 3px solid #000;
+            border-radius: 15px;
+            font-size: 20px; 
+            font-weight: bold;
             background: white;
             color: #000;
         }
 
-        /* LARGE ROUND BUTTONS */
+        /* EXTRA LARGE CIRCLE BUTTONS */
         .btn-circle {
-            width: 68px;
-            height: 68px;
+            width: 85px;
+            height: 85px;
             border-radius: 50%;
-            border: none;
+            border: 4px solid #000;
             font-weight: 900;
-            font-size: 0.6rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            flex-shrink: 0;
+            font-size: 0.8rem;
+            box-shadow: 0 6px 0px #000;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             text-transform: uppercase;
             line-height: 1.1;
+            cursor: pointer;
         }
 
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
+        .btn-circle:active { transform: translateY(4px); box-shadow: none; }
 
-        /* GIANT PICK LIST ITEMS FOR MOBILE */
+        /* PICK LIST - HUGE FOR MOBILE */
         .suggestion-box {
             background: white;
-            border: 3px solid var(--usps-blue);
-            border-radius: 15px;
-            max-height: 250px;
+            border: 4px solid var(--usps-blue);
+            border-radius: 20px;
+            max-height: 300px;
             overflow-y: auto;
             display: none;
             position: absolute;
-            bottom: 105%; /* Pops up ABOVE the keyboard */
+            bottom: 110%; /* Above the input */
             left: 0;
             right: 0;
-            box-shadow: 0 -8px 25px rgba(0,0,0,0.3);
             z-index: 9999;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.4);
         }
 
         .suggestion-item {
-            padding: 20px; /* Big touch target */
-            border-bottom: 1px solid #eee;
-            font-size: 1.1rem;
-            font-weight: 800;
+            padding: 25px;
+            border-bottom: 2px solid #eee;
+            font-size: 1.5rem; /* Huge text */
+            font-weight: 900;
             color: var(--usps-blue);
         }
 
-        .suggestion-item:active {
-            background-color: #f0f0f0;
-        }
-
-        /* RESULT CARDS */
+        /* BIG RESULT CARDS */
         .result-card {
             background: white;
-            border-radius: 15px;
-            padding: 18px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            margin-top: 10px;
+            border: 4px solid #000;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #ddd;
         }
 
-        .range-display { font-size: 1.7rem; font-weight: 900; color: #000; }
-        .street-display { font-size: 1rem; color: #555; font-weight: 700; margin-top: 2px; }
+        .range-display { font-size: 2.2rem; font-weight: 900; color: #000; }
+        .street-display { font-size: 1.2rem; font-weight: 700; color: #444; margin-top: 5px; }
 
         .route-side {
             background-color: var(--usps-blue);
             color: white;
-            padding: 10px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 15px;
             text-align: center;
-            min-width: 75px;
+            min-width: 100px;
         }
 
-        .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; margin-bottom: 2px; }
-        .route-side .num { font-size: 1.7rem; font-weight: 900; display: block; }
+        .route-side .lbl { font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 5px; }
+        .route-side .num { font-size: 2.5rem; font-weight: 900; display: block; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo-row">
-            <svg class="usps-eagle" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-                <path fill="white" d="M90.5,10.2c-5.8-2.1-12.1-3.2-18.6-3.2c-15.5,0-29.2,10.3-34,24.7c-2.3,6.8-2.4,13.8-0.6,20.4 C32.9,41,47.5,29.6,64.3,29.6c3.2,0,6.3,0.3,9.4,0.9l0.4-1.9c-3.1-0.6-6.3-0.9-9.5-0.9c-23,0-42.5,15.6-48.5,36.8 c-3.5,12.2-1.9,25.2,4.4,36c-1.3-0.7-2.7-1.5-3.8-2.5C7.2,83.3,4.7,65.5,9.4,48.8C16.6,23.4,40.2,4.7,68,4.7 c13,0,25.7,1.7,37.3,4.9c1.8,6,1.8,12.5,0,18.6C95.9,24.8,86,23.1,76,23.1c-5.4,0-10.7,0.5-15.9,1.5l-0.1,1.9 c5.2-1.1,10.6-1.7,16-1.7c9.7,0,19.3,1.8,28.2,5.2c1.1,4.7,1.1,9.7,0,14.4c-6-2.6-12.5-3.9-19.1-3.9c-5.3,0-10.5,0.5-15.5,1.5 l0.4,2c4.4-1.3,9-1.9,13.6-1.9c5.1,0,10.1,0.8,14.9,2.2c1.3,3.8,1.8,7.8,1.5,11.8C92.1,51.8,85.3,48.8,78,47.5 c-3.7,1.9-7,4.5-9.4,7.5c8.6,0.5,16.8,2.8,24.3,6.7c0.9,3.8,1.1,7.7,0.6,11.6c-6-4.3-12.8-7.3-20.1-8.6 c-2.9,1.9-5.3,4.5-6.9,7.5c6.7,0.9,13.1,2.9,18.8,6c0.3,3.4,0,6.8-1,10.1c-4.9-3.6-10.5-6.4-16.5-8.2 c-2.1,2.5-3.6,5.5-4.3,8.8c5.8,1.6,11.2,4.2,15.9,7.8c0,3.3-0.5,6.5-1.6,9.5c-3.6-3.4-7.8-6.2-12.4-8.2 c0.4,6.7-1.9,13.3-6.4,18.4c-5.6,6.4-13.8,10.1-22.3,10.1c-5.6,0-11.1-1.6-15.8-4.7c3.2,0.8,6.4,1.3,9.7,1.5 c-3.8-2.2-6.8-5.7-8.2-9.9c-4-1.2-8.1-1.8-12.3-1.8c-6.1,0-12.1,1.3-17.6,3.9c-3.9-0.3-7.7-1.1-11.2-2.3 c8.7-4.2,18.3-6.5,28.3-6.5c4.1,0,8.1,0.3,12.1,1c-1.9-5-1.7-10.5,0.6-15.4c-4.4-1.2-9-1.8-13.6-1.8 c-5.4,0-10.7,0.9-15.8,2.6c-2.5-0.6-4.9-1.4-7.1-2.4c7.2-2.7,15-4.1,22.9-4.1c4.8,0,9.6,0.5,14.2,1.5 c-0.1-3,0.5-6,1.8-8.7c-5.2-1.4-10.7-2.1-16.2-2.1c-5.1,0-10.1,0.7-14.8,2c-1.5-0.5-3-1.1-4.3-1.8 c6.1-1.9,12.6-2.8,19.1-2.8c5.8,0,11.6,0.8,17.1,2.3c0.3-1.5,0.9-2.9,1.6-4.3c-6.1-2-12.5-3.1-18.9-3.1 c-4.9,0-9.7,0.6-14.4,1.9c-0.9-0.6-1.7-1.2-2.4-1.9c5.6-1.6,11.4-2.4,17.2-2.4c6.9,0,13.8,1.1,20.4,3.2 c0.4-1.2,0.9-2.3,1.5-3.4c-7.1-2.5-14.6-3.8-22.2-3.8c-4.2,0-8.3,0.4-12.2,1.2c-0.5-0.6-1-1.3-1.4-1.9 c4.4-0.9,9-1.3,13.6-1.3c8.1,0,16.2,1.3,23.8,4c0.4-1,1-2.1,1.6-3.1c-8.1-3.1-16.9-4.7-25.8-4.7 c-3.2,0-6.3,0.2-9.4,0.6c-0.2-0.6-0.4-1.3-0.5-1.9c3.2-0.5,6.5-0.7,9.8-0.7c9.7,0,19.3,1.8,28.1,5.2 c1.2-1.1,2.4-2.1,3.7-3c-3.8-1.3-7.8-2.1-11.8-2.5c1.2-1.1,2.4-2.1,3.7-3c4.3,0.4,8.6,1.2,12.7,2.5 C93.5,10.9,92,11.9,90.5,10.2z"/>
-            </svg>
-            <span class="usps-signature">USPS</span>
-        </div>
+        <svg class="usps-eagle" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+            <path fill="white" d="M90.5,10.2c-5.8-2.1-12.1-3.2-18.6-3.2c-15.5,0-29.2,10.3-34,24.7c-2.3,6.8-2.4,13.8-0.6,20.4 C32.9,41,47.5,29.6,64.3,29.6c3.2,0,6.3,0.3,9.4,0.9l0.4-1.9c-3.1-0.6-6.3-0.9-9.5-0.9c-23,0-42.5,15.6-48.5,36.8 c-3.5,12.2-1.9,25.2,4.4,36c-1.3-0.7-2.7-1.5-3.8-2.5C7.2,83.3,4.7,65.5,9.4,48.8C16.6,23.4,40.2,4.7,68,4.7 c13,0,25.7,1.7,37.3,4.9c1.8,6,1.8,12.5,0,18.6C95.9,24.8,86,23.1,76,23.1c-5.4,0-10.7,0.5-15.9,1.5l-0.1,1.9 c5.2-1.1,10.6-1.7,16-1.7c9.7,0,19.3,1.8,28.2,5.2c1.1,4.7,1.1,9.7,0,14.4c-6-2.6-12.5-3.9-19.1-3.9c-5.3,0-10.5,0.5-15.5,1.5 l0.4,2c4.4-1.3,9-1.9,13.6-1.9c5.1,0,10.1,0.8,14.9,2.2c1.3,3.8,1.8,7.8,1.5,11.8C92.1,51.8,85.3,48.8,78,47.5 c-3.7,1.9-7,4.5-9.4,7.5c8.6,0.5,16.8,2.8,24.3,6.7c0.9,3.8,1.1,7.7,0.6,11.6c-6-4.3-12.8-7.3-20.1-8.6 c-2.9,1.9-5.3,4.5-6.9,7.5c6.7,0.9,13.1,2.9,18.8,6c0.3,3.4,0,6.8-1,10.1c-4.9-3.6-10.5-6.4-16.5-8.2 c-2.1,2.5-3.6,5.5-4.3,8.8c5.8,1.6,11.2,4.2,15.9,7.8c0,3.3-0.5,6.5-1.6,9.5c-3.6-3.4-7.8-6.2-12.4-8.2 c0.4,6.7-1.9,13.3-6.4,18.4c-5.6,6.4-13.8,10.1-22.3,10.1c-5.6,0-11.1-1.6-15.8-4.7c3.2,0.8,6.4,1.3,9.7,1.5 c-3.8-2.2-6.8-5.7-8.2-9.9c-4-1.2-8.1-1.8-12.3-1.8c-6.1,0-12.1,1.3-17.6,3.9c-3.9-0.3-7.7-1.1-11.2-2.3 c8.7-4.2,18.3-6.5,28.3-6.5c4.1,0,8.1,0.3,12.1,1c-1.9-5-1.7-10.5,0.6-15.4c-4.4-1.2-9-1.8-13.6-1.8 c-5.4,0-10.7,0.9-15.8,2.6c-2.5-0.6-4.9-1.4-7.1-2.4c7.2-2.7,15-4.1,22.9-4.1c4.8,0,9.6,0.5,14.2,1.5 c-0.1-3,0.5-6,1.8-8.7c-5.2-1.4-10.7-2.1-16.2-2.1c-5.1,0-10.1,0.7-14.8,2c-1.5-0.5-3-1.1-4.3-1.8 c6.1-1.9,12.6-2.8,19.1-2.8c5.8,0,11.6,0.8,17.1,2.3c0.3-1.5,0.9-2.9,1.6-4.3c-6.1-2-12.5-3.1-18.9-3.1 c-4.9,0-9.7,0.6-14.4,1.9c-0.9-0.6-1.7-1.2-2.4-1.9c5.6-1.6,11.4-2.4,17.2-2.4c6.9,0,13.8,1.1,20.4,3.2 c0.4-1.2,0.9-2.3,1.5-3.4c-7.1-2.5-14.6-3.8-22.2-3.8c-4.2,0-8.3,0.4-12.2,1.2c-0.5-0.6-1-1.3-1.4-1.9 c4.4-0.9,9-1.3,13.6-1.3c8.1,0,16.2,1.3,23.8,4c0.4-1,1-2.1,1.6-3.1c-8.1-3.1-16.9-4.7-25.8-4.7 c-3.2,0-6.3,0.2-9.4,0.6c-0.2-0.6-0.4-1.3-0.5-1.9c3.2-0.5,6.5-0.7,9.8-0.7c9.7,0,19.3,1.8,28.1,5.2 c1.2-1.1,2.4-2.1,3.7-3c-3.8-1.3-7.8-2.1-11.8-2.5c1.2-1.1,2.4-2.1,3.7-3c4.3,0.4,8.6,1.2,12.7,2.5 C93.5,10.9,92,11.9,90.5,10.2z"/>
+        </svg>
+        <span class="usps-signature">USPS</span>
         <h1>Vancouver Route Finder</h1>
     </div>
     <div class="header-accent"></div>
@@ -209,28 +188,22 @@
             <div class="input-wrapper">
                 <label>Zip Code</label>
                 <select id="zipCode" onchange="clearStreetOnly()">
-                    <option value="">Select ZIP...</option>
-                    <option value="98662">98662 (Demo)</option>
-                    <option value="98660">98660</option>
+                    <option value="">Choose ZIP...</option>
+                    <option value="98662">98662</option>
                     <option value="98661">98661</option>
-                    <option value="98663">98663</option>
-                    <option value="98664">98664</option>
-                    <option value="98665">98665</option>
-                    <option value="98682">98682</option>
                 </select>
             </div>
-            <button class="btn-circle reset-all" onclick="fullAppReset()">RESET ALL</button>
+            <button class="btn-circle reset-all" onclick="fullAppReset()">Reset<br>All</button>
         </div>
 
         <!-- STREET ROW -->
         <div class="input-row">
             <div class="input-wrapper">
                 <label>Street Name</label>
-                <!-- SUGGESTION BOX ABOVE -->
                 <div id="suggestionBox" class="suggestion-box"></div>
                 <input type="text" id="streetInput" placeholder="Start typing..." autocomplete="off" oninput="handleSearch()">
             </div>
-            <button class="btn-circle reset-street" onclick="clearStreetOnly()">RESET STREET</button>
+            <button class="btn-circle reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
         </div>
 
         <div id="resultArea"></div>
@@ -257,14 +230,8 @@
             const val = strIn.value.toLowerCase();
             sugBox.innerHTML = "";
             resArea.innerHTML = "";
-
-            if (!zip || val.length < 1) {
-                sugBox.style.display = "none";
-                return;
-            }
-
+            if (!zip || val.length < 1) { sugBox.style.display = "none"; return; }
             const matches = (database[zip] || []).filter(s => s.name.toLowerCase().startsWith(val));
-
             if (matches.length > 0) {
                 sugBox.style.display = "block";
                 matches.forEach(item => {
@@ -274,9 +241,7 @@
                     div.onclick = () => selectStreet(item);
                     sugBox.appendChild(div);
                 });
-            } else {
-                sugBox.style.display = "none";
-            }
+            } else { sugBox.style.display = "none"; }
         }
 
         function selectStreet(item) {
