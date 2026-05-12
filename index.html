@@ -48,7 +48,6 @@
 
         .suggestion-item { height: 48px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; background: white; margin-bottom: 4px; border-radius: 6px; border-bottom: 2px solid #ccc; font-size: 1.1rem; font-weight: 900; color: var(--usps-blue); }
         
-        /* UPDATED ZIP BADGE STYLE */
         .zip-badge-small { 
             font-size: 0.9rem; 
             font-weight: 900; 
@@ -60,8 +59,9 @@
             letter-spacing: 0.5px;
         }
         
+        /* THE FIX: MASSIVE 350px CUSHION TO PREVENT CUTOFFS */
         #resultArea { 
-            padding: 20px 15px 250px 15px; 
+            padding: 20px 15px 350px 15px; 
             height: calc(100vh - 160px); 
             overflow-y: auto; 
             position: relative;
@@ -72,7 +72,6 @@
         .result-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card-left { flex: 1; }
         
-        /* ZIP BADGE IN RESULTS CARD */
         .zip-tag { 
             display: inline-block; 
             font-size: 0.9rem; 
