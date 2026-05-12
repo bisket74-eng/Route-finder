@@ -20,63 +20,56 @@
             -webkit-text-size-adjust: 100%;
         }
 
-        /* TIGHTER HEADER */
+        /* LARGER, CLEANER BANNER */
         .header {
             background-color: var(--usps-blue);
-            padding: 15px 10px;
+            padding: 35px 15px; /* Increased padding for bigger banner */
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-        }
-
-        /* Authentic Sonic Eagle SVG */
-        .usps-eagle {
-            height: 35px;
-            margin-right: 10px;
-            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .usps-signature {
             color: white;
-            font-size: 2.2rem;
+            font-size: 3.5rem; /* Big USPS Letters */
             font-weight: 900;
             font-style: italic;
-            letter-spacing: -3px;
-            line-height: 1;
+            letter-spacing: -4px;
+            line-height: 0.8;
             font-family: "Arial Black", sans-serif;
-            margin-right: 10px;
+            transform: skewX(-5deg);
         }
 
         .header h1 {
             color: white;
-            margin: 0;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
+            margin: 15px 0 0 0;
+            font-size: 1rem;
+            letter-spacing: 2px;
             font-weight: 700;
             text-transform: uppercase;
-            border-left: 1px solid rgba(255,255,255,0.3);
-            padding-left: 10px;
+            opacity: 0.9;
         }
 
         .header-accent {
-            height: 5px;
+            height: 8px;
             background-color: var(--usps-red);
             width: 100%;
+            margin-bottom: 30px; /* Moves content down further */
         }
 
         .container {
             padding: 15px;
             max-width: 450px;
-            margin: 10px auto 0;
+            margin: 0 auto;
         }
 
-        /* COMPACT ROWS */
         .input-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: flex-end;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             position: relative;
         }
 
@@ -84,100 +77,97 @@
 
         label {
             display: block;
-            margin-bottom: 4px;
-            font-size: 0.75rem;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
             font-weight: bold;
-            color: #555;
+            color: #333;
             text-transform: uppercase;
         }
 
         select, input {
             width: 100%;
-            padding: 12px;
+            padding: 16px;
             border: 2px solid #bbb;
-            border-radius: 8px;
-            font-size: 16px; /* Prevents zoom */
+            border-radius: 10px;
+            font-size: 18px; /* High visibility, no zoom */
             box-sizing: border-box;
             background: white;
+            color: #000;
         }
 
-        /* SMALLER ACTION BUTTONS */
+        /* BUTTONS */
         .btn-action {
-            height: 48px;
-            width: 80px;
-            border-radius: 8px;
+            height: 55px;
+            width: 90px;
+            border-radius: 10px;
             border: none;
-            font-weight: 800;
-            font-size: 0.65rem;
+            font-weight: 900;
+            font-size: 0.7rem;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            line-height: 1.1;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            line-height: 1.2;
         }
 
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* SUGGESTION BOX FIX */
+        /* GIANT SUGGESTION BOX - FLOATS ABOVE */
         .suggestion-box {
             background: white;
-            border: 2px solid var(--usps-blue);
-            border-radius: 8px;
-            max-height: 200px;
+            border: 3px solid var(--usps-blue);
+            border-radius: 12px;
+            max-height: 250px;
             overflow-y: auto;
             display: none;
             position: absolute;
-            bottom: 100%; /* Float above the input */
+            bottom: 105%; 
             left: 0;
             right: 0;
             z-index: 5000;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 -8px 20px rgba(0,0,0,0.2);
         }
 
         .suggestion-item {
-            padding: 15px;
+            padding: 20px;
             border-bottom: 1px solid #eee;
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 800;
             color: var(--usps-blue);
         }
 
-        /* RESULTS */
+        /* RESULT CARDS */
         .result-card {
             background: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-top: 10px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            margin-top: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
         }
 
-        .range-display { font-size: 1.5rem; font-weight: 900; color: #000; }
-        .street-display { font-size: 0.9rem; color: #666; font-weight: 600; }
+        .range-display { font-size: 1.8rem; font-weight: 900; color: #000; }
+        .street-display { font-size: 1rem; color: #555; font-weight: 700; margin-top: 4px; }
 
         .route-side {
             background-color: var(--usps-blue);
             color: white;
-            padding: 6px 10px;
-            border-radius: 6px;
+            padding: 10px;
+            border-radius: 10px;
             text-align: center;
-            min-width: 60px;
+            min-width: 80px;
         }
 
-        .route-side .lbl { font-size: 0.5rem; font-weight: bold; display: block; }
-        .route-side .num { font-size: 1.4rem; font-weight: 900; display: block; }
+        .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
+        .route-side .num { font-size: 1.8rem; font-weight: 900; display: block; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <!-- New Sonic Eagle SVG -->
-        <svg class="usps-eagle" viewBox="0 0 50 32" xmlns="http://www.w3.org/2000/svg">
-            <path fill="white" d="M48.7,11.5c-2.1-0.7-4.3-1.1-6.5-1.3c-0.7,0.5-1.3,1-1.9,1.5c2.1,0.2,4.1,0.6,6.1,1.3C47.2,12.5,48,12,48.7,11.5z M11.8,21.8 c0-5.6,4.1-10.3,9.6-11.1c-0.1-0.3-0.1-0.7-0.1-1c-6.2,0.8-11,6.2-11,12.7c0,7,5.7,12.8,12.8,12.8c1.8,0,3.6-0.4,5.2-1.1 c-0.8-0.6-1.5-1.2-2.1-1.9c-0.9,0.3-1.9,0.5-3,0.5C16.9,32.5,11.8,27.7,11.8,21.8z M42.1,17.4c-4.5-1.7-9.4-2.7-14.4-2.7 c-1.7,0-3.4,0.1-5,0.4c0.1,0.3,0.2,0.7,0.3,1c1.6-0.2,3.2-0.3,4.8-0.3c4.5,0,9,0.8,13.2,2.4c-0.3,0.5-0.6,1.1-0.8,1.6 c-3.9-1.4-8-2.1-12.2-2.1c-2.3,0-4.7,0.2-7,0.7c0.2,0.3,0.4,0.7,0.7,1c2-0.4,4.1-0.6,6.3-0.6c3.9,0,7.7,0.7,11.4,1.9 c-0.3,0.6-0.6,1.1-0.8,1.7c-3.4-1.1-6.9-1.6-10.4-1.6c-3,0-5.9,0.4-8.8,1.2c0.4,0.3,0.8,0.7,1.2,1c2.4-0.7,4.9-1,7.4-1 c3.3,0,6.5,0.5,9.6,1.6c-0.4,0.7-0.7,1.4-0.8,2.2c-2.8-0.8-5.8-1.2-8.7-1.2c-3.3,0-6.7,0.5-9.8,1.4c0.7,0.4,1.4,0.7,2.2,0.9 c2.4-0.7,5-1,7.6-1c2.8,0,5.6,0.4,8.3,1.1c-0.7,1.4-1,2.9-0.9,4.4c-2.3-0.5-4.8-0.8-7.3-0.8c-4,0-8,0.7-11.7,2.1 c1.1,0.5,2.4,0.9,3.6,1.2c2.6-0.9,5.3-1.3,8.1-1.3c2.4,0,4.7,0.3,7,0.9c-1.2,2.5-1.3,5.3-0.3,7.9c-2-0.4-4.1-0.5-6.2-0.5 c-5.1,0-10.1,1.2-14.5,3.3c1.8,0.6,3.7,1,5.7,1.2c2.8-1.3,5.9-2,9-2c2.1,0,4.3,0.3,6.3,0.9c0.7,2.1,2.3,4,4.2,5.1 c-1.7-0.1-3.3-0.4-5-0.8c2.4,1.6,5.2,2.4,8.1,2.4c4.3,0,8.6-1.9,11.4-5.2c2.3-2.6,3.5-6,3.3-9.4c2.4,1,4.5,2.5,6.3,4.2 c0.6-1.5,0.8-3.2,0.8-4.9c-2.4-1.8-5.2-3.2-8.1-4c0.4-1.7,1.1-3.2,2.2-4.5c3.1,0.9,5.9,2.4,8.5,4.2c0.5-1.7,0.7-3.4,0.5-5.2 c-2.9-1.6-6.2-2.6-9.6-3.1c0.8-1.5,2-2.9,3.5-3.8c3.7,0.7,7.2,2.2,10.3,4.4c0.3-2,0.2-4-0.3-5.9c-3.8-2-8-3.2-12.4-3.4 c1.2-1.5,2.9-2.7,4.8-3.2C43.7,15,47.2,15.8,50.4,17.1C50.6,15,50.3,13,49.7,11.1C47.2,10.3,44.7,9.9,42.1,9.9c-2.3,0-4.7,0.3-7,1 c-0.1-0.4-0.1-0.7-0.2-1c2.3-0.5,4.7-0.7,7.1-0.7c3.4,0,6.7,0.7,9.8,2c0.6-2.4,0.6-5,0-7.4c-4.5-1.7-9.5-2.7-14.4-2.7 c-2.8,0-5.5,0.3-8.2,0.9c0-0.3,0-0.7,0-1c2.7-0.5,5.4-0.8,8.1-0.8c5.1,0,10.2,0.9,15,2.6c0.9-3.1,0.9-6.4,0-9.5 c-6.9-2.6-14.3-4-21.8-4C19.5,0,7.4,9.6,3.7,22.6c-2.4,8.6-1.1,17.7,3.5,25.3c0.6-0.6,1.3-1.1,1.9-1.5c-3.6-6.1-4.7-13.5-2.9-20.4 c3.1-10.8,13-18.8,24.8-18.8c1.6,0,3.2,0.2,4.8,0.5c-0.1,0.3-0.1,0.7-0.2,1c-1.5-0.3-3.1-0.4-4.6-0.4 c-11.1,0-20.5,7.5-23.4,17.7c-1.6,5.6-0.9,11.6,2.1,16.7c0.7-0.4,1.4-0.8,2.1-1.1c-2.2-4.2-2.9-9.1-1.7-13.9 c1.8-7,7.5-12.8,14.7-12.8c1.2,0,2.4,0.1,3.6,0.4c-0.1,0.3-0.1,0.7-0.2,1c-1.1-0.2-2.3-0.3-3.5-0.3c-8,0-14.9,5.3-17.4,12.7 c-1,2.9-1,6,0.3,8.9c0.7-0.3,1.5-0.6,2.2-0.9c-0.5-2.1-0.5-4.3,0.1-6.4c1.8-5.6,7.1-9.6,13.3-9.6c1,0,2,0.1,3,0.3 c0,0.3,0,0.7,0,1c-1-0.2-1.9-0.3-3-0.3c-5.6,0-10.4,3.5-12.3,8.4c-0.6,1.6-0.8,3.2-0.7,4.9c0.8-0.2,1.6-0.4,2.4-0.5 c-0.1-1,0-2,0.2-2.9c1.2-3.8,4.7-6.5,8.9-6.5c0.7,0,1.4,0.1,2.1,0.3c0.1,0.3,0.1,0.7,0.1,1c-0.7-0.2-1.5-0.2-2.2-0.2 c-3.6,0-6.7,2.3-7.9,5.5c-0.3,0.9-0.5,1.9-0.5,2.9c0.9-0.1,1.7-0.1,2.6-0.2c0.1,0.9,0.4,1.8,0.8,2.6 c2.3-0.4,4.7-0.6,7.1-0.6c2.4,0,4.8,0.2,7,0.6c0.4-0.8,0.7-1.6,0.8-2.6c1-0.1,1.9-0.1,2.9-0.2c0,0,0,0,0,0"/>
-        </svg>
         <span class="usps-signature">USPS</span>
         <h1>Vancouver Route Finder</h1>
     </div>
@@ -190,7 +180,7 @@
                 <label>Zip Code</label>
                 <select id="zipCode" onchange="clearStreetOnly()">
                     <option value="">Select ZIP...</option>
-                    <option value="98662">98662 (Demo)</option>
+                    <option value="98662">98662 (Test Me)</option>
                     <option value="98661">98661</option>
                     <option value="98660">98660</option>
                 </select>
@@ -203,7 +193,7 @@
             <div class="input-wrapper">
                 <label>Street Name</label>
                 <div id="suggestionBox" class="suggestion-box"></div>
-                <input type="text" id="streetInput" placeholder="Type street..." autocomplete="off" oninput="handleSearch()">
+                <input type="text" id="streetInput" placeholder="Enter street name..." autocomplete="off" oninput="handleSearch()">
             </div>
             <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
         </div>
@@ -214,11 +204,12 @@
     <script>
         const database = {
             "98662": [
-                { name: "Burton Road", results: [{ range: "100 - 1500", route: "C012" }] },
-                { name: "Be Street", results: [
-                    { range: "100 - 500 (Odd)", route: "C001" },
-                    { range: "502 - 998 (Even)", route: "C005" }
-                ]}
+                { name: "1st Street", results: [{ range: "100-500", route: "C001" }] },
+                { name: "18th Street", results: [{ range: "1000-1800", route: "C018" }] },
+                { name: "187th Street", results: [{ range: "18700-18799", route: "C087" }] },
+                { name: "188th Street", results: [{ range: "18800-18899", route: "C088" }] },
+                { name: "189th Street", results: [{ range: "18900-18999", route: "C089" }] },
+                { name: "Burton Road", results: [{ range: "100-1500", route: "C012" }] }
             ]
         };
 
@@ -232,8 +223,12 @@
             const val = strIn.value.toLowerCase();
             sugBox.innerHTML = "";
             resArea.innerHTML = "";
+            
             if (!zip || val.length < 1) { sugBox.style.display = "none"; return; }
+
+            // Filter logic: Checks if the street name starts with whatever you've typed
             const matches = (database[zip] || []).filter(s => s.name.toLowerCase().startsWith(val));
+
             if (matches.length > 0) {
                 sugBox.style.display = "block";
                 matches.forEach(item => {
@@ -269,6 +264,7 @@
 
         function clearStreetOnly() {
             strIn.value = "";
+            sugBox.innerHTML = "";
             sugBox.style.display = "none";
             resArea.innerHTML = "";
             strIn.focus();
@@ -276,9 +272,7 @@
 
         function fullAppReset() {
             zipIn.selectedIndex = 0;
-            strIn.value = "";
-            sugBox.style.display = "none";
-            resArea.innerHTML = "";
+            clearStreetOnly();
         }
     </script>
 </body>
