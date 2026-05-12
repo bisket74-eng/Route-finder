@@ -21,15 +21,9 @@
             overflow-x: hidden;
         }
 
-        /* HEADER SECTION */
-        #banner-wrap {
-            transition: all 0.2s ease;
-        }
-
-        /* Hide full header in Focus Mode */
-        body.searching #banner-wrap {
-            display: none;
-        }
+        /* HEADER Focus Mode */
+        #banner-wrap { transition: all 0.2s ease; }
+        body.searching #banner-wrap { display: none; }
 
         .header {
             background-color: var(--usps-blue);
@@ -57,7 +51,6 @@
             font-size: 1.5rem;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .route-finder-cool {
@@ -67,16 +60,10 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             color: var(--usps-yellow);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
-        .header-accent {
-            height: 6px;
-            background-color: var(--usps-red);
-            width: 100%;
-        }
+        .header-accent { height: 6px; background-color: var(--usps-red); width: 100%; }
 
-        /* STICKY SEARCH CONTROLS */
         .sticky-controls {
             position: sticky;
             top: 0;
@@ -87,25 +74,10 @@
         }
 
         .input-container { max-width: 450px; margin: 0 auto; }
-
-        .input-row {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-            margin-bottom: 12px;
-            position: relative;
-        }
-
+        .input-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 12px; position: relative; }
         .input-wrapper { flex: 1; position: relative; }
 
-        label {
-            display: block;
-            margin-bottom: 3px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #333;
-            text-transform: uppercase;
-        }
+        label { display: block; margin-bottom: 3px; font-size: 0.75rem; font-weight: bold; color: #333; text-transform: uppercase; }
 
         select, input {
             width: 100%;
@@ -118,28 +90,17 @@
             color: #000;
         }
 
-        .btn-action {
-            height: 48px;
-            width: 90px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 900;
-            font-size: 0.6rem;
-            text-transform: uppercase;
-        }
-
+        .btn-action { height: 48px; width: 90px; border-radius: 8px; border: none; font-weight: 900; font-size: 0.6rem; text-transform: uppercase; }
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* THE 6.5 ITEM SLICE SUGGESTION BOX */
+        /* FIXED SUGGESTION BOX - NO BOTTOM BUFFER */
         .suggestion-box {
             background: white;
             border: 4px solid var(--usps-blue);
             border-radius: 12px;
-            /* 6 items * 54px + 27px (half) = 351px */
-            height: 351px;
-            max-height: 351px;
-            overflow-y: scroll;
+            height: 351px; /* The 6.5 Slice height */
+            overflow-y: auto;
             display: none;
             position: absolute;
             top: 105%; 
@@ -147,7 +108,6 @@
             right: 0;
             z-index: 5000;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            -webkit-overflow-scrolling: touch;
         }
 
         .suggestion-item {
@@ -160,7 +120,6 @@
             font-weight: 800;
             color: var(--usps-blue);
             box-sizing: border-box;
-            white-space: nowrap;
         }
 
         .suggestion-box::-webkit-scrollbar { width: 16px; }
@@ -170,7 +129,6 @@
             border-radius: 10px;
         }
 
-        /* RESULTS */
         #resultArea { padding: 10px 15px; }
         .result-card {
             background: white;
@@ -185,16 +143,7 @@
         }
 
         .range-display { font-size: 1.5rem; font-weight: 900; color: #000; }
-
-        .route-side {
-            background-color: var(--usps-blue);
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            min-width: 80px;
-        }
-
+        .route-side { background-color: var(--usps-blue); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 80px; }
         .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
         .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
     </style>
@@ -217,14 +166,18 @@
                     <label>Zip Code</label>
                     <select id="zipCode" onchange="clearStreetOnly()">
                         <option value="">Select ZIP...</option>
-                        <option value="98662">98662 (Trial Data)</option>
                         <option value="98660">98660</option>
                         <option value="98661">98661</option>
+                        <option value="98662">98662 (Trial Data)</option>
                         <option value="98663">98663</option>
                         <option value="98664">98664</option>
                         <option value="98665">98665</option>
+                        <option value="98668">98668</option>
                         <option value="98682">98682</option>
+                        <option value="98683">98683</option>
                         <option value="98684">98684</option>
+                        <option value="98685">98685</option>
+                        <option value="98686">98686</option>
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -233,7 +186,7 @@
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Street Name</label>
-                    <input type="text" id="streetInput" placeholder="Start typing street..." autocomplete="off" oninput="handleSearch()" onfocus="enterFocus()" onblur="exitFocus()">
+                    <input type="text" id="streetInput" placeholder="Type street name..." autocomplete="off" oninput="handleSearch()" onfocus="enterFocus()" onblur="exitFocus()">
                     <div id="suggestionBox" class="suggestion-box"></div>
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
