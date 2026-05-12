@@ -36,11 +36,22 @@
             border-bottom: 4px solid var(--usps-red); box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .suggestion-box { background: #e5e5e5; border: 2px solid var(--usps-blue); border-top: none; border-radius: 0 0 12px 12px; height: 260px; max-height: 260px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        /* PICKLIST SCROLLBAR FIXES */
+        .suggestion-box { 
+            background: #e5e5e5; border: 2px solid var(--usps-blue); border-top: none; border-radius: 0 0 12px 12px; 
+            height: 236px; max-height: 236px; overflow-y: scroll; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            -webkit-overflow-scrolling: touch;
+        }
+        .suggestion-box::-webkit-scrollbar { width: 14px; display: block; }
+        .suggestion-box::-webkit-scrollbar-track { background: #ccc; border-radius: 10px; }
+        .suggestion-box::-webkit-scrollbar-thumb { background-color: var(--usps-blue); border-radius: 10px; border: 2px solid #ccc; }
+
         .suggestion-item { height: 48px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; background: white; margin-bottom: 4px; border-radius: 6px; border-bottom: 2px solid #ccc; font-size: 1.1rem; font-weight: 900; color: var(--usps-blue); }
         .zip-badge-small { font-size: 0.7rem; background: var(--usps-blue); color: white; padding: 2px 6px; border-radius: 4px; }
         
-        #resultArea { padding: 10px 15px; height: calc(100vh - 150px); overflow-y: auto; }
+        /* ROUTE CARD SPACING FIX */
+        #resultArea { padding: 10px 15px 100px 15px; height: calc(100vh - 150px); overflow-y: auto; }
+        
         .result-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card-left { flex: 1; }
         .zip-tag { display: inline-block; font-size: 0.7rem; font-weight: 800; background: var(--usps-blue); color: white; padding: 2px 8px; border-radius: 4px; margin-bottom: 5px; }
@@ -55,7 +66,7 @@
 <body>
     <div id="adminPanel">
         <h3 style="color:var(--usps-blue); margin:0;">Master Data Paste</h3>
-        <textarea id="dataInput" placeholder="Paste Row 3 down from Excel here..."></textarea>
+        <textarea id="dataInput" placeholder="Paste Row 3 down..."></textarea>
         <button onclick="savePastedData()" style="width:100%; padding:15px; border-radius:8px; border:none; background:var(--usps-blue); color:white; font-weight:bold;">SAVE DATA</button>
         <button onclick="document.getElementById('adminPanel').style.display='none'" style="display:block; width:100%; margin-top:8px; padding:8px; background:#666; color:white; border-radius:8px; border:none; font-size:0.7rem;">CLOSE</button>
     </div>
@@ -125,7 +136,6 @@
             if (!input) return;
             const lines = input.split('\n');
             const newDatabase = {};
-            let count = 0;
             lines.forEach(line => {
                 const cells = line.split('\t');
                 if (cells.length < 8) return;
@@ -140,11 +150,10 @@
                     newDatabase[zip].push(street);
                 }
                 street.results.push({ range: cells[0] + (cells[1] ? "-" + cells[1] : ""), route: cells[8]?.trim() });
-                count++;
             });
             database = newDatabase;
             localStorage.setItem('vancouverData', JSON.stringify(newDatabase));
-            alert("Success! " + count + " rows saved.");
+            alert("Success! Data saved.");
             document.getElementById('adminPanel').style.display = 'none';
         }
 
@@ -155,8 +164,12 @@
         const backBtn = document.getElementById('backToListBtn');
 
         function handleZipChange() {
-            if(zipIn.value !== "") { strIn.disabled = false; strIn.placeholder = "Start typing..."; strIn.focus(); }
-            else { resetZipSelection(); }
+            if(zipIn.value !== "") { 
+                strIn.disabled = false; 
+                strIn.placeholder = "Start typing..."; 
+            } else { 
+                resetZipSelection(); 
+            }
         }
 
         function handleSearch() {
