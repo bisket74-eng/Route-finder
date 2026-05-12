@@ -120,20 +120,21 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* FLOATING PICK LIST - ABOVE KEYBOARD */
+        /* FIXED PICK LIST - ADDED SAFETY MARGIN */
         .suggestion-box {
             background: white;
             border: 3px solid var(--usps-blue);
             border-radius: 12px;
-            max-height: 240px; 
+            max-height: 220px; /* Reduced slightly to stay away from the very top */
             overflow-y: scroll;
             display: none;
             position: absolute;
-            bottom: 105%; /* Pops up ABOVE the input bar */
+            bottom: 115%; /* Added extra gap from the input bar */
             left: 0;
             right: 0;
             z-index: 5000;
             box-shadow: 0 -8px 20px rgba(0,0,0,0.3);
+            margin-bottom: 10px; /* The "Safety Bumper" */
             -webkit-overflow-scrolling: touch;
         }
 
