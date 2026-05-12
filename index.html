@@ -9,7 +9,6 @@
             --usps-blue: #004b87;
             --usps-red: #da291c;
             --usps-yellow: #ffde00;
-            --scroll-blue: #82caff;
             --bg-color: #f4f7f9;
         }
 
@@ -18,10 +17,9 @@
             padding: 0;
             background-color: var(--bg-color);
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            -webkit-text-size-adjust: 100%;
         }
 
-        /* HEADER - Scrolls away to make room */
+        /* HEADER SECTION */
         .header {
             background-color: var(--usps-blue);
             padding: 20px 15px;
@@ -40,7 +38,6 @@
             line-height: 0.8;
             font-family: "Arial Black", sans-serif;
             transform: skewX(-5deg);
-            margin-bottom: 4px;
         }
 
         .vancouver-text {
@@ -48,6 +45,7 @@
             font-size: 1.5rem;
             font-weight: 900;
             text-transform: uppercase;
+            margin-top: 5px;
         }
 
         .route-finder-cool {
@@ -65,7 +63,7 @@
             width: 100%;
         }
 
-        /* CONTROLS - Sticks to top after scroll */
+        /* STICKY SEARCH CONTROLS */
         .sticky-controls {
             position: sticky;
             top: 0;
@@ -75,20 +73,16 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .input-container {
-            max-width: 450px;
-            margin: 0 auto;
-        }
+        .input-container { max-width: 450px; margin: 0 auto; }
 
         .input-row {
             display: flex;
             gap: 10px;
             align-items: flex-end;
             margin-bottom: 12px;
-            position: relative;
         }
 
-        .input-wrapper { flex: 1; position: relative; }
+        .input-wrapper { flex: 1; }
 
         label {
             display: block;
@@ -124,89 +118,71 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* PICK LIST */
-        .suggestion-box {
-            background: white;
-            border: 3px solid var(--usps-blue);
-            border-radius: 12px;
-            max-height: 380px; 
-            overflow-y: scroll;
-            display: none;
-            position: absolute;
-            top: 105%; 
-            left: 0;
-            right: 0;
-            z-index: 5000;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-        }
-
-        .suggestion-box::-webkit-scrollbar { width: 14px; }
-        .suggestion-box::-webkit-scrollbar-thumb {
-            background: var(--scroll-blue);
-            border: 2px solid #333;
-            border-radius: 10px;
-        }
-        .suggestion-box::-webkit-scrollbar-track { background: #444; }
-
-        .suggestion-item {
-            padding: 18px 20px;
-            border-bottom: 1px solid #eee;
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--usps-blue);
-        }
-
-        .kb-buffer { height: 120px; } /* Keyboard clearance */
-
-        #resultArea {
+        /* KIOSK LIST ITEMS */
+        #mainContentArea {
             padding: 10px 15px;
             max-width: 450px;
             margin: 0 auto;
         }
 
+        .list-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 2px solid var(--usps-blue);
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--usps-blue);
+            box-shadow: 0 4px 0px var(--usps-blue); /* Hard shadow for "Cool" look */
+        }
+
+        .list-item:active { transform: translateY(2px); box-shadow: none; }
+
+        /* RESULT CARDS */
         .result-card {
             background: white;
             border-radius: 10px;
             padding: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid #ccc;
         }
 
-        .range-display { font-size: 1.4rem; font-weight: 900; color: #000; }
-        .street-display { font-size: 0.85rem; color: #555; font-weight: 700; }
+        .range-display { font-size: 1.6rem; font-weight: 900; color: #000; }
+        .street-display { font-size: 0.95rem; color: #555; font-weight: 700; }
 
         .route-side {
             background-color: var(--usps-blue);
             color: white;
-            padding: 8px;
+            padding: 10px;
             border-radius: 8px;
             text-align: center;
-            min-width: 70px;
+            min-width: 80px;
         }
 
-        .route-side .lbl { font-size: 0.5rem; font-weight: bold; display: block; }
-        .route-side .num { font-size: 1.4rem; font-weight: 900; display: block; }
-        
-        .bottom-gap { height: 100px; }
+        .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
+        .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
+
+        /* KEYBOARD BUFFER */
+        .spacer { height: 350px; } 
     </style>
 </head>
 <body>
 
-    <div id="topBanner">
-        <div class="header">
-            <span class="usps-signature">USPS</span>
-            <div class="vancouver-text">VANCOUVER, WA</div>
-            <div class="route-finder-cool">ROUTE FINDER</div>
-        </div>
-        <div class="header-accent"></div>
+    <div class="header">
+        <span class="usps-signature">USPS</span>
+        <div class="vancouver-text">VANCOUVER, WA</div>
+        <div class="route-finder-cool">ROUTE FINDER</div>
     </div>
+    <div class="header-accent"></div>
 
     <div class="sticky-controls">
         <div class="input-container">
+            <!-- FULL ZIP LIST RESTORED -->
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Zip Code</label>
@@ -214,7 +190,7 @@
                         <option value="">Select ZIP...</option>
                         <option value="98660">98660</option>
                         <option value="98661">98661</option>
-                        <option value="98662">98662 (Demo)</option>
+                        <option value="98662">98662 (Demo Data)</option>
                         <option value="98663">98663</option>
                         <option value="98664">98664</option>
                         <option value="98665">98665</option>
@@ -229,19 +205,20 @@
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
             </div>
 
+            <!-- STREET SEARCH -->
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Street Name</label>
                     <input type="text" id="streetInput" placeholder="Start typing street..." autocomplete="off" oninput="handleSearch()">
-                    <div id="suggestionBox" class="suggestion-box"></div>
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
             </div>
         </div>
     </div>
 
-    <div id="resultArea"></div>
-    <div class="bottom-gap"></div>
+    <!-- TRIAL CONTENT AREA -->
+    <div id="mainContentArea"></div>
+    <div class="spacer"></div>
 
     <script>
         const database = {
@@ -274,17 +251,16 @@
 
         const zipIn = document.getElementById('zipCode');
         const strIn = document.getElementById('streetInput');
-        const sugBox = document.getElementById('suggestionBox');
-        const resArea = document.getElementById('resultArea');
+        const mainArea = document.getElementById('mainContentArea');
 
         function handleSearch() {
             const zip = zipIn.value;
             const val = strIn.value.toLowerCase();
-            sugBox.innerHTML = "";
-            resArea.innerHTML = "";
-            if (!zip || val.length < 1) { sugBox.style.display = "none"; return; }
+            mainArea.innerHTML = "";
+            
+            if (!zip || val.length < 1) return;
 
-            // Auto-scroll to hide banner when typing starts
+            // Auto-scroll header away
             if (window.scrollY < 40) {
                 window.scrollTo({ top: 120, behavior: 'smooth' });
             }
@@ -293,24 +269,19 @@
             matches.sort((a, b) => a.name.length - b.name.length || a.name.localeCompare(b.name));
 
             if (matches.length > 0) {
-                sugBox.style.display = "block";
                 matches.forEach(item => {
                     const div = document.createElement('div');
-                    div.className = "suggestion-item";
+                    div.className = "list-item";
                     div.innerText = item.name;
                     div.onclick = () => selectStreet(item);
-                    sugBox.appendChild(div);
+                    mainArea.appendChild(div);
                 });
-                const buffer = document.createElement('div');
-                buffer.className = "kb-buffer";
-                sugBox.appendChild(buffer);
-            } else { sugBox.style.display = "none"; }
+            }
         }
 
         function selectStreet(item) {
             strIn.value = item.name;
-            sugBox.style.display = "none";
-            resArea.innerHTML = "";
+            mainArea.innerHTML = "";
             item.results.forEach(res => {
                 const card = document.createElement('div');
                 card.className = "result-card";
@@ -324,15 +295,15 @@
                         <span class="num">${res.route}</span>
                     </div>
                 `;
-                resArea.appendChild(card);
+                mainArea.appendChild(card);
             });
+            // Auto-hide keyboard
+            document.activeElement.blur();
         }
 
         function clearStreetOnly() {
             strIn.value = "";
-            sugBox.innerHTML = "";
-            sugBox.style.display = "none";
-            resArea.innerHTML = "";
+            mainArea.innerHTML = "";
             strIn.focus();
         }
 
