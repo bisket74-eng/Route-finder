@@ -52,6 +52,15 @@
             text-transform: uppercase;
         }
 
+        .route-finder-cool {
+            margin-top: 2px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--usps-yellow);
+        }
+
         .header-accent { height: 6px; background-color: var(--usps-red); width: 100%; }
 
         .sticky-controls {
@@ -83,12 +92,17 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* THE "STRIPED" PICK LIST */
+        /* THE "STRIPED" PICK LIST WITH BORDERS */
         .suggestion-box {
-            background: transparent; /* No big white box background */
-            /* Height for 5.5 items (54px rows + small 4px gaps) */
-            height: 310px; 
-            max-height: 310px; 
+            background: #eee; /* Subtle background behind the plates */
+            border: 2px solid var(--usps-blue); /* Thin borders back on */
+            border-top: none; /* Keep it connected to the input bar */
+            border-radius: 0 0 12px 12px;
+            
+            /* Reduced height to raise the bottom of the box */
+            height: 285px; 
+            max-height: 285px; 
+            
             overflow-y: auto;
             display: none;
             position: absolute;
@@ -96,7 +110,8 @@
             left: 0;
             right: 0;
             z-index: 9999;
-            padding-top: 5px;
+            padding: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .suggestion-item {
@@ -105,18 +120,18 @@
             display: flex;
             align-items: center;
             background: white;
-            margin-bottom: 4px; /* Creates the "Lined" or "Striped" look */
-            border-radius: 4px;
-            border-bottom: 3px solid #ddd; /* Adds weight to the line */
+            margin-bottom: 4px; 
+            border-radius: 6px;
+            border-bottom: 2px solid #ccc; 
             font-size: 1.3rem;
             font-weight: 900;
             color: var(--usps-blue);
             box-sizing: border-box;
         }
 
-        .suggestion-item:active {
-            background: var(--usps-yellow);
-        }
+        .suggestion-item:last-child { margin-bottom: 0; }
+
+        .suggestion-item:active { background: var(--usps-yellow); }
 
         .suggestion-box::-webkit-scrollbar { width: 14px; }
         .suggestion-box::-webkit-scrollbar-thumb {
@@ -162,10 +177,12 @@
                     <label>Zip Code</label>
                     <select id="zipCode" onchange="clearStreetOnly()">
                         <option value="">Select ZIP...</option>
-                        <option value="98662">98662 (Trial Data)</option>
                         <option value="98660">98660</option>
                         <option value="98661">98661</option>
+                        <option value="98662">98662 (Trial Data)</option>
                         <option value="98665">98665</option>
+                        <option value="98682">98682</option>
+                        <option value="98686">98686</option>
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -200,8 +217,14 @@
                 { name: "188th Street", results: [{ range: "18800-18899", route: "C088" }] },
                 { name: "189th Street", results: [
                     { range: "100-500", route: "C001" },
+                    { range: "101-499", route: "C002" },
+                    { range: "501-999", route: "C010" },
                     { range: "1000-1500", route: "C022" },
+                    { range: "1501-2000", route: "C033" },
                     { range: "2001-2500", route: "C044" },
+                    { range: "2501-3000", route: "C055" },
+                    { range: "3001-3500", route: "C066" },
+                    { range: "3501-4000", route: "C077" },
                     { range: "4001-5000", route: "C099" }
                 ]}
             ]
