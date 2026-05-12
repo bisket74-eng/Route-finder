@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Finder</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        select, input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
+        .result-card { background: white; padding: 15px; border-radius: 8px; margin-top: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .route-tag { font-weight: bold; color: #004b87; float: right; }
+    </style>
+</head>
+<body>
+
+    <h2>Carrier Route Lookup</h2>
+
+    <label>1. Select ZIP Code</label>
+    <select id="zipSelect" onchange="updateStreets()">
+        <option value="">-- Select ZIP --</option>
+        <option value="98660">98660</option>
+        <option value="98661">98661</option>
+    </select>
+
+    <label>2. Start Typing Street</label>
+    <input type="text" id="streetInput" placeholder="e.g. Main St" oninput="filterStreets()">
+    <div id="streetSuggestions"></div>
+
+    <div id="routeResults"></div>
+
+    <script>
+        // Example Data Structure
+        const routeData = {
+            "98660": {
+                "Main St": [
+                    { range: "100-499", route: "C001" },
+                    { range: "500-999", route: "C002" }
+                ],
+                "Broadway": [
+                    { range: "100-1000", route: "C005" }
+                ]
+            }
+        };
+
+        function updateStreets() {
+            document.getElementById('streetInput').value = '';
+            document.getElementById('routeResults').innerHTML = '';
+        }
+
+        function filterStreets() {
+            const zip = document.getElementById('zipSelect').value;
+            const input = document.getElementById('streetInput').value.toLowerCase();
+            const resultsDiv = document.getElementById('routeResults');
+            
+            if (!zip || !input) return;
+
+            const streets = routeData[zip];
+            resultsDiv.innerHTML = '';
+
+            for (let street in streets) {
+                if (street.toLowerCase().includes(input)) {
+                    streets[street].forEach(item => {
+                        resultsDiv.innerHTML += `
+                            <div class="result-card">
+                                <strong>${street}</strong> (${item.range})
+                                <span class="route-tag">${item.route}</span>
+                            </div>`;
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
