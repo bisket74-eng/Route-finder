@@ -2,13 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Vancouver Route Finder</title>
     <style>
         :root { --usps-blue: #004b87; --usps-red: #da291c; --usps-yellow: #ffde00; --bg-color: #f4f7f9; }
-        html, body { margin: 0; padding: 0; height: 100%; background-color: var(--bg-color); font-family: sans-serif; overflow: hidden; }
-        #banner-wrap { transition: 0.3s; cursor: pointer; }
+        
+        /* THE KEY FIX: FORCING THE BODY TO BE EXACTLY THE SCREEN HEIGHT */
+        html, body { 
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            background-color: var(--bg-color); font-family: sans-serif; 
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+
+        #banner-wrap { flex-shrink: 0; transition: 0.3s; cursor: pointer; }
         body.searching #banner-wrap { display: none; }
+        
         .header { background-color: var(--usps-blue); padding: 18px 15px; display: flex; flex-direction: column; align-items: center; text-align: center; }
         .usps-signature { color: white; font-size: 2rem; font-weight: 900; font-style: italic; letter-spacing: -3px; line-height: 0.8; transform: skewX(-5deg); margin-bottom: 4px; }
         .vancouver-text { color: white; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; }
@@ -18,7 +26,7 @@
         #adminPanel { display: none; background: white; padding: 15px; border: 3px dashed var(--usps-blue); margin: 10px; border-radius: 12px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         #dataInput { width: 100%; height: 150px; margin: 10px 0; font-size: 12px; border: 2px solid var(--usps-blue); border-radius: 8px; }
         
-        .sticky-controls { position: sticky; top: 0; z-index: 5000; background-color: var(--bg-color); padding: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .sticky-controls { flex-shrink: 0; background-color: var(--bg-color); padding: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 5000; }
         .input-container { max-width: 450px; margin: 0 auto; position: relative; }
         .input-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 12px; }
         .input-wrapper { flex: 1; position: relative; }
@@ -49,39 +57,26 @@
         .suggestion-item { height: 48px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; background: white; margin-bottom: 4px; border-radius: 6px; border-bottom: 2px solid #ccc; font-size: 1.1rem; font-weight: 900; color: var(--usps-blue); }
         
         .zip-badge-small { 
-            font-size: 0.9rem; 
-            font-weight: 900; 
-            background: var(--usps-blue); 
-            color: white; 
-            padding: 4px 10px; 
-            border-radius: 6px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            letter-spacing: 0.5px;
+            font-size: 0.9rem; font-weight: 900; background: var(--usps-blue); 
+            color: white; padding: 4px 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
-        /* THE FIX: MASSIVE 350px CUSHION TO PREVENT CUTOFFS */
+        /* THE FIX: FLEX-GROW ALLOWS THIS TO TAKE REMAINING SPACE, PADDING-BOTTOM ENSURES CLEARANCE */
         #resultArea { 
-            padding: 20px 15px 350px 15px; 
-            height: calc(100vh - 160px); 
+            flex-grow: 1;
+            padding: 10px 15px 120px 15px; 
             overflow-y: auto; 
             position: relative;
             z-index: 10;
-            margin-top: -10px;
         }
         
         .result-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card-left { flex: 1; }
         
         .zip-tag { 
-            display: inline-block; 
-            font-size: 0.9rem; 
-            font-weight: 900; 
-            background: var(--usps-blue); 
-            color: white; 
-            padding: 3px 10px; 
-            border-radius: 6px; 
-            margin-bottom: 8px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: inline-block; font-size: 0.9rem; font-weight: 900; 
+            background: var(--usps-blue); color: white; padding: 3px 10px; 
+            border-radius: 6px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .range-display { font-size: 1.5rem; font-weight: 900; display: block; color: #000; }
@@ -95,7 +90,7 @@
 <body>
     <div id="adminPanel">
         <h3 style="color:var(--usps-blue); margin:0;">Master Data Paste</h3>
-        <textarea id="dataInput" placeholder="Paste Row 3 down from Excel here..."></textarea>
+        <textarea id="dataInput" placeholder="Paste Row 3 down..."></textarea>
         <button onclick="savePastedData()" style="width:100%; padding:15px; border-radius:8px; border:none; background:var(--usps-blue); color:white; font-weight:bold;">SAVE DATA</button>
         <button onclick="document.getElementById('adminPanel').style.display='none'" style="display:block; width:100%; margin-top:8px; padding:8px; background:#666; color:white; border-radius:8px; border:none; font-size:0.7rem;">CLOSE</button>
     </div>
