@@ -92,17 +92,14 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* THE COMPACT 5.5 ITEM STRIPED LIST */
+        /* THE 5.5 ITEM STRIPED LIST */
         .suggestion-box {
             background: #e5e5e5; 
             border: 2px solid var(--usps-blue); 
             border-top: none;
             border-radius: 0 0 12px 12px;
-            
-            /* Shortened to force a mid-text slice on the 6th item */
             height: 235px; 
             max-height: 235px; 
-            
             overflow-y: auto;
             display: none;
             position: absolute;
@@ -115,30 +112,30 @@
         }
 
         .suggestion-item {
-            height: 48px; /* Slightly tighter rows */
-            padding: 0 20px;
+            height: 48px; 
+            padding: 0 15px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
             background: white;
             margin-bottom: 4px; 
             border-radius: 6px;
             border-bottom: 2px solid #ccc; 
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 900;
             color: var(--usps-blue);
             box-sizing: border-box;
-            white-space: nowrap;
         }
 
-        .suggestion-item:last-child { margin-bottom: 0; }
+        .zip-badge-small {
+            font-size: 0.7rem;
+            background: var(--usps-blue);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
         .suggestion-item:active { background: var(--usps-yellow); }
-
-        .suggestion-box::-webkit-scrollbar { width: 14px; }
-        .suggestion-box::-webkit-scrollbar-thumb {
-            background: var(--scroll-blue);
-            border-radius: 10px;
-            border: 2px solid var(--usps-blue);
-        }
 
         #resultArea { padding: 10px 15px; height: calc(100vh - 150px); overflow-y: auto; }
         .result-card {
@@ -153,7 +150,20 @@
             border: 1px solid #ccc;
         }
 
-        .range-display { font-size: 1.5rem; font-weight: 900; color: #000; }
+        .card-left { flex: 1; }
+        .zip-tag { 
+            display: inline-block;
+            font-size: 0.7rem; 
+            font-weight: 800; 
+            background: var(--usps-blue); 
+            color: white; 
+            padding: 2px 8px; 
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .range-display { font-size: 1.5rem; font-weight: 900; color: #000; display: block; }
+        .street-display { font-size: 0.8rem; color: #666; font-weight: bold; }
+
         .route-side { background-color: var(--usps-blue); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 80px; }
         .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
         .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
@@ -175,13 +185,20 @@
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Zip Code</label>
-                    <select id="zipCode" onchange="clearStreetOnly()">
-                        <option value="">Select ZIP...</option>
-                        <option value="98662">98662 (Trial Data)</option>
+                    <select id="zipCode" onchange="handleZipChange()">
+                        <option value="">Search All ZIPs</option>
                         <option value="98660">98660</option>
                         <option value="98661">98661</option>
+                        <option value="98662">98662</option>
+                        <option value="98663">98663</option>
+                        <option value="98664">98664</option>
+                        <option value="98665">98665</option>
                         <option value="98668">98668</option>
                         <option value="98682">98682</option>
+                        <option value="98683">98683</option>
+                        <option value="98684">98684</option>
+                        <option value="98685">98685</option>
+                        <option value="98686">98686</option>
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -190,7 +207,7 @@
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Street Name</label>
-                    <input type="text" id="streetInput" placeholder="Start typing street..." autocomplete="off" oninput="handleSearch()" onfocus="enterFocus()" onblur="exitFocus()">
+                    <input type="text" id="streetInput" placeholder="Type street name..." autocomplete="off" oninput="handleSearch()" onfocus="enterFocus()" onblur="exitFocus()">
                     <div id="suggestionBox" class="suggestion-box"></div>
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
@@ -202,30 +219,19 @@
 
     <script>
         const database = {
+            "98660": [{ name: "Main Street", results: [{ range: "100-500", route: "C005" }] }],
+            "98661": [{ name: "18th Avenue", results: [{ range: "500-1500", route: "C011" }] }],
             "98662": [
                 { name: "1st Street", results: [{ range: "100-998", route: "C001" }] },
-                { name: "18th Circle", results: [{ range: "1800-1899", route: "C018" }] },
                 { name: "180th Street", results: [{ range: "18000-18099", route: "C080" }] },
                 { name: "181st Street", results: [{ range: "18100-18199", route: "C081" }] },
                 { name: "182nd Street", results: [{ range: "18200-18299", route: "C082" }] },
                 { name: "183rd Street", results: [{ range: "18300-18399", route: "C083" }] },
-                { name: "184th Street", results: [{ range: "18400-18499", route: "C084" }] },
-                { name: "185th Circle", results: [{ range: "18500-18599", route: "C085" }] },
-                { name: "186th Avenue", results: [{ range: "18600-18699", route: "C086" }] },
-                { name: "187th Avenue", results: [{ range: "18700-18799", route: "C087" }] },
-                { name: "188th Street", results: [{ range: "18800-18899", route: "C088" }] },
-                { name: "189th Street", results: [
-                    { range: "100-500", route: "C001" },
-                    { range: "501-999", route: "C010" },
-                    { range: "1000-1500", route: "C022" },
-                    { range: "1501-2000", route: "C033" },
-                    { range: "2001-2500", route: "C044" },
-                    { range: "2501-3000", route: "C055" },
-                    { range: "3001-3500", route: "C066" },
-                    { range: "3501-4000", route: "C077" },
-                    { range: "4001-5000", route: "C099" }
-                ]}
-            ]
+                { name: "184th Street", results: [{ range: "18400-18499", route: "C084" }] }
+            ],
+            "98682": [{ name: "Main Street", results: [{ range: "1000-2000", route: "C042" }] }],
+            "98684": [{ name: "189th Avenue", results: [{ range: "200-800", route: "C084" }] }],
+            "98685": [{ name: "182nd Court", results: [{ range: "18205-18220", route: "C085" }] }]
         };
 
         const zipIn = document.getElementById('zipCode');
@@ -234,28 +240,33 @@
         const cardCont = document.getElementById('cardContainer');
 
         function enterFocus() { document.body.classList.add('searching'); }
-        function exitFocus() {
-            setTimeout(() => {
-                if(strIn.value === "") document.body.classList.remove('searching');
-            }, 200);
-        }
+        function exitFocus() { setTimeout(() => { if(strIn.value === "") document.body.classList.remove('searching'); }, 200); }
+        function handleZipChange() { if(strIn.value !== "") handleSearch(); }
 
         function handleSearch() {
-            const zip = zipIn.value;
+            const selectedZip = zipIn.value;
             const val = strIn.value.toLowerCase();
             sugBox.innerHTML = "";
             cardCont.innerHTML = "";
-            if (!zip || val.length < 1) { sugBox.style.display = "none"; return; }
+            if (val.length < 1) { sugBox.style.display = "none"; return; }
 
-            let matches = (database[zip] || []).filter(s => s.name.toLowerCase().startsWith(val));
-            matches.sort((a, b) => a.name.length - b.name.length || a.name.localeCompare(b.name));
+            let allMatches = [];
+            const zipsToSearch = selectedZip ? [selectedZip] : Object.keys(database);
 
-            if (matches.length > 0) {
+            zipsToSearch.forEach(zip => {
+                if(database[zip]) {
+                    const matches = database[zip].filter(s => s.name.toLowerCase().startsWith(val));
+                    matches.forEach(m => { allMatches.push({ ...m, zip: zip }); });
+                }
+            });
+
+            if (allMatches.length > 0) {
                 sugBox.style.display = "block";
-                matches.forEach(item => {
+                allMatches.forEach(item => {
                     const div = document.createElement('div');
                     div.className = "suggestion-item";
-                    div.innerText = item.name;
+                    const zipBadge = selectedZip ? "" : `<span class="zip-badge-small">${item.zip}</span>`;
+                    div.innerHTML = `<span>${item.name}</span> ${zipBadge}`;
                     div.onclick = () => selectStreet(item);
                     sugBox.appendChild(div);
                 });
@@ -270,7 +281,11 @@
                 const card = document.createElement('div');
                 card.className = "result-card";
                 card.innerHTML = `
-                    <div class="range-side"><div class="range-display">${res.range}</div></div>
+                    <div class="card-left">
+                        <span class="zip-tag">ZIP: ${item.zip}</span>
+                        <span class="range-display">${res.range}</span>
+                        <span class="street-display">${item.name}</span>
+                    </div>
                     <div class="route-side"><span class="lbl">ROUTE</span><span class="num">${res.route}</span></div>
                 `;
                 cardCont.appendChild(card);
@@ -278,17 +293,8 @@
             document.activeElement.blur();
         }
 
-        function clearStreetOnly() { 
-            strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; 
-            document.body.classList.remove('searching');
-            strIn.focus(); 
-        }
-
-        function fullAppReset() { 
-            zipIn.selectedIndex = 0; clearStreetOnly(); 
-            document.body.classList.remove('searching');
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
-        }
+        function clearStreetOnly() { strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; document.body.classList.remove('searching'); strIn.focus(); }
+        function fullAppReset() { zipIn.selectedIndex = 0; clearStreetOnly(); document.body.classList.remove('searching'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
     </script>
 </body>
 </html>
