@@ -13,7 +13,6 @@
             --bg-color: #f4f7f9;
         }
 
-        /* The whole page can scroll now to allow the header to move up */
         html, body {
             margin: 0;
             padding: 0;
@@ -22,7 +21,7 @@
             -webkit-text-size-adjust: 100%;
         }
 
-        /* HEADER (Not Sticky anymore so it can scroll away) */
+        /* HEADER - Scrolls away to make room */
         .header {
             background-color: var(--usps-blue);
             padding: 20px 15px;
@@ -66,7 +65,7 @@
             width: 100%;
         }
 
-        /* SELECTORS (These will become sticky once they reach the top) */
+        /* CONTROLS - Sticks to top after scroll */
         .sticky-controls {
             position: sticky;
             top: 0;
@@ -102,16 +101,17 @@
 
         select, input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 2px solid #bbb;
             border-radius: 8px;
             font-size: 18px;
             box-sizing: border-box;
             background: white;
+            color: #000;
         }
 
         .btn-action {
-            height: 48px;
+            height: 52px;
             width: 90px;
             border-radius: 8px;
             border: none;
@@ -124,12 +124,12 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* THE DROPDOWN LIST */
+        /* PICK LIST */
         .suggestion-box {
             background: white;
             border: 3px solid var(--usps-blue);
             border-radius: 12px;
-            max-height: 350px; /* Taller now that header moves */
+            max-height: 380px; 
             overflow-y: scroll;
             display: none;
             position: absolute;
@@ -156,8 +156,7 @@
             color: var(--usps-blue);
         }
 
-        /* Pushes the last items up so they don't hide behind keyboard */
-        .kb-buffer { height: 100px; }
+        .kb-buffer { height: 120px; } /* Keyboard clearance */
 
         #resultArea {
             padding: 10px 15px;
@@ -191,19 +190,21 @@
 
         .route-side .lbl { font-size: 0.5rem; font-weight: bold; display: block; }
         .route-side .num { font-size: 1.4rem; font-weight: 900; display: block; }
+        
+        .bottom-gap { height: 100px; }
     </style>
 </head>
 <body>
 
-    <!-- This header scrolls away -->
-    <div class="header">
-        <span class="usps-signature">USPS</span>
-        <div class="vancouver-text">VANCOUVER, WA</div>
-        <div class="route-finder-cool">ROUTE FINDER</div>
+    <div id="topBanner">
+        <div class="header">
+            <span class="usps-signature">USPS</span>
+            <div class="vancouver-text">VANCOUVER, WA</div>
+            <div class="route-finder-cool">ROUTE FINDER</div>
+        </div>
+        <div class="header-accent"></div>
     </div>
-    <div class="header-accent"></div>
 
-    <!-- These controls stick to the very top when you scroll down -->
     <div class="sticky-controls">
         <div class="input-container">
             <div class="input-row">
@@ -211,8 +212,18 @@
                     <label>Zip Code</label>
                     <select id="zipCode" onchange="clearStreetOnly()">
                         <option value="">Select ZIP...</option>
-                        <option value="98662">98662 (Demo)</option>
+                        <option value="98660">98660</option>
                         <option value="98661">98661</option>
+                        <option value="98662">98662 (Demo)</option>
+                        <option value="98663">98663</option>
+                        <option value="98664">98664</option>
+                        <option value="98665">98665</option>
+                        <option value="98668">98668</option>
+                        <option value="98682">98682</option>
+                        <option value="98683">98683</option>
+                        <option value="98684">98684</option>
+                        <option value="98685">98685</option>
+                        <option value="98686">98686</option>
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -221,7 +232,7 @@
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Street Name</label>
-                    <input type="text" id="streetInput" placeholder="Type street name..." autocomplete="off" oninput="handleSearch()">
+                    <input type="text" id="streetInput" placeholder="Start typing street..." autocomplete="off" oninput="handleSearch()">
                     <div id="suggestionBox" class="suggestion-box"></div>
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
@@ -230,11 +241,13 @@
     </div>
 
     <div id="resultArea"></div>
+    <div class="bottom-gap"></div>
 
     <script>
         const database = {
             "98662": [
-                { name: "18th Street", results: [{ range: "1000-1800", route: "C018" }] },
+                { name: "1st Street", results: [{ range: "100-998", route: "C001" }] },
+                { name: "18th Circle", results: [{ range: "1800-1899", route: "C018" }] },
                 { name: "180th Street", results: [{ range: "18000-18099", route: "C080" }] },
                 { name: "181st Street", results: [{ range: "18100-18199", route: "C081" }] },
                 { name: "182nd Street", results: [{ range: "18200-18299", route: "C082" }] },
@@ -245,9 +258,16 @@
                 { name: "187th Avenue", results: [{ range: "18700-18799", route: "C087" }] },
                 { name: "188th Street", results: [{ range: "18800-18899", route: "C088" }] },
                 { name: "189th Street", results: [
-                    { range: "100-998 (Even)", route: "C001" },
-                    { range: "2501-3000", route: "C044" },
-                    { range: "5001-6000", route: "C105" }
+                    { range: "100-500 (Even)", route: "C001" },
+                    { range: "101-499 (Odd)", route: "C002" },
+                    { range: "501-999", route: "C010" },
+                    { range: "1000-1500", route: "C022" },
+                    { range: "1501-2000", route: "C033" },
+                    { range: "2001-2500", route: "C044" },
+                    { range: "2501-3000", route: "C055" },
+                    { range: "3001-3500", route: "C066" },
+                    { range: "3501-4000", route: "C077" },
+                    { range: "4001-5000", route: "C099" }
                 ]}
             ]
         };
@@ -264,9 +284,9 @@
             resArea.innerHTML = "";
             if (!zip || val.length < 1) { sugBox.style.display = "none"; return; }
 
-            // When user starts typing, scroll the page down slightly to hide the banner
-            if (window.scrollY < 50) {
-                window.scrollTo({ top: 100, behavior: 'smooth' });
+            // Auto-scroll to hide banner when typing starts
+            if (window.scrollY < 40) {
+                window.scrollTo({ top: 120, behavior: 'smooth' });
             }
 
             let matches = (database[zip] || []).filter(s => s.name.toLowerCase().startsWith(val));
@@ -281,7 +301,6 @@
                     div.onclick = () => selectStreet(item);
                     sugBox.appendChild(div);
                 });
-                // Add keyboard buffer at the end of the list
                 const buffer = document.createElement('div');
                 buffer.className = "kb-buffer";
                 sugBox.appendChild(buffer);
