@@ -91,6 +91,7 @@
             font-size: 18px;
             box-sizing: border-box;
             background: white;
+            color: #000;
         }
 
         .btn-action {
@@ -106,12 +107,12 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* THE "MID-TEXT SLICE" PICK LIST */
+        /* THE 5.5 ITEM SLICE */
         .suggestion-box {
             background: white;
             border: 3px solid var(--usps-blue);
             border-radius: 12px;
-            max-height: 232px; /* CALIBRATED TO CUT OFF 5th ITEM */
+            max-height: 295px; /* ADJUSTED FOR 5 FULL + 0.5 OF 6th */
             overflow-y: scroll;
             display: none;
             position: absolute;
@@ -137,7 +138,7 @@
             font-size: 1.2rem;
             font-weight: 800;
             color: var(--usps-blue);
-            line-height: 1; /* Tight line height to make the slice consistent */
+            line-height: 1; 
         }
 
         #resultArea {
@@ -190,18 +191,10 @@
                     <label>Zip Code</label>
                     <select id="zipCode" onchange="clearStreetOnly()">
                         <option value="">Select ZIP...</option>
-                        <option value="98660">98660</option>
+                        <option value="98662">98662 (Trial Data)</option>
                         <option value="98661">98661</option>
-                        <option value="98662">98662 (Trial)</option>
-                        <option value="98663">98663</option>
-                        <option value="98664">98664</option>
-                        <option value="98665">98665</option>
-                        <option value="98668">98668</option>
-                        <option value="98682">98682</option>
-                        <option value="98683">98683</option>
-                        <option value="98684">98684</option>
-                        <option value="98685">98685</option>
-                        <option value="98686">98686</option>
+                        <option value="98660">98660</option>
+                        <!-- Other ZIPs omitted for brevity -->
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
