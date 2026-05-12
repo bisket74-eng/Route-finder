@@ -16,8 +16,8 @@
             background-color: var(--bg-color);
             margin: 0;
             padding: 20px;
-            /* Fix for bottom cutoff on mobile */
-            padding-bottom: calc(60px + env(safe-area-inset-bottom));
+            /* Extra space at bottom for mobile browser bars */
+            padding-bottom: calc(80px + env(safe-area-inset-bottom));
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -26,79 +26,89 @@
         .container {
             width: 100%;
             max-width: 500px;
+            position: relative;
         }
+
+        h2 { color: var(--primary-color); text-align: center; }
 
         input {
             width: 100%;
-            padding: 12px;
-            font-size: 16px;
+            padding: 15px;
+            font-size: 18px;
             border: 2px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
+            outline: none;
         }
 
-        /* --- STYLING THE PICK LIST (STREET DROPDOWN) --- */
+        input:focus { border-color: var(--accent-color); }
+
+        /* --- THE PICK LIST FIXES --- */
         #suggestions {
             background: white;
             border: 1px solid #ccc;
             border-top: none;
             border-radius: 0 0 8px 8px;
-            /* Height set to show roughly 4.5 items (40px * 4.5) */
+            /* 180px height / 40px items = 4.5 items shown (The Half-Cut) */
             max-height: 180px; 
             overflow-y: auto;
             position: absolute;
-            width: calc(100% - 40px); /* Adjust based on container padding */
-            max-width: 460px;
+            width: 100%;
             z-index: 1000;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none; /* Hidden by default */
         }
 
-        /* Force scrollbar visibility on Mobile/Webkit */
+        /* Make scrollbar visible and dark on mobile */
         #suggestions::-webkit-scrollbar {
             width: 10px;
             display: block;
         }
-
         #suggestions::-webkit-scrollbar-thumb {
-            background: #888; 
+            background: #666; 
             border-radius: 5px;
             border: 2px solid white;
         }
-
         #suggestions::-webkit-scrollbar-track {
             background: #eee;
         }
 
         .suggestion-item {
-            padding: 10px;
-            height: 40px; /* Fixed height for the "half-cut" math */
+            padding: 10px 15px;
+            height: 40px; 
             line-height: 20px;
             box-sizing: border-box;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f0f0f0;
             cursor: pointer;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* --- STYLING THE RESULTS (ROUTES LIST) --- */
+        /* --- RESULTS LIST FIXES --- */
         #results {
-            margin-top: 20px;
-            /* Ensures the last item isn't buried under browser toolbars */
-            padding-bottom: 40px; 
+            margin-top: 25px;
+            width: 100%;
         }
 
         .route-card {
             background: white;
             padding: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            border-left: 6px solid var(--accent-color);
+            animation: fadeIn 0.3s ease;
         }
 
-        .route-number {
-            font-weight: bold;
-            font-size: 1.2em;
-            color: var(--primary-color);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .route-label { font-size: 0.9rem; color: #7f8c8d; text-transform: uppercase; }
+        .route-number { font-weight: bold; font-size: 1.4rem; color: var(--primary-color); display: block; }
     </style>
 </head>
 <body>
@@ -107,55 +117,79 @@
         <h2>Street Search</h2>
         <input type="text" id="streetInput" placeholder="Start typing street name..." autocomplete="off">
         <div id="suggestions"></div>
-        
         <div id="results"></div>
     </div>
 
     <script>
-        // Assuming your database 'data' is loaded here
+        let routeData = {};
+
+        // Load your JSON data
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                routeData = data;
+                console.log("Database loaded successfully");
+            })
+            .catch(err => console.error("Error loading database:", err));
+
         const streetInput = document.getElementById('streetInput');
         const suggestions = document.getElementById('suggestions');
         const results = document.getElementById('results');
 
         streetInput.addEventListener('input', () => {
-            const val = streetInput.value.toLowerCase();
+            const val = streetInput.value.trim().toLowerCase();
             suggestions.innerHTML = '';
             
-            if (val.length < 2) return;
+            if (val.length < 2) {
+                suggestions.style.display = 'none';
+                return;
+            }
 
-            // Filtering logic (standardized for your CSV/JSON structure)
-            const matches = Object.keys(data).filter(s => s.toLowerCase().includes(val));
+            const matches = Object.keys(routeData).filter(s => s.toLowerCase().includes(val));
 
-            matches.forEach(match => {
-                const div = document.createElement('div');
-                div.classList.add('suggestion-item');
-                div.textContent = match;
-                div.onclick = () => selectStreet(match);
-                suggestions.appendChild(div);
-            });
+            if (matches.length > 0) {
+                suggestions.style.display = 'block';
+                matches.forEach(match => {
+                    const div = document.createElement('div');
+                    div.classList.add('suggestion-item');
+                    div.textContent = match;
+                    div.onclick = () => selectStreet(match);
+                    suggestions.appendChild(div);
+                });
+            } else {
+                suggestions.style.display = 'none';
+            }
         });
 
         function selectStreet(street) {
             streetInput.value = street;
             suggestions.innerHTML = '';
+            suggestions.style.display = 'none';
             displayRoutes(street);
         }
 
         function displayRoutes(street) {
             results.innerHTML = '';
-            const routes = data[street]; // Adjust based on your DB keys
+            const routes = routeData[street];
             
-            routes.forEach(route => {
-                const card = document.createElement('div');
-                card.classList.add('route-card');
-                card.innerHTML = `<div class="route-number">Route: ${route}</div>`;
-                results.appendChild(card);
-            });
+            if (routes && Array.isArray(routes)) {
+                routes.forEach(route => {
+                    const card = document.createElement('div');
+                    card.classList.add('route-card');
+                    card.innerHTML = `
+                        <span class="route-label">Assigned Route</span>
+                        <span class="route-number">${route}</span>
+                    `;
+                    results.appendChild(card);
+                });
+            }
         }
 
-        // Close dropdown when clicking outside
+        // Close dropdown when clicking away
         document.addEventListener('click', (e) => {
-            if (e.target !== streetInput) suggestions.innerHTML = '';
+            if (e.target !== streetInput) {
+                suggestions.style.display = 'none';
+            }
         });
     </script>
 </body>
