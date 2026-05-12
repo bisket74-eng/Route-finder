@@ -20,7 +20,6 @@
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
 
-        /* HEADER - This will scroll away to make room */
         .header {
             background-color: var(--usps-blue);
             padding: 20px 15px;
@@ -54,7 +53,6 @@
             width: 100%;
         }
 
-        /* CONTROLS - Sticks to top edge */
         .sticky-controls {
             position: sticky;
             top: 0;
@@ -108,16 +106,16 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* DROPS DOWN NOW - Sits on top of results */
+        /* THE "MID-TEXT SLICE" PICK LIST */
         .suggestion-box {
             background: white;
             border: 3px solid var(--usps-blue);
             border-radius: 12px;
-            max-height: 250px;
+            max-height: 232px; /* CALIBRATED TO CUT OFF 5th ITEM */
             overflow-y: scroll;
             display: none;
             position: absolute;
-            top: 105%; /* Drops DOWN from bar */
+            top: 105%; 
             left: 0;
             right: 0;
             z-index: 5000;
@@ -139,6 +137,7 @@
             font-size: 1.2rem;
             font-weight: 800;
             color: var(--usps-blue);
+            line-height: 1; /* Tight line height to make the slice consistent */
         }
 
         #resultArea {
@@ -159,6 +158,7 @@
         }
 
         .range-display { font-size: 1.4rem; font-weight: 900; color: #000; }
+        
         .route-side {
             background-color: var(--usps-blue);
             color: white;
@@ -167,9 +167,10 @@
             text-align: center;
             min-width: 70px;
         }
+        .route-side .lbl { font-size: 0.5rem; display: block; font-weight: bold; }
         .route-side .num { font-size: 1.4rem; font-weight: 900; }
 
-        .kb-buffer { height: 150px; }
+        .kb-buffer { height: 180px; }
     </style>
 </head>
 <body>
@@ -195,7 +196,12 @@
                         <option value="98663">98663</option>
                         <option value="98664">98664</option>
                         <option value="98665">98665</option>
+                        <option value="98668">98668</option>
                         <option value="98682">98682</option>
+                        <option value="98683">98683</option>
+                        <option value="98684">98684</option>
+                        <option value="98685">98685</option>
+                        <option value="98686">98686</option>
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -288,7 +294,7 @@
                 card.className = "result-card";
                 card.innerHTML = `
                     <div class="range-side"><div class="range-display">${res.range}</div></div>
-                    <div class="route-side"><span class="num">${res.route}</span></div>
+                    <div class="route-side"><span class="lbl">ROUTE</span><span class="num">${res.route}</span></div>
                 `;
                 cardCont.appendChild(card);
             });
