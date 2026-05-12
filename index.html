@@ -92,16 +92,16 @@
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* THE "STRIPED" PICK LIST WITH BORDERS */
+        /* THE COMPACT 5.5 ITEM STRIPED LIST */
         .suggestion-box {
-            background: #eee; /* Subtle background behind the plates */
-            border: 2px solid var(--usps-blue); /* Thin borders back on */
-            border-top: none; /* Keep it connected to the input bar */
+            background: #e5e5e5; 
+            border: 2px solid var(--usps-blue); 
+            border-top: none;
             border-radius: 0 0 12px 12px;
             
-            /* Reduced height to raise the bottom of the box */
-            height: 285px; 
-            max-height: 285px; 
+            /* Shortened to force a mid-text slice on the 6th item */
+            height: 235px; 
+            max-height: 235px; 
             
             overflow-y: auto;
             display: none;
@@ -115,7 +115,7 @@
         }
 
         .suggestion-item {
-            height: 54px; 
+            height: 48px; /* Slightly tighter rows */
             padding: 0 20px;
             display: flex;
             align-items: center;
@@ -123,14 +123,14 @@
             margin-bottom: 4px; 
             border-radius: 6px;
             border-bottom: 2px solid #ccc; 
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 900;
             color: var(--usps-blue);
             box-sizing: border-box;
+            white-space: nowrap;
         }
 
         .suggestion-item:last-child { margin-bottom: 0; }
-
         .suggestion-item:active { background: var(--usps-yellow); }
 
         .suggestion-box::-webkit-scrollbar { width: 14px; }
@@ -177,12 +177,11 @@
                     <label>Zip Code</label>
                     <select id="zipCode" onchange="clearStreetOnly()">
                         <option value="">Select ZIP...</option>
+                        <option value="98662">98662 (Trial Data)</option>
                         <option value="98660">98660</option>
                         <option value="98661">98661</option>
-                        <option value="98662">98662 (Trial Data)</option>
-                        <option value="98665">98665</option>
+                        <option value="98668">98668</option>
                         <option value="98682">98682</option>
-                        <option value="98686">98686</option>
                     </select>
                 </div>
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -217,7 +216,6 @@
                 { name: "188th Street", results: [{ range: "18800-18899", route: "C088" }] },
                 { name: "189th Street", results: [
                     { range: "100-500", route: "C001" },
-                    { range: "101-499", route: "C002" },
                     { range: "501-999", route: "C010" },
                     { range: "1000-1500", route: "C022" },
                     { range: "1501-2000", route: "C033" },
