@@ -24,7 +24,7 @@
 
         .sticky-top {
             position: relative;
-            z-index: 1000;
+            z-index: 2000; /* Higher than result area */
             background-color: var(--bg-color);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -117,39 +117,29 @@
             font-weight: 900;
             font-size: 0.6rem;
             text-transform: uppercase;
+            flex-shrink: 0;
         }
 
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        #resultArea {
-            height: calc(100vh - 320px); 
-            overflow-y: auto;
-            padding: 10px 15px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .scroll-spacer {
-            height: 80px; 
-            width: 100%;
-        }
-
+        /* THE FIX: Suggestion Box Drops DOWN and sits OVER the results */
         .suggestion-box {
             background: white;
             border: 3px solid var(--usps-blue);
             border-radius: 12px;
-            max-height: 235px; 
+            max-height: 250px; 
             overflow-y: scroll;
             display: none;
             position: absolute;
-            bottom: 105%; 
+            top: 105%; /* Drops DOWN from the input */
             left: 0;
             right: 0;
-            z-index: 5000;
-            box-shadow: 0 -8px 20px rgba(0,0,0,0.3);
+            z-index: 5000; /* Stays on top of everything */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
-        .suggestion-box::-webkit-scrollbar { width: 12px; }
+        .suggestion-box::-webkit-scrollbar { width: 14px; }
         .suggestion-box::-webkit-scrollbar-thumb {
             background: var(--scroll-blue);
             border: 2px solid #333;
@@ -164,6 +154,15 @@
             font-weight: 800;
             color: var(--usps-blue);
         }
+
+        #resultArea {
+            height: calc(100vh - 320px); 
+            overflow-y: auto;
+            padding: 10px 15px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scroll-spacer { height: 100px; width: 100%; }
 
         .result-card {
             background: white;
@@ -189,7 +188,7 @@
             min-width: 70px;
         }
 
-        .route-side .lbl { font-size: 0.55rem; font-weight: bold; display: block; }
+        .route-side .lbl { font-size: 0.5rem; font-weight: bold; display: block; }
         .route-side .num { font-size: 1.4rem; font-weight: 900; display: block; }
     </style>
 </head>
@@ -204,6 +203,7 @@
         <div class="header-accent"></div>
 
         <div class="input-container">
+            <!-- ZIP ROW -->
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Zip Code</label>
@@ -226,11 +226,13 @@
                 <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
             </div>
 
+            <!-- STREET ROW -->
             <div class="input-row">
                 <div class="input-wrapper">
                     <label>Street Name</label>
+                    <input type="text" id="streetInput" placeholder="Type street name..." autocomplete="off" oninput="handleSearch()">
+                    <!-- SUGGESTION BOX DROPS DOWN NOW -->
                     <div id="suggestionBox" class="suggestion-box"></div>
-                    <input type="text" id="streetInput" placeholder="Start typing street..." autocomplete="off" oninput="handleSearch()">
                 </div>
                 <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
             </div>
