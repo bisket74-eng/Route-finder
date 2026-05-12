@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,7 @@
             --usps-blue: #004b87;
             --usps-red: #da291c;
             --usps-yellow: #ffde00;
+            --scroll-blue: #82caff; /* Light Sky Blue for high contrast */
             --bg-color: #f4f7f9;
         }
 
@@ -48,7 +50,6 @@
             letter-spacing: 2px;
             font-weight: 700;
             text-transform: uppercase;
-            opacity: 0.9;
         }
 
         .header-accent {
@@ -91,32 +92,29 @@
             font-size: 18px;
             box-sizing: border-box;
             background: white;
-            color: #000;
         }
 
         .btn-action {
             height: 55px;
-            width: 90px;
+            width: 95px;
             border-radius: 10px;
             border: none;
             font-weight: 900;
             font-size: 0.7rem;
             text-transform: uppercase;
-            cursor: pointer;
             box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-            line-height: 1.2;
         }
 
         .reset-all { background-color: var(--usps-red); color: white; }
         .reset-street { background-color: var(--usps-yellow); color: #000; }
 
-        /* IMPROVED SCROLLABLE SUGGESTION BOX */
+        /* SUGGESTION BOX - CUT OFF TO SHOW MORE */
         .suggestion-box {
             background: white;
             border: 3px solid var(--usps-blue);
             border-radius: 12px;
-            max-height: 275px; /* Adjusted to "cut off" the last item slightly */
-            overflow-y: scroll; /* Forces scrollbar to be active */
+            max-height: 235px; /* Tuned to cut off mid-text on line 5 */
+            overflow-y: scroll; 
             display: none;
             position: absolute;
             bottom: 105%; 
@@ -124,34 +122,36 @@
             right: 0;
             z-index: 5000;
             box-shadow: 0 -8px 20px rgba(0,0,0,0.3);
-            -webkit-overflow-scrolling: touch; 
         }
 
-        /* Visible Scrollbar Styling */
+        /* HIGH-CONTRAST SCROLLBAR */
         .suggestion-box::-webkit-scrollbar {
-            width: 10px;
+            width: 14px;
         }
         .suggestion-box::-webkit-scrollbar-thumb {
-            background: var(--usps-blue);
+            background: var(--scroll-blue);
+            border: 2px solid #333;
             border-radius: 10px;
         }
         .suggestion-box::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: #444;
             border-radius: 0 10px 10px 0;
         }
 
         .suggestion-item {
-            padding: 20px;
+            padding: 18px 20px;
             border-bottom: 1px solid #eee;
             font-size: 1.2rem;
             font-weight: 800;
             color: var(--usps-blue);
+            line-height: 1;
         }
 
+        /* RESULT CARDS */
         .result-card {
             background: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             margin-top: 12px;
             display: flex;
@@ -160,20 +160,20 @@
             border: 1px solid #ccc;
         }
 
-        .range-display { font-size: 1.8rem; font-weight: 900; color: #000; }
-        .street-display { font-size: 1rem; color: #555; font-weight: 700; margin-top: 4px; }
+        .range-display { font-size: 1.6rem; font-weight: 900; color: #000; }
+        .street-display { font-size: 0.95rem; color: #555; font-weight: 700; }
 
         .route-side {
             background-color: var(--usps-blue);
             color: white;
-            padding: 10px;
-            border-radius: 10px;
+            padding: 8px;
+            border-radius: 8px;
             text-align: center;
-            min-width: 80px;
+            min-width: 75px;
         }
 
-        .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
-        .route-side .num { font-size: 1.8rem; font-weight: 900; display: block; }
+        .route-side .lbl { font-size: 0.55rem; font-weight: bold; display: block; }
+        .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
     </style>
 </head>
 <body>
@@ -191,8 +191,6 @@
                 <select id="zipCode" onchange="clearStreetOnly()">
                     <option value="">Select ZIP...</option>
                     <option value="98662">98662 (Demo)</option>
-                    <option value="98661">98661</option>
-                    <option value="98660">98660</option>
                 </select>
             </div>
             <button class="btn-action reset-all" onclick="fullAppReset()">Reset<br>All</button>
@@ -223,7 +221,15 @@
                 { name: "186th Avenue", results: [{ range: "18600-18699", route: "C086" }] },
                 { name: "187th Street", results: [{ range: "18700-18799", route: "C087" }] },
                 { name: "188th Street", results: [{ range: "18800-18899", route: "C088" }] },
-                { name: "189th Street", results: [{ range: "18900-18999", route: "C089" }] }
+                { name: "189th Street", results: [
+                    { range: "100-998 (Even)", route: "C001" },
+                    { range: "101-999 (Odd)", route: "C002" },
+                    { range: "1000-1998 (Even)", route: "C015" },
+                    { range: "1001-1999 (Odd)", route: "C016" },
+                    { range: "2000-2500", route: "C022" },
+                    { range: "2501-3000", route: "C044" },
+                    { range: "3001-4000", route: "C099" }
+                ]}
             ]
         };
 
@@ -239,7 +245,6 @@
             resArea.innerHTML = "";
             if (!zip || val.length < 1) { sugBox.style.display = "none"; return; }
 
-            // SORTED SEARCH: This puts the shortest names (like 18th) first
             let matches = (database[zip] || []).filter(s => s.name.toLowerCase().startsWith(val));
             matches.sort((a, b) => a.name.length - b.name.length || a.name.localeCompare(b.name));
 
