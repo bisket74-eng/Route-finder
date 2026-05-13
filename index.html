@@ -11,7 +11,28 @@
         ::-webkit-scrollbar-track { background: var(--lt-bl); }
         ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 3px solid var(--lt-bl); }
 
-        body { margin: 0; background: var(--lt-bl); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        /* THE DESKTOP FIX: Center the app and limit width on wide screens */
+        body { 
+            margin: 0; 
+            background: #d1dee8; /* Darker blue for the "desk" background */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; /* Centers the app on desktop */
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* This container is the "Phone" frame on a Desktop */
+        .app-container {
+            width: 100%;
+            max-width: 600px; /* The "Happy Medium" width */
+            background: var(--lt-bl);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.2); /* Adds depth on desktop */
+        }
         
         #banner-wrap { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.4s; flex-shrink: 0; }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -140px; }
@@ -54,43 +75,45 @@
     </style>
 </head>
 <body>
-    <div id="admin">
-        <textarea id="ti" placeholder="Paste Excel Data..."></textarea>
-        <button onclick="savePastedData()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:8px;">SAVE DATA</button>
-    </div>
-    <div id="banner-wrap">
-        <div class="hdr" onclick="secretKnock()">
-            <span class="usps-sig">USPS</span><span class="vanc-text">Vancouver, WA</span><span class="rt-finder-text">Route Finder</span>
+    <div class="app-container">
+        <div id="admin">
+            <textarea id="ti" placeholder="Paste Data..."></textarea>
+            <button onclick="savePastedData()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:6px;">SAVE DATA</button>
         </div>
-        <div class="hdr-accent"></div>
-    </div>
-    <div class="sticky-top">
-        <div class="ctrls">
-            <div class="row">
-                <div class="input-wrapper">
-                    <label>Zip Code</label>
-                    <select id="zipCode" onchange="handleZipChange()">
-                        <option value="">Select ZIP...</option><option value="ALL">ALL ZIPs</option>
-                        <option value="98660">98660</option><option value="98661">98661</option><option value="98662">98662</option>
-                        <option value="98663">98663</option><option value="98664">98664</option><option value="98665">98665</option>
-                        <option value="98668">98668</option><option value="98682">98682</option><option value="98683">98683</option>
-                        <option value="98684">98684</option><option value="98685">98685</option><option value="98686">98686</option>
-                    </select>
-                </div>
-                <button class="btn-action red" onclick="resetZipSelection()">Reset</button>
+        <div id="banner-wrap">
+            <div class="hdr" onclick="secretKnock()">
+                <span class="usps-sig">USPS</span><span class="vanc-text">Vancouver, WA</span><span class="rt-finder-text">Route Finder</span>
             </div>
-            <div class="row" style="position:relative">
-                <div class="input-wrapper">
-                    <label>Type Street Name Only</label>
-                    <input type="text" id="streetInput" placeholder="Select ZIP first..." disabled autocomplete="off" oninput="handleSearch()" onfocus="handleSearch()">
-                    <div id="suggestionBox" class="sug"></div>
-                </div>
-                <button class="btn-action yel" onclick="clearStreetOnly()">Clear<br>Street</button>
-            </div>
+            <div class="hdr-accent"></div>
         </div>
-        <button id="backToListBtn" onclick="reopenSuggestions()">⬅ Return to Street List</button>
+        <div class="sticky-top">
+            <div class="ctrls">
+                <div class="row">
+                    <div class="input-wrapper">
+                        <label>Zip Code</label>
+                        <select id="zipCode" onchange="handleZipChange()">
+                            <option value="">Select ZIP...</option><option value="ALL">ALL ZIPs</option>
+                            <option value="98660">98660</option><option value="98661">98661</option><option value="98662">98662</option>
+                            <option value="98663">98663</option><option value="98664">98664</option><option value="98665">98665</option>
+                            <option value="98668">98668</option><option value="98682">98682</option><option value="98683">98683</option>
+                            <option value="98684">98684</option><option value="98685">98685</option><option value="98686">98686</option>
+                        </select>
+                    </div>
+                    <button class="btn-action red" onclick="resetZipSelection()">Reset</button>
+                </div>
+                <div class="row" style="position:relative">
+                    <div class="input-wrapper">
+                        <label>Type Street Name Only</label>
+                        <input type="text" id="streetInput" placeholder="Select ZIP first..." disabled autocomplete="off" oninput="handleSearch()" onfocus="handleSearch()">
+                        <div id="suggestionBox" class="sug"></div>
+                    </div>
+                    <button class="btn-action yel" onclick="clearStreetOnly()">Clear<br>Street</button>
+                </div>
+            </div>
+            <button id="backToListBtn" onclick="reopenSuggestions()">⬅ Return to Street List</button>
+        </div>
+        <div id="list-res"><div id="cc"></div></div>
     </div>
-    <div id="list-res"><div id="cc"></div></div>
 
 <script>
     let database = {}; let lastUserTyping = ""; let currentOpenStreet = null;
@@ -150,26 +173,9 @@
 
         if (allM.length > 0) {
             sugBox.style.display = "block";
-            
-            // CUSTOM POSTAL SORT
-            allM.sort((a, b) => {
-                const cleanA = a.searchName;
-                const cleanB = b.searchName;
-                
-                // 1. Sort by the numeric value or name part first
-                const naturalResult = cleanA.localeCompare(cleanB, undefined, {numeric: true, sensitivity: 'base'});
-                
-                // 2. If it's the same base name (e.g., "1ST"), tie-break by Suffix (CIR, ST, WAY)
-                if (naturalResult === 0) {
-                    return a.displayName.localeCompare(b.displayName);
-                }
-                
-                return naturalResult;
-            });
-            
+            allM.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric: true, sensitivity: 'base'}));
             const unique = []; const seen = new Set();
             allM.forEach(item => { const id = item.displayName + item.zip; if(!seen.has(id)){ unique.push(item); seen.add(id); } });
-
             unique.slice(0, 250).forEach(item => {
                 const div = document.createElement('div'); div.className = "s-item";
                 div.innerHTML = `<span>${item.displayName}</span> <span class="zip-badge-small">${item.zip}</span>`;
