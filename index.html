@@ -144,16 +144,35 @@
         const backBtn = document.getElementById('backToListBtn');
 
         function handleZipChange() {
-            if(zipIn.value !== "") { strIn.disabled = false; strIn.placeholder = "Start typing..."; setTimeout(() => { strIn.focus(); }, 50); }
-            else { resetZipSelection(); }
+            if(zipIn.value !== "") { 
+                strIn.disabled = false; 
+                strIn.placeholder = "Start typing..."; 
+                
+                // FIXED: If user already has text in the box, re-trigger the search for the new ZIP
+                if(strIn.value.length > 0) {
+                    handleSearch();
+                } else {
+                    setTimeout(() => { strIn.focus(); }, 50);
+                }
+            } else { 
+                resetZipSelection(); 
+            }
         }
 
         function handleSearch() {
             const selectedZip = zipIn.value;
             const val = strIn.value.toUpperCase().trim();
-            if (val.length > 0) { document.body.classList.add('searching'); if(!val.includes(" ")) { lastUserTyping = strIn.value; } }
-            sugBox.innerHTML = "";
+            
+            // Clean up view when search starts
+            cardCont.innerHTML = "";
             backBtn.style.display = "none";
+
+            if (val.length > 0) { 
+                document.body.classList.add('searching'); 
+                if(!val.includes(" ")) { lastUserTyping = strIn.value; } 
+            }
+            
+            sugBox.innerHTML = "";
             if (val.length < 1) { sugBox.style.display = "none"; return; }
             
             let allMatches = [];
@@ -168,8 +187,6 @@
             if (allMatches.length > 0) {
                 sugBox.style.display = "block";
                 const unique = [...new Map(allMatches.map(item => [item.displayName + item.zip, item])).values()];
-                
-                // NEW NATURAL SORT LOGIC
                 unique.sort((a, b) => a.displayName.localeCompare(b.displayName, undefined, { numeric: true, sensitivity: 'base' }));
                 
                 unique.slice(0, 50).forEach(item => {
