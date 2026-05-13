@@ -8,21 +8,21 @@
     <style>
         :root { --bl: #004b87; --rd: #da291c; --yl: #ffde00; --bg: #f4f7f9; }
         
-        /* Prevent body from scrolling when list is active */
-        body.lock-scroll { overflow: hidden; position: fixed; width: 100%; }
+        /* Sticky Top Section to prevent "Runaway" scrolling */
+        .sticky-top { position: sticky; top: 0; z-index: 2000; background: var(--bg); }
         
-        body { margin: 0; background: var(--bg); font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { margin: 0; background: var(--bg); font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow-x: hidden; }
         
-        .hdr { background: var(--bl); padding: 18px 15px; text-align: center; color: white; cursor: pointer; flex-shrink: 0; }
+        .hdr { background: var(--bl); padding: 18px 15px; text-align: center; color: white; cursor: pointer; }
         .usps-sig { font-size: 2.4rem; font-weight: 900; font-style: italic; letter-spacing: -3px; transform: skewX(-12deg); display: block; line-height: 0.8; margin-bottom: 5px; }
         .vanc-text { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: block; }
         .rt-finder-text { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--yl); margin-top: 4px; display: block; }
-        .hdr-accent { height: 5px; background: var(--rd); width: 100%; flex-shrink: 0; }
+        .hdr-accent { height: 5px; background: var(--rd); width: 100%; }
         
         #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 20000; top: 10px; left: 10px; right: 10px; border-radius: 12px; border: 3px dashed var(--bl); box-shadow: 0 10px 30px #000; }
         textarea { width: 100%; height: 150px; font-size: 12px; }
 
-        .ctrls { padding: 10px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1000; position: relative; }
+        .ctrls { padding: 10px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; }
         .row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-end; }
         select, input { width: 100%; padding: 12px; border: 2px solid #bbb; border-radius: 8px; font-size: 18px; box-sizing: border-box; font-weight: 600; }
         
@@ -30,11 +30,11 @@
         .red { background: var(--rd); color: white; width: 85px; }
         .yel { background: var(--yl); color: black; width: 85px; }
         
-        /* PICK LIST - Now with Internal Scroll Only */
+        /* PICK LIST - Improved containment */
         .sug { 
             background: white; 
             border: 3px solid var(--bl); 
-            max-height: 220px; /* Limits height so it fits above keyboard */
+            max-height: 250px; 
             overflow-y: auto; 
             display: none; 
             position: absolute; 
@@ -44,7 +44,6 @@
             z-index: 9999; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
             border-radius: 0 0 12px 12px;
-            -webkit-overflow-scrolling: touch; /* Smooth mobile scroll */
         }
         .s-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: 900; color: var(--bl); }
 
@@ -53,16 +52,17 @@
         .big-card { background: white; border: 6px solid var(--bl); border-radius: 24px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; }
         .rt-giant { font-size: 8rem; font-weight: 900; color: var(--bl); line-height: 1; display: block; }
 
-        #list-res { flex: 1; overflow-y: auto; padding: 15px; z-index: 10; }
+        #list-res { flex: 1; overflow-y: auto; padding: 15px; }
         .list-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ccc; display: flex; justify-content: space-between; align-items: center; }
         .blue-block { background: var(--bl); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 75px; font-weight: 900; }
         .blue-block small { font-size: 0.6rem; display: block; margin-bottom: -3px; }
         .blue-block span { font-size: 1.6rem; display: block; }
 
+        /* The Fixed Return Button */
         #return-btn { display: none; width: 100%; padding: 16px; background: var(--bl); color: white; border: none; font-weight: 900; border-radius: 8px; margin-bottom: 15px; text-transform: uppercase; font-size: 1rem; }
 
-        .scan-wrap { padding: 20px; background: white; border-top: 1px solid #ddd; z-index: 50; }
-        .big-scan { background: var(--bl); color: white; width: 100%; padding: 20px; border-radius: 50px; font-size: 1.3rem; font-weight: 900; border: none; box-shadow: 0 6px 15px rgba(0,75,135,0.4); text-transform: uppercase; }
+        .scan-wrap { padding: 20px; background: white; border-top: 1px solid #ddd; flex-shrink: 0; }
+        .big-scan { background: var(--bl); color: white; width: 100%; padding: 20px; border-radius: 50px; font-size: 1.3rem; font-weight: 900; border: none; text-transform: uppercase; }
 
         #scanner-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 11000; }
         #reader { width: 100%; height: 80%; }
@@ -85,33 +85,35 @@
         </div>
     </div>
 
-    <div class="hdr" onclick="kn()">
-        <span class="usps-sig">USPS</span>
-        <span class="vanc-text">Vancouver, WA</span>
-        <span class="rt-finder-text">Route Finder</span>
-    </div>
-    <div class="hdr-accent"></div>
-
-    <div class="ctrls">
-        <div class="row">
-            <select id="zs" onchange="zc()">
-                <option value="">Select ZIP...</option><option value="ALL">ALL ZIPs</option>
-                <option value="98660">98660</option><option value="98661">98661</option><option value="98662">98662</option>
-                <option value="98663">98663</option><option value="98664">98664</option><option value="98665">98665</option>
-                <option value="98668">98668</option><option value="98682">98682</option><option value="98683">98683</option>
-                <option value="98684">98684</option><option value="98685">98685</option><option value="98686">98686</option>
-            </select>
-            <button class="btn red" onclick="ra()">Reset</button>
+    <div class="sticky-top">
+        <div class="hdr" onclick="kn()">
+            <span class="usps-sig">USPS</span>
+            <span class="vanc-text">Vancouver, WA</span>
+            <span class="rt-finder-text">Route Finder</span>
         </div>
-        <div class="row" style="position:relative">
-            <input type="text" id="si" placeholder="Select ZIP first..." disabled oninput="sh()">
-            <div id="sb" class="sug"></div>
-            <button class="btn yel" onclick="cs()">Clear</button>
+        <div class="hdr-accent"></div>
+
+        <div class="ctrls">
+            <div class="row">
+                <select id="zs" onchange="zc()">
+                    <option value="">Select ZIP...</option><option value="ALL">ALL ZIPs</option>
+                    <option value="98660">98660</option><option value="98661">98661</option><option value="98662">98662</option>
+                    <option value="98663">98663</option><option value="98664">98664</option><option value="98665">98665</option>
+                    <option value="98668">98668</option><option value="98682">98682</option><option value="98683">98683</option>
+                    <option value="98684">98684</option><option value="98685">98685</option><option value="98686">98686</option>
+                </select>
+                <button class="btn red" onclick="ra()">Reset</button>
+            </div>
+            <div class="row" style="position:relative">
+                <input type="text" id="si" placeholder="Select ZIP first..." disabled oninput="sh()">
+                <div id="sb" class="sug"></div>
+                <button class="btn yel" onclick="clearInputOnly()">Clear</button>
+            </div>
         </div>
     </div>
 
     <div id="list-res">
-        <button id="return-btn" onclick="cs()">Return to Street List</button>
+        <button id="return-btn" onclick="backToList()">Return to Street List</button>
         <div id="cc"></div>
     </div>
 
@@ -144,36 +146,29 @@
         localStorage.setItem('vanc_db', JSON.stringify(n)); alert("Data Saved!"); location.reload();
     }
 
-    function zc(){ cs(); if(zs.value){si.disabled=false;si.placeholder="Type street...";si.focus();} else {si.disabled=true;} }
+    function zc(){ clearInputOnly(); if(zs.value){si.disabled=false;si.placeholder="Type street...";si.focus();} else {si.disabled=true;} }
 
     function sh(){
         const v=si.value.toUpperCase().trim(); cc.innerHTML=""; sb.innerHTML=""; rbtn.style.display="none"; 
-        
-        if(!v){
-            sb.style.display="none";
-            document.body.classList.remove('lock-scroll');
-            return;
-        }
-
+        if(!v){ sb.style.display="none"; return; }
         let f=[]; const t=(zs.value==="ALL")?Object.keys(d):[zs.value];
         t.forEach(z=>{ if(d[z]) d[z].filter(s=>s.key.startsWith(v)).forEach(s=>f.push({...s, zip:z})); });
-
         if(f.length>0){ 
             sb.style.display="block"; 
-            document.body.classList.add('lock-scroll'); // LOCKS PAGE
             f.sort((a,b)=>a.name.localeCompare(b.name)).forEach(x=>{
                 const div = document.createElement('div'); div.className="s-item";
-                div.innerHTML=`<span>${x.name}</span> <small style="background:var(--bl); color:white; padding:2px 6px; border-radius:4px;">${x.zip}</small>`; div.onclick=()=>sr(x); sb.appendChild(div);
+                div.innerHTML=`<span>${x.name}</span> <small style="background:var(--bl); color:white; padding:2px 6px; border-radius:4px;">${x.zip}</small>`; 
+                div.onclick = () => sr(x); 
+                sb.appendChild(div);
             }); 
-        } else { 
-            sb.style.display="none"; 
-            document.body.classList.remove('lock-scroll');
-        }
+        } else { sb.style.display="none"; }
     }
 
     function sr(x){
-        si.value = x.name; sb.style.display = "none"; cc.innerHTML = ""; rbtn.style.display = "block";
-        document.body.classList.remove('lock-scroll'); // UNLOCKS PAGE
+        si.value = x.name; 
+        sb.style.display = "none"; 
+        cc.innerHTML = ""; 
+        rbtn.style.display = "block";
         x.list.forEach(i => {
             const div = document.createElement('div'); div.className="list-card";
             div.innerHTML=`<div class="blue-block"><small>ZIP</small><span>${x.zip}</span></div><div style="flex:1; padding:0 15px;"><b style="font-size:1.7rem">${i.range}</b><br><small style="font-weight:bold; color:#555">${x.name}</small></div><div class="blue-block"><small>RT</small><span>${i.rt}</span></div>`;
@@ -181,6 +176,25 @@
         });
         window.scrollTo(0,0);
     }
+
+    // FIX: Back to list only clears the results, not the inputs
+    function backToList() {
+        cc.innerHTML = "";
+        rbtn.style.display = "none";
+        sh(); // Re-runs the search logic to show your pick list
+    }
+
+    // FIX: Clear button only clears the search bar, not the ZIP
+    function clearInputOnly() {
+        si.value = "";
+        sb.innerHTML = "";
+        sb.style.display = "none";
+        cc.innerHTML = "";
+        rbtn.style.display = "none";
+        if(!si.disabled) si.focus();
+    }
+
+    function ra(){ zs.selectedIndex=0; clearInputOnly(); }
 
     function startScan() {
         if (fullList.length === 0) { flashCard("98661", "C042", "NO DATA"); return; }
@@ -195,7 +209,7 @@
         const zip = raw.slice(-11, -6), dp = raw.slice(-2);
         let match = fullList.find(i => i.z === zip && i.r.includes(dp));
         if (match) { flashCard(match.z, match.rt, match.n); } 
-        else { alert("ZIP " + zip + " found. Check list."); zs.value = zip; zc(); }
+        else { alert("ZIP " + zip + " found."); zs.value = zip; zc(); }
     }
 
     function flashCard(zip, route, street) {
@@ -209,17 +223,6 @@
     }
 
     function stopScan() { if(scanner) scanner.stop(); document.getElementById('scanner-ui').style.display = 'none'; }
-    
-    function cs(){ 
-        si.value=""; 
-        sb.style.display="none"; 
-        cc.innerHTML=""; 
-        rbtn.style.display="none"; 
-        document.body.classList.remove('lock-scroll');
-        if(!si.disabled)si.focus(); 
-    }
-    
-    function ra(){ zs.selectedIndex=0; zc(); }
 </script>
 </body>
 </html>
