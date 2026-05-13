@@ -29,9 +29,13 @@
         .suggestion-item { height: 48px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; background: white; margin-bottom: 4px; border-radius: 6px; border-bottom: 2px solid #ccc; font-size: 1.1rem; font-weight: 900; color: var(--usps-blue); }
         .zip-badge-small { font-size: 0.8rem; background: var(--usps-blue); color: white; padding: 2px 6px; border-radius: 4px; }
         #resultArea { flex-grow: 1; padding: 10px 15px 350px 15px; overflow-y: auto; position: relative; z-index: 10; }
-        .result-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; }
-        .range-display { font-size: 1.5rem; font-weight: 900; display: block; }
+        .result-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card-left { flex: 1; }
+        .zip-tag { display: inline-block; font-size: 0.9rem; font-weight: 900; background: var(--usps-blue); color: white; padding: 3px 10px; border-radius: 6px; margin-bottom: 8px; }
+        .range-display { font-size: 1.5rem; font-weight: 900; display: block; color: #000; }
+        .street-display { font-size: 0.8rem; color: #666; font-weight: bold; }
         .route-side { background-color: var(--usps-blue); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 80px; }
+        .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
         .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
     </style>
 </head>
@@ -103,7 +107,7 @@
             const newDB = {};
             lines.forEach(line => {
                 const c = line.split('\t');
-                if (c.length < 8) return; 
+                if (c.length < 9) return; // Ensure we have enough columns for Route at index 8
                 const zip = c[7]?.trim();
                 const name = c[4]?.trim();
                 if (!zip || !name) return;
@@ -169,7 +173,16 @@
             item.results.forEach(res => {
                 const card = document.createElement('div');
                 card.className = "result-card";
-                card.innerHTML = `<div class="card-left"><strong>${res.range}</strong><br><small>${item.displayName} (${item.zip})</small></div><div class="route-side"><span class="num">${res.route}</span></div>`;
+                card.innerHTML = `
+                    <div class="card-left">
+                        <span class="zip-tag">ZIP: ${item.zip}</span>
+                        <span class="range-display">${res.range}</span>
+                        <span class="street-display">${item.displayName}</span>
+                    </div>
+                    <div class="route-side">
+                        <span class="lbl">ROUTE</span>
+                        <span class="num">${res.route}</span>
+                    </div>`;
                 cardCont.appendChild(card);
             });
         }
