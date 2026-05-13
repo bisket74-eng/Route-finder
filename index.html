@@ -3,229 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Vancouver Route Finder</title>
+    <title>USPS Fast-Sort</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        :root { --usps-blue: #004b87; --usps-red: #da291c; --usps-yellow: #ffde00; --bg-color: #f4f7f9; }
-        html, body { margin: 0; padding: 0; height: 100%; width: 100%; background-color: var(--bg-color); font-family: sans-serif; overflow: hidden; display: flex; flex-direction: column; }
-        #banner-wrap { flex-shrink: 0; transition: 0.3s; cursor: pointer; }
-        body.searching #banner-wrap { display: none; }
-        .header { background-color: var(--usps-blue); padding: 18px 15px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .usps-signature { color: white; font-size: 2rem; font-weight: 900; font-style: italic; letter-spacing: -3px; line-height: 0.8; transform: skewX(-5deg); margin-bottom: 4px; }
-        .vancouver-text { color: white; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; }
-        .route-finder-cool { margin-top: 2px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: var(--usps-yellow); }
-        .header-accent { height: 6px; background-color: var(--usps-red); width: 100%; }
-        #adminPanel { display: none; background: white; padding: 15px; border: 3px dashed var(--usps-blue); margin: 10px; border-radius: 12px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        #dataInput { width: 100%; height: 150px; margin: 10px 0; font-size: 12px; border: 2px solid var(--usps-blue); border-radius: 8px; }
-        .sticky-controls { flex-shrink: 0; background-color: var(--bg-color); padding: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 5000; }
-        .input-container { max-width: 450px; margin: 0 auto; position: relative; }
-        .input-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 12px; }
-        .input-wrapper { flex: 1; position: relative; }
-        label { display: block; margin-bottom: 3px; font-size: 0.75rem; font-weight: bold; color: #333; text-transform: uppercase; }
-        select, input { width: 100%; padding: 12px; border: 2px solid #bbb; border-radius: 8px; font-size: 18px; box-sizing: border-box; background: white; color: #000; }
-        .btn-action { height: 48px; width: 90px; border-radius: 8px; border: none; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
-        .reset-zip { background-color: var(--usps-red); color: white; }
-        .reset-street { background-color: var(--usps-yellow); color: #000; }
-        #backToListBtn { display: none; position: sticky; top: 0; z-index: 4000; width: 100%; background: var(--usps-blue); color: white; margin-bottom: 12px; padding: 14px; border-radius: 8px; font-weight: 900; text-transform: uppercase; border: none; font-size: 0.85rem; cursor: pointer; border-bottom: 4px solid var(--usps-red); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .suggestion-box { background: #e5e5e5; border: 2px solid var(--usps-blue); border-top: none; border-radius: 0 0 12px 12px; height: 236px; max-height: 236px; overflow-y: scroll; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); -webkit-overflow-scrolling: touch; }
-        .suggestion-box::-webkit-scrollbar { width: 14px; display: block; }
-        .suggestion-box::-webkit-scrollbar-track { background: #ccc; border-radius: 10px; }
-        .suggestion-box::-webkit-scrollbar-thumb { background-color: var(--usps-blue); border-radius: 10px; border: 2px solid #ccc; }
-        .suggestion-item { height: 48px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; background: white; margin-bottom: 4px; border-radius: 6px; border-bottom: 2px solid #ccc; font-size: 1.1rem; font-weight: 900; color: var(--usps-blue); }
-        .zip-badge-small { font-size: 0.9rem; font-weight: 900; background: var(--usps-blue); color: white; padding: 4px 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        #resultArea { flex-grow: 1; padding: 10px 15px 350px 15px; overflow-y: auto; position: relative; z-index: 10; }
-        .result-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card-left { flex: 1; }
-        .zip-tag { display: inline-block; font-size: 0.9rem; font-weight: 900; background: var(--usps-blue); color: white; padding: 3px 10px; border-radius: 6px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .range-display { font-size: 1.5rem; font-weight: 900; display: block; color: #000; }
-        .street-display { font-size: 0.8rem; color: #666; font-weight: bold; }
-        .route-side { background-color: var(--usps-blue); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 80px; }
-        .route-side .lbl { font-size: 0.6rem; font-weight: bold; display: block; }
-        .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
+        :root { --bl: #004b87; --rd: #da291c; --yl: #ffde00; --bg: #f4f7f9; }
+        body { margin: 0; background: var(--bg); font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        .hdr { background: var(--bl); padding: 15px; text-align: center; border-bottom: 6px solid var(--rd); color: white; cursor: pointer; flex-shrink: 0; }
+        .sig { font-size: 2rem; font-weight: 900; font-style: italic; transform: skewX(-10deg); display: block; line-height: 0.8; }
+        
+        #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px; border-radius: 12px; border: 3px dashed var(--bl); }
+        textarea { width: 100%; height: 150px; border-radius: 8px; border: 1px solid #ccc; font-size: 12px; box-sizing: border-box; }
+
+        .ctrls { padding: 10px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 50; }
+        .row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-end; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #bbb; border-radius: 8px; font-size: 18px; box-sizing: border-box; }
+        
+        .btn { height: 48px; border-radius: 8px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.7rem; }
+        .red { background: var(--rd); color: white; width: 85px; }
+        .yel { background: var(--yl); color: black; width: 85px; }
+        
+        /* Large Scan Button */
+        .scan-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+        .big-scan { background: var(--bl); color: white; width: 85%; padding: 25px; border-radius: 50px; font-size: 1.4rem; font-weight: 900; border: none; box-shadow: 0 8px 20px rgba(0,75,135,0.4); }
+
+        /* Fly-in Card Animation */
+        #flash-res { position: fixed; top: 25%; left: 5%; right: 5%; z-index: 12000; display: none; transform: translateY(-50px); opacity: 0; transition: 0.3s ease-out; }
+        #flash-res.show { display: block; transform: translateY(0); opacity: 1; }
+        
+        .big-card { background: white; border: 5px solid var(--bl); border-radius: 20px; padding: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); text-align: center; }
+        .zip-mini { font-size: 1.2rem; font-weight: 900; color: var(--bl); margin-bottom: 5px; display: block; }
+        .rt-giant { font-size: 6rem; font-weight: 900; color: var(--bl); line-height: 1; display: block; }
+        .st-mini { font-size: 1rem; color: #555; text-transform: uppercase; font-weight: bold; margin-top: 10px; display: block; }
+
+        .sug { background: white; border: 2px solid var(--bl); max-height: 250px; overflow-y: auto; display: none; position: absolute; width: calc(100% - 20px); z-index: 100; }
+        #list-res { flex: 1; overflow-y: auto; padding: 10px; }
+        .list-card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ccc; display: flex; justify-content: space-between; align-items: center; }
+        
+        #scanner-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 11000; }
+        #reader { width: 100%; height: 80%; }
+        .scan-close { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); padding: 15px 40px; background: var(--rd); color: white; border-radius: 50px; border: none; font-weight: 900; }
     </style>
 </head>
 <body>
-    <div id="adminPanel">
-        <h3 style="color:var(--usps-blue); margin:0;">Master Data Paste</h3>
-        <textarea id="dataInput" placeholder="Paste Row 3 down..."></textarea>
-        <button onclick="savePastedData()" style="width:100%; padding:15px; border-radius:8px; border:none; background:var(--usps-blue); color:white; font-weight:bold;">SAVE DATA</button>
-        <button onclick="document.getElementById('adminPanel').style.display='none'" style="display:block; width:100%; margin-top:8px; padding:8px; background:#666; color:white; border-radius:8px; border:none;">CLOSE</button>
+    <div id="admin">
+        <textarea id="ti" placeholder="Paste Row 3 down..."></textarea>
+        <button onclick="sd()" style="width:100%; padding:15px; background:var(--bl); color:white; border-radius:8px; border:none; font-weight:bold;">SAVE DATA</button>
     </div>
 
-    <div id="banner-wrap" onclick="secretKnock()">
-        <div class="header">
-            <span class="usps-signature">USPS</span>
-            <div class="vancouver-text">VANCOUVER, WA</div>
-            <div class="route-finder-cool">ROUTE FINDER</div>
-        </div>
-        <div class="header-accent"></div>
-    </div>
+    <div id="scanner-ui"><div id="reader"></div><button class="scan-close" onclick="stopScan()">CANCEL</button></div>
 
-    <div class="sticky-controls">
-        <div class="input-container">
-            <div class="input-row">
-                <div class="input-wrapper">
-                    <label>1. Zip Code</label>
-                    <select id="zipCode" onchange="handleZipChange()">
-                        <option value="">Select ZIP...</option>
-                        <option value="ALL">ALL ZIPs</option>
-                        <option value="98660">98660</option><option value="98661">98661</option>
-                        <option value="98662">98662</option><option value="98663">98663</option>
-                        <option value="98664">98664</option><option value="98665">98665</option>
-                        <option value="98668">98668</option><option value="98682">98682</option>
-                        <option value="98683">98683</option><option value="98684">98684</option>
-                        <option value="98685">98685</option><option value="98686">98686</option>
-                    </select>
-                </div>
-                <button class="btn-action reset-zip" onclick="resetZipSelection()">Reset</button>
-            </div>
-            <div class="input-row">
-                <div class="input-wrapper">
-                    <label>2. Street Name</label>
-                    <input type="text" id="streetInput" placeholder="Select ZIP first..." disabled autocomplete="off" oninput="handleSearch()" onfocus="handleSearch()">
-                    <div id="suggestionBox" class="suggestion-box"></div>
-                </div>
-                <button class="btn-action reset-street" onclick="clearStreetOnly()">Reset<br>Street</button>
-            </div>
+    <div id="flash-res">
+        <div class="big-card">
+            <span id="f-zip" class="zip-mini"></span>
+            <span id="f-rt" class="rt-giant"></span>
+            <span id="f-st" class="st-mini"></span>
         </div>
     </div>
 
-    <div id="resultArea">
-        <button id="backToListBtn" onclick="reopenSuggestions()">⬅ Back to List</button>
-        <div id="cardContainer"></div>
+    <div class="hdr" onclick="kn()">
+        <span class="sig">USPS</span>
+        <div style="font-weight:900">VANCOUVER, WA</div>
     </div>
 
-    <script>
-        let database = {};
-        let lastUserTyping = ""; 
+    <div class="ctrls">
+        <div class="row">
+            <select id="zs" onchange="zc()">
+                <option value="">Select ZIP...</option><option value="ALL">ALL ZIPs</option>
+                <option value="98660">98660</option><option value="98661">98661</option><option value="98662">98662</option>
+                <option value="98663">98663</option><option value="98664">98664</option><option value="98665">98665</option>
+                <option value="98682">98682</option><option value="98683">98683</option><option value="98684">98684</option>
+                <option value="98685">98685</option><option value="98686">98686</option>
+            </select>
+            <button class="btn red" onclick="ra()">Reset</button>
+        </div>
+        <div class="row" style="position:relative">
+            <input type="text" id="si" placeholder="Select ZIP first..." disabled oninput="sh()">
+            <div id="sb" class="sug"></div>
+            <button class="btn yel" onclick="cs()">Clear</button>
+        </div>
+    </div>
 
-        window.onload = () => {
-            const saved = localStorage.getItem('vancouverData');
-            if (saved) { try { database = JSON.parse(saved); } catch(e) {} }
-        };
+    <div id="list-res"><div id="cc"></div></div>
 
-        function secretKnock() {
-            if (!window.knockCount) window.knockCount = 0;
-            window.knockCount++;
-            clearTimeout(window.knockTimer);
-            if (window.knockCount === 5) { document.getElementById('adminPanel').style.display = 'block'; window.knockCount = 0; }
-            window.knockTimer = setTimeout(() => { window.knockCount = 0; }, 500);
+    <div class="scan-wrap">
+        <button class="big-scan" onclick="startScan()">📷 SCAN PACKAGE</button>
+    </div>
+
+<script>
+    let d = {}; const zs=document.getElementById('zs'), si=document.getElementById('si'), sb=document.getElementById('sb'), cc=document.getElementById('cc');
+    let scanner = null, fullList = [];
+
+    window.onload = () => { 
+        const s = localStorage.getItem('vanc_db'); 
+        if(s) {
+            d = JSON.parse(s);
+            Object.keys(d).forEach(z => d[z].forEach(st => st.list.forEach(r => fullList.push({ z:z, n:st.name, r:r.range, rt:r.rt }))));
         }
+    };
 
-        function savePastedData() {
-            const input = document.getElementById('dataInput').value;
-            if (!input) return;
-            const lines = input.split('\n');
-            const newDatabase = {};
-            lines.forEach(line => {
-                const cells = line.split('\t');
-                if (cells.length < 8) return;
-                const zip = cells[7]?.trim();
-                const name = cells[4]?.trim();
-                if (!zip || !name || !zip.startsWith('986')) return;
-                if (!newDatabase[zip]) newDatabase[zip] = [];
-                const fullName = [cells[3], cells[4], cells[5], cells[6]].filter(Boolean).map(s => s.trim()).join(" ");
-                let street = newDatabase[zip].find(s => s.displayName === fullName);
-                if (!street) {
-                    street = { searchName: name.toUpperCase(), displayName: fullName, results: [] };
-                    newDatabase[zip].push(street);
-                }
-                street.results.push({ range: cells[0] + (cells[1] ? "-" + cells[1] : ""), route: cells[8]?.trim() });
-            });
-            database = newDatabase;
-            localStorage.setItem('vancouverData', JSON.stringify(newDatabase));
-            alert("Success! Data saved.");
-            document.getElementById('adminPanel').style.display = 'none';
+    function kn(){ window.k=(window.k||0)+1; setTimeout(()=>window.k=0,1500); if(window.k===5)document.getElementById('admin').style.display='block'; }
+    
+    function sd(){
+        const l=document.getElementById('ti').value.split('\n'), n={};
+        l.forEach(x=>{ const c=x.split('\t'); if(c.length<8)return; 
+            const z=c[7]?.trim(), nm=c[4]?.trim(); if(!z||!nm)return; if(!n[z])n[z]=[];
+            const f=[c[3],c[4],c[5],c[6]].filter(Boolean).map(y=>y.trim()).join(" ");
+            let s=n[z].find(y=>y.name===f); if(!s){ s={name:f, key:nm.toUpperCase(), list:[]}; n[z].push(s); }
+            s.list.push({range:c[0]+(c[1]?"-"+c[1]:""), rt:c[8]?.trim()||"??"});
+        });
+        localStorage.setItem('vanc_db', JSON.stringify(n)); alert("Saved!"); location.reload();
+    }
+
+    function zc(){ cs(); if(zs.value){si.disabled=false;si.placeholder="Type street...";} else {si.disabled=true;} }
+
+    function sh(){
+        const v=si.value.toUpperCase().trim(); cc.innerHTML=""; sb.innerHTML=""; if(!v){sb.style.display="none";return;}
+        let f=[]; const t=(zs.value==="ALL")?Object.keys(d):[zs.value];
+        t.forEach(z=>{ if(d[z]) d[z].filter(s=>s.key.startsWith(v)).forEach(s=>f.push({...s, zip:z})); });
+        if(f.length>0){ sb.style.display="block"; f.sort((a,b)=>a.name.localeCompare(b.name)).forEach(x=>{
+            const div=document.createElement('div'); div.style.padding="15px"; div.style.borderBottom="1px solid #eee"; div.style.fontWeight="900"; div.style.color="var(--bl)";
+            div.innerHTML=`${x.name} <small style="float:right">${x.zip}</small>`; div.onclick=()=>sr(x); sb.appendChild(div);
+        }); } else { sb.style.display="none"; }
+    }
+
+    function sr(x){
+        si.value = x.name; sb.style.display = "none"; cc.innerHTML = "";
+        x.list.forEach(i => {
+            const div = document.createElement('div'); div.className="list-card";
+            div.innerHTML=`<div><b style="font-size:1.4rem">${i.range}</b><br><small>${x.name}</small></div><div style="background:var(--bl);color:white;padding:10px;border-radius:8px;text-align:center;min-width:60px;"><small>RT</small><br><b>${i.rt}</b></div>`;
+            cc.appendChild(div);
+        });
+    }
+
+    function startScan() {
+        document.getElementById('scanner-ui').style.display = 'block';
+        scanner = new Html5Qrcode("reader");
+        scanner.start({ facingMode: "environment" }, { fps: 20, qrbox: { width: 350, height: 150 } }, (txt) => {
+            stopScan();
+            processScan(txt.trim());
+        }).catch(err => { alert("Camera error"); stopScan(); });
+    }
+
+    function processScan(raw) {
+        const zip = raw.slice(-11, -6), dp = raw.slice(-2);
+        let match = fullList.find(i => i.z === zip && i.r.includes(dp));
+        
+        if (match) {
+            flashCard(match.z, match.rt, match.n);
+        } else {
+            alert("No direct match for ZIP " + zip + ". Sorting by ZIP only.");
+            zs.value = zip; zc();
         }
+    }
 
-        const zipIn = document.getElementById('zipCode');
-        const strIn = document.getElementById('streetInput');
-        const sugBox = document.getElementById('suggestionBox');
-        const cardCont = document.getElementById('cardContainer');
-        const backBtn = document.getElementById('backToListBtn');
+    function flashCard(zip, route, street) {
+        const flash = document.getElementById('flash-res');
+        document.getElementById('f-zip').innerText = "ZIP: " + zip;
+        document.getElementById('f-rt').innerText = route;
+        document.getElementById('f-st').innerText = street;
+        
+        flash.style.display = 'block';
+        setTimeout(() => flash.classList.add('show'), 10);
+        
+        // Disappear after 2 seconds
+        setTimeout(() => {
+            flash.classList.remove('show');
+            setTimeout(() => flash.style.display = 'none', 300);
+        }, 2000);
+    }
 
-        function handleZipChange() {
-            if(zipIn.value !== "") { 
-                strIn.disabled = false; 
-                strIn.placeholder = "Start typing..."; 
-                if(strIn.value.length > 0) {
-                    cardCont.innerHTML = "";
-                    backBtn.style.display = "none";
-                    handleSearch(true); // "true" signals we are switching ZIPs
-                } else {
-                    setTimeout(() => { strIn.focus(); }, 50);
-                }
-            } else { 
-                resetZipSelection(); 
-            }
-        }
-
-        function handleSearch(isZipSwitch = false) {
-            const selectedZip = zipIn.value;
-            const currentVal = strIn.value.toUpperCase().trim();
-            
-            cardCont.innerHTML = "";
-            backBtn.style.display = "none";
-
-            if (currentVal.length > 0) { 
-                document.body.classList.add('searching'); 
-                // Only update typing memory if NOT switching ZIPs
-                if(!isZipSwitch && (!currentVal.includes(" ") || currentVal.length < 5)) { 
-                    lastUserTyping = strIn.value; 
-                } 
-            }
-            
-            sugBox.innerHTML = "";
-            if (currentVal.length < 1) { sugBox.style.display = "none"; return; }
-            
-            let allMatches = [];
-            const zipsToSearch = (selectedZip === "ALL") ? Object.keys(database) : [selectedZip];
-            
-            zipsToSearch.forEach(zip => {
-                if(database[zip]) {
-                    let matches = [];
-                    if (isZipSwitch) {
-                        // If we switched ZIPs, look for the full display name or the core name
-                        matches = database[zip].filter(s => s.displayName.includes(currentVal) || s.searchName.startsWith(lastUserTyping.toUpperCase().trim()));
-                    } else {
-                        // Strict filter for active typing
-                        matches = database[zip].filter(s => s.searchName.startsWith(currentVal));
-                    }
-                    matches.forEach(m => { allMatches.push({ ...m, zip: zip }); });
-                }
-            });
-
-            if (allMatches.length > 0) {
-                sugBox.style.display = "block";
-                const unique = [...new Map(allMatches.map(item => [item.displayName + item.zip, item])).values()];
-                unique.sort((a, b) => a.displayName.localeCompare(b.displayName, undefined, { numeric: true, sensitivity: 'base' }));
-                
-                unique.slice(0, 50).forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = "suggestion-item";
-                    div.innerHTML = `<span>${item.displayName}</span> <span class="zip-badge-small">${item.zip}</span>`;
-                    div.onclick = () => selectStreet(item);
-                    sugBox.appendChild(div);
-                });
-            } else { sugBox.style.display = "none"; }
-        }
-
-        function selectStreet(item) {
-            strIn.value = item.displayName;
-            sugBox.style.display = "none"; 
-            cardCont.innerHTML = "";
-            backBtn.style.display = "block";
-            item.results.forEach(res => {
-                const card = document.createElement('div');
-                card.className = "result-card";
-                card.innerHTML = `<div class="card-left"><span class="zip-tag">ZIP: ${item.zip}</span><span class="range-display">${res.range}</span><span class="street-display">${item.displayName}</span></div><div class="route-side"><span class="lbl">ROUTE</span><span class="num">${res.route}</span></div>`;
-                cardCont.appendChild(card);
-            });
-            document.activeElement.blur();
-        }
-
-        function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; strIn.value = lastUserTyping; handleSearch(); strIn.focus(); }
-        function clearStreetOnly() { lastUserTyping = ""; strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; strIn.focus(); }
-        function resetZipSelection() { zipIn.selectedIndex = 0; lastUserTyping = ""; strIn.value = ""; strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; document.body.classList.remove('searching'); }
-    </script>
+    function stopScan() { if(scanner) scanner.stop(); document.getElementById('scanner-ui').style.display = 'none'; }
+    function cs(){ si.value=""; sb.style.display="none"; cc.innerHTML=""; if(!si.disabled)si.focus(); }
+    function ra(){ zs.selectedIndex=0; zc(); }
+</script>
 </body>
 </html>
