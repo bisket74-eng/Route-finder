@@ -10,6 +10,7 @@
         .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--bg); }
         body { margin: 0; background: var(--bg); font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
+        /* HEADER */
         .hdr { background: var(--bl); padding: 18px 15px; text-align: center; color: white; cursor: pointer; }
         .usps-sig { font-size: 2.4rem; font-weight: 900; font-style: italic; letter-spacing: -3px; transform: skewX(-12deg); display: block; line-height: 0.8; margin-bottom: 5px; }
         .vanc-text { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: block; }
@@ -27,18 +28,32 @@
         .red { background: var(--rd); color: white; width: 85px; }
         .yel { background: var(--yl); color: black; width: 85px; }
         
+        /* PICK LIST */
         .sug { background: white; border: 3px solid var(--bl); max-height: 250px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border-radius: 0 0 12px 12px; }
         .s-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: 900; color: var(--bl); }
 
         #list-res { flex: 1; overflow-y: auto; padding: 15px; z-index: 100; position: relative; }
+        
+        /* THE REFINED LIST CARD */
         .list-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .blue-block { background: var(--bl); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 75px; font-weight: 900; }
-        .blue-block small { font-size: 0.6rem; display: block; margin-bottom: -3px; }
-        .blue-block span { font-size: 1.6rem; display: block; }
+        
+        /* Left Block: ZIP (Slightly Smaller) */
+        .zip-block { background: var(--bl); color: white; padding: 8px; border-radius: 8px; text-align: center; min-width: 60px; font-weight: 900; }
+        .zip-block small { font-size: 0.5rem; display: block; margin-bottom: -4px; opacity: 0.8; }
+        .zip-block span { font-size: 1.1rem; display: block; }
+        
+        /* Middle: Range (More Prominent) */
+        .info-center { flex: 1; padding: 0 15px; }
+        .range-txt { font-size: 2rem; font-weight: 900; color: #000; display: block; letter-spacing: -1px; }
+        .st-txt { font-size: 0.9rem; font-weight: 800; color: #555; text-transform: uppercase; }
+
+        /* Right Block: Route (Very Large) */
+        .rt-block { background: var(--bl); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 85px; font-weight: 900; }
+        .rt-block small { font-size: 0.6rem; display: block; margin-bottom: -5px; }
+        .rt-block span { font-size: 2rem; display: block; }
 
         #return-btn { display: none; width: 100%; padding: 16px; background: var(--bl); color: white; border: none; font-weight: 900; border-radius: 8px; margin-bottom: 20px; text-transform: uppercase; font-size: 1rem; }
 
-        /* Scanner Button - Now positioned 2/3 down and stays behind results */
         .scan-layer { position: absolute; top: 60%; left: 0; right: 0; display: flex; justify-content: center; pointer-events: none; z-index: 10; }
         .big-scan { pointer-events: auto; background: var(--bl); color: white; width: 85%; max-width: 320px; padding: 22px; border-radius: 50px; font-size: 1.3rem; font-weight: 900; border: none; box-shadow: 0 10px 20px rgba(0,75,135,0.4); text-transform: uppercase; }
 
@@ -157,20 +172,26 @@
     function selectStreet(x){
         si.value = x.name; sb.style.display = "none"; cc.innerHTML = ""; 
         rbtn.style.display = "block";
-        scanL.style.opacity = "0.1"; // Dim the button so results are readable
+        scanL.style.opacity = "0.05"; 
         x.list.forEach(i => {
             const div = document.createElement('div'); div.className="list-card";
-            div.innerHTML=`<div class="blue-block"><small>ZIP</small><span>${x.zip}</span></div><div style="flex:1; padding:0 15px;"><b style="font-size:1.7rem">${i.range}</b><br><small style="font-weight:bold; color:#555">${x.name}</small></div><div class="blue-block"><small>RT</small><span>${i.rt}</span></div>`;
+            div.innerHTML=`
+                <div class="zip-block"><small>ZIP</small><span>${x.zip}</span></div>
+                <div class="info-center"><span class="range-txt">${i.range}</span><span class="st-txt">${x.name}</span></div>
+                <div class="rt-block"><small>RT</small><span>${i.rt}</span></div>`;
             cc.appendChild(div);
         });
         document.getElementById('list-res').scrollTo(0,0);
     }
 
+    // THE FIX: Returns to list and triggers the dropdown to re-open
     function backToStreetList() {
         cc.innerHTML = "";
         rbtn.style.display = "none";
         scanL.style.opacity = "1";
-        searchStreets();
+        if(si.value !== "") {
+            searchStreets(); // Re-populates and SHOWS the street list
+        }
     }
 
     function clearSearchOnly() {
