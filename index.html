@@ -55,8 +55,8 @@
 </head>
 <body>
     <div id="admin">
-        <textarea id="ti" placeholder="Paste Data..."></textarea>
-        <button onclick="savePastedData()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:6px;">SAVE DATA</button>
+        <textarea id="ti" placeholder="Paste Excel Data..."></textarea>
+        <button onclick="savePastedData()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:8px;">SAVE DATA</button>
     </div>
     <div id="banner-wrap">
         <div class="hdr" onclick="secretKnock()">
@@ -141,7 +141,6 @@
             if(database[z]) { 
                 database[z].forEach(m => {
                     const name = m.searchName;
-                    // SIMPLE STARTS-WITH: No hidden filters, shows everything (ST, CIR, WAY, etc.)
                     if (name.startsWith(val)) {
                         allM.push({ ...m, zip: z });
                     }
@@ -151,13 +150,26 @@
 
         if (allM.length > 0) {
             sugBox.style.display = "block";
-            // NATURAL NUMERIC SORT: Groups 1, 1st together before moving to 10, 11
-            allM.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric: true, sensitivity: 'base'}));
+            
+            // CUSTOM POSTAL SORT
+            allM.sort((a, b) => {
+                const cleanA = a.searchName;
+                const cleanB = b.searchName;
+                
+                // 1. Sort by the numeric value or name part first
+                const naturalResult = cleanA.localeCompare(cleanB, undefined, {numeric: true, sensitivity: 'base'});
+                
+                // 2. If it's the same base name (e.g., "1ST"), tie-break by Suffix (CIR, ST, WAY)
+                if (naturalResult === 0) {
+                    return a.displayName.localeCompare(b.displayName);
+                }
+                
+                return naturalResult;
+            });
             
             const unique = []; const seen = new Set();
             allM.forEach(item => { const id = item.displayName + item.zip; if(!seen.has(id)){ unique.push(item); seen.add(id); } });
 
-            // BIG LIMIT: Increased to 250 so nothing gets hidden
             unique.slice(0, 250).forEach(item => {
                 const div = document.createElement('div'); div.className = "s-item";
                 div.innerHTML = `<span>${item.displayName}</span> <span class="zip-badge-small">${item.zip}</span>`;
