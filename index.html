@@ -3,73 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>USPS Route Finder</title>
+    <title>USPS Fast-Sort Pro</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root { --bl: #004b87; --rd: #da291c; --yl: #ffde00; --bg: #f4f7f9; }
         body { margin: 0; background: var(--bg); font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* SLIM HEADER */
-        .hdr { background: var(--bl); padding: 10px 15px; text-align: center; color: white; cursor: pointer; flex-shrink: 0; }
-        .usps-sig { font-size: 1.8rem; font-weight: 900; font-style: italic; letter-spacing: -2px; transform: skewX(-12deg); display: block; line-height: 1; }
-        .vanc-text { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; display: block; }
-        .hdr-accent { height: 4px; background: var(--rd); width: 100%; flex-shrink: 0; }
+        /* OFFICIAL BUSINESS HEADER */
+        .hdr { background: var(--bl); padding: 18px 15px; text-align: center; color: white; cursor: pointer; flex-shrink: 0; }
+        .usps-sig { font-size: 2.4rem; font-weight: 900; font-style: italic; letter-spacing: -3px; transform: skewX(-12deg); display: block; line-height: 0.8; margin-bottom: 5px; }
+        .vanc-text { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: block; }
+        .rt-finder-text { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--yl); margin-top: 4px; display: block; }
+        .hdr-accent { height: 5px; background: var(--rd); width: 100%; flex-shrink: 0; }
         
-        #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px; border: 2px solid var(--bl); border-radius: 8px; }
-        textarea { width: 100%; height: 120px; font-size: 12px; }
+        #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px; border-radius: 12px; border: 3px dashed var(--bl); box-shadow: 0 10px 30px #000; }
+        textarea { width: 100%; height: 150px; font-size: 12px; box-sizing: border-box; }
 
-        .ctrls { padding: 8px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 50; }
-        .row { display: flex; gap: 6px; margin-bottom: 6px; align-items: flex-end; }
-        select, input { width: 100%; padding: 10px; border: 2px solid #bbb; border-radius: 8px; font-size: 16px; box-sizing: border-box; font-weight: 600; }
+        .ctrls { padding: 10px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 100; position: relative; }
+        .row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-end; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #bbb; border-radius: 8px; font-size: 18px; box-sizing: border-box; font-weight: 600; }
         
-        .btn { height: 44px; border-radius: 8px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.65rem; }
-        .red { background: var(--rd); color: white; width: 70px; }
-        .yel { background: var(--yl); color: black; width: 80px; }
+        .btn { height: 48px; border-radius: 8px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.7rem; }
+        .red { background: var(--rd); color: white; width: 85px; }
+        .yel { background: var(--yl); color: black; width: 85px; }
         
+        /* DROPDOWN PICK LIST (FORCE DOWN) */
+        .sug { background: white; border: 2px solid var(--bl); max-height: 300px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-radius: 0 0 12px 12px; }
+        .s-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: 900; color: var(--bl); }
+
         /* FLY-IN RESULT */
-        #flash-res { position: fixed; top: 15%; left: 10%; right: 10%; z-index: 12000; display: none; transform: scale(0.8); opacity: 0; transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.2); }
+        #flash-res { position: fixed; top: 20%; left: 8%; right: 8%; z-index: 12000; display: none; transform: scale(0.5); opacity: 0; transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #flash-res.show { display: block; transform: scale(1); opacity: 1; }
-        .big-card { background: white; border: 6px solid var(--bl); border-radius: 20px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); text-align: center; }
-        .rt-giant { font-size: 7rem; font-weight: 900; color: var(--bl); line-height: 1; display: block; }
+        .big-card { background: white; border: 6px solid var(--bl); border-radius: 24px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; }
+        .rt-giant { font-size: 8rem; font-weight: 900; color: var(--bl); line-height: 1; display: block; }
 
-        /* LIST RESULTS */
-        #list-res { flex: 1; overflow-y: auto; padding: 10px; position: relative; }
-        .list-card { background: white; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ccc; display: flex; justify-content: space-between; align-items: center; }
-        .blue-block { background: var(--bl); color: white; padding: 8px; border-radius: 6px; text-align: center; min-width: 65px; font-weight: 900; }
-        .blue-block small { font-size: 0.5rem; display: block; margin-bottom: -2px; }
-        .blue-block span { font-size: 1.4rem; }
+        /* LIST VIEW RESULTS */
+        #list-res { flex: 1; overflow-y: auto; padding: 15px; z-index: 10; }
+        .list-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ccc; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .blue-block { background: var(--bl); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 75px; font-weight: 900; }
+        .blue-block small { font-size: 0.6rem; display: block; margin-bottom: -3px; }
+        .blue-block span { font-size: 1.6rem; display: block; }
 
-        /* BUTTON PLACEMENT */
-        .scan-wrap { padding: 15px; display: flex; justify-content: center; background: white; border-top: 1px solid #eee; }
-        .big-scan { background: var(--bl); color: white; width: 80%; padding: 16px; border-radius: 50px; font-size: 1.1rem; font-weight: 900; border: none; }
-        
-        #return-btn { display: none; width: 100%; padding: 12px; background: var(--bl); color: white; border: none; font-weight: 900; border-radius: 8px; margin-bottom: 10px; }
-        .sug { background: white; border: 2px solid var(--bl); max-height: 200px; overflow-y: auto; display: none; position: absolute; width: calc(100% - 20px); z-index: 100; }
+        /* RETURN BUTTON */
+        #return-btn { display: none; width: 100%; padding: 16px; background: var(--bl); color: white; border: none; font-weight: 900; border-radius: 8px; margin-bottom: 15px; text-transform: uppercase; font-size: 1rem; }
+
+        /* SCANNER BUTTON */
+        .scan-wrap { padding: 20px; background: white; border-top: 1px solid #ddd; z-index: 50; }
+        .big-scan { background: var(--bl); color: white; width: 100%; padding: 20px; border-radius: 50px; font-size: 1.3rem; font-weight: 900; border: none; box-shadow: 0 6px 15px rgba(0,75,135,0.4); text-transform: uppercase; }
 
         #scanner-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 11000; }
-        #reader { width: 100%; height: 75%; }
-        .scan-close { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); padding: 15px 30px; background: var(--rd); color: white; border-radius: 50px; font-weight: 900; border: none; }
+        #reader { width: 100%; height: 80%; }
+        .scan-close { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); padding: 15px 40px; background: var(--rd); color: white; border-radius: 50px; border: none; font-weight: 900; }
     </style>
 </head>
 <body>
     <div id="admin">
         <textarea id="ti" placeholder="Paste Row 3 down..."></textarea>
-        <button onclick="sd()" style="width:100%; padding:10px; background:var(--bl); color:white; border:none; font-weight:bold;">SAVE DATA</button>
+        <button onclick="sd()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:8px;">SAVE DATA</button>
     </div>
 
     <div id="scanner-ui"><div id="reader"></div><button class="scan-close" onclick="stopScan()">CANCEL</button></div>
 
     <div id="flash-res">
         <div class="big-card">
-            <span id="f-zip" style="font-weight:900; color:var(--bl)"></span>
+            <span id="f-zip" style="font-weight:900; color:var(--bl); font-size:1.4rem;"></span>
             <span id="f-rt" class="rt-giant"></span>
-            <span id="f-st" style="text-transform:uppercase; font-size:0.9rem; font-weight:bold"></span>
+            <span id="f-st" style="text-transform:uppercase; font-size:1.1rem; font-weight:800; color:#444;"></span>
         </div>
     </div>
 
     <div class="hdr" onclick="kn()">
         <span class="usps-sig">USPS</span>
         <span class="vanc-text">Vancouver, WA</span>
+        <span class="rt-finder-text">Route Finder</span>
     </div>
     <div class="hdr-accent"></div>
 
@@ -78,7 +84,9 @@
             <select id="zs" onchange="zc()">
                 <option value="">Select ZIP...</option><option value="ALL">ALL ZIPs</option>
                 <option value="98660">98660</option><option value="98661">98661</option><option value="98662">98662</option>
-                <option value="98684">98684</option><option value="98685">98685</option>
+                <option value="98663">98663</option><option value="98664">98664</option><option value="98665">98665</option>
+                <option value="98668">98668</option><option value="98682">98682</option><option value="98683">98683</option>
+                <option value="98684">98684</option><option value="98685">98685</option><option value="98686">98686</option>
             </select>
             <button class="btn red" onclick="ra()">Reset</button>
         </div>
@@ -120,18 +128,18 @@
             let s=n[z].find(y=>y.name===f); if(!s){ s={name:f, key:nm.toUpperCase(), list:[]}; n[z].push(s); }
             s.list.push({range:c[0]+(c[1]?"-"+c[1]:""), rt:c[8]?.trim()||"??"});
         });
-        localStorage.setItem('vanc_db', JSON.stringify(n)); alert("Saved!"); location.reload();
+        localStorage.setItem('vanc_db', JSON.stringify(n)); alert("Data Saved!"); location.reload();
     }
 
-    function zc(){ cs(); if(zs.value){si.disabled=false;si.placeholder="Type street...";} else {si.disabled=true;} }
+    function zc(){ cs(); if(zs.value){si.disabled=false;si.placeholder="Type street...";si.focus();} else {si.disabled=true;} }
 
     function sh(){
         const v=si.value.toUpperCase().trim(); cc.innerHTML=""; sb.innerHTML=""; rbtn.style.display="none"; if(!v){sb.style.display="none";return;}
         let f=[]; const t=(zs.value==="ALL")?Object.keys(d):[zs.value];
         t.forEach(z=>{ if(d[z]) d[z].filter(s=>s.key.startsWith(v)).forEach(s=>f.push({...s, zip:z})); });
         if(f.length>0){ sb.style.display="block"; f.sort((a,b)=>a.name.localeCompare(b.name)).forEach(x=>{
-            const div = document.createElement('div'); div.style.padding="12px"; div.style.borderBottom="1px solid #eee"; div.style.fontWeight="900"; div.style.color="var(--bl)";
-            div.innerHTML=`${x.name} <small style="float:right">${x.zip}</small>`; div.onclick=()=>sr(x); sb.appendChild(div);
+            const div = document.createElement('div'); div.className="s-item";
+            div.innerHTML=`<span>${x.name}</span> <small style="background:var(--bl); color:white; padding:2px 6px; border-radius:4px;">${x.zip}</small>`; div.onclick=()=>sr(x); sb.appendChild(div);
         }); } else { sb.style.display="none"; }
     }
 
@@ -139,17 +147,17 @@
         si.value = x.name; sb.style.display = "none"; cc.innerHTML = ""; rbtn.style.display = "block";
         x.list.forEach(i => {
             const div = document.createElement('div'); div.className="list-card";
-            div.innerHTML=`<div class="blue-block"><small>ZIP</small><span>${x.zip}</span></div><div style="flex:1; padding-left:15px;"><b style="font-size:1.4rem">${i.range}</b><br><small style="font-weight:bold">${x.name}</small></div><div class="blue-block"><small>RT</small><span>${i.rt}</span></div>`;
+            div.innerHTML=`<div class="blue-block"><small>ZIP</small><span>${x.zip}</span></div><div style="flex:1; padding:0 15px;"><b style="font-size:1.7rem">${i.range}</b><br><small style="font-weight:bold; color:#555">${x.name}</small></div><div class="blue-block"><small>RT</small><span>${i.rt}</span></div>`;
             cc.appendChild(div);
         });
         window.scrollTo(0,0);
     }
 
     function startScan() {
-        if (fullList.length === 0) { flashCard("98661", "C042", "NO DATA LOADED"); return; }
+        if (fullList.length === 0) { flashCard("98661", "C042", "NO DATA"); return; }
         document.getElementById('scanner-ui').style.display = 'block';
         scanner = new Html5Qrcode("reader");
-        scanner.start({ facingMode: "environment" }, { fps: 20, qrbox: { width: 320, height: 150 } }, (txt) => {
+        scanner.start({ facingMode: "environment" }, { fps: 20, qrbox: { width: 350, height: 150 } }, (txt) => {
             stopScan(); processScan(txt.trim());
         }).catch(err => { alert("Camera error"); stopScan(); });
     }
