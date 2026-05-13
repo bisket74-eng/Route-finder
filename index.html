@@ -35,7 +35,7 @@
         
         #backToListBtn { display: none; width: calc(100% - 30px); background: var(--bl); color: white; margin: 0 15px 15px 15px; padding: 18px; border-radius: 8px; font-weight: 900; text-transform: uppercase; border: none; letter-spacing: 1px; border-bottom: 4px solid var(--rd); cursor: pointer; }
 
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 400px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 450px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); font-size: 1.1rem; }
         .zip-badge-small { font-weight: 900; color: white; background: var(--bl); padding: 4px 10px; border-radius: 4px; font-size: 0.9rem; }
 
@@ -55,7 +55,7 @@
 </head>
 <body>
     <div id="admin">
-        <textarea id="ti" placeholder="Paste Excel Data..."></textarea>
+        <textarea id="ti" placeholder="Paste Data..."></textarea>
         <button onclick="savePastedData()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:6px;">SAVE DATA</button>
     </div>
     <div id="banner-wrap">
@@ -141,10 +141,8 @@
             if(database[z]) { 
                 database[z].forEach(m => {
                     const name = m.searchName;
-                    // IMPROVED LOGIC: Match the input directly against the start of the name
-                    // Also handles "1" matching "1ST CIR", "1ST ST", etc.
-                    const isNumBase = !isNaN(val.charAt(0));
-                    if (name.startsWith(val) || (isNumBase && val === name.replace(/\D/g,''))) {
+                    // SIMPLE STARTS-WITH: No hidden filters, shows everything (ST, CIR, WAY, etc.)
+                    if (name.startsWith(val)) {
                         allM.push({ ...m, zip: z });
                     }
                 }); 
@@ -153,12 +151,14 @@
 
         if (allM.length > 0) {
             sugBox.style.display = "block";
+            // NATURAL NUMERIC SORT: Groups 1, 1st together before moving to 10, 11
             allM.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric: true, sensitivity: 'base'}));
             
             const unique = []; const seen = new Set();
             allM.forEach(item => { const id = item.displayName + item.zip; if(!seen.has(id)){ unique.push(item); seen.add(id); } });
 
-            unique.slice(0, 150).forEach(item => {
+            // BIG LIMIT: Increased to 250 so nothing gets hidden
+            unique.slice(0, 250).forEach(item => {
                 const div = document.createElement('div'); div.className = "s-item";
                 div.innerHTML = `<span>${item.displayName}</span> <span class="zip-badge-small">${item.zip}</span>`;
                 div.onclick = () => selectStreet(item); sugBox.appendChild(div);
