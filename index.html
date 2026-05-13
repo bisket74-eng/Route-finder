@@ -7,83 +7,115 @@
     <style>
         :root { --bl: #004b87; --rd: #da291c; --yl: #ffde00; --bg: #f4f7f9; }
         
-        /* High-Contrast Scrollbars */
         ::-webkit-scrollbar { width: 14px; }
         ::-webkit-scrollbar-track { background: #eee; }
         ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 3px solid #eee; }
 
-        body { margin: 0; background: var(--bg); font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { margin: 0; background: var(--bg); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* Sharp Official Header */
         .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--bg); flex-shrink: 0; }
-        .hdr { background: var(--bl); padding: 18px 15px; text-align: center; color: white; cursor: pointer; }
-        .usps-sig { font-size: 2.4rem; font-weight: 900; font-style: italic; letter-spacing: -3px; transform: skewX(-12deg); display: block; line-height: 0.8; margin-bottom: 4px; }
-        .vanc-text { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: block; }
-        .rt-finder-text { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--yl); margin-top: 4px; display: block; }
-        .hdr-accent { height: 6px; background: var(--rd); width: 100%; }
+        
+        /* CLASSY GLASS HEADER */
+        .hdr { 
+            background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%);
+            padding: 22px 15px; 
+            text-align: center; 
+            color: white; 
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);
+        }
 
-        #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px; border-radius: 12px; border: 3px dashed var(--bl); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        /* Gleam/Shimmer Animation */
+        .hdr::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(30deg);
+            transition: none;
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -60%; }
+            20% { left: 120%; }
+            100% { left: 120%; }
+        }
+
+        .usps-sig { 
+            font-family: 'Times New Roman', serif;
+            font-size: 2.8rem; 
+            font-weight: 900; 
+            font-style: italic; 
+            letter-spacing: -2px; 
+            display: block; 
+            line-height: 0.8; 
+            margin-bottom: 8px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 0 10px rgba(255,255,255,0.2);
+            filter: drop-shadow(0px 1px 1px rgba(255,255,255,0.8));
+        }
+
+        .vanc-text { font-size: 1.2rem; font-weight: 300; text-transform: uppercase; letter-spacing: 4px; display: block; opacity: 0.9; }
+        .rt-finder-text { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 6px; color: var(--yl); margin-top: 6px; display: block; }
+        .hdr-accent { height: 4px; background: var(--rd); width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px; border-radius: 12px; border: 1px solid #ccc; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         textarea { width: 100%; height: 150px; font-size: 12px; }
 
-        /* Search Controls */
-        .ctrls { padding: 10px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; }
+        .ctrls { padding: 15px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; }
         .row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-end; }
         .input-wrapper { flex: 1; position: relative; }
-        label { display: block; margin-bottom: 3px; font-size: 0.75rem; font-weight: bold; color: #333; text-transform: uppercase; }
-        select, input { width: 100%; padding: 12px; border: 2px solid #bbb; border-radius: 8px; font-size: 18px; box-sizing: border-box; background: white; color: #000; font-weight: 600; }
+        label { display: block; margin-bottom: 4px; font-size: 0.7rem; font-weight: 800; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        select, input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; color: #000; font-weight: 600; }
         
-        .btn-action { height: 48px; width: 85px; border-radius: 8px; border: none; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
+        .btn-action { height: 52px; width: 85px; border-radius: 6px; border: none; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
         .red { background-color: var(--rd); color: white; }
         .yel { background-color: var(--yl); color: #000; }
         
-        /* Suggestion List */
-        .sug { 
-            background: #e5e5e5; border: 2px solid var(--bl); border-radius: 0 0 12px 12px; 
-            max-height: 250px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-        }
-        .s-item { padding: 15px; background: white; margin-bottom: 4px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: 900; color: var(--bl); font-size: 1.1rem; }
-        .zip-badge-small { background: var(--bl); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; }
+        .sug { background: #fff; border: 1px solid #ccc; border-radius: 0 0 8px 8px; max-height: 250px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .s-item { padding: 16px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--bl); font-size: 1.1rem; }
+        .zip-badge-small { font-weight: 900; color: var(--bl); background: #e8f0f6; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; }
 
-        /* Scrollable Results */
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; }
-        
-        #backToListBtn { 
-            display: none; width: 100%; background: var(--bl); color: white; 
-            margin-bottom: 15px; padding: 16px; border-radius: 8px; font-weight: 900; 
-            text-transform: uppercase; border: none; font-size: 1rem; border-bottom: 4px solid var(--rd); 
-        }
+        #backToListBtn { display: none; width: 100%; background: var(--bl); color: white; margin-bottom: 15px; padding: 16px; border-radius: 6px; font-weight: 800; text-transform: uppercase; border: none; letter-spacing: 1px; }
 
-        /* Result Cards - New Hierarchy */
-        .list-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 2.5px solid var(--bl); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* REFINED CARD DESIGN */
+        .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .info-left { flex: 1; text-align: left; }
-        .st-txt { font-size: 0.95rem; font-weight: 800; color: #555; text-transform: uppercase; display: block; margin-bottom: 2px; }
-        .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; display: block; line-height: 1; margin: 4px 0; }
-        .zip-txt { font-size: 1.1rem; font-weight: 800; color: var(--bl); display: block; }
+        .st-txt { font-size: 0.85rem; font-weight: 700; color: #888; text-transform: uppercase; display: block; margin-bottom: 4px; }
+        .range-txt { font-size: 2.2rem; font-weight: 900; color: #111; display: block; line-height: 1; margin: 2px 0; letter-spacing: -1px; }
+        /* BOLDED ZIP */
+        .zip-txt { font-size: 1.15rem; font-weight: 900; color: var(--bl); display: block; margin-top: 6px; letter-spacing: 0.5px; }
         
-        /* Route Block */
-        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 10px; text-align: center; min-width: 95px; font-weight: 900; }
-        .rt-block small { font-size: 0.6rem; display: block; margin-bottom: -4px; opacity: 0.9; letter-spacing: 1px; }
+        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 90px; font-weight: 900; box-shadow: 0 4px 10px rgba(0,75,135,0.2); }
+        .rt-block small { font-size: 0.6rem; display: block; margin-bottom: -4px; opacity: 0.8; letter-spacing: 1px; }
         .rt-block span { font-size: 2.4rem; display: block; line-height: 1; }
     </style>
 </head>
 <body>
     <div id="admin">
-        <textarea id="dataInput" placeholder="Paste Row 3 down from Excel..."></textarea>
-        <button onclick="savePastedData()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:8px;">SAVE DATA</button>
+        <textarea id="dataInput" placeholder="Paste data here..."></textarea>
+        <button onclick="savePastedData()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:6px;">SAVE DATA</button>
     </div>
 
     <div class="sticky-top">
         <div class="hdr" onclick="secretKnock()">
             <span class="usps-sig">USPS</span>
             <span class="vanc-text">Vancouver, WA</span>
-            <span class="rt-finder-text">Route Finder</span>
+            <span class="rt-finder-text">Route Finder Professional</span>
         </div>
         <div class="hdr-accent"></div>
 
         <div class="ctrls">
             <div class="row">
                 <div class="input-wrapper">
-                    <label>1. Zip Code</label>
+                    <label>Station Zip Code</label>
                     <select id="zipCode" onchange="handleZipChange()">
                         <option value="">Select ZIP...</option>
                         <option value="ALL">ALL ZIPs</option>
@@ -97,17 +129,17 @@
             </div>
             <div class="row" style="position:relative">
                 <div class="input-wrapper">
-                    <label>2. Street Name</label>
-                    <input type="text" id="streetInput" placeholder="Select ZIP first..." disabled autocomplete="off" oninput="handleSearch()" onfocus="handleSearch()">
+                    <label>Street Inquiry</label>
+                    <input type="text" id="streetInput" placeholder="Select ZIP to begin..." disabled autocomplete="off" oninput="handleSearch()" onfocus="handleSearch()">
                     <div id="suggestionBox" class="sug"></div>
                 </div>
-                <button class="btn-action yel" onclick="clearStreetOnly()">Reset<br>Street</button>
+                <button class="btn-action yel" onclick="clearStreetOnly()">Clear<br>Input</button>
             </div>
         </div>
     </div>
 
     <div id="list-res">
-        <button id="backToListBtn" onclick="reopenSuggestions()">⬅ Return to Street List</button>
+        <button id="backToListBtn" onclick="reopenSuggestions()">⬅ Back to Street List</button>
         <div id="cc"></div>
     </div>
 
@@ -157,7 +189,7 @@
     function handleZipChange() {
         if(zipIn.value !== "") { 
             strIn.disabled = false; 
-            strIn.placeholder = "Start typing..."; 
+            strIn.placeholder = "Enter street name..."; 
             strIn.focus();
         } else { resetZipSelection(); }
     }
@@ -168,7 +200,6 @@
         sugBox.innerHTML = "";
         cardCont.innerHTML = "";
         backBtn.style.display = "none";
-
         if (val.length > 0) { lastUserTyping = strIn.value; }
         if (val.length < 1) { sugBox.style.display = "none"; return; }
         
@@ -204,7 +235,7 @@
                 <div class="info-left">
                     <span class="st-txt">${item.displayName}</span>
                     <span class="range-txt">${res.range}</span>
-                    <span class="zip-txt">ZIP: ${item.zip}</span>
+                    <span class="zip-txt">ZIP ${item.zip}</span>
                 </div>
                 <div class="rt-block">
                     <small>ROUTE</small>
@@ -212,7 +243,6 @@
                 </div>`;
             cardCont.appendChild(div);
         });
-        window.scrollTo(0,0);
     }
 
     function reopenSuggestions() { 
