@@ -150,7 +150,7 @@
                 if(strIn.value.length > 0) {
                     cardCont.innerHTML = "";
                     backBtn.style.display = "none";
-                    handleSearch();
+                    handleSearch(true); // "true" signals we are switching ZIPs
                 } else {
                     setTimeout(() => { strIn.focus(); }, 50);
                 }
@@ -159,9 +159,8 @@
             }
         }
 
-        function handleSearch() {
+        function handleSearch(isZipSwitch = false) {
             const selectedZip = zipIn.value;
-            // Capture EXACT current value of input
             const currentVal = strIn.value.toUpperCase().trim();
             
             cardCont.innerHTML = "";
@@ -169,8 +168,8 @@
 
             if (currentVal.length > 0) { 
                 document.body.classList.add('searching'); 
-                // Only update memory if the user is building the search string
-                if(!currentVal.includes(" ") || currentVal.length < 5) { 
+                // Only update typing memory if NOT switching ZIPs
+                if(!isZipSwitch && (!currentVal.includes(" ") || currentVal.length < 5)) { 
                     lastUserTyping = strIn.value; 
                 } 
             }
@@ -183,8 +182,14 @@
             
             zipsToSearch.forEach(zip => {
                 if(database[zip]) {
-                    // STRICT FILTERING: Match only things that START with the current search string
-                    const matches = database[zip].filter(s => s.searchName.startsWith(currentVal));
+                    let matches = [];
+                    if (isZipSwitch) {
+                        // If we switched ZIPs, look for the full display name or the core name
+                        matches = database[zip].filter(s => s.displayName.includes(currentVal) || s.searchName.startsWith(lastUserTyping.toUpperCase().trim()));
+                    } else {
+                        // Strict filter for active typing
+                        matches = database[zip].filter(s => s.searchName.startsWith(currentVal));
+                    }
                     matches.forEach(m => { allMatches.push({ ...m, zip: zip }); });
                 }
             });
