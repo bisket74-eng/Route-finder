@@ -7,9 +7,10 @@
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; }
         
-        ::-webkit-scrollbar { width: 14px; }
-        ::-webkit-scrollbar-track { background: var(--lt-bl); }
-        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 3px solid var(--lt-bl); }
+        /* VERY PROMINENT SCROLLBARS */
+        ::-webkit-scrollbar { width: 16px; display: block; }
+        ::-webkit-scrollbar-track { background: #ddd; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 2px solid #ddd; }
 
         body { margin: 0; background: #d1dee8; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
 
@@ -19,23 +20,38 @@
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -140px; }
 
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 22px 15px; text-align: center; color: white; cursor: pointer; position: relative; box-shadow: inset 0 1px 1px rgba(255,255,255,0.3); }
-        .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: var(--lt-bl); text-shadow: 0 2px 10px rgba(255,255,255,0.3); }
+        .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: var(--lt-bl); text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .vanc-text { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; display: block; }
         .rt-finder-text { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); margin-top: 6px; display: block; }
         .hdr-accent { height: 5px; background: var(--rd); width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .ctrls { padding: 15px; background: var(--lt-bl); position: relative; }
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
         .input-wrapper { flex: 1; position: relative; }
         label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
         
         .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--bl); z-index: 6000; display: none; padding: 10px; border-radius: 0 0 10px 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); max-height: 400px; overflow-y: auto; }
+        
+        /* ZIP CHECKLIST FIX */
+        .zip-checklist { 
+            position: absolute; top: 100%; left: 0; right: 0; 
+            background: white; border: 3px solid var(--bl); z-index: 6000; 
+            display: none; border-radius: 0 0 10px 10px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+            max-height: 320px; /* Fits about 4-5 items + button */
+            display: none;
+            flex-direction: column;
+        }
+        .zip-scroll-area { 
+            overflow-y: scroll; 
+            flex: 1; 
+            max-height: 220px; /* Forces scroll after ~4.5 items */
+        }
         .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; }
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
 
-        .apply-btn { width: 100%; background: var(--bl); color: white; padding: 15px; border: none; border-radius: 6px; font-weight: 900; text-transform: uppercase; margin-top: 10px; font-size: 1rem; cursor: pointer; position: sticky; bottom: 0; box-shadow: 0 -5px 10px rgba(0,0,0,0.1); }
+        .apply-btn { width: 100%; background: var(--bl); color: white; padding: 15px; border: none; font-weight: 900; text-transform: uppercase; font-size: 1rem; cursor: pointer; border-top: 2px solid #eee; }
 
         input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; color: #000; font-weight: 700; }
         
@@ -45,7 +61,7 @@
         
         #backToListBtn { display: none; width: calc(100% - 30px); background: var(--bl); color: white; margin: 0 15px 15px 15px; padding: 18px; border-radius: 8px; font-weight: 900; text-transform: uppercase; border: none; letter-spacing: 1px; border-bottom: 4px solid var(--rd); cursor: pointer; }
 
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 450px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 400px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); font-size: 1.1rem; }
         .zip-badge-small { font-weight: 900; color: white; background: var(--bl); padding: 4px 10px; border-radius: 4px; font-size: 0.9rem; }
 
@@ -82,19 +98,21 @@
                         <label>Zip Code</label>
                         <div id="zipTrig" class="zip-trigger" onclick="toggleZipList(event)">Select Zip(s)...</div>
                         <div id="zipList" class="zip-checklist">
-                            <label class="zip-item"><input type="checkbox" id="allZipMaster" value="ALL" onchange="checkAllZips(this)"> ALL ZIPs</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="syncMaster()"> 98660</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="syncMaster()"> 98661</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="syncMaster()"> 98662</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="syncMaster()"> 98663</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="syncMaster()"> 98664</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="syncMaster()"> 98665</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="syncMaster()"> 98668</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="syncMaster()"> 98682</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="syncMaster()"> 98683</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="syncMaster()"> 98684</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="syncMaster()"> 98685</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="syncMaster()"> 98686</label>
+                            <div class="zip-scroll-area">
+                                <label class="zip-item"><input type="checkbox" id="allZipMaster" value="ALL" onchange="checkAllZips(this)"> ALL ZIPs</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="syncMaster()"> 98660</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="syncMaster()"> 98661</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="syncMaster()"> 98662</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="syncMaster()"> 98663</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="syncMaster()"> 98664</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="syncMaster()"> 98665</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="syncMaster()"> 98668</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="syncMaster()"> 98682</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="syncMaster()"> 98683</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="syncMaster()"> 98684</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="syncMaster()"> 98685</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="syncMaster()"> 98686</label>
+                            </div>
                             <button class="apply-btn" onclick="applyZipSelections(event)">Apply Selections</button>
                         </div>
                     </div>
@@ -124,7 +142,7 @@
     function toggleZipList(e) { 
         e.stopPropagation();
         const list = document.getElementById('zipList'); 
-        list.style.display = list.style.display === 'block' ? 'none' : 'block'; 
+        list.style.display = list.style.display === 'flex' ? 'none' : 'flex'; 
     }
     
     function checkAllZips(master) {
@@ -244,7 +262,6 @@
     function resetZipSelection() { document.body.classList.remove('header-hidden'); lastUserTyping = ""; strIn.value = ""; strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; }
     function resetAll() { location.reload(); }
     
-    // Proper Click-Outside protection
     window.onclick = function(event) { 
         const list = document.getElementById('zipList');
         const trig = document.getElementById('zipTrig');
