@@ -210,17 +210,31 @@
         }
 
         function selectStreet(item) {
-            strIn.value = item.displayName;
+            strIn.value = item.displayName; 
             sugBox.style.display = "none"; 
             cardCont.innerHTML = "";
-            backBtn.style.display = "block";
+            if(returnBtn) returnBtn.style.display = "block";
+
             item.results.forEach(res => {
+                // This fix ensures we grab 'route' even if it was saved as 'rt' or 'Route'
+                const finalRoute = res.route || res.rt || res.Route || "??";
+                
                 const card = document.createElement('div');
                 card.className = "result-card";
-                card.innerHTML = `<div class="card-left"><span class="zip-tag">ZIP: ${item.zip}</span><span class="range-display">${res.range}</span><span class="street-display">${item.displayName}</span></div><div class="route-side"><span class="lbl">ROUTE</span><span class="num">${res.route}</span></div>`;
+                card.innerHTML = `
+                    <div class="card-left">
+                        <span class="zip-tag">ZIP: ${item.zip || zipIn.value}</span>
+                        <span class="range-display">${res.range}</span>
+                        <span class="street-display">${item.displayName}</span>
+                    </div>
+                    <div class="route-side">
+                        <span class="lbl">ROUTE</span>
+                        <span class="num">${finalRoute}</span>
+                    </div>`;
                 cardCont.appendChild(card);
             });
-            document.activeElement.blur();
+            window.scrollTo(0, 0);
+        }
         }
 
         function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; strIn.value = lastUserTyping; handleSearch(); strIn.focus(); }
