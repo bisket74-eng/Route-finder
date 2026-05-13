@@ -64,7 +64,7 @@
         let database = {};
 
         // This pulls the data directly from your text file on GitHub
-        fetch(https://raw.githubusercontent.com/bisket74-eng/Route-finder/refs/heads/main/BAKED_DATA.txt)
+        fetch(DATA_URL)
             .then(res => res.text())
             .then(text => {
                 // Find the data anywhere in the file
