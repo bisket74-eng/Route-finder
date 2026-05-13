@@ -147,9 +147,7 @@
             if(zipIn.value !== "") { 
                 strIn.disabled = false; 
                 strIn.placeholder = "Start typing..."; 
-                
                 if(strIn.value.length > 0) {
-                    // Force the list to reopen by clearing results
                     cardCont.innerHTML = "";
                     backBtn.style.display = "none";
                     handleSearch();
@@ -163,25 +161,30 @@
 
         function handleSearch() {
             const selectedZip = zipIn.value;
-            // Use the lastUserTyping if the box has a full name in it to keep the search broad
-            const rawVal = strIn.value.toUpperCase().trim();
-            const val = (rawVal === lastUserTyping.toUpperCase().trim() || lastUserTyping === "") ? rawVal : lastUserTyping.toUpperCase().trim();
+            // Capture EXACT current value of input
+            const currentVal = strIn.value.toUpperCase().trim();
+            
+            cardCont.innerHTML = "";
+            backBtn.style.display = "none";
 
-            if (rawVal.length > 0) { 
+            if (currentVal.length > 0) { 
                 document.body.classList.add('searching'); 
-                // Only update lastUserTyping if the user is actually typing, not when a selection is made
-                if(!rawVal.includes(" ") || rawVal.length < 10) { lastUserTyping = strIn.value; } 
+                // Only update memory if the user is building the search string
+                if(!currentVal.includes(" ") || currentVal.length < 5) { 
+                    lastUserTyping = strIn.value; 
+                } 
             }
             
             sugBox.innerHTML = "";
-            if (rawVal.length < 1) { sugBox.style.display = "none"; return; }
+            if (currentVal.length < 1) { sugBox.style.display = "none"; return; }
             
             let allMatches = [];
             const zipsToSearch = (selectedZip === "ALL") ? Object.keys(database) : [selectedZip];
+            
             zipsToSearch.forEach(zip => {
                 if(database[zip]) {
-                    // Match against the searchName (usually just the core street name)
-                    const matches = database[zip].filter(s => s.searchName.startsWith(val) || s.displayName.startsWith(rawVal));
+                    // STRICT FILTERING: Match only things that START with the current search string
+                    const matches = database[zip].filter(s => s.searchName.startsWith(currentVal));
                     matches.forEach(m => { allMatches.push({ ...m, zip: zip }); });
                 }
             });
