@@ -7,7 +7,6 @@
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; }
         
-        /* VERY PROMINENT SCROLLBARS */
         ::-webkit-scrollbar { width: 16px; display: block; }
         ::-webkit-scrollbar-track { background: #ddd; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 2px solid #ddd; }
@@ -25,7 +24,7 @@
         .rt-finder-text { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); margin-top: 6px; display: block; }
         .hdr-accent { height: 5px; background: var(--rd); width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .ctrls { padding: 15px; background: var(--lt-bl); position: relative; }
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
         .input-wrapper { flex: 1; position: relative; }
@@ -33,21 +32,15 @@
         
         .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         
-        /* ZIP CHECKLIST FIX */
         .zip-checklist { 
             position: absolute; top: 100%; left: 0; right: 0; 
             background: white; border: 3px solid var(--bl); z-index: 6000; 
             display: none; border-radius: 0 0 10px 10px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
-            max-height: 320px; /* Fits about 4-5 items + button */
-            display: none;
+            max-height: 320px; 
             flex-direction: column;
         }
-        .zip-scroll-area { 
-            overflow-y: scroll; 
-            flex: 1; 
-            max-height: 220px; /* Forces scroll after ~4.5 items */
-        }
+        .zip-scroll-area { overflow-y: scroll; flex: 1; max-height: 220px; }
         .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; }
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
 
@@ -145,9 +138,7 @@
         list.style.display = list.style.display === 'flex' ? 'none' : 'flex'; 
     }
     
-    function checkAllZips(master) {
-        document.querySelectorAll('.z-chk').forEach(c => c.checked = master.checked);
-    }
+    function checkAllZips(master) { document.querySelectorAll('.z-chk').forEach(c => c.checked = master.checked); }
 
     function syncMaster() {
         const all = document.querySelectorAll('.z-chk');
@@ -157,27 +148,34 @@
 
     function applyZipSelections(e) {
         if(e) e.stopPropagation();
+        const allZips = document.querySelectorAll('.z-chk');
         const chks = document.querySelectorAll('.z-chk:checked');
-        const labels = Array.from(chks).map(c => c.value);
         const trig = document.getElementById('zipTrig');
         
-        trig.innerText = labels.length > 0 ? labels.join(', ') : 'Select Zip(s)...';
+        // Logical Label Tweak
+        if (chks.length === allZips.length) {
+            trig.innerText = 'ALL ZIPs';
+        } else if (chks.length > 0) {
+            trig.innerText = Array.from(chks).map(c => c.value).join(', ');
+        } else {
+            trig.innerText = 'Select Zip(s)...';
+        }
+
         document.getElementById('zipList').style.display = 'none';
+        const labels = Array.from(chks).map(c => c.value);
 
         if (labels.length > 0) {
             document.body.classList.add('header-hidden');
             strIn.disabled = false;
             strIn.placeholder = "Enter street name...";
-            setTimeout(() => strIn.focus(), 100);
-
             if (currentOpenStreet) {
                 refreshActiveStreet(labels);
             } else if (strIn.value.length > 0) {
                 handleSearch();
+            } else {
+                setTimeout(() => strIn.focus(), 100);
             }
-        } else {
-            resetZipSelection();
-        }
+        } else { resetZipSelection(); }
     }
 
     function refreshActiveStreet(activeZips) {
@@ -228,8 +226,7 @@
         if (allM.length > 0) {
             sugBox.style.display = "block";
             allM.sort((a,b) => {
-                const partsA = a.displayName.split(' ');
-                const partsB = b.displayName.split(' ');
+                const partsA = a.displayName.split(' '); const partsB = b.displayName.split(' ');
                 const isDir = (s) => /^(N|S|E|W|NE|NW|SE|SW)$/.test(s);
                 const nameA = isDir(partsA[0]) ? partsA.slice(1).join(' ') : a.displayName;
                 const nameB = isDir(partsB[0]) ? partsB.slice(1).join(' ') : b.displayName;
@@ -263,11 +260,8 @@
     function resetAll() { location.reload(); }
     
     window.onclick = function(event) { 
-        const list = document.getElementById('zipList');
-        const trig = document.getElementById('zipTrig');
-        if (!list.contains(event.target) && event.target !== trig) {
-            list.style.display = 'none';
-        }
+        const list = document.getElementById('zipList'); const trig = document.getElementById('zipTrig');
+        if (!list.contains(event.target) && event.target !== trig) { list.style.display = 'none'; }
     }
 </script>
 </body>
