@@ -5,19 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>USPS Route Finder</title>
     <style>
-        :root { --bl: #004b87; --rd: #da291c; --yl: #ffde00; --bg: #f4f7f9; }
+        /* THEME COLORS */
+        :root { 
+            --bl: #004b87; 
+            --lt-bl: #eef4f9; /* Light Blue Background */
+            --rd: #da291c; 
+            --yl: #ffde00; 
+        }
         
         ::-webkit-scrollbar { width: 14px; }
-        ::-webkit-scrollbar-track { background: #eee; }
-        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 2px solid #eee; }
+        ::-webkit-scrollbar-track { background: var(--lt-bl); }
+        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 3px solid var(--lt-bl); }
 
-        body { margin: 0; background: var(--bg); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { margin: 0; background: var(--lt-bl); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
         #banner-wrap { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.4s; flex-shrink: 0; }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -140px; }
 
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 22px 15px; text-align: center; color: white; cursor: pointer; position: relative; box-shadow: inset 0 1px 1px rgba(255,255,255,0.3); }
-        .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .hdr { 
+            background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); 
+            padding: 22px 15px; 
+            text-align: center; 
+            color: white; 
+            cursor: pointer; 
+            position: relative; 
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.3); 
+        }
+        
+        /* USPS TEXT MATCHES LIGHT BLUE BACKGROUND */
+        .usps-sig { 
+            font-family: 'Times New Roman', serif; 
+            font-size: 3rem; 
+            font-weight: 900; 
+            font-style: italic; 
+            letter-spacing: -2px; 
+            display: block; 
+            line-height: 0.8; 
+            margin-bottom: 8px; 
+            color: var(--lt-bl); 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3); 
+        }
+        
         .vanc-text { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; display: block; }
         .rt-finder-text { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); margin-top: 6px; display: block; }
         .hdr-accent { height: 5px; background: var(--rd); width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
@@ -25,11 +53,11 @@
         #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 10000; top: 10px; left: 10px; right: 10px; border-radius: 12px; border: 1px solid #ccc; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         textarea { width: 100%; height: 150px; }
 
-        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--bg); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .ctrls { padding: 15px; background: white; position: relative; }
+        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .ctrls { padding: 15px; background: var(--lt-bl); position: relative; }
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
         .input-wrapper { flex: 1; position: relative; }
-        label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: #444; text-transform: uppercase; letter-spacing: 1px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
         select, input { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; color: #000; font-weight: 700; }
         
         .btn-action { height: 52px; width: 90px; border-radius: 6px; border: none; font-weight: 900; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; }
@@ -118,8 +146,6 @@
         if(zipIn.value !== "") { 
             document.body.classList.add('header-hidden');
             strIn.disabled = false; strIn.placeholder = "Enter street name..."; 
-            
-            // IF A STREET IS CURRENTLY DISPLAYED: Switch to new Zip's version of that same street
             if (currentOpenStreet) {
                 const searchVal = currentOpenStreet.displayName;
                 const selectedZip = zipIn.value;
