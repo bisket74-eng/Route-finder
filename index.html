@@ -8,21 +8,21 @@
     <style>
         :root { --bl: #004b87; --rd: #da291c; --yl: #ffde00; --bg: #f4f7f9; }
         
-        /* SCROLLBAR DEFINITION */
-        ::-webkit-scrollbar { width: 12px; }
-        ::-webkit-scrollbar-track { background: #e0e0e0; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 2px solid #e0e0e0; }
+        /* SHARP SCROLLBARS */
+        ::-webkit-scrollbar { width: 14px; }
+        ::-webkit-scrollbar-track { background: #eee; }
+        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 3px solid #eee; }
 
         body { margin: 0; background: var(--bg); font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--bg); flex-shrink: 0; }
         
-        /* HEADER */
+        /* STICKY TOP SECTION */
+        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--bg); flex-shrink: 0; }
         .hdr { background: var(--bl); padding: 18px 15px; text-align: center; color: white; cursor: pointer; }
         .usps-sig { font-size: 2.4rem; font-weight: 900; font-style: italic; letter-spacing: -3px; transform: skewX(-12deg); display: block; line-height: 0.8; margin-bottom: 5px; }
         .vanc-text { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: block; }
         .rt-finder-text { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--yl); margin-top: 4px; display: block; }
         .hdr-accent { height: 5px; background: var(--rd); width: 100%; }
-        
+
         #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 30000; top: 10px; left: 10px; right: 10px; border-radius: 12px; border: 3px dashed var(--bl); box-shadow: 0 10px 30px #000; }
         textarea { width: 100%; height: 150px; }
 
@@ -30,6 +30,7 @@
         .ctrls { padding: 10px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; }
         .row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-end; }
         select, input { width: 100%; padding: 12px; border: 2px solid #bbb; border-radius: 8px; font-size: 18px; box-sizing: border-box; font-weight: 600; }
+        input:disabled { background: #eee; cursor: not-allowed; }
         
         .btn { height: 48px; border-radius: 8px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.7rem; }
         .red { background: var(--rd); color: white; width: 85px; }
@@ -38,31 +39,29 @@
         .sug { background: white; border: 3px solid var(--bl); max-height: 250px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border-radius: 0 0 12px 12px; }
         .s-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: 900; color: var(--bl); }
 
-        /* RESULTS AREA - Added bottom cushion */
-        #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 150px; position: relative; }
+        /* SCROLLABLE RESULTS AREA */
+        #list-res { flex: 1; overflow-y: auto; padding: 15px; }
         
-        /* THE REFINED CARD LAYOUT */
+        /* LOCKED BUTTON SECTION */
+        .bottom-shelf { padding: 15px; background: white; border-top: 2px solid #ddd; z-index: 5000; }
+        #return-btn { display: none; width: 100%; padding: 16px; background: var(--bl); color: white; border: none; font-weight: 900; border-radius: 8px; margin-bottom: 15px; text-transform: uppercase; font-size: 1rem; }
+        .big-scan { width: 100%; padding: 22px; background: var(--bl); color: white; border-radius: 50px; font-size: 1.3rem; font-weight: 900; border: none; box-shadow: 0 10px 20px rgba(0,75,135,0.4); text-transform: uppercase; }
+
+        /* CARD STYLING */
         .list-card { background: white; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .info-center { flex: 1; text-align: left; }
-        .st-txt { font-size: 0.9rem; font-weight: 800; color: #555; text-transform: uppercase; display: block; margin-bottom: 2px; }
-        .range-txt { font-size: 2.2rem; font-weight: 900; color: #000; display: block; line-height: 1; }
-        .zip-txt { font-size: 1rem; font-weight: 800; color: var(--bl); display: block; margin-top: 4px; }
-
-        /* Right Block: Route (Very Large) */
-        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 10px; text-align: center; min-width: 90px; font-weight: 900; }
+        .st-txt { font-size: 0.95rem; font-weight: 800; color: #555; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; display: block; line-height: 1; }
+        .zip-txt { font-size: 1.1rem; font-weight: 800; color: var(--bl); display: block; margin-top: 4px; }
+        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 10px; text-align: center; min-width: 95px; font-weight: 900; }
         .rt-block small { font-size: 0.6rem; display: block; margin-bottom: -4px; opacity: 0.9; }
-        .rt-block span { font-size: 2.2rem; display: block; line-height: 1; }
+        .rt-block span { font-size: 2.4rem; display: block; line-height: 1; }
 
-        #return-btn { display: none; width: 100%; padding: 16px; background: var(--bl); color: white; border: none; font-weight: 900; border-radius: 8px; margin-bottom: 20px; text-transform: uppercase; font-size: 1rem; }
-
-        .scan-layer { position: absolute; top: 60%; left: 0; right: 0; display: flex; justify-content: center; pointer-events: none; z-index: 10; }
-        .big-scan { pointer-events: auto; background: var(--bl); color: white; width: 85%; max-width: 320px; padding: 22px; border-radius: 50px; font-size: 1.3rem; font-weight: 900; border: none; box-shadow: 0 10px 20px rgba(0,75,135,0.4); text-transform: uppercase; }
-
-        #flash-res { position: fixed; top: 20%; left: 8%; right: 8%; z-index: 20000; display: none; transform: scale(0.5); opacity: 0; transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* OVERLAYS */
+        #flash-res { position: fixed; top: 20%; left: 8%; right: 8%; z-index: 20000; display: none; transform: scale(0.5); opacity: 0; transition: 0.25s; }
         #flash-res.show { display: block; transform: scale(1); opacity: 1; }
         .big-card { background: white; border: 8px solid var(--bl); border-radius: 24px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; }
         .rt-giant { font-size: 8.5rem; font-weight: 900; color: var(--bl); line-height: 1; display: block; }
-
         #scanner-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 25000; }
         #reader { width: 100%; height: 80%; }
         .scan-close { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); padding: 15px 40px; background: var(--rd); color: white; border-radius: 50px; border: none; font-weight: 900; }
@@ -113,13 +112,16 @@
     </div>
 
     <div id="list-res">
-        <button id="return-btn" onclick="returnToListAction()">Return to Street List</button>
         <div id="cc"></div>
-        <div class="scan-layer" id="main-scan-layer"><button class="big-scan" onclick="startScan()">📷 SCAN PACKAGE</button></div>
+    </div>
+
+    <div class="bottom-shelf">
+        <button id="return-btn" onclick="returnToListAction()">Return to Street List</button>
+        <button class="big-scan" onclick="startScan()">📷 SCAN PACKAGE</button>
     </div>
 
 <script>
-    let d = {}; const zs=document.getElementById('zs'), si=document.getElementById('si'), sb=document.getElementById('sb'), cc=document.getElementById('cc'), rbtn=document.getElementById('return-btn'), scanL = document.getElementById('main-scan-layer');
+    let d = {}; const zs=document.getElementById('zs'), si=document.getElementById('si'), sb=document.getElementById('sb'), cc=document.getElementById('cc'), rbtn=document.getElementById('return-btn');
     let scanner = null, fullList = [];
 
     window.onload = () => { 
@@ -159,6 +161,7 @@
             else si.focus();
         } else {
             si.disabled = true;
+            si.placeholder = "Select ZIP first...";
             si.value = "";
             sb.style.display = "none";
         }
@@ -217,6 +220,7 @@
     function returnToListAction(){
         cc.innerHTML = "";
         rbtn.style.display = "none";
+        // Directly trigger the pick list to open back up
         streetSearchAction();
     }
 
@@ -225,7 +229,7 @@
     }
 
     function resetPage() {
-        zs.selectedIndex = 0; si.value = ""; si.disabled = true; sb.style.display = "none"; cc.innerHTML = ""; rbtn.style.display = "none";
+        zs.selectedIndex = 0; si.value = ""; si.disabled = true; si.placeholder = "Select ZIP first..."; sb.style.display = "none"; cc.innerHTML = ""; rbtn.style.display = "none";
     }
 
     function startScan() {
@@ -253,7 +257,7 @@
         if (matches.length === 1) {
             flashCard(matches[0].zip, matches[0].rt, matches[0].street);
         } else {
-            alert("ZIP Found: " + zip5 + ". Manual select required.");
+            alert("No pinpoint match. Jumping to ZIP: " + zip5);
             zs.value = zip5; zipChangeAction();
         }
     }
@@ -265,10 +269,7 @@
         document.getElementById('f-st').innerText = street;
         flash.style.display = 'block';
         setTimeout(() => flash.classList.add('show'), 10);
-        setTimeout(() => {
-            flash.classList.remove('show');
-            setTimeout(() => flash.style.display = 'none', 300);
-        }, 2000);
+        setTimeout(() => { flash.classList.remove('show'); setTimeout(() => flash.style.display = 'none', 300); }, 2000);
     }
 
     function stopScan() { if(scanner) scanner.stop(); document.getElementById('scanner-ui').style.display = 'none'; }
