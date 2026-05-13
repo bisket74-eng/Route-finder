@@ -11,27 +11,25 @@
         ::-webkit-scrollbar-track { background: var(--lt-bl); }
         ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 3px solid var(--lt-bl); }
 
-        /* THE DESKTOP FIX: Center the app and limit width on wide screens */
         body { 
             margin: 0; 
-            background: #d1dee8; /* Darker blue for the "desk" background */
+            background: #d1dee8; 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
             display: flex; 
-            justify-content: center; /* Centers the app on desktop */
+            justify-content: center; 
             height: 100vh; 
             overflow: hidden; 
         }
 
-        /* This container is the "Phone" frame on a Desktop */
         .app-container {
             width: 100%;
-            max-width: 600px; /* The "Happy Medium" width */
+            max-width: 600px; 
             background: var(--lt-bl);
             display: flex;
             flex-direction: column;
             height: 100%;
             position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.2); /* Adds depth on desktop */
+            box-shadow: 0 0 50px rgba(0,0,0,0.2);
         }
         
         #banner-wrap { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.4s; flex-shrink: 0; }
@@ -163,8 +161,7 @@
         zips.forEach(z => { 
             if(database[z]) { 
                 database[z].forEach(m => {
-                    const name = m.searchName;
-                    if (name.startsWith(val)) {
+                    if (m.searchName.startsWith(val)) {
                         allM.push({ ...m, zip: z });
                     }
                 }); 
@@ -173,7 +170,28 @@
 
         if (allM.length > 0) {
             sugBox.style.display = "block";
-            allM.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric: true, sensitivity: 'base'}));
+            
+            // THE "NAME-FIRST" SORTING ENGINE
+            allM.sort((a,b) => {
+                const partsA = a.displayName.split(' ');
+                const partsB = b.displayName.split(' ');
+
+                // Function to identify and ignore directionals (N, S, E, W, NE, NW, SE, SW)
+                const isDir = (s) => /^(N|S|E|W|NE|NW|SE|SW)$/.test(s);
+                
+                // Get the actual "Name" part (skipping the first part if it's a directional)
+                const nameA = isDir(partsA[0]) ? partsA.slice(1).join(' ') : a.displayName;
+                const nameB = isDir(partsB[0]) ? partsB.slice(1).join(' ') : b.displayName;
+
+                // Step 1: Sort by Natural Name (e.g., "1ST ST" vs "11TH ST")
+                const nameCompare = nameA.localeCompare(nameB, undefined, {numeric: true, sensitivity: 'base'});
+                
+                if (nameCompare !== 0) return nameCompare;
+
+                // Step 2: If base names match, sort by full string (this handles the directionals)
+                return a.displayName.localeCompare(b.displayName);
+            });
+
             const unique = []; const seen = new Set();
             allM.forEach(item => { const id = item.displayName + item.zip; if(!seen.has(id)){ unique.push(item); seen.add(id); } });
             unique.slice(0, 250).forEach(item => {
