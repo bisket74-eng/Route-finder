@@ -73,26 +73,35 @@
     </div>
     <div id="resultArea"><div id="cardContainer"></div></div>
 
-    <script>
-        // CHANGE THE NAME BELOW TO YOUR GITHUB USERNAME
-        const DATA_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/refs/heads/main/BAKED_DATA.txt";
+<script>
+       
+        // 1. YOUR RAW LINK GOES HERE
+        const DATA_URL = "PASTE_YOUR_RAW_LINK_HERE";
 
         let database = {};
         let lastUserTyping = "";
 
-        // Automatically fetch the file from your GitHub
         fetch(DATA_URL)
             .then(response => response.text())
             .then(text => {
-                // Remove the "let Master_data =" part if it exists
-                let cleanText = text.replace(/let\s+Master_data\s*=\s*/i, "").replace(/;$/, "");
-                const rawData = JSON.parse(cleanText);
+                // SUPER-CLEANER: Find the start of the data [ and the end ]
+                let start = text.indexOf('[');
+                let end = text.lastIndexOf(']');
+                
+                if (start === -1 || end === -1) {
+                    throw new Error("Could not find the data brackets in the file.");
+                }
+
+                // Extract just the part between [ and ]
+                let cleanJson = text.substring(start, end + 1);
+                const rawData = JSON.parse(cleanJson);
                 
                 rawData.forEach(row => {
                     const zip = row.Zip || row.ZIP || "00000";
                     const name = row.Name || "";
+                    if (!name) return;
                     if (!database[zip]) database[zip] = [];
-                    const fullName = [row.Pre, row.Name, row.Type, row.Suf].filter(Boolean).join(" ");
+                    const fullName = [row.Pre, row.Name, row.Type, row.Suf].filter(Boolean).map(s => s.trim()).join(" ");
                     let street = database[zip].find(s => s.displayName === fullName);
                     if (!street) {
                         street = { searchName: name.toUpperCase(), displayName: fullName, results: [] };
@@ -101,14 +110,17 @@
                     street.results.push({ range: row.Range, route: row.Route });
                 });
                 
-                document.getElementById('zipCode').options[0].text = "Select ZIP...";
-                console.log("Data Loaded Successfully");
+                // Unlock the ZIP selector
+                const zipDropdown = document.getElementById('zipCode');
+                zipDropdown.options[0].text = "Select ZIP...";
+                console.log("Database successfully built!");
             })
             .catch(err => {
-                alert("Data failed to load. Check your GitHub username in the code.");
+                alert("Data found, but could not be read. Check the file format!");
                 console.error(err);
             });
 
+        // --- UI FUNCTIONS ---
         const zipIn = document.getElementById('zipCode');
         const strIn = document.getElementById('streetInput');
         const sugBox = document.getElementById('suggestionBox');
@@ -118,7 +130,12 @@
             if(zipIn.value !== "") { 
                 strIn.disabled = false; 
                 strIn.placeholder = "Start typing..."; 
-                strIn.focus();
+                setTimeout(() => { strIn.focus(); }, 50);
+            } else {
+                strIn.disabled = true;
+                strIn.value = "";
+                sugBox.style.display = "none";
+                cardCont.innerHTML = "";
             }
         }
 
@@ -140,6 +157,9 @@
 
             if (allMatches.length > 0) {
                 sugBox.style.display = "block";
+                // Sort results numerically/alphabetically
+                allMatches.sort((a, b) => a.displayName.localeCompare(b.displayName, undefined, { numeric: true }));
+                
                 allMatches.slice(0, 50).forEach(item => {
                     const div = document.createElement('div');
                     div.className = "suggestion-item";
@@ -157,10 +177,150 @@
             item.results.forEach(res => {
                 const card = document.createElement('div');
                 card.className = "result-card";
-                card.innerHTML = `<div class="card-left"><span class="zip-tag">ZIP: ${item.zip}</span><span class="range-display">${res.range}</span><span>${item.displayName}</span></div><div class="route-side"><span class="num">${res.route}</span></div>`;
+                card.innerHTML = `
+                    <div class="card-left">
+                        <span class="zip-tag">ZIP: ${item.zip}</span>
+                        <span class="range-display">${res.range}</span>
+                        <span style="font-size:0.8rem; color:#666;">${item.displayName}</span>
+                    </div>
+                    <div class="route-side">
+                        <span style="font-size:0.6rem; font-weight:bold; display:block;">ROUTE</span>
+                        <span class="num">${res.route}</span>
+                    </div>`;
                 cardCont.appendChild(card);
             });
+            document.activeElement.blur();
         }
+
+        function clearStreetOnly() { 
+            strIn.value = ""; 
+            sugBox.style.display = "none"; 
+            cardCont.innerHTML = ""; 
+            strIn.focus(); 
+        }
+    </script>";
+
+        let database = {};
+        let lastUserTyping = "";
+
+        fetch(DATA_URL)
+            .then(response => response.text())
+            .then(text => {
+                // SUPER-CLEANER: Find the start of the data [ and the end ]
+                let start = text.indexOf('[');
+                let end = text.lastIndexOf(']');
+                
+                if (start === -1 || end === -1) {
+                    throw new Error("Could not find the data brackets in the file.");
+                }
+
+                // Extract just the part between [ and ]
+                let cleanJson = text.substring(start, end + 1);
+                const rawData = JSON.parse(cleanJson);
+                
+                rawData.forEach(row => {
+                    const zip = row.Zip || row.ZIP || "00000";
+                    const name = row.Name || "";
+                    if (!name) return;
+                    if (!database[zip]) database[zip] = [];
+                    const fullName = [row.Pre, row.Name, row.Type, row.Suf].filter(Boolean).map(s => s.trim()).join(" ");
+                    let street = database[zip].find(s => s.displayName === fullName);
+                    if (!street) {
+                        street = { searchName: name.toUpperCase(), displayName: fullName, results: [] };
+                        database[zip].push(street);
+                    }
+                    street.results.push({ range: row.Range, route: row.Route });
+                });
+                
+                // Unlock the ZIP selector
+                const zipDropdown = document.getElementById('zipCode');
+                zipDropdown.options[0].text = "Select ZIP...";
+                console.log("Database successfully built!");
+            })
+            .catch(err => {
+                alert("Data found, but could not be read. Check the file format!");
+                console.error(err);
+            });
+
+        // --- UI FUNCTIONS ---
+        const zipIn = document.getElementById('zipCode');
+        const strIn = document.getElementById('streetInput');
+        const sugBox = document.getElementById('suggestionBox');
+        const cardCont = document.getElementById('cardContainer');
+
+        function handleZipChange() {
+            if(zipIn.value !== "") { 
+                strIn.disabled = false; 
+                strIn.placeholder = "Start typing..."; 
+                setTimeout(() => { strIn.focus(); }, 50);
+            } else {
+                strIn.disabled = true;
+                strIn.value = "";
+                sugBox.style.display = "none";
+                cardCont.innerHTML = "";
+            }
+        }
+
+        function handleSearch() {
+            const selectedZip = zipIn.value;
+            const currentVal = strIn.value.toUpperCase().trim();
+            cardCont.innerHTML = "";
+            sugBox.innerHTML = "";
+            if (currentVal.length < 1) { sugBox.style.display = "none"; return; }
+            
+            let allMatches = [];
+            const zips = (selectedZip === "ALL") ? Object.keys(database) : [selectedZip];
+            zips.forEach(z => {
+                if(database[z]) {
+                    const matches = database[z].filter(s => s.searchName.startsWith(currentVal));
+                    matches.forEach(m => allMatches.push({...m, zip: z}));
+                }
+            });
+
+            if (allMatches.length > 0) {
+                sugBox.style.display = "block";
+                // Sort results numerically/alphabetically
+                allMatches.sort((a, b) => a.displayName.localeCompare(b.displayName, undefined, { numeric: true }));
+                
+                allMatches.slice(0, 50).forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = "suggestion-item";
+                    div.innerHTML = `<span>${item.displayName}</span> <span class="zip-badge-small">${item.zip}</span>`;
+                    div.onclick = () => selectStreet(item);
+                    sugBox.appendChild(div);
+                });
+            } else { sugBox.style.display = "none"; }
+        }
+
+        function selectStreet(item) {
+            strIn.value = item.displayName;
+            sugBox.style.display = "none";
+            cardCont.innerHTML = "";
+            item.results.forEach(res => {
+                const card = document.createElement('div');
+                card.className = "result-card";
+                card.innerHTML = `
+                    <div class="card-left">
+                        <span class="zip-tag">ZIP: ${item.zip}</span>
+                        <span class="range-display">${res.range}</span>
+                        <span style="font-size:0.8rem; color:#666;">${item.displayName}</span>
+                    </div>
+                    <div class="route-side">
+                        <span style="font-size:0.6rem; font-weight:bold; display:block;">ROUTE</span>
+                        <span class="num">${res.route}</span>
+                    </div>`;
+                cardCont.appendChild(card);
+            });
+            document.activeElement.blur();
+        }
+
+        function clearStreetOnly() { 
+            strIn.value = ""; 
+            sugBox.style.display = "none"; 
+            cardCont.innerHTML = ""; 
+            strIn.focus(); 
+        }
+    </script>
 
         function clearStreetOnly() { strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; strIn.focus(); }
     </script>
