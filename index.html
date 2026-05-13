@@ -25,16 +25,19 @@
         .hdr-accent { height: 5px; background: var(--rd); width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
         .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .ctrls { padding: 15px; background: white; position: relative; }
+        .ctrls { padding: 15px; background: var(--lt-bl); position: relative; }
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
-        .input-wrapper { flex: 1; position: relative; }
+        .input-wrapper { flex: 1; position: relative; width: 100%; }
         label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
         
-        /* NEW MULTI-SELECT STYLING */
-        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 16px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; position: relative; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--bl); z-index: 6000; display: none; padding: 10px; border-radius: 0 0 10px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .zip-item { display: flex; align-items: center; padding: 10px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; }
-        .zip-item input { width: 22px; height: 22px; margin-right: 12px; cursor: pointer; }
+        /* ZIP TRIGGER ALIGNMENT */
+        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--bl); z-index: 6000; display: none; padding: 10px; border-radius: 0 0 10px 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; }
+        .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
+
+        /* APPLY BUTTON IN CHECKLIST */
+        .apply-btn { width: 100%; background: var(--bl); color: white; padding: 15px; border: none; border-radius: 6px; font-weight: 900; text-transform: uppercase; margin-top: 10px; font-size: 1rem; cursor: pointer; }
 
         input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; color: #000; font-weight: 700; }
         
@@ -66,7 +69,7 @@
     <div class="app-container">
         <div id="admin">
             <textarea id="ti" placeholder="Paste Data..."></textarea>
-            <button onclick="savePastedData()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:8px;">SAVE DATA</button>
+            <button onclick="savePastedData()" style="width:100%; padding:15px; background:var(--bl); color:white; border:none; font-weight:bold; border-radius:6px;">SAVE DATA</button>
         </div>
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
@@ -81,19 +84,20 @@
                         <label>Zip Code</label>
                         <div id="zipTrig" class="zip-trigger" onclick="toggleZipList()">Select Zip(s)...</div>
                         <div id="zipList" class="zip-checklist">
-                            <label class="zip-item"><input type="checkbox" value="ALL" onchange="checkAllZips(this)"> ALL ZIPs</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="zipUpdate()"> 98660</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="zipUpdate()"> 98661</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="zipUpdate()"> 98662</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="zipUpdate()"> 98663</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="zipUpdate()"> 98664</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="zipUpdate()"> 98665</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="zipUpdate()"> 98668</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="zipUpdate()"> 98682</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="zipUpdate()"> 98683</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="zipUpdate()"> 98684</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="zipUpdate()"> 98685</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="zipUpdate()"> 98686</label>
+                            <label class="zip-item"><input type="checkbox" id="allZipMaster" value="ALL" onchange="checkAllZips(this)"> ALL ZIPs</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="syncMaster()"> 98660</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="syncMaster()"> 98661</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="syncMaster()"> 98662</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="syncMaster()"> 98663</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="syncMaster()"> 98664</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="syncMaster()"> 98665</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="syncMaster()"> 98668</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="syncMaster()"> 98682</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="syncMaster()"> 98683</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="syncMaster()"> 98684</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="syncMaster()"> 98685</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="syncMaster()"> 98686</label>
+                            <button class="apply-btn" onclick="applyZipSelections()">Apply Selections</button>
                         </div>
                     </div>
                     <button class="btn-action red" onclick="resetAll()">Reset</button>
@@ -122,21 +126,31 @@
     function toggleZipList() { const list = document.getElementById('zipList'); list.style.display = list.style.display === 'block' ? 'none' : 'block'; }
     
     function checkAllZips(master) {
-        const chks = document.querySelectorAll('.z-chk');
-        chks.forEach(c => c.checked = master.checked);
-        zipUpdate();
+        document.querySelectorAll('.z-chk').forEach(c => c.checked = master.checked);
     }
 
-    function zipUpdate() {
+    function syncMaster() {
+        const all = document.querySelectorAll('.z-chk');
+        const checked = document.querySelectorAll('.z-chk:checked');
+        document.getElementById('allZipMaster').checked = (all.length === checked.length);
+    }
+
+    function applyZipSelections() {
         const chks = document.querySelectorAll('.z-chk:checked');
         const labels = Array.from(chks).map(c => c.value);
         const trig = document.getElementById('zipTrig');
-        trig.innerText = labels.length > 0 ? labels.join(', ') : 'Select Zip(s)...';
         
+        trig.innerText = labels.length > 0 ? labels.join(', ') : 'Select Zip(s)...';
+        document.getElementById('zipList').style.display = 'none';
+
         if (labels.length > 0) {
             document.body.classList.add('header-hidden');
             strIn.disabled = false;
             strIn.placeholder = "Enter street name...";
+            
+            // AUTOMATIC KEYBOARD FOCUS
+            setTimeout(() => strIn.focus(), 50);
+
             if (currentOpenStreet) {
                 refreshActiveStreet(labels);
             } else if (strIn.value.length > 0) {
@@ -208,7 +222,7 @@
             unique.slice(0, 250).forEach(item => {
                 const div = document.createElement('div'); div.className = "s-item";
                 div.innerHTML = `<span>${item.displayName}</span> <span class="zip-badge-small">${item.zip}</span>`;
-                div.onclick = () => { selectStreet(item); document.getElementById('zipList').style.display='none'; }; sugBox.appendChild(div);
+                div.onclick = () => { selectStreet(item); }; sugBox.appendChild(div);
             });
         } else { sugBox.style.display = "none"; }
     }
@@ -229,8 +243,8 @@
     function resetZipSelection() { document.body.classList.remove('header-hidden'); lastUserTyping = ""; strIn.value = ""; strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; }
     function resetAll() { location.reload(); }
     
-    // Close checklist when clicking outside
-    window.onclick = function(event) { if (!event.target.matches('.zip-trigger') && !event.target.closest('.zip-checklist')) { document.getElementById('zipList').style.display = 'none'; } }
+    // Close checklist if user clicks outside of the control area
+    window.onclick = function(event) { if (!event.target.closest('.input-wrapper') && !event.target.closest('.zip-checklist')) { document.getElementById('zipList').style.display = 'none'; } }
 </script>
 </body>
 </html>
