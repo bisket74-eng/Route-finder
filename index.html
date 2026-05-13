@@ -27,8 +27,9 @@
         .reset-street { background-color: var(--usps-yellow); color: #000; }
         .suggestion-box { background: #e5e5e5; border: 2px solid var(--usps-blue); border-top: none; border-radius: 0 0 12px 12px; max-height: 236px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9999; padding: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .suggestion-item { height: 48px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; background: white; margin-bottom: 4px; border-radius: 6px; border-bottom: 2px solid #ccc; font-size: 1.1rem; font-weight: 900; color: var(--usps-blue); }
+        .zip-badge-small { font-size: 0.8rem; background: var(--usps-blue); color: white; padding: 2px 6px; border-radius: 4px; }
         #resultArea { flex-grow: 1; padding: 10px 15px 350px 15px; overflow-y: auto; position: relative; z-index: 10; }
-        .result-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .result-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ccc; }
         .range-display { font-size: 1.5rem; font-weight: 900; display: block; }
         .route-side { background-color: var(--usps-blue); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 80px; }
         .route-side .num { font-size: 1.6rem; font-weight: 900; display: block; }
@@ -37,7 +38,6 @@
 <body>
     <div id="adminPanel">
         <h3 style="color:var(--usps-blue); margin:0;">Paste Excel Data</h3>
-        <p style="font-size: 0.7rem; margin: 5px 0;">Paste from Row 3 down (Range, Ext, Pre, Name, Type, Suf, ZIP, Route)</p>
         <textarea id="dataInput" placeholder="Paste columns here..."></textarea>
         <button onclick="saveExcelData()" style="width:100%; padding:15px; border-radius:8px; border:none; background:var(--usps-blue); color:white; font-weight:bold;">SAVE DATA</button>
         <button onclick="document.getElementById('adminPanel').style.display='none'" style="display:block; width:100%; margin-top:8px; padding:8px; background:#666; color:white; border-radius:8px; border:none;">CLOSE</button>
@@ -59,6 +59,7 @@
                     <label>1. Zip Code</label>
                     <select id="zipCode" onchange="handleZipChange()">
                         <option value="">Select ZIP...</option>
+                        <option value="ALL">ALL ZIPs</option>
                         <option value="98660">98660</option><option value="98661">98661</option><option value="98662">98662</option>
                         <option value="98663">98663</option><option value="98664">98664</option><option value="98665">98665</option>
                         <option value="98682">98682</option><option value="98683">98683</option><option value="98684">98684</option>
@@ -100,15 +101,12 @@
             const input = document.getElementById('dataInput').value;
             const lines = input.split('\n');
             const newDB = {};
-            
             lines.forEach(line => {
-                const c = line.split('\t'); // Split by Tab (Excel default)
+                const c = line.split('\t');
                 if (c.length < 8) return; 
-                
                 const zip = c[7]?.trim();
                 const name = c[4]?.trim();
                 if (!zip || !name) return;
-                
                 if (!newDB[zip]) newDB[zip] = [];
                 const full = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s => s.trim()).join(" ");
                 let street = newDB[zip].find(s => s.displayName === full);
@@ -118,10 +116,9 @@
                 }
                 street.results.push({ range: c[0] + (c[1] ? "-" + c[1] : ""), route: c[8]?.trim() });
             });
-
             database = newDB;
             localStorage.setItem('vancouverData', JSON.stringify(newDB));
-            alert("Success! Excel data saved to phone.");
+            alert("Success! Data saved.");
             document.getElementById('adminPanel').style.display = 'none';
             location.reload();
         }
@@ -143,14 +140,24 @@
             const zip = zipIn.value;
             const val = strIn.value.toUpperCase().trim();
             cardCont.innerHTML = ""; sugBox.innerHTML = "";
-            if (val.length < 1 || !database[zip]) { sugBox.style.display = "none"; return; }
-            const matches = database[zip].filter(s => s.searchName.startsWith(val));
-            if (matches.length > 0) {
+            if (val.length < 1) { sugBox.style.display = "none"; return; }
+            
+            let allMatches = [];
+            const targetZips = (zip === "ALL") ? Object.keys(database) : [zip];
+            
+            targetZips.forEach(z => {
+                if (database[z]) {
+                    const matches = database[z].filter(s => s.searchName.startsWith(val));
+                    matches.forEach(m => allMatches.push({...m, zip: z}));
+                }
+            });
+
+            if (allMatches.length > 0) {
                 sugBox.style.display = "block";
-                matches.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric: true})).slice(0, 50).forEach(item => {
+                allMatches.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric: true})).slice(0, 50).forEach(item => {
                     const div = document.createElement('div');
                     div.className = "suggestion-item";
-                    div.innerHTML = item.displayName;
+                    div.innerHTML = `<span>${item.displayName}</span> ${zip === "ALL" ? `<span class="zip-badge-small">${item.zip}</span>` : ""}`;
                     div.onclick = () => selectStreet(item);
                     sugBox.appendChild(div);
                 });
@@ -162,7 +169,7 @@
             item.results.forEach(res => {
                 const card = document.createElement('div');
                 card.className = "result-card";
-                card.innerHTML = `<div class="card-left"><strong>${res.range}</strong><br><small>${item.displayName}</small></div><div class="route-side"><span class="num">${res.route}</span></div>`;
+                card.innerHTML = `<div class="card-left"><strong>${res.range}</strong><br><small>${item.displayName} (${item.zip})</small></div><div class="route-side"><span class="num">${res.route}</span></div>`;
                 cardCont.appendChild(card);
             });
         }
