@@ -61,8 +61,8 @@
         
         #backToListBtn { display: none; width: calc(100% - 30px); background: var(--bl); color: white; margin: 0 15px 15px 15px; padding: 18px; border-radius: 8px; font-weight: 900; text-transform: uppercase; border: none; letter-spacing: 1px; border-bottom: 4px solid var(--rd); cursor: pointer; }
 
-        /* STREET PICKLIST - Limited to 5 Rows (Approx 310px) */
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 310px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        /* STREET PICKLIST - Adjusted to 4.5 Rows (approx 270px) */
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); font-size: 1.1rem; }
         .zip-badge-small { font-weight: 900; color: white; background: var(--bl); padding: 4px 10px; border-radius: 4px; font-size: 0.9rem; }
 
@@ -223,7 +223,6 @@
         activeZips.forEach(z => { if(database[z]) { database[z].forEach(m => { if (m.searchName.startsWith(val)) { allM.push({ ...m, zip: z }); } }); } });
         if (allM.length > 0) {
             sugBox.style.display = "block";
-            // RESET SCROLL TO TOP ON EACH SEARCH
             sugBox.scrollTop = 0; 
             
             allM.sort((a,b) => {
