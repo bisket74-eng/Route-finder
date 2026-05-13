@@ -163,18 +163,24 @@
         const chks = document.querySelectorAll('.z-chk:checked');
         const trig = document.getElementById('zipTrig');
         
-        // AUTO-SHRINK FONT LOGIC
-        if (chks.length > 5) {
+        // REFINED FONT LOGIC
+        if (chks.length === allZ.length) {
+            trig.innerText = 'ALL ZIPs';
+            trig.style.fontSize = "18px";
+            trig.style.padding = "14px";
+        } else if (chks.length > 4) { // Only shrink if 5 or more are manually selected
+            trig.innerText = Array.from(chks).map(c => c.value).join(', ');
             trig.style.fontSize = "13px";
-            trig.style.padding = "17px 14px"; // Keep vertical center
+            trig.style.padding = "17px 14px";
+        } else if (chks.length > 0) {
+            trig.innerText = Array.from(chks).map(c => c.value).join(', ');
+            trig.style.fontSize = "18px";
+            trig.style.padding = "14px";
         } else {
+            trig.innerText = 'Select Zip(s)...';
             trig.style.fontSize = "18px";
             trig.style.padding = "14px";
         }
-
-        if (chks.length === allZ.length) { trig.innerText = 'ALL ZIPs'; }
-        else if (chks.length > 0) { trig.innerText = Array.from(chks).map(c => c.value).join(', '); }
-        else { trig.innerText = 'Select Zip(s)...'; }
 
         document.getElementById('zipList').style.display = 'none';
         const labels = Array.from(chks).map(c => c.value);
@@ -220,21 +226,14 @@
         const activeZips = Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
         const val = strIn.value.toUpperCase().trim();
         sugBox.innerHTML = ""; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null;
-        
-        if (val.length > 0) { 
-            lastUserTyping = strIn.value;
-            body.classList.add('header-hidden');
-        } else {
-            body.classList.remove('header-hidden');
-        }
-
+        if (val.length > 0) { lastUserTyping = strIn.value; body.classList.add('header-hidden'); }
+        else { body.classList.remove('header-hidden'); }
         if (val.length < 1 || activeZips.length === 0) { sugBox.style.display = "none"; return; }
         let allM = [];
         activeZips.forEach(z => { if(database[z]) { database[z].forEach(m => { if (m.searchName.startsWith(val)) { allM.push({ ...m, zip: z }); } }); } });
         if (allM.length > 0) {
             sugBox.style.display = "block";
             sugBox.scrollTop = 0; 
-            
             allM.sort((a,b) => {
                 const pA = a.displayName.split(' '); const pB = b.displayName.split(' ');
                 const isD = (s) => /^(N|S|E|W|NE|NW|SE|SW)$/.test(s);
