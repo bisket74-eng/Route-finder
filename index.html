@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>USPS Route Finder</title>
+    <title>USPS Route Finder - Supervisor Mode</title>
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; }
         
@@ -19,43 +19,23 @@
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -140px; }
 
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 22px 15px; text-align: center; color: white; cursor: pointer; position: relative; box-shadow: inset 0 1px 1px rgba(255,255,255,0.3); }
-        .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: var(--lt-bl); text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: var(--lt-bl); text-shadow: 0 2px 10px rgba(255,255,255,0.3); }
         .vanc-text { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; display: block; }
         .rt-finder-text { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); margin-top: 6px; display: block; }
         .hdr-accent { height: 5px; background: var(--rd); width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--lt-bl); flex-shrink: 0; }
+        .sticky-top { position: sticky; top: 0; z-index: 5000; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .ctrls { padding: 15px; background: var(--lt-bl); position: relative; }
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
-        .input-wrapper { flex: 1; position: relative; width: 100%; }
+        .input-wrapper { flex: 1; position: relative; }
         label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
         
         .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        
-        /* SCROLLABLE ZIP WINDOW */
-        .zip-checklist { 
-            position: absolute; top: 100%; left: 0; right: 0; 
-            background: white; border: 3px solid var(--bl); 
-            z-index: 6000; display: none; 
-            height: 350px; /* FIXED HEIGHT */
-            border-radius: 0 0 12px 12px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        }
-        .zip-scroll-area { height: 100%; overflow-y: auto; padding: 10px; padding-bottom: 80px; box-sizing: border-box; }
-        
-        .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
-        .zip-item input { width: 26px; height: 26px; margin-right: 15px; }
+        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--bl); z-index: 6000; display: none; padding: 10px; border-radius: 0 0 10px 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); max-height: 400px; overflow-y: auto; }
+        .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; }
+        .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
 
-        /* FLOATING APPLY BUTTON */
-        .apply-floating { 
-            position: absolute; bottom: 15px; right: 15px; 
-            background: var(--bl); color: white; 
-            padding: 12px 25px; border: none; border-radius: 50px; 
-            font-weight: 900; text-transform: uppercase; 
-            font-size: 1rem; cursor: pointer; 
-            box-shadow: 0 5px 15px rgba(0,75,135,0.4);
-            border: 2px solid white;
-        }
+        .apply-btn { width: 100%; background: var(--bl); color: white; padding: 15px; border: none; border-radius: 6px; font-weight: 900; text-transform: uppercase; margin-top: 10px; font-size: 1rem; cursor: pointer; position: sticky; bottom: 0; box-shadow: 0 -5px 10px rgba(0,0,0,0.1); }
 
         input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; color: #000; font-weight: 700; }
         
@@ -75,7 +55,7 @@
         .st-txt { font-size: 0.9rem; font-weight: 800; color: #555; text-transform: uppercase; display: block; margin-bottom: 4px; }
         .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; display: block; line-height: 1; letter-spacing: -1px; }
         .zip-txt { font-size: 1.2rem; font-weight: 900; color: var(--bl); display: block; margin-top: 6px; }
-        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; font-weight: 900; }
+        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; font-weight: 900; box-shadow: 0 4px 8px rgba(0,75,135,0.3); }
         .rt-block small { font-size: 0.6rem; display: block; margin-bottom: -4px; opacity: 0.9; letter-spacing: 1px; }
         .rt-block span { font-size: 2.5rem; display: block; line-height: 1; }
 
@@ -100,24 +80,22 @@
                 <div class="row">
                     <div class="input-wrapper">
                         <label>Zip Code</label>
-                        <div id="zipTrig" class="zip-trigger" onclick="toggleZipList()">Select Zip(s)...</div>
+                        <div id="zipTrig" class="zip-trigger" onclick="toggleZipList(event)">Select Zip(s)...</div>
                         <div id="zipList" class="zip-checklist">
-                            <div class="zip-scroll-area">
-                                <label class="zip-item"><input type="checkbox" id="allZipMaster" value="ALL" onchange="checkAllZips(this)"> ALL ZIPs</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="syncMaster()"> 98660</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="syncMaster()"> 98661</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="syncMaster()"> 98662</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="syncMaster()"> 98663</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="syncMaster()"> 98664</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="syncMaster()"> 98665</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="syncMaster()"> 98668</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="syncMaster()"> 98682</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="syncMaster()"> 98683</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="syncMaster()"> 98684</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="syncMaster()"> 98685</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="syncMaster()"> 98686</label>
-                            </div>
-                            <button class="apply-floating" onclick="applyZipSelections()">Apply</button>
+                            <label class="zip-item"><input type="checkbox" id="allZipMaster" value="ALL" onchange="checkAllZips(this)"> ALL ZIPs</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="syncMaster()"> 98660</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="syncMaster()"> 98661</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="syncMaster()"> 98662</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="syncMaster()"> 98663</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="syncMaster()"> 98664</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="syncMaster()"> 98665</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="syncMaster()"> 98668</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="syncMaster()"> 98682</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="syncMaster()"> 98683</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="syncMaster()"> 98684</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="syncMaster()"> 98685</label>
+                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="syncMaster()"> 98686</label>
+                            <button class="apply-btn" onclick="applyZipSelections(event)">Apply Selections</button>
                         </div>
                     </div>
                     <button class="btn-action red" onclick="resetAll()">Reset</button>
@@ -143,9 +121,137 @@
 
     function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { document.getElementById('admin').style.display = 'block'; window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
 
-    function toggleZipList() { 
+    function toggleZipList(e) { 
+        e.stopPropagation();
         const list = document.getElementById('zipList'); 
         list.style.display = list.style.display === 'block' ? 'none' : 'block'; 
     }
     
     function checkAllZips(master) {
+        document.querySelectorAll('.z-chk').forEach(c => c.checked = master.checked);
+    }
+
+    function syncMaster() {
+        const all = document.querySelectorAll('.z-chk');
+        const checked = document.querySelectorAll('.z-chk:checked');
+        document.getElementById('allZipMaster').checked = (all.length === checked.length);
+    }
+
+    function applyZipSelections(e) {
+        if(e) e.stopPropagation();
+        const chks = document.querySelectorAll('.z-chk:checked');
+        const labels = Array.from(chks).map(c => c.value);
+        const trig = document.getElementById('zipTrig');
+        
+        trig.innerText = labels.length > 0 ? labels.join(', ') : 'Select Zip(s)...';
+        document.getElementById('zipList').style.display = 'none';
+
+        if (labels.length > 0) {
+            document.body.classList.add('header-hidden');
+            strIn.disabled = false;
+            strIn.placeholder = "Enter street name...";
+            setTimeout(() => strIn.focus(), 100);
+
+            if (currentOpenStreet) {
+                refreshActiveStreet(labels);
+            } else if (strIn.value.length > 0) {
+                handleSearch();
+            }
+        } else {
+            resetZipSelection();
+        }
+    }
+
+    function refreshActiveStreet(activeZips) {
+        const searchVal = currentOpenStreet.displayName;
+        let found = null;
+        activeZips.forEach(z => {
+            if(database[z]) {
+                const match = database[z].find(s => s.displayName === searchVal);
+                if(match) found = { ...match, zip: z };
+            }
+        });
+        if(found) selectStreet(found);
+        else { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; handleSearch(); }
+    }
+
+    function savePastedData() {
+        const input = document.getElementById('ti').value; const lines = input.split('\n'); const nDB = {};
+        lines.forEach(line => {
+            const c = line.split('\t'); if (c.length < 8) return;
+            const z = c[7]?.trim(); const nm = c[4]?.trim(); if (!z || !nm) return;
+            if (!nDB[z]) nDB[z] = [];
+            const fNm = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s => s.trim()).join(" ");
+            let st = nDB[z].find(s => s.displayName === fNm);
+            if (!st) { st = { searchName: nm.toUpperCase(), displayName: fNm, results: [] }; nDB[z].push(st); }
+            st.results.push({ range: c[0] + (c[1] ? "-" + c[1] : ""), route: c[8]?.trim() });
+        });
+        database = nDB; localStorage.setItem('vancouverData', JSON.stringify(nDB)); alert("Data saved!"); location.reload();
+    }
+
+    const strIn = document.getElementById('streetInput'), sugBox = document.getElementById('suggestionBox'), cardCont = document.getElementById('cc'), backBtn = document.getElementById('backToListBtn');
+
+    function handleSearch() {
+        const activeZips = Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
+        const val = strIn.value.toUpperCase().trim();
+        sugBox.innerHTML = ""; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null;
+        if (val.length > 0) { lastUserTyping = strIn.value; }
+        if (val.length < 1 || activeZips.length === 0) { sugBox.style.display = "none"; return; }
+        
+        let allM = [];
+        activeZips.forEach(z => { 
+            if(database[z]) { 
+                database[z].forEach(m => {
+                    if (m.searchName.startsWith(val)) { allM.push({ ...m, zip: z }); }
+                }); 
+            } 
+        });
+
+        if (allM.length > 0) {
+            sugBox.style.display = "block";
+            allM.sort((a,b) => {
+                const partsA = a.displayName.split(' ');
+                const partsB = b.displayName.split(' ');
+                const isDir = (s) => /^(N|S|E|W|NE|NW|SE|SW)$/.test(s);
+                const nameA = isDir(partsA[0]) ? partsA.slice(1).join(' ') : a.displayName;
+                const nameB = isDir(partsB[0]) ? partsB.slice(1).join(' ') : b.displayName;
+                const nameCompare = nameA.localeCompare(nameB, undefined, {numeric: true, sensitivity: 'base'});
+                return nameCompare !== 0 ? nameCompare : a.displayName.localeCompare(b.displayName);
+            });
+            const unique = []; const seen = new Set();
+            allM.forEach(item => { const id = item.displayName + item.zip; if(!seen.has(id)){ unique.push(item); seen.add(id); } });
+            unique.slice(0, 250).forEach(item => {
+                const div = document.createElement('div'); div.className = "s-item";
+                div.innerHTML = `<span>${item.displayName}</span> <span class="zip-badge-small">${item.zip}</span>`;
+                div.onclick = () => { selectStreet(item); }; sugBox.appendChild(div);
+            });
+        } else { sugBox.style.display = "none"; }
+    }
+
+    function selectStreet(item) {
+        strIn.value = item.displayName; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "block";
+        currentOpenStreet = item;
+        item.results.forEach(res => {
+            const div = document.createElement('div'); div.className = "list-card";
+            div.innerHTML = `<div class="info-left"><span class="st-txt">${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-txt">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
+            cardCont.appendChild(div);
+        });
+        document.getElementById('list-res').scrollTo(0,0);
+    }
+
+    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; strIn.value = lastUserTyping; handleSearch(); }
+    function clearStreetOnly() { lastUserTyping = ""; strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; strIn.focus(); }
+    function resetZipSelection() { document.body.classList.remove('header-hidden'); lastUserTyping = ""; strIn.value = ""; strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; }
+    function resetAll() { location.reload(); }
+    
+    // Proper Click-Outside protection
+    window.onclick = function(event) { 
+        const list = document.getElementById('zipList');
+        const trig = document.getElementById('zipTrig');
+        if (!list.contains(event.target) && event.target !== trig) {
+            list.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>
