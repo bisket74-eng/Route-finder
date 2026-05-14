@@ -37,18 +37,15 @@
         .btn-red { background-color: var(--rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
         
-        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 10000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 65vh; flex-direction: column; width: 100%; box-sizing: border-box; }
-        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
-        .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
-        .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
-        .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
-
         #viewer, #timeModal, #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         #scrollPicker { z-index: 999999; }
 
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; } 
         .time-box { width: 92%; max-width: 400px; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 100; }
+
+        /* BUTTON STYLE FOR CLEAR WEEKLY LOG */
+        .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--rd); color: var(--rd); font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; padding: 4px 8px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
         .drum-wrap { display: flex; justify-content: center; gap: 10px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; background: white; border-radius: 8px; }
         .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
@@ -104,7 +101,7 @@
 
     <div id="timeModal">
         <div class="time-box">
-            <button style="position:absolute; top:12px; left:12px; background:none; border:none; color:var(--rd); font-weight:900; font-size:0.7rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Weekly Log</button>
+            <button class="btn-clear-log" onclick="clearLog()">Clear Weekly Log</button>
             <button class="modal-x" onclick="closeTime()">×</button>
             <h2 style="color:var(--bl); margin:0 0 15px;">Timekeeper</h2>
             
@@ -121,8 +118,8 @@
             <input type="hidden" id="t-in" value="00.00"><input type="hidden" id="l-out" value="00.00"><input type="hidden" id="l-in" value="00.00"><input type="hidden" id="t-actual" value="00.00">
             
             <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
-                <span style="font-weight:900; color:var(--rd); font-size:1.1rem; text-transform:uppercase;">8 Hour ET Goal:</span>
-                <span id="t-target" style="font-size:1.3rem; font-weight:900; color:#004b87;">00.00</span>
+                <span style="font-weight:900; color:var(--bl); font-size:1rem; text-transform:uppercase;">8 Hour ET Goal:</span>
+                <span id="t-target" style="font-size:1.1rem; font-weight:900; color:var(--rd);">00.00</span>
             </div>
 
             <button class="btn-round btn-yel" id="add-log-btn" style="width:160px; margin:15px auto 0; display:block;" onclick="addToLog()">Add To Log</button>
@@ -188,52 +185,36 @@
         setTimeout(() => { const h = 50; Array.from(d.children).forEach((c,i) => { c.className = (i === Math.round(d.scrollTop / h) + 1) ? 'selected' : ''; }); }, 50);
     }
 
-    function openPicker(t, title) { 
-        activeId = t; 
-        document.getElementById('picker-title').innerText = "Set " + title; 
-        document.getElementById('scrollPicker').style.display='flex'; 
-        initDrum('hour-drum', 24, [0, 12]); 
-        initDrum('click-drum', 100, [0, 50]); 
-    }
-    
+    function openPicker(t, title) { activeId = t; document.getElementById('picker-title').innerText = "Set " + title; document.getElementById('scrollPicker').style.display='flex'; initDrum('hour-drum', 24, [0, 12]); initDrum('click-drum', 100, [0, 50]); }
     function closeScroll() { document.getElementById('scrollPicker').style.display='none'; }
-    
     function setupClock() {
         document.getElementById('confirm-time-btn').onclick = () => {
             const h = document.querySelector('#hour-drum .selected').innerText, c = document.querySelector('#click-drum .selected').innerText;
-            const val = h + "." + c; 
-            document.getElementById(activeId).value = val;
+            const val = h + "." + c; document.getElementById(activeId).value = val;
             const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
-            document.getElementById(btnMap[activeId]).innerText = val; 
-            closeScroll(); 
-            calcGoal();
+            document.getElementById(btnMap[activeId]).innerText = val; closeScroll(); calcGoal();
         };
     }
 
-    // FIX 2: REBUILT MATH ENGINE (MINUTES BASED)
+    // POSTAL HUNDRED-CLICK MATH ENGINE
     function calcGoal() {
-        const btStr = document.getElementById('t-in').value || "0.0";
-        const olStr = document.getElementById('l-out').value || "0.0";
-        const ilStr = document.getElementById('l-in').value || "0.0";
+        const btStr = document.getElementById('t-in').value || "0.00";
+        const olStr = document.getElementById('l-out').value || "0.00";
+        const ilStr = document.getElementById('l-in').value || "0.00";
 
         if(btStr !== "00.00" && olStr !== "00.00" && ilStr !== "00.00") {
-            const toMins = (s) => { const [h,m] = s.split('.').map(Number); return (h * 60) + m; };
-            const fromMins = (m) => { 
-                let h = Math.floor(m / 60) % 24; 
-                let mins = m % 60;
-                return h.toString().padStart(2, '0') + "." + mins.toString().padStart(2, '0');
-            };
+            const bt = parseFloat(btStr);
+            const ol = parseFloat(olStr);
+            const il = parseFloat(ilStr);
 
-            const btM = toMins(btStr);
-            const olM = toMins(olStr);
-            const ilM = toMins(ilStr);
+            // Formula: BT + 8.50 + (IL - OL)
+            let result = bt + 8.50 + (il - ol);
+            
+            // Wrap logic for 24-hour cycle
+            while (result >= 24) result -= 24;
+            while (result < 0) result += 24;
 
-            // Calculation: BT + 8 Hours (480m) + 30m Lunch + Any additional lunch gap
-            // Final ET = BT + 8.5hrs + (IL - OL)
-            let lunchGap = ilM - olM;
-            let targetM = btM + 510 + lunchGap; // 510 = 8.5 hours in minutes
-
-            document.getElementById('t-target').innerText = fromMins(targetM);
+            document.getElementById('t-target').innerText = result.toFixed(2).padStart(5, '0');
         }
     }
 
@@ -249,9 +230,7 @@
         ids.forEach((id, i) => { document.getElementById(id).value = "00.00"; document.getElementById(btns[i]).innerText = "00.00"; });
         document.getElementById('t-target').innerText = "00.00";
     }
-    
     function renderLog() { document.getElementById('log-container').innerHTML = (JSON.parse(localStorage.getItem('usps_weekly_log')||"[]")).join(''); }
-    
     function clearLog() { if(confirm("Clear log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
 
     function processExcelData(rows) {
@@ -273,10 +252,7 @@
         const val = document.getElementById('streetInput').value.toUpperCase().trim();
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
         if(val.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
-        
-        // Header stays up logic
         document.body.classList.add('header-hidden');
-
         let matches = []; activeZips.forEach(z => { if(database[z]) database[z].forEach(m => { if(m.searchName.startsWith(val)) matches.push({...m, zip: z}); }); });
         if(matches.length > 0) {
             sugBox.style.display="block"; document.body.classList.add('sug-active');
@@ -299,62 +275,17 @@
         } else { sugBox.style.display="none"; document.body.classList.remove('sug-active'); }
     }
 
-    function toggleZipList(e) { 
-        e.stopPropagation(); 
-        const l = document.getElementById('zipList'); 
-        const isOpen = (l.style.display==='flex'); 
-        l.style.display = isOpen ? 'none' : 'flex'; 
-        if (!isOpen) document.body.classList.add('zip-open', 'header-hidden'); 
-    }
-    
+    function toggleZipList(e) { e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; if (!isOpen) document.body.classList.add('zip-open', 'header-hidden'); }
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); }
-    
-    function finalApply(e) { 
-        if(e) e.stopPropagation(); 
-        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'); 
-        const isAll = document.getElementById('allZipMaster').checked; 
-        if (isAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = '18px'; } 
-        else { trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; trig.style.fontSize = chks.length >= 5 ? '12px' : '18px'; } 
-        document.getElementById('zipList').style.display='none'; 
-        document.body.classList.remove('zip-open'); 
-        if(chks.length > 0 || isAll) { 
-            sIn.disabled = false; sIn.placeholder = "Enter street name..."; 
-            document.body.classList.add('header-hidden'); 
-            setTimeout(() => { sIn.focus(); }, 300); 
-        } 
-    }
-    
+    function finalApply(e) { if(e) e.stopPropagation(); const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'); const isAll = document.getElementById('allZipMaster').checked; if (isAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = '18px'; } else { trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; trig.style.fontSize = chks.length >= 5 ? '12px' : '18px'; } document.getElementById('zipList').style.display='none'; document.body.classList.remove('zip-open'); if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => { sIn.focus(); }, 300); } }
     function reopenSuggestions() { document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block"; handleSearch(); }
     function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    
-    // Header fly down only on Reset or Opening Modals
-    function resetAll() { 
-        document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); 
-        const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; 
-        document.getElementById('zipTrig').innerText = "Select Zip(s)..."; 
-        document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); 
-        document.getElementById('cc').innerHTML = ""; 
-        document.getElementById('suggestionBox').style.display = "none"; 
-        document.getElementById('backToListBtn').style.display = "none"; 
-    }
-    
-    function openViewer(url) { 
-        document.body.classList.remove('header-hidden'); 
-        document.getElementById('viewer-img').src = url; 
-        document.getElementById('viewer').style.display='flex'; 
-    }
-    
+    function resetAll() { document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
+    function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
-    
-    function openTime() { 
-        document.body.classList.remove('header-hidden'); 
-        document.getElementById('timeModal').style.display='flex'; 
-    }
-    
+    function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; }
     function closeTime() { document.getElementById('timeModal').style.display='none'; }
-    
     function secretKnock() { if(!window.k) window.k=0; window.k++; if(window.k===5) alert("USPS Dev Active"); setTimeout(()=>window.k=0,2000); }
-    
     window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); } }
 </script>
 </body>
