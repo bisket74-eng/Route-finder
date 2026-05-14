@@ -23,14 +23,14 @@
             position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.2); 
         }
         
-        #banner-wrap { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.4s; flex-shrink: 0; }
+        #banner-wrap { transition: transform 0.4s; flex-shrink: 0; }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -140px; }
 
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 22px 15px; text-align: center; color: white; cursor: pointer; position: relative; box-shadow: inset 0 1px 1px rgba(255,255,255,0.3); }
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 22px 15px; text-align: center; color: white; cursor: pointer; position: relative; }
         .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: var(--lt-bl); text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .vanc-text { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; display: block; }
         .rt-finder-text { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); margin-top: 6px; display: block; }
-        .hdr-accent { height: 5px; background: var(--rd); width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .hdr-accent { height: 5px; background: var(--rd); width: 100%; }
 
         .sticky-top { position: sticky; top: 0; z-index: 6000; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .ctrls { padding: 15px; background: var(--lt-bl); position: relative; }
@@ -38,7 +38,7 @@
         .input-wrapper { flex: 1; position: relative; }
         label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
         
-        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; box-sizing: border-box; }
         
         .zip-checklist { 
             position: absolute; top: 100%; left: 0; right: 0; 
@@ -69,49 +69,66 @@
             font-size: 0.7rem; text-transform: uppercase; cursor: pointer; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52;
             display: flex; align-items: center; justify-content: center; text-align: center;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s;
         }
         .ref-left { left: 30px; }
         .ref-right { right: 30px; }
         body.cards-active .ref-btn { transform: translateY(150px); }
 
-        /* SCROLL-FREE VIEW-FITTING VIEWER */
-        #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100000; display: none; overflow: hidden; /* LOCKED GHOST SCROLL */ }
-        #viewer-content { display: flex; height: 100%; width: 100%; align-items: center; justify-content: center; touch-action: pan-x pan-y; /* ENABLE NATIVE PANNING */ }
+        /* UPGRADED ZOOMABLE VIEWER */
+        #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100000; display: none; overflow: auto; }
+        #viewer-content { min-height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; }
         #viewer img { 
             max-width: 90%; 
-            max-height: 80vh; 
+            max-height: 85vh; 
             border: 2px solid white; 
             box-shadow: 0 0 30px rgba(255,255,255,0.2); 
             object-fit: contain; 
             background: #000;
+            transition: transform 0.1s ease-out;
+            transform-origin: center center;
         }
-        .close-viewer { position: fixed; top: 30px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; box-shadow: 0 0 15px rgba(0,0,0,0.8); z-index: 100001; }
+        
+        .close-viewer { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; cursor: pointer; z-index: 100001; }
 
-        #backToListBtn { display: none; width: calc(100% - 30px); background: var(--bl); color: white; margin: 0 15px 15px 15px; padding: 18px; border-radius: 8px; font-weight: 900; text-transform: uppercase; border: none; letter-spacing: 1px; border-bottom: 4px solid var(--rd); cursor: pointer; }
+        /* ZOOM SLIDER CONSOLE */
+        .zoom-console { position: fixed; top: 85px; right: 20px; width: 50px; background: rgba(255,255,255,0.1); border-radius: 25px; padding: 15px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 100001; border: 1px solid rgba(255,255,255,0.2); }
+        .zoom-icon { color: white; font-weight: 900; font-size: 20px; user-select: none; }
+        input[type=range].zoom-slider { 
+            writing-mode: bt-lr; /* Vertical slider support */
+            appearance: slider-vertical;
+            width: 8px; height: 150px; cursor: pointer;
+        }
 
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        #backToListBtn { display: none; width: calc(100% - 30px); background: var(--bl); color: white; margin: 0 15px 15px 15px; padding: 18px; border-radius: 8px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer; }
+
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9000; }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); font-size: 1.1rem; }
         
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 60px; -webkit-overflow-scrolling: touch; position: relative; z-index: 10; }
-        .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
         .info-left { flex: 1; text-align: left; }
-        .st-txt { font-size: 0.9rem; font-weight: 800; color: #555; text-transform: uppercase; display: block; margin-bottom: 4px; }
-        .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; display: block; line-height: 1; letter-spacing: -1px; }
-        .zip-txt { font-size: 1.2rem; font-weight: 900; color: var(--bl); display: block; margin-top: 6px; }
-        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; font-weight: 900; box-shadow: 0 4px 8px rgba(0,75,135,0.3); }
-        .rt-block small { font-size: 0.6rem; display: block; margin-bottom: -4px; opacity: 0.9; letter-spacing: 1px; }
+        .st-txt { font-size: 0.9rem; font-weight: 800; color: #555; text-transform: uppercase; display: block; }
+        .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; display: block; line-height: 1; }
+        .zip-txt { font-size: 1.2rem; font-weight: 900; color: var(--bl); display: block; }
+        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; font-weight: 900; }
+        .rt-block small { font-size: 0.6rem; display: block; }
         .rt-block span { font-size: 2.5rem; display: block; line-height: 1; }
-
+        
         .zip-badge-small { font-weight: 900; color: white; background: var(--bl); padding: 4px 10px; border-radius: 4px; font-size: 0.9rem; }
 
-        #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 100000; top: 10px; left: 10px; right: 10px; border-radius: 12px; border: 1px solid #ccc; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        #admin { display: none; background: white; padding: 15px; position: absolute; z-index: 100000; top: 10px; left: 10px; right: 10px; border-radius: 12px; border: 1px solid #ccc; }
         textarea { width: 100%; height: 150px; }
     </style>
 </head>
 <body id="mainBody">
     <div id="viewer">
         <button class="close-viewer" onclick="closeViewer()">×</button>
+        <div class="zoom-console">
+            <span class="zoom-icon">+</span>
+            <input type="range" class="zoom-slider" id="zoomRange" min="1" max="4" step="0.1" value="1" oninput="applyZoom(this.value)">
+            <span class="zoom-icon">-</span>
+        </div>
         <div id="viewer-content">
             <img id="viewer-img" src="">
         </div>
@@ -171,8 +188,8 @@
         
         <div id="list-res"><div id="cc"></div></div>
 
-        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-Finder/main/Screenshot_20260513-183016_Chrome.png')">Current Rates</button>
-        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-Finder/main/Screenshot_20260513-183349_Chrome.png')">Click Conversion</button>
+        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/Current%20Rates.png')">Current Rates</button>
+        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/Click%20Conversion.png')">Click Conversion</button>
     </div>
 
 <script>
@@ -182,15 +199,23 @@
     window.onload = () => { const saved = localStorage.getItem('vancouverData'); if (saved) { try { database = JSON.parse(saved); } catch(e) {} } };
 
     function openViewer(url) { 
-        if(!url || url.startsWith('URL_OF')) { alert("No image link added yet!"); return; }
         document.getElementById('viewer-img').src = url; 
         document.getElementById('viewer').style.display = 'block'; 
-        document.body.classList.add('header-hidden'); // Hide banner for more space
+        document.getElementById('zoomRange').value = 1;
+        applyZoom(1);
     }
+    
     function closeViewer() { 
         document.getElementById('viewer').style.display = 'none'; 
         document.getElementById('viewer-img').src = ""; 
-        document.body.classList.remove('header-hidden');
+    }
+
+    function applyZoom(val) {
+        const img = document.getElementById('viewer-img');
+        img.style.transform = `scale(${val})`;
+        // Handle scrollability when zoomed
+        if (val > 1) { document.getElementById('viewer').style.overflow = 'auto'; }
+        else { document.getElementById('viewer').style.overflow = 'hidden'; }
     }
 
     function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { document.getElementById('admin').style.display = 'block'; window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
@@ -208,9 +233,7 @@
 
     function finalApply(e) {
         if(e) e.stopPropagation();
-        const allZ = document.querySelectorAll('.z-chk');
-        const chks = document.querySelectorAll('.z-chk:checked');
-        const trig = document.getElementById('zipTrig');
+        const allZ = document.querySelectorAll('.z-chk'), chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig');
         if (chks.length > 4 && chks.length < allZ.length) { trig.style.fontSize = "13px"; trig.style.padding = "17px 14px"; } 
         else { trig.style.fontSize = "18px"; trig.style.padding = "14px"; }
         if (chks.length === allZ.length) { trig.innerText = 'ALL ZIPs'; }
@@ -219,26 +242,23 @@
         document.getElementById('zipList').style.display = 'none';
         const labels = Array.from(chks).map(c => c.value);
         if (labels.length > 0) {
-            strIn.disabled = false;
-            strIn.placeholder = "Enter street name...";
+            strIn.disabled = false; strIn.placeholder = "Enter street name...";
             if (currentOpenStreet) { refreshActiveStreet(labels); } 
             else { handleSearch(); if (strIn.value === "") { setTimeout(() => strIn.focus(), 100); } }
         } else { resetZipSelection(); }
     }
 
     function refreshActiveStreet(activeZips) {
-        const searchVal = currentOpenStreet.displayName;
-        let found = null;
+        const searchVal = currentOpenStreet.displayName; let found = null;
         activeZips.forEach(z => { if(database[z]) { const match = database[z].find(s => s.displayName === searchVal); if(match) found = { ...match, zip: z }; } });
-        if(found) selectStreet(found);
-        else { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; handleSearch(); }
+        if(found) selectStreet(found); else { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; handleSearch(); }
     }
 
     function savePastedData() {
-        const input = document.getElementById('ti').value; const lines = input.split('\n'); const nDB = {};
+        const input = document.getElementById('ti').value, lines = input.split('\n'), nDB = {};
         lines.forEach(line => {
             const c = line.split('\t'); if (c.length < 8) return;
-            const z = c[7]?.trim(); const nm = c[4]?.trim(); if (!z || !nm) return;
+            const z = c[7]?.trim(), nm = c[4]?.trim(); if (!z || !nm) return;
             if (!nDB[z]) nDB[z] = [];
             const fNm = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s => s.trim()).join(" ");
             let st = nDB[z].find(s => s.displayName === fNm);
@@ -261,14 +281,8 @@
         let allM = [];
         activeZips.forEach(z => { if(database[z]) { database[z].forEach(m => { if (m.searchName.startsWith(val)) { allM.push({ ...m, zip: z }); } }); } });
         if (allM.length > 0) {
-            sugBox.style.display = "block"; sugBox.scrollTop = 0; 
-            allM.sort((a,b) => {
-                const pA = a.displayName.split(' '); const pB = b.displayName.split(' ');
-                const isD = (s) => /^(N|S|E|W|NE|NW|SE|SW)$/.test(s);
-                const nA = isD(pA[0]) ? pA.slice(1).join(' ') : a.displayName;
-                const nB = isD(pB[0]) ? pB.slice(1).join(' ') : b.displayName;
-                return nA.localeCompare(nB, undefined, {numeric: true, sensitivity: 'base'});
-            });
+            sugBox.style.display = "block";
+            allM.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric: true}));
             allM.forEach(item => {
                 const div = document.createElement('div'); div.className = "s-item";
                 div.innerHTML = `<span>${item.displayName}</span> <span class="zip-badge-small">${item.zip}</span>`;
@@ -279,8 +293,7 @@
 
     function selectStreet(item) {
         strIn.value = item.displayName; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "block";
-        currentOpenStreet = item; body.classList.add('header-hidden');
-        body.classList.add('cards-active');
+        currentOpenStreet = item; body.classList.add('header-hidden'); body.classList.add('cards-active');
         item.results.forEach(res => {
             const div = document.createElement('div'); div.className = "list-card";
             div.innerHTML = `<div class="info-left"><span class="st-txt">${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-txt">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
@@ -289,7 +302,7 @@
         document.getElementById('list-res').scrollTo(0,0);
     }
 
-    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; strIn.value = lastUserTyping; body.classList.remove('cards-active'); handleSearch(); }
+    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; body.classList.remove('cards-active'); handleSearch(); }
     function clearStreetOnly() { lastUserTyping = ""; strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; body.classList.remove('cards-active'); strIn.focus(); body.classList.remove('header-hidden'); }
     function resetZipSelection() { body.classList.remove('header-hidden'); body.classList.remove('cards-active'); lastUserTyping = ""; strIn.value = ""; strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; }
     function resetAll() { location.reload(); }
