@@ -23,31 +23,35 @@
         .sticky-top { position: sticky; top: 0; z-index: 6000; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .ctrls { padding: 15px; background: var(--lt-bl); position: relative; }
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
-        .input-wrapper { flex: 1; position: relative; }
+        .input-wrapper { flex: 1; position: relative; min-width: 0; }
         label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
         
-        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; height: 52px; line-height: 22px; }
         .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 4px solid var(--bl); z-index: 99999; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 25px 50px rgba(0,0,0,0.4); max-height: 450px; flex-direction: column; }
         .zip-scroll-area { overflow-y: auto; flex: 1; }
         .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; cursor: pointer; }
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
 
-        input[type="text"], select { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; text-align: center; }
-        .time-display-btn { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 1.2rem; background: #fff; font-weight: 800; text-align: center; cursor: pointer; }
+        input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; text-align: left; }
+        select { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; text-align: center; }
+        
+        .time-display-btn { width: 100%; padding: 14px 0; border: 2px solid #aaa; border-radius: 6px; font-size: 1.1rem; background: #fff; font-weight: 800; text-align: center; cursor: pointer; box-sizing: border-box; }
+        .time-display-btn.active { border-color: var(--rd); background: var(--yl); }
+        
         .btn-action { height: 52px; width: 90px; border-radius: 6px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         .red { background-color: var(--rd); color: white; }
         .yel { background-color: var(--yl); color: #000; }
+        .apply-btn-blue { background: var(--bl); color: white; padding: 12px 30px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; border-radius: 50px; font-size: 0.9rem; }
 
-        #viewer, #timeModal, #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; align-items: center; justify-content: center; }
+        #viewer, #timeModal, #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; align-items: center; justify-content: center; overflow-y: auto; }
         .time-box { background: white; width: 95%; max-width: 450px; padding: 20px; border-radius: 15px; border: 4px solid var(--bl); box-sizing: border-box; }
         .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .time-label { font-size: 0.7rem; font-weight: 900; color: var(--bl); text-transform: uppercase; margin-bottom: 4px; display: block; text-align: center; }
-        .target-out { background: #eee !important; color: #444; border: 2px dashed #aaa !important; font-size: 1.8rem !important; margin-top:5px; padding:10px; border-radius:8px; font-weight:900; text-align:center;}
+        .target-out { background: #eee !important; color: #444; border: 2px dashed #aaa !important; font-size: 1.8rem !important; margin-top:5px; padding:10px; border-radius:8px; font-weight:900; text-align:center; display:block; width:100%; box-sizing:border-box;}
 
-        /* PICKER DRUMS */
         .picker-container { background: white; padding: 20px; border-radius: 15px; border: 4px solid var(--bl); width: 85%; max-width: 300px; text-align: center; }
         .drum-wrap { display: flex; justify-content: center; gap: 20px; height: 200px; overflow: hidden; margin: 20px 0; position: relative; }
-        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; -ms-overflow-style: none; scrollbar-width: none; }
+        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; }
         .drum::-webkit-scrollbar { display: none; }
         .drum div { height: 50px; line-height: 50px; font-size: 1.8rem; font-weight: 900; scroll-snap-align: center; color: #ccc; }
         .drum div.selected { color: var(--bl); font-size: 2.2rem; }
@@ -57,11 +61,13 @@
         .log-header { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; font-weight: 900; font-size: 0.65rem; text-align: center; border-bottom: 2px solid black; padding-bottom: 5px; margin-bottom: 5px; }
         .log-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; font-size: 0.85rem; text-align: center; padding: 6px 0; border-bottom: 1px solid #ddd; }
 
+        .btn-done { background: var(--bl); color: white; padding: 12px 40px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; border-radius: 50px; display: block; margin: 20px auto 0; font-size: 1rem; }
+
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 150px; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
         .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; font-weight: 900; }
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9000; }
-        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
+        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); text-align: left; }
         
         .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: transform 0.4s; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; }
         .ref-left { left: 15px; }
@@ -82,13 +88,13 @@
                 <div class="drum" id="hour-drum"></div>
                 <div class="drum" id="click-drum"></div>
             </div>
-            <button class="apply-btn" style="width:100%;" onclick="confirmScrollTime()">Set Time</button>
+            <button class="apply-btn-blue" style="width:100%;" onclick="confirmScrollTime()">Set Time</button>
         </div>
     </div>
 
     <div id="timeModal">
         <div class="time-box">
-            <h2 style="margin:0 0 10px 0; color:var(--bl); text-align:center; font-size: 1.4rem;">Postal Clock (24h)</h2>
+            <h2 style="margin:0 0 10px 0; color:var(--bl); text-align:center; font-size: 1.4rem;">Timekeeper</h2>
             <select id="t-day" style="margin-bottom:10px;"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
             
             <div class="time-grid">
@@ -99,18 +105,18 @@
             </div>
 
             <div style="margin-top:15px;">
-                <span class="time-label" style="color: var(--rd);">8-Hour Target ET:</span>
+                <span class="time-label" style="color: var(--rd);">8-Hour Goal (ET):</span>
                 <div id="t-target" class="target-out">00.00</div>
             </div>
 
-            <button class="apply-btn" style="width:100%; margin-top:15px; background: var(--yl); color:black;" onclick="addToLog()">Add To Log</button>
+            <button class="apply-btn-blue" style="width:100%; margin-top:15px; background: var(--yl); color:black;" onclick="addToLog()">Add To Log</button>
 
             <div class="log-section">
                 <div class="log-header"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span></div>
                 <div id="log-container"></div>
-                <div style="text-align:right; margin-top:5px;"><button onclick="clearLog()" style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase;">[Clear Week]</button></div>
+                <div style="text-align:left; margin-top:5px;"><button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button></div>
             </div>
-            <button class="apply-btn" style="width:100%; margin-top:10px; background: var(--bl);" onclick="closeTime()">Done</button>
+            <button class="btn-done" onclick="closeTime()">Done</button>
         </div>
     </div>
 
@@ -137,7 +143,7 @@
                             <label class="zip-item"><input type="checkbox" class="z-chk" value="98684"> 98684</label>
                             <label class="zip-item"><input type="checkbox" class="z-chk" value="98685"> 98685</label>
                             <label class="zip-item"><input type="checkbox" class="z-chk" value="98686"> 98686</label>
-                        </div><div class="apply-wrap"><button class="apply-btn" onclick="finalApply(event)">Apply</button></div></div>
+                        </div><div class="apply-wrap" style="padding:10px; display:flex; justify-content:flex-end; border-top:1px solid #eee;"><button class="apply-btn-blue" onclick="finalApply(event)">Apply</button></div></div>
                     </div>
                     <button class="btn-action red" onclick="resetAll()">Reset</button>
                 </div>
@@ -149,7 +155,7 @@
         </div>
         <div id="list-res"><div id="cc"></div></div>
         <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Rates</button>
-        <button class="ref-btn ref-mid" onclick="openTime()">Time Clock</button>
+        <button class="ref-btn ref-mid" onclick="openTime()">Timekeeper</button>
         <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183349_Chrome.png')">Conversion</button>
     </div>
 
@@ -180,11 +186,11 @@
 
     function openScroll(id, title) {
         activeTargetId = id;
+        document.querySelectorAll('.time-display-btn').forEach(b => b.classList.remove('active'));
+        const btnId = id.replace('t-in','bt').replace('l-out','ol').replace('l-in','il').replace('t-actual','et') + '-btn';
+        document.getElementById(btnId).classList.add('active');
         document.getElementById('picker-title').innerText = title;
         document.getElementById('scrollPicker').style.display = 'flex';
-        // Reset drums to 08 and 00 for BT
-        document.getElementById('hour-drum').scrollTop = id === 't-in' ? 400 : 0; 
-        document.getElementById('click-drum').scrollTop = 0;
     }
 
     function confirmScrollTime() {
@@ -192,7 +198,9 @@
         const c = document.querySelector('#click-drum .selected').innerText;
         const val = `${h}.${c}`;
         document.getElementById(activeTargetId).value = val;
-        document.getElementById(activeTargetId.replace('t-in','bt').replace('l-out','ol').replace('l-in','il').replace('t-actual','et') + '-btn').innerText = val;
+        const btnId = activeTargetId.replace('t-in','bt').replace('l-out','ol').replace('l-in','il').replace('t-actual','et') + '-btn';
+        document.getElementById(btnId).innerText = val;
+        document.getElementById(btnId).classList.remove('active');
         document.getElementById('scrollPicker').style.display = 'none';
         calcClicks();
     }
@@ -240,16 +248,29 @@
     function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { alert("Admin Activated"); window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
     function toggleZipList(e) { e.stopPropagation(); const list = document.getElementById('zipList'); list.style.display = list.style.display === 'flex' ? 'none' : 'flex'; }
     function checkAllZips(master) { document.querySelectorAll('.z-chk').forEach(c => c.checked = master.checked); }
+
     function finalApply(e) {
         if(e) e.stopPropagation();
-        const chks = document.querySelectorAll('.z-chk:checked'), sIn = document.getElementById('streetInput');
-        document.getElementById('zipTrig').innerText = (chks.length > 0) ? Array.from(chks).map(c => c.value).join(', ') : 'Select Zip(s)...';
+        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
+        const isAll = document.getElementById('allZipMaster').checked;
+        
+        if (isAll) {
+            trig.innerText = 'ALL ZIPs';
+            trig.style.fontSize = '18px';
+        } else {
+            trig.innerText = (chks.length > 0) ? Array.from(chks).map(c => c.value).join(', ') : 'Select Zip(s)...';
+            trig.style.fontSize = (chks.length >= 5) ? '13px' : '18px';
+        }
+        
         document.getElementById('zipList').style.display = 'none';
-        if (chks.length > 0) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; setTimeout(() => sIn.focus(), 150); handleSearch(); }
+        if (chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; setTimeout(() => sIn.focus(), 150); handleSearch(); }
     }
+
     const strIn = document.getElementById('streetInput'), sugBox = document.getElementById('suggestionBox'), cardCont = document.getElementById('cc');
     function handleSearch() {
-        const activeZips = Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value), val = strIn.value.toUpperCase().trim();
+        const isAll = document.getElementById('allZipMaster').checked;
+        const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
+        const val = strIn.value.toUpperCase().trim();
         sugBox.innerHTML = ""; cardCont.innerHTML = ""; 
         if (val.length < 1 || activeZips.length === 0) { sugBox.style.display = "none"; return; }
         let allM = [];
@@ -274,7 +295,7 @@
         strIn.value = item.displayName; sugBox.style.display = "none"; document.getElementById('backToListBtn').style.display = "block"; document.getElementById('mainBody').classList.add('cards-active');
         item.results.forEach(res => {
             const div = document.createElement('div'); div.className = "list-card";
-            div.innerHTML = `<div class="info-left"><span style="font-size:0.9rem;font-weight:800;color:#555;">${item.displayName}</span><span style="font-size:2.3rem;font-weight:900;color:#000;line-height:1;">${res.range}</span><span style="font-weight:900;color:var(--bl);">ZIP ${item.zip}</span></div><div class="rt-block"><small style="font-size:0.6rem;">ROUTE</small><span>${res.route}</span></div>`;
+            div.innerHTML = `<div class="info-left"><span style="font-size:0.9rem;font-weight:800;color:#555;display:block;text-align:left;">${item.displayName}</span><span style="font-size:2.3rem;font-weight:900;color:#000;line-height:1;display:block;text-align:left;">${res.range}</span><span style="font-weight:900;color:var(--bl);display:block;text-align:left;">ZIP ${item.zip}</span></div><div class="rt-block"><small style="font-size:0.6rem;">ROUTE</small><span>${res.route}</span></div>`;
             cardCont.appendChild(div);
         });
     }
