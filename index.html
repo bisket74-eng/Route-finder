@@ -41,25 +41,23 @@
         
         #backToListBtn { display: none; background-color: var(--bl); color: white; width: 180px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 0; }
 
-        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #ffffff !important; border: 4px solid var(--bl); z-index: 99999; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 65vh; flex-direction: column; }
-        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #fff; }
-        .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
-        .zip-item input { width: 26px; height: 26px; margin-right: 15px; }
-        .apply-wrap { padding: 15px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; flex-shrink: 0; }
+        /* TIMEKEEPER MODALS */
+        #viewer, #timeModal, #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; }
+        
+        /* Landscape/Laptop fix: Max height and internal scroll */
+        .time-box { background: white; width: 92%; max-width: 400px; max-height: 95vh; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; }
+        .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 10; }
 
-        /* MODAL FIXES */
-        #viewer, #timeModal, #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        .time-box { background: white; width: 90%; max-width: 400px; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; }
-        .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; }
-
-        /* DRUM PICKER STYLES */
         .drum-wrap { display: flex; justify-content: center; gap: 15px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
         .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
-        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; }
-        .drum div { height: 50px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; scroll-snap-align: center; color: #ccc; }
+        
+        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .drum::-webkit-scrollbar { display: none; }
+        .drum div { height: 50px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700; scroll-snap-align: center; color: #bbb; transition: 0.2s; }
         .drum div.selected { color: var(--bl); font-size: 2.2rem; font-weight: 900; }
 
-        .time-display-btn { border: 1px solid #aaa; padding: 10px; text-align: center; font-weight: 800; background: #fff; border-radius: 5px; font-size: 1.2rem; cursor: pointer; }
+        .time-display-btn { border: 2px solid #aaa; padding: 12px; text-align: center; font-weight: 900; background: #fff; border-radius: 8px; font-size: 1.4rem; cursor: pointer; color: var(--bl); }
+        .time-display-btn:active { background: #eee; }
 
         .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s ease; }
         .ref-left { left: 15px; }
@@ -85,15 +83,15 @@
     <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
     <div id="scrollPicker">
-        <div class="time-box" style="width: 280px; text-align: center;">
+        <div class="time-box" style="width: 280px; text-align: center; overflow: hidden;">
             <button class="modal-x" onclick="closeScroll()">×</button>
-            <h3 style="margin:0; color:var(--bl);">Set Time</h3>
+            <h3 style="margin:0 0 10px; color:var(--bl);">Select Time</h3>
             <div class="drum-wrap">
                 <div class="drum-overlay"></div>
                 <div class="drum" id="hour-drum"></div>
                 <div class="drum" id="click-drum"></div>
             </div>
-            <button class="btn-round btn-red" style="width:100%;" id="confirm-time-btn">Confirm</button>
+            <button class="btn-round btn-red" style="width:100%;" id="confirm-time-btn">Set Clock</button>
         </div>
     </div>
 
@@ -101,22 +99,22 @@
         <div class="time-box">
             <button class="modal-x" onclick="closeTime()">×</button>
             <h2 style="text-align:center; color:var(--bl); margin:0 0 15px;">Timekeeper</h2>
-            <select id="t-day" style="width:100%; padding:10px; margin-bottom:15px; font-weight:800; border-radius:5px; border:2px solid var(--bl);"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+            <select id="t-day" style="width:100%; padding:12px; margin-bottom:15px; font-weight:900; border:2px solid var(--bl); border-radius:8px;"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                <div><label>BT</label><div class="time-display-btn" id="bt-btn">00.00</div></div>
-                <div><label>OL</label><div class="time-display-btn" id="ol-btn">00.00</div></div>
-                <div><label>IL</label><div class="time-display-btn" id="il-btn">00.00</div></div>
-                <div><label>ET</label><div class="time-display-btn" id="et-btn">00.00</div></div>
+                <div onclick="openPicker('t-in')"><label>BT</label><div class="time-display-btn" id="bt-btn">00.00</div></div>
+                <div onclick="openPicker('l-out')"><label>OL</label><div class="time-display-btn" id="ol-btn">00.00</div></div>
+                <div onclick="openPicker('l-in')"><label>IL</label><div class="time-display-btn" id="il-btn">00.00</div></div>
+                <div onclick="openPicker('t-actual')"><label>ET</label><div class="time-display-btn" id="et-btn">00.00</div></div>
             </div>
             <input type="hidden" id="t-in"><input type="hidden" id="l-out"><input type="hidden" id="l-in"><input type="hidden" id="t-actual">
-            <div style="margin-top:20px; text-align:center; background:#eee; padding:15px; border-radius:10px; border:2px dashed var(--bl);">
-                <span style="font-weight:900; color:var(--rd); font-size:0.9rem;">8-Hour Goal:</span><div id="t-target" style="font-size:2.2rem; font-weight:900; color:#000;">00.00</div>
+            <div style="margin-top:20px; text-align:center; background:var(--lt-bl); padding:15px; border-radius:10px; border:2px dashed var(--bl);">
+                <span style="font-weight:900; color:var(--rd); text-transform:uppercase; font-size:0.75rem;">8-Hour Goal:</span><div id="t-target" style="font-size:2.5rem; font-weight:900; color:#000;">00.00</div>
             </div>
             <button class="btn-round btn-yel" style="width:100%; margin-top:15px;" onclick="addToLog()">Add To Log</button>
             <div id="log-table" style="margin-top:15px; max-height:120px; overflow-y:auto; border-top:1px solid #ccc; padding-top:10px;">
                 <div id="log-container"></div>
             </div>
-            <button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.7rem; text-transform:uppercase; cursor:pointer; margin-top:10px;" onclick="clearLog()">Clear Week</button>
+            <button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.75rem; cursor:pointer; margin-top:10px;" onclick="clearLog()">Clear Week</button>
         </div>
     </div>
 
@@ -184,27 +182,33 @@
     function initDrum(id, count) {
         const d = document.getElementById(id);
         const set = Array.from({length:count}, (_,i)=>i.toString().padStart(2,'0'));
+        // Triple the set for infinite illusion
         const triple = [...set, ...set, ...set];
         d.innerHTML = '<div></div>' + triple.map(n=>`<div>${n}</div>`).join('') + '<div></div>';
+        
         d.onscroll = () => {
-            const h = 50; if(d.scrollTop < count*h) d.scrollTop += count*h; if(d.scrollTop >= count*h*2) d.scrollTop -= count*h;
-            const idx = Math.round(d.scrollTop/h);
+            const h = 50;
+            // Loop back logic
+            if(d.scrollTop < count * h) d.scrollTop += count * h;
+            if(d.scrollTop >= count * h * 2) d.scrollTop -= count * h;
+            
+            const idx = Math.round(d.scrollTop / h);
             Array.from(d.children).forEach((c,i) => {
-                c.className = (i===idx+1)?'selected':'';
-                if(c.innerText==="00"||c.innerText==="50") c.style.fontWeight = "900";
+                c.className = (i === idx + 1) ? 'selected' : '';
             });
         };
-        d.scrollTop = count*50;
+        // Start in the middle set
+        d.scrollTop = count * 50;
+    }
+
+    function openPicker(target) {
+        activeId = target;
+        document.getElementById('scrollPicker').style.display='flex';
+        initDrum('hour-drum', 24); 
+        initDrum('click-drum', 100);
     }
 
     function setupClock() {
-        ['bt-btn','ol-btn','il-btn','et-btn'].forEach((id, i) => {
-            document.getElementById(id).onclick = () => {
-                activeId = ['t-in','l-out','l-in','t-actual'][i];
-                document.getElementById('scrollPicker').style.display='flex';
-                initDrum('hour-drum', 24); initDrum('click-drum', 100);
-            };
-        });
         document.getElementById('confirm-time-btn').onclick = () => {
             const h = document.querySelector('#hour-drum .selected').innerText;
             const c = document.querySelector('#click-drum .selected').innerText;
