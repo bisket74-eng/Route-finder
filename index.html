@@ -8,8 +8,7 @@
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; }
         ::-webkit-scrollbar { width: 12px; display: block; }
-        ::-webkit-scrollbar-track { background: #ddd; }
-        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 2px solid #ddd; }
+        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; }
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
         
         .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); }
@@ -37,27 +36,28 @@
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
 
         input[type="text"], select { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; text-align: left; }
-        .time-display-btn { width: 100%; padding: 12px 0; border: 2px solid #aaa; border-radius: 6px; font-size: 1.1rem; background: #fff; font-weight: 800; text-align: center; cursor: pointer; }
         
+        /* ROUNDED PILL BUTTONS */
+        .btn-round { height: 52px; width: 95px; border-radius: 50px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.7rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-red { background-color: var(--rd); color: white; }
+        .btn-yel { background-color: var(--yl); color: #000; }
+
+        /* MODALS */
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 10000; display: none; align-items: center; justify-content: center; overflow-y: auto; }
         #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200000; display: none; align-items: center; justify-content: center; }
 
         .time-box { background: white; width: 92%; max-width: 440px; padding: 20px; border-radius: 15px; border: 4px solid var(--bl); box-sizing: border-box; }
+        .time-display-btn { width: 100%; padding: 12px 0; border: 2px solid #aaa; border-radius: 6px; font-size: 1.1rem; background: #fff; font-weight: 800; text-align: center; cursor: pointer; }
         .target-out { background: #f0f0f0; color: #333; border: 2px dashed #999; font-size: 1.8rem; padding: 10px; border-radius: 8px; font-weight: 900; text-align: center; margin-top: 5px; }
 
+        /* DRUM PICKER */
         .picker-container { background: white; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); width: 280px; text-align: center; }
         .drum-wrap { display: flex; justify-content: center; gap: 15px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
-        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-padding: 50px 0; -webkit-overflow-scrolling: touch; }
+        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-padding: 50px 0; }
         .drum::-webkit-scrollbar { display: none; }
         .drum div { height: 50px; line-height: 50px; font-size: 1.8rem; font-weight: 800; scroll-snap-align: center; color: #bbb; scroll-snap-stop: always; }
         .drum div.selected { color: var(--bl); font-size: 2.2rem; }
         .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
-
-        .log-header { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; font-weight: 900; font-size: 0.65rem; text-align: center; border-bottom: 2px solid #000; margin-top: 15px; }
-        .log-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; font-size: 0.85rem; text-align: center; padding: 5px 0; border-bottom: 1px solid #ddd; color: #000; }
-
-        .btn-done { background: var(--bl); color: white; padding: 12px 40px; border: none; font-weight: 900; text-transform: uppercase; border-radius: 50px; display: block; margin: 15px auto 0; cursor: pointer; }
-        .apply-btn-blue { background: var(--bl); color: white; padding: 10px 25px; border: none; font-weight: 900; text-transform: uppercase; border-radius: 50px; cursor: pointer; }
 
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 150px; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
@@ -83,7 +83,7 @@
         <div class="picker-container">
             <h3 id="picker-title" style="margin:0; color:var(--bl); font-size: 1.1rem;">Set Time</h3>
             <div class="drum-wrap"><div class="drum-overlay"></div><div class="drum" id="hour-drum"></div><div class="drum" id="click-drum"></div></div>
-            <button class="apply-btn-blue" style="width:100%;" id="confirm-time-btn">Set Time</button>
+            <button class="btn-round btn-red" style="width:100%; font-size:1rem;" id="confirm-time-btn">Set Time</button>
         </div>
     </div>
 
@@ -99,13 +99,10 @@
             </div>
             <input type="hidden" id="t-in" value="0.00"><input type="hidden" id="l-out" value="0.00"><input type="hidden" id="l-in" value="0.00"><input type="hidden" id="t-actual" value="0.00">
             <div style="margin-top:12px;"><span class="time-label" style="color: var(--rd);">8-Hour Goal (ET):</span><div id="t-target" class="target-out">00.00</div></div>
-            <button class="apply-btn-blue" style="width:100%; margin-top:12px; background: var(--yl); color:black;" onclick="addToLog()">Add To Log</button>
-            <div class="log-section">
-                <div class="log-header"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span></div>
-                <div id="log-container"></div>
-                <div style="text-align:left; margin-top:5px;"><button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button></div>
-            </div>
-            <button class="btn-done" onclick="closeTime()">Done</button>
+            <button class="btn-round btn-yel" style="width:100%; margin-top:12px; font-size:1rem;" onclick="addToLog()">Add To Log</button>
+            <div id="log-container" style="margin-top:15px; border-top:2px solid #ccc; padding-top:10px;"></div>
+            <div style="text-align:left; margin-top:5px;"><button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button></div>
+            <button class="btn-round btn-red" style="width:120px; margin:20px auto 0; display:block; font-size:1rem;" onclick="closeTime()">Done</button>
         </div>
     </div>
 
@@ -134,16 +131,16 @@
                             <label class="zip-item"><input type="checkbox" class="z-chk" value="98684"> 98684</label>
                             <label class="zip-item"><input type="checkbox" class="z-chk" value="98685"> 98685</label>
                             <label class="zip-item"><input type="checkbox" class="z-chk" value="98686"> 98686</label>
-                        </div><div class="apply-wrap" style="padding:10px; display:flex; justify-content:flex-end; border-top:1px solid #eee;"><button class="apply-btn-blue" onclick="finalApply(event)">Apply</button></div></div>
+                        </div><div class="apply-wrap" style="padding:10px; display:flex; justify-content:flex-end; border-top:1px solid #eee;"><button class="btn-round btn-red" style="width:100px; height:40px;" onclick="finalApply(event)">Apply</button></div></div>
                     </div>
-                    <button class="btn-action red" onclick="resetAll()">Reset</button>
+                    <button class="btn-round btn-red" onclick="resetAll()">Reset</button>
                 </div>
                 <div class="row" style="position:relative">
                     <div class="input-wrapper"><label id="streetLabel">Select ZIP first...</label><input type="text" id="streetInput" placeholder="Select ZIP first..." disabled oninput="handleSearch()" onfocus="handleSearch()"><div id="suggestionBox" class="sug"></div></div>
-                    <button class="btn-action yel" onclick="clearStreetOnly()">Clear<br>Street</button>
+                    <button class="btn-round btn-yel" onclick="clearStreetOnly()">Clear</button>
                 </div>
             </div>
-            <button id="backToListBtn" style="display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 15px; padding:18px; border-radius:8px; font-weight:900; border:none;" onclick="reopenSuggestions()">⬅ Return to Street List</button>
+            <button id="backToListBtn" style="display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 15px; padding:18px; border-radius:50px; font-weight:900; border:none;" onclick="reopenSuggestions()">⬅ Return to Street List</button>
         </div>
         <div id="list-res"><div id="cc"></div></div>
         <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Rates</button>
@@ -177,10 +174,10 @@
     }
 
     function setupClockEvents() {
-        document.getElementById('bt-btn').onclick = (e) => { e.stopPropagation(); openScroll('t-in', 'Set Begin Tour'); };
-        document.getElementById('ol-btn').onclick = (e) => { e.stopPropagation(); openScroll('l-out', 'Set Out Lunch'); };
-        document.getElementById('il-btn').onclick = (e) => { e.stopPropagation(); openScroll('l-in', 'Set In Lunch'); };
-        document.getElementById('et-btn').onclick = (e) => { e.stopPropagation(); openScroll('t-actual', 'Set End Tour'); };
+        document.getElementById('bt-btn').onclick = () => openScroll('t-in', 'Set Begin Tour');
+        document.getElementById('ol-btn').onclick = () => openScroll('l-out', 'Set Out Lunch');
+        document.getElementById('il-btn').onclick = () => openScroll('l-in', 'Set In Lunch');
+        document.getElementById('et-btn').onclick = () => openScroll('t-actual', 'Set End Tour');
         document.getElementById('confirm-time-btn').onclick = confirmScrollTime;
     }
 
@@ -224,7 +221,7 @@
     function closeViewer() { document.getElementById('viewer').style.display = 'none'; }
     function openTime() { document.getElementById('timeModal').style.display = 'flex'; }
     function closeTime() { document.getElementById('timeModal').style.display = 'none'; }
-    function renderLog() { document.getElementById('log-container').innerHTML = (JSON.parse(localStorage.getItem('usps_weekly_log') || "[]")).join(''); }
+    function renderLog() { document.getElementById('log-container').innerHTML = `<div class="log-header"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span></div>` + (JSON.parse(localStorage.getItem('usps_weekly_log') || "[]")).join(''); }
     function clearLog() { if(confirm("Clear log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
     function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { alert("Admin Activated"); window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
     function toggleZipList(e) { e.stopPropagation(); const l = document.getElementById('zipList'); l.style.display = l.style.display === 'flex' ? 'none' : 'flex'; if(l.style.display==='flex') document.body.classList.add('header-hidden'); }
@@ -279,7 +276,7 @@
         document.getElementById('cc').innerHTML = ""; 
         document.getElementById('backToListBtn').style.display = "none"; 
         document.getElementById('mainBody').classList.remove('cards-active'); 
-        handleSearch(); 
+        setTimeout(handleSearch, 50); // Small delay to ensure view resets before repopulating
     }
 
     function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
