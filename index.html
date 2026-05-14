@@ -39,20 +39,17 @@
         
         #backToListBtn { display: none; background-color: var(--bl); color: white; width: 180px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 0; }
 
-        /* FIXED LAYERING: Sug and ZipList over buttons */
-        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 9000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 70vh; flex-direction: column; }
+        /* FIXED ZIP LIST: Higher z-index but pointer-events handled */
+        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 99999; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 70vh; flex-direction: column; pointer-events: auto; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
         .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
         .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
 
-        #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
-        
+        #viewer, #timeModal, #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100000; display: none; align-items: center; justify-content: center; }
         .time-box { background: white; width: 92%; max-width: 400px; max-height: 90vh; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; }
         .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 30; }
 
-        /* LOOSER DRUM SCROLLING */
         .drum-wrap { display: flex; justify-content: center; gap: 10px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
         .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
         .drum { flex: 1; overflow-y: scroll; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
@@ -62,20 +59,23 @@
 
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.3rem; cursor: pointer; color: var(--bl); }
 
-        /* FOOTER BUTTONS: Lower z-index than results */
+        /* FOOTER BUTTONS: Lower z-index than search lists */
         .ref-btn { position: absolute; bottom: 100px; z-index: 500; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s ease; }
         .ref-left { left: 15px; }
         .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
         .ref-right { right: 15px; }
         
-        #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 160px; z-index: 600; position: relative; }
+        /* FIX: pointer-events none when empty allows button clicks */
+        #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 160px; z-index: 600; position: relative; pointer-events: none; }
+        body.cards-active #list-res { pointer-events: auto; }
+        
         #cc { margin-top: 20px; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
         .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; line-height: 1; }
         .rt-block { background: var(--bl); color: white; padding: 15px; border-radius: 10px; text-align: center; min-width: 110px; }
         .rt-block span { font-size: 2.5rem; display: block; font-weight: 900; }
         
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 8000; }
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 99999; pointer-events: auto; }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
     </style>
 </head>
@@ -107,12 +107,10 @@
                 <div onclick="openPicker('t-actual', 'End Tour')"><label>ET</label><div class="time-display-btn" id="et-btn">00.00</div></div>
             </div>
             <input type="hidden" id="t-in"><input type="hidden" id="l-out"><input type="hidden" id="l-in"><input type="hidden" id="t-actual">
-            
             <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid #eee; padding-top:15px;">
                 <span style="font-weight:900; color:var(--rd); font-size:0.7rem; text-transform:uppercase;">8-Hour Goal:</span>
                 <span id="t-target" style="font-size:1.6rem; font-weight:900; color:#004b87;">00.00</span>
             </div>
-
             <button class="btn-round btn-yel" style="width:100%; margin-top:15px;" onclick="addToLog()">Add To Log</button>
             <div id="log-table" style="margin-top:10px; max-height:100px; overflow-y:auto;"><div id="log-container"></div></div>
             <button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.7rem; text-transform:uppercase; cursor:pointer; margin-top:10px;" onclick="clearLog()">Clear Week</button>
@@ -172,51 +170,29 @@
         const set = Array.from({length:count}, (_,i)=>i.toString().padStart(2,'0'));
         const triple = [...set, ...set, ...set];
         d.innerHTML = '<div></div>' + triple.map(n=>`<div>${n}</div>`).join('') + '<div></div>';
-        
         let isStopped = false;
-
         d.onscroll = () => {
             const h = 50;
             if(d.scrollTop < count*h) d.scrollTop += count*h;
             if(d.scrollTop >= count*h*2) d.scrollTop -= count*h;
-            
-            const currentIdx = Math.round(d.scrollTop/h) % count;
-            const currentVal = parseInt(set[currentIdx]);
-
-            // Snap Logic: Force stop at 00, 12, or 50
+            const currentVal = parseInt(set[Math.round(d.scrollTop/h) % count]);
             if (snaps.includes(currentVal) && !isStopped) {
-                const targetScroll = Math.round(d.scrollTop/h) * h;
-                if (Math.abs(d.scrollTop - targetScroll) < 5) {
-                    d.style.overflowY = 'hidden'; // Briefly kill momentum
-                    setTimeout(() => { d.style.overflowY = 'scroll'; }, 50);
+                const target = Math.round(d.scrollTop/h) * h;
+                if (Math.abs(d.scrollTop - target) < 5) {
+                    d.style.overflowY = 'hidden'; setTimeout(() => { d.style.overflowY = 'scroll'; }, 50);
                     isStopped = true;
                 }
-            } else if (!snaps.includes(currentVal)) {
-                isStopped = false;
-            }
-
-            Array.from(d.children).forEach((c,i) => {
-                c.className = (i === Math.round(d.scrollTop/h) + 1) ? 'selected' : '';
-            });
+            } else if (!snaps.includes(currentVal)) { isStopped = false; }
+            Array.from(d.children).forEach((c,i) => { c.className = (i === Math.round(d.scrollTop/h) + 1) ? 'selected' : ''; });
         };
         d.scrollTop = count*50;
     }
 
-    function openPicker(t, title) { 
-        activeId = t; 
-        document.getElementById('picker-title').innerText = "Set " + title;
-        document.getElementById('scrollPicker').style.display='flex'; 
-        // Hour Snap: 00, 12 | Click Snap: 00, 50
-        initDrum('hour-drum', 24, [0, 12]); 
-        initDrum('click-drum', 100, [0, 50]); 
-    }
-
+    function openPicker(t, title) { activeId = t; document.getElementById('picker-title').innerText = "Set " + title; document.getElementById('scrollPicker').style.display='flex'; initDrum('hour-drum', 24, [0, 12]); initDrum('click-drum', 100, [0, 50]); }
     function closeScroll() { document.getElementById('scrollPicker').style.display='none'; }
     function setupClock() {
         document.getElementById('confirm-time-btn').onclick = () => {
-            const h = document.querySelector('#hour-drum .selected').innerText;
-            const c = document.querySelector('#click-drum .selected').innerText;
-            const val = h + "." + c;
+            const val = document.querySelector('#hour-drum .selected').innerText + "." + document.querySelector('#click-drum .selected').innerText;
             document.getElementById(activeId).value = val;
             const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
             document.getElementById(btnMap[activeId]).innerText = val;
@@ -280,7 +256,21 @@
 
     function toggleZipList(e) { e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; if (!isOpen) document.body.classList.add('zip-open', 'header-hidden'); else if (!document.body.classList.contains('sug-active')) document.body.classList.remove('zip-open', 'header-hidden'); }
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); }
-    function finalApply(e) { if(e) e.stopPropagation(); const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'); const isAll = document.getElementById('allZipMaster').checked; if (isAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = '18px'; } else { trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; trig.style.fontSize = chks.length >= 5 ? '12px' : '18px'; } document.getElementById('zipList').style.display='none'; document.body.classList.remove('zip-open'); if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => { sIn.focus(); }, 300); } }
+    
+    function finalApply(e) { 
+        if(e) e.stopPropagation(); 
+        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'); 
+        const isAll = document.getElementById('allZipMaster').checked; 
+        if (isAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = '18px'; } 
+        else { 
+            trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; 
+            trig.style.fontSize = chks.length >= 5 ? '12px' : '18px'; 
+        } 
+        document.getElementById('zipList').style.display='none'; 
+        document.body.classList.remove('zip-open'); 
+        if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => { sIn.focus(); }, 300); } 
+    }
+
     function reopenSuggestions() { document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block"; handleSearch(); }
     function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
     function resetAll() { document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('list-res').scrollTop = 0; }
