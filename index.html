@@ -193,7 +193,7 @@
         document.getElementById('confirm-time-btn').onclick = () => {
             const val = `${document.querySelector('#hour-drum .selected').innerText}.${document.querySelector('#click-drum .selected').innerText}`;
             document.getElementById(activeId).value = val;
-            const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
+            const btnMap = {'t-in':'bt-btn','l-out','l-in','t-actual':'et-btn'};
             document.getElementById(btnMap[activeId]).innerText = val;
             closeScroll(); calcGoal();
         };
@@ -296,16 +296,21 @@
         if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => { sIn.focus(); }, 300); }
     }
 
-    // ANOMALY FIXED: Manually toggling states and re-running search logic
+    // ANOMALY RESOLVED: FORCING VIEW STATE RESET
     function reopenSuggestions() { 
+        // 1. Clear Card Results
         document.getElementById('cc').innerHTML = ""; 
+        // 2. Hide Return Button
         document.getElementById('backToListBtn').style.display = "none"; 
+        // 3. Remove result state from body
         document.getElementById('mainBody').classList.remove('cards-active'); 
         
-        // Reset scroll position for cleanliness
-        document.getElementById('suggestionBox').scrollTop = 0;
+        // 4. Force suggestion box display and reset scroll
+        const sug = document.getElementById('suggestionBox');
+        sug.style.display = "block";
+        sug.scrollTop = 0;
         
-        // Re-trigger search to bring back the suggestion list immediately
+        // 5. Re-run search to ensure current list is fresh
         handleSearch(); 
     }
     
@@ -328,11 +333,8 @@
         document.getElementById('cc').innerHTML = "";
         document.getElementById('suggestionBox').style.display = "none";
         document.getElementById('backToListBtn').style.display = "none";
-        
-        // Reset all possible scrollable containers
         document.getElementById('list-res').scrollTop = 0;
         document.getElementById('suggestionBox').scrollTop = 0;
-        document.getElementById('zipScrollBox').scrollTop = 0;
     }
 
     function openViewer(url) { document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
