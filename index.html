@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, user-scalable=yes, viewport-fit=cover">
     <title>USPS Route Finder - Vancouver WA</title>
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; }
@@ -75,17 +75,29 @@
         .ref-right { right: 30px; }
         body.cards-active .ref-btn { transform: translateY(150px); }
 
-        /* FIXED VIEWER - Ensures image fits within screen boundaries */
-        #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        /* PAPER-SNAP VIEWER ANIMATION */
+        #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100000; display: none; overflow: auto; -webkit-overflow-scrolling: touch; }
+        #viewer-content { display: flex; min-height: 100%; width: 100%; align-items: center; justify-content: center; padding: 40px 0; }
+        
         #viewer img { 
-            max-width: 90%; 
-            max-height: 80%; 
-            border: 2px solid white; 
-            box-shadow: 0 0 30px rgba(255,255,255,0.2); 
-            object-fit: contain; /* ENFORCES NO CROP/ZOOM */
-            background: #000;
+            max-width: 98%; 
+            max-height: 90vh; 
+            border: 4px solid white; 
+            box-shadow: 0 15px 50px rgba(0,0,0,0.7); 
+            object-fit: contain; 
+            background: #fff;
+            transform: scale(0.5) rotate(-5deg); /* Start small and tilted */
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; /* Snap effect */
         }
-        .close-viewer { position: absolute; top: 30px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        
+        /* The state when the image is visible */
+        #viewer.show img {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        .close-viewer { position: fixed; top: 30px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; box-shadow: 0 0 15px rgba(0,0,0,0.8); z-index: 100001; }
 
         #backToListBtn { display: none; width: calc(100% - 30px); background: var(--bl); color: white; margin: 0 15px 15px 15px; padding: 18px; border-radius: 8px; font-weight: 900; text-transform: uppercase; border: none; letter-spacing: 1px; border-bottom: 4px solid var(--rd); cursor: pointer; }
 
@@ -111,7 +123,9 @@
 <body id="mainBody">
     <div id="viewer">
         <button class="close-viewer" onclick="closeViewer()">×</button>
-        <img id="viewer-img" src="">
+        <div id="viewer-content">
+            <img id="viewer-img" src="">
+        </div>
     </div>
 
     <div class="app-container">
@@ -180,10 +194,26 @@
 
     function openViewer(url) { 
         if(!url || url.startsWith('URL_OF')) { alert("No image link added yet!"); return; }
-        document.getElementById('viewer-img').src = url; 
-        document.getElementById('viewer').style.display = 'flex'; 
+        const viewer = document.getElementById('viewer');
+        const img = document.getElementById('viewer-img');
+        img.src = url; 
+        viewer.style.display = 'block'; 
+        document.body.style.overflow = 'auto';
+        
+        // Trigger the "Paper-Snap" animation
+        setTimeout(() => { viewer.classList.add('show'); }, 10);
     }
-    function closeViewer() { document.getElementById('viewer').style.display = 'none'; document.getElementById('viewer-img').src = ""; }
+    
+    function closeViewer() { 
+        const viewer = document.getElementById('viewer');
+        viewer.classList.remove('show'); // Slide/shrink back first
+        
+        setTimeout(() => {
+            viewer.style.display = 'none'; 
+            document.getElementById('viewer-img').src = ""; 
+            document.body.style.overflow = 'hidden';
+        }, 300); // Wait for shrink animation to finish
+    }
 
     function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { document.getElementById('admin').style.display = 'block'; window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
 
@@ -281,15 +311,4 @@
         document.getElementById('list-res').scrollTo(0,0);
     }
 
-    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; strIn.value = lastUserTyping; body.classList.remove('cards-active'); handleSearch(); }
-    function clearStreetOnly() { lastUserTyping = ""; strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; body.classList.remove('cards-active'); strIn.focus(); body.classList.remove('header-hidden'); }
-    function resetZipSelection() { body.classList.remove('header-hidden'); body.classList.remove('cards-active'); lastUserTyping = ""; strIn.value = ""; strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; }
-    function resetAll() { location.reload(); }
-    
-    window.onclick = function(event) { 
-        const list = document.getElementById('zipList'); const trig = document.getElementById('zipTrig');
-        if (!list.contains(event.target) && event.target !== trig) { list.style.display = 'none'; }
-    }
-</script>
-</body>
-</html>
+    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; strIn.value = lastUserTyping; body.classList.remove
