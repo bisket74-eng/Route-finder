@@ -25,35 +25,29 @@
         .ctrls { padding: 15px; background: var(--lt-bl); }
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
         
-        /* ZIP PICKER - FORCED TOP PRIORITY */
-        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; cursor: pointer; box-sizing: border-box; height: 52px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        /* ZIP PICKER - AESTHETIC SIZING */
+        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; cursor: pointer; box-sizing: border-box; height: 52px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: flex; align-items: center; }
         .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: #ffffff !important; border: 4px solid var(--bl); z-index: 99999; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 65vh; flex-direction: column; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #fff; }
         .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
         .zip-item input { width: 26px; height: 26px; margin-right: 15px; }
         .apply-wrap { padding: 15px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; flex-shrink: 0; }
 
-        input[type="text"], select { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; }
+        input[type="text"], select { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; }
         .btn-round { height: 52px; width: 95px; border-radius: 50px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .btn-red { background-color: var(--rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
 
-        /* MODALS */
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        #viewer-img { max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px; }
-        .time-box { background: white; width: 92%; max-width: 440px; padding: 25px 20px; border-radius: 15px; border: 4px solid var(--bl); position: relative; }
-        .modal-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 24px; font-weight: 900; cursor: pointer; }
+        .modal-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 24px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10001; }
 
-        /* FOOTER BUTTONS - LOWER Z-INDEX WITH FLY-DOWN TRANSITION */
+        /* FOOTER BUTTONS & FLY-DOWN */
         .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s ease; }
         .ref-left { left: 15px; }
         .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
         .ref-right { right: 15px; }
         
-        /* FLY DOWN LOGIC */
-        body.cards-active .ref-btn, 
-        body.zip-open .ref-btn, 
-        body.sug-active .ref-btn { transform: translateY(200px); }
+        body.cards-active .ref-btn, body.zip-open .ref-btn, body.sug-active .ref-btn { transform: translateY(200px); }
 
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 160px; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
@@ -67,7 +61,7 @@
     </style>
 </head>
 <body id="mainBody">
-    <div id="viewer" onclick="closeViewer()"><button class="modal-x" style="top:20px; right:20px;">×</button><img id="viewer-img" src=""></div>
+    <div id="viewer" onclick="closeViewer()"><button class="modal-x" style="top:20px; right:20px;">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
     <div id="scrollPicker" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:200000; display:none; align-items:center; justify-content:center;">
         <div style="background:white; padding:30px 20px; border-radius:12px; border:4px solid var(--bl); width:280px; text-align:center; position:relative;">
@@ -88,10 +82,10 @@
             <h2 style="text-align:center; color:var(--bl); margin:0 0 10px;">Timekeeper</h2>
             <select id="t-day" style="margin-bottom:10px;"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div><label>BT</label><div class="time-display-btn" id="bt-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
-                <div><label>OL</label><div class="time-display-btn" id="ol-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
-                <div><label>IL</label><div class="time-display-btn" id="il-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
-                <div><label>ET</label><div class="time-display-btn" id="et-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
+                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">BT</label><div class="time-display-btn" id="bt-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
+                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">OL</label><div class="time-display-btn" id="ol-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
+                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">IL</label><div class="time-display-btn" id="il-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
+                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">ET</label><div class="time-display-btn" id="et-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
             </div>
             <input type="hidden" id="t-in"><input type="hidden" id="l-out"><input type="hidden" id="l-in"><input type="hidden" id="t-actual">
             <div style="margin-top:15px; text-align:center; background:#eee; padding:10px; border-radius:8px; border:2px dashed #999;">
@@ -102,6 +96,7 @@
                 <div style="display:flex; justify-content:space-between; font-weight:900; border-bottom:2px solid #000; font-size:0.7rem;"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span></div>
                 <div id="log-container"></div>
             </div>
+            <div style="text-align:left; margin-top:10px;"><button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button></div>
         </div>
     </div>
 
@@ -163,7 +158,7 @@
             const idx = Math.round(d.scrollTop/h);
             Array.from(d.children).forEach((c,i) => {
                 c.className = (i===idx+1)?'selected':'';
-                if(c.innerText==="00"||c.innerText==="50") c.style.color = "var(--bl)";
+                if(c.innerText==="00"||c.innerText==="50") c.style.fontWeight = "900";
             });
         };
         d.scrollTop = count*50;
@@ -261,8 +256,11 @@
         const l = document.getElementById('zipList'); 
         const isOpen = (l.style.display==='flex');
         l.style.display = isOpen ? 'none' : 'flex';
-        if (!isOpen) document.body.classList.add('zip-open');
-        else document.body.classList.remove('zip-open');
+        if (!isOpen) {
+            document.body.classList.add('zip-open', 'header-hidden');
+        } else {
+            document.body.classList.remove('zip-open', 'header-hidden');
+        }
     }
     
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); }
