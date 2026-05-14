@@ -63,6 +63,9 @@
         
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 900; }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
+
+        /* THINNER RETURN BUTTON */
+        #backToListBtn { display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 10px; padding:8px 18px; border-radius:50px; font-weight:900; border:none; font-size: 0.85rem; cursor: pointer; }
     </style>
 </head>
 <body id="mainBody">
@@ -138,7 +141,7 @@
                     <button class="btn-round btn-yel" onclick="clearStreetOnly()">Clear</button>
                 </div>
             </div>
-            <button id="backToListBtn" style="display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 15px; padding:18px; border-radius:50px; font-weight:900; border:none;" onclick="reopenSuggestions()">⬅ Return to Street List</button>
+            <button id="backToListBtn" onclick="reopenSuggestions()">⬅ Return to Street List</button>
         </div>
         <div id="list-res"><div id="cc"></div></div>
         <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Rates</button>
@@ -282,14 +285,22 @@
         if(e) e.stopPropagation(); 
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
         const isAll = document.getElementById('allZipMaster').checked;
-        trig.innerText = isAll ? 'ALL ZIPs' : (chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...');
+        
+        // DYNAMIC FONT SCALING
+        if (isAll) {
+            trig.innerText = 'ALL ZIPs';
+            trig.style.fontSize = '18px';
+        } else {
+            trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...';
+            trig.style.fontSize = chks.length >= 5 ? '12px' : '18px';
+        }
+
         document.getElementById('zipList').style.display='none';
         document.body.classList.remove('zip-open');
         
         if(chks.length > 0 || isAll) { 
             sIn.disabled = false; 
             sIn.placeholder = "Enter street name..."; 
-            // Fly up header for space and focus to pull up keyboard
             document.body.classList.add('header-hidden');
             setTimeout(() => {
                 sIn.focus();
