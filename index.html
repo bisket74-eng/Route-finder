@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>USPS Route Finder - Vancouver WA</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; }
         
-        ::-webkit-scrollbar { width: 16px; display: block; }
-        ::-webkit-scrollbar-track { background: #ddd; border-radius: 10px; }
+        ::-webkit-scrollbar { width: 12px; display: block; }
+        ::-webkit-scrollbar-track { background: #ddd; }
         ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 2px solid #ddd; }
 
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #d1dee8; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
@@ -19,12 +19,11 @@
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -140px; }
 
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 22px 15px; text-align: center; color: white; cursor: pointer; position: relative; }
-        .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: var(--lt-bl); text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: var(--lt-bl); }
         .vanc-text { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; display: block; }
         .rt-finder-text { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); margin-top: 6px; display: block; }
-        .hdr-accent { height: 5px; background: var(--rd); width: 100%; }
-
-        #status-dot { position: absolute; top: 15px; right: 15px; width: 12px; height: 12px; border-radius: 50%; background: #666; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5); z-index: 9999; }
+        
+        #status-dot { position: absolute; top: 15px; right: 15px; width: 12px; height: 12px; border-radius: 50%; background: #666; border: 2px solid white; z-index: 9999; }
         #status-dot.live { background: var(--gr); box-shadow: 0 0 10px var(--gr); }
         #status-dot.local { background: var(--yl); }
 
@@ -35,18 +34,16 @@
         label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
         
         .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; text-align: left; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        
-        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 4px solid var(--bl); z-index: 99999; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 25px 50px rgba(0,0,0,0.4); max-height: calc(100vh - 350px); flex-direction: column; }
-        .zip-scroll-area { overflow-y: scroll; flex: 1; }
+        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 4px solid var(--bl); z-index: 99999; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 25px 50px rgba(0,0,0,0.4); max-height: 300px; flex-direction: column; }
+        .zip-scroll-area { overflow-y: auto; flex: 1; }
         .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; cursor: pointer; }
-        .zip-item input { width: 24px; height: 24px; margin-right: 12px; cursor: pointer; }
+        .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
 
         .apply-wrap { padding: 10px; display: flex; justify-content: flex-end; background: #fff; border-top: 1px solid #eee; }
-        .apply-btn { background: var(--bl); color: white; padding: 10px 30px; border: none; font-weight: 900; text-transform: uppercase; font-size: 0.9rem; cursor: pointer; border-radius: 50px; }
+        .apply-btn { background: var(--bl); color: white; padding: 10px 25px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; border-radius: 50px; }
 
-        input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; color: #000; font-weight: 700; }
-        
-        .btn-action { height: 52px; width: 90px; border-radius: 6px; border: none; font-weight: 900; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; }
+        input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; }
+        .btn-action { height: 52px; width: 90px; border-radius: 6px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         .red { background-color: var(--rd); color: white; }
         .yel { background-color: var(--yl); color: #000; }
 
@@ -55,21 +52,10 @@
         .ref-right { right: 30px; }
         body.cards-active .ref-btn { transform: translateY(150px); }
 
-        /* VIEWER & PANNING */
-        #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100000; display: none; overflow: hidden; cursor: grab; }
-        #viewer-content { display: flex; height: 100%; width: 100%; align-items: center; justify-content: center; }
-        #viewer img { 
-            max-width: 90%; max-height: 80vh; border: 2px solid white; 
-            object-fit: contain; background: #000; 
-            transition: transform 0.1s ease-out; 
-            transform-origin: center center;
-            user-select: none;
-        }
-        .close-viewer { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; cursor: pointer; z-index: 100001; display: flex; align-items: center; justify-content: center; }
-
-        .zoom-console { position: fixed; top: 85px; right: 20px; width: 60px; background: rgba(255,255,255,0.15); border-radius: 30px; padding: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; z-index: 100001; border: 2px solid rgba(255,255,255,0.3); }
-        .zoom-icon { color: white; font-weight: 900; font-size: 32px; user-select: none; line-height: 1; }
-        input[type=range].zoom-slider { appearance: slider-vertical; width: 12px; height: 180px; cursor: pointer; }
+        /* CLEANER VIEWER - NO SCROLLBARS */
+        #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; align-items: center; justify-content: center; }
+        #viewer img { max-width: 95%; max-height: 85%; object-fit: contain; border: 2px solid white; background: #000; }
+        .close-viewer { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; cursor: pointer; z-index: 100001; }
 
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 60px; -webkit-overflow-scrolling: touch; position: relative; z-index: 10; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
@@ -77,23 +63,18 @@
         .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; font-weight: 900; }
         .rt-block span { font-size: 2.5rem; display: block; line-height: 1; }
 
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); font-size: 1.1rem; }
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
     </style>
 </head>
 <body id="mainBody">
-    <div id="viewer" onmousedown="startPan(event)" onmousemove="doPan(event)" onmouseup="endPan()" onmouseleave="endPan()" ontouchstart="startPan(event)" ontouchmove="doPan(event)" ontouchend="endPan()">
+    <div id="viewer">
         <button class="close-viewer" onclick="closeViewer()">×</button>
-        <div class="zoom-console">
-            <span class="zoom-icon">+</span>
-            <input type="range" class="zoom-slider" id="zoomRange" min="1" max="5" step="0.1" value="1" oninput="updateZoom(this.value)">
-            <span class="zoom-icon">-</span>
-        </div>
-        <div id="viewer-content"><img id="viewer-img" src=""></div>
+        <img id="viewer-img" src="">
     </div>
 
     <div class="app-container">
-        <div id="status-dot" title="Data Status"></div>
+        <div id="status-dot"></div>
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
                 <span class="usps-sig">USPS</span><span class="vanc-text">Vancouver, WA</span><span class="rt-finder-text">Route Finder</span>
@@ -139,20 +120,21 @@
             <button id="backToListBtn" style="display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 15px; padding:18px; border-radius:8px; font-weight:900; border:none;" onclick="reopenSuggestions()">⬅ Return to Street List</button>
         </div>
         <div id="list-res"><div id="cc"></div></div>
-        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-Finder/main/Screenshot_20260513-183016_Chrome.png')">Current Rates</button>
-        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-Finder/main/Screenshot_20260513-183016_Chrome.png')">Click Conversion</button>
+        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/Current%20Rates.png')">Current Rates</button>
+        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/Click%20Conversion.png')">Click Conversion</button>
     </div>
 
 <script>
-    let database = {}; let currentZoom = 1; let isPanning = false; let startX, startY, scrollLeft, scrollTop;
-    const body = document.getElementById('mainBody'), dot = document.getElementById('status-dot'), viewer = document.getElementById('viewer'), img = document.getElementById('viewer-img');
-    const CSV_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.csv";
+    let database = {};
+    const body = document.getElementById('mainBody'), dot = document.getElementById('status-dot');
+    const CSV_URL = "https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/data.csv";
 
     window.onload = async () => {
         try {
             const resp = await fetch(CSV_URL);
             if (!resp.ok) throw new Error();
-            processData(await resp.text()); dot.className = 'live';
+            const csvText = await resp.text();
+            processData(csvText); dot.className = 'live';
         } catch (e) {
             const saved = localStorage.getItem('vancouverData');
             if (saved) { database = JSON.parse(saved); dot.className = 'local'; }
@@ -174,36 +156,33 @@
         database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    function openViewer(url) { img.src = url; viewer.style.display = 'block'; updateZoom(1); document.getElementById('zoomRange').value = 1; }
-    function closeViewer() { viewer.style.display = 'none'; img.src = ""; }
-    function updateZoom(val) { currentZoom = val; img.style.transform = `scale(${val})`; viewer.style.overflow = val > 1 ? 'auto' : 'hidden'; }
+    function openViewer(url) { document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display = 'flex'; }
+    function closeViewer() { document.getElementById('viewer').style.display = 'none'; document.getElementById('viewer-img').src = ""; }
 
-    function startPan(e) { if (currentZoom <= 1) return; isPanning = true; const pageX = e.pageX || e.touches[0].pageX; const pageY = e.pageY || e.touches[0].pageY; startX = pageX - viewer.offsetLeft; startY = pageY - viewer.offsetTop; scrollLeft = viewer.scrollLeft; scrollTop = viewer.scrollTop; }
-    function doPan(e) { if (!isPanning) return; e.preventDefault(); const pageX = e.pageX || e.touches[0].pageX; const pageY = e.pageY || e.touches[0].pageY; const x = pageX - viewer.offsetLeft; const y = pageY - viewer.offsetTop; viewer.scrollLeft = scrollLeft - (x - startX); viewer.scrollTop = scrollTop - (y - startY); }
-    function endPan() { isPanning = false; }
-
-    function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { alert("Admin Activated"); window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
-    function toggleZipList(e) { e.stopPropagation(); const list = document.getElementById('zipList'); list.style.display = list.style.display === 'flex' ? 'none' : 'flex'; if (list.style.display === 'flex') body.classList.add('header-hidden'); }
+    function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { alert("Admin Box Enabled"); window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
+    function toggleZipList(e) { e.stopPropagation(); const list = document.getElementById('zipList'); list.style.display = list.style.display === 'flex' ? 'none' : 'flex'; }
     function checkAllZips(master) { document.querySelectorAll('.z-chk').forEach(c => c.checked = master.checked); }
     function syncMaster() { const all = document.querySelectorAll('.z-chk'), checked = document.querySelectorAll('.z-chk:checked'); document.getElementById('allZipMaster').checked = (all.length === checked.length); }
     
     function finalApply(e) {
         if(e) e.stopPropagation();
-        const masterAll = document.getElementById('allZipMaster').checked, chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), sLb = document.getElementById('streetLabel');
-        if (masterAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = "18px"; }
-        else if (chks.length >= 5) { trig.innerText = Array.from(chks).map(c => c.value).join(', '); trig.style.fontSize = "13px"; }
-        else { trig.innerText = chks.length > 0 ? Array.from(chks).map(c => c.value).join(', ') : 'Select Zip(s)...'; trig.style.fontSize = "18px"; }
+        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), sLb = document.getElementById('streetLabel');
+        const isAll = document.getElementById('allZipMaster').checked;
+        trig.innerText = isAll ? 'ALL ZIPs' : (chks.length > 0 ? Array.from(chks).map(c => c.value).join(', ') : 'Select Zip(s)...');
+        trig.style.fontSize = (chks.length >= 5 && !isAll) ? "13px" : "18px";
         document.getElementById('zipList').style.display = 'none';
-        if (chks.length > 0) { sIn.disabled = false; sIn.placeholder = "Start typing..."; sLb.innerText = "Street Name:"; handleSearch(); } else resetZipSelection();
+        if (chks.length > 0) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; sLb.innerText = "Street Name:"; }
+        else { resetZipSelection(); }
     }
 
     const strIn = document.getElementById('streetInput'), sugBox = document.getElementById('suggestionBox'), cardCont = document.getElementById('cc'), backBtn = document.getElementById('backToListBtn');
+    
     function handleSearch() {
         const activeZips = Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value), val = strIn.value.toUpperCase().trim();
-        sugBox.innerHTML = ""; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; body.classList.remove('cards-active');
+        sugBox.innerHTML = ""; cardCont.innerHTML = ""; backBtn.style.display = "none"; body.classList.remove('cards-active');
         if (val.length < 1 || activeZips.length === 0) { sugBox.style.display = "none"; return; }
         let allM = [];
-        activeZips.forEach(z => { if(database[z]) { database[z].forEach(m => { if (m.searchName.startsWith(val)) allM.push({ ...m, zip: z }); }); } });
+        activeZips.forEach(z => { if(database[z]) { database[z].forEach(m => { if (m.searchName.includes(val)) allM.push({ ...m, zip: z }); }); } });
         if (allM.length > 0) {
             sugBox.style.display = "block";
             allM.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric: true}));
@@ -213,19 +192,21 @@
             });
         } else sugBox.style.display = "none";
     }
+
     function selectStreet(item) {
-        strIn.value = item.displayName; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "block"; currentOpenStreet = item; body.classList.add('cards-active');
+        strIn.value = item.displayName; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "block"; body.classList.add('cards-active');
         item.results.forEach(res => {
             const div = document.createElement('div'); div.className = "list-card";
             div.innerHTML = `<div class="info-left"><span style="font-size:0.9rem;font-weight:800;color:#555;">${item.displayName}</span><span class="range-txt">${res.range}</span><span style="font-weight:900;color:var(--bl);">ZIP ${item.zip}</span></div><div class="rt-block"><small style="font-size:0.6rem;">ROUTE</small><span>${res.route}</span></div>`;
             cardCont.appendChild(div);
         });
     }
-    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; body.classList.remove('cards-active'); handleSearch(); }
+
+    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; body.classList.remove('cards-active'); handleSearch(); }
     function clearStreetOnly() { strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; body.classList.remove('cards-active'); strIn.focus(); }
     function resetZipSelection() { body.classList.remove('cards-active'); strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; document.getElementById('streetLabel').innerText = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; }
     function resetAll() { location.reload(); }
-    window.onclick = function(event) { const list = document.getElementById('zipList'), trig = document.getElementById('zipTrig'); if (!list.contains(event.target) && event.target !== trig) { list.style.display = 'none'; } }
+    window.onclick = function(event) { if (!document.getElementById('zipList').contains(event.target) && event.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; } }
 </script>
 </body>
 </html>
