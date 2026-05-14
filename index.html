@@ -47,8 +47,6 @@
 
         /* MODALS */
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        
-        /* FIX: Clock Picker z-index must be higher than Timekeeper */
         #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         
         .time-box { background: white; width: 92%; max-width: 400px; max-height: 90vh; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; }
@@ -85,7 +83,7 @@
     <div id="scrollPicker">
         <div class="time-box" style="width: 280px; text-align: center; overflow: hidden;">
             <button class="modal-x" onclick="closeScroll()">×</button>
-            <h3 style="margin:0; color:var(--bl);">Set Clock</h3>
+            <h3 id="picker-title" style="margin:0; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">Set Clock</h3>
             <div class="drum-wrap">
                 <div class="drum-overlay"></div>
                 <div class="drum" id="hour-drum"></div>
@@ -101,15 +99,18 @@
             <h2 style="text-align:center; color:var(--bl); margin:0 0 15px;">Timekeeper</h2>
             <select id="t-day" style="width:100%; padding:10px; margin-bottom:15px; font-weight:900; border:2px solid var(--bl); border-radius:8px;"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                <div onclick="openPicker('t-in')"><label>BT</label><div class="time-display-btn" id="bt-btn">00.00</div></div>
-                <div onclick="openPicker('l-out')"><label>OL</label><div class="time-display-btn" id="ol-btn">00.00</div></div>
-                <div onclick="openPicker('l-in')"><label>IL</label><div class="time-display-btn" id="il-btn">00.00</div></div>
-                <div onclick="openPicker('t-actual')"><label>ET</label><div class="time-display-btn" id="et-btn">00.00</div></div>
+                <div onclick="openPicker('t-in', 'Begin Tour')"><label>BT</label><div class="time-display-btn" id="bt-btn">00.00</div></div>
+                <div onclick="openPicker('l-out', 'Out to Lunch')"><label>OL</label><div class="time-display-btn" id="ol-btn">00.00</div></div>
+                <div onclick="openPicker('l-in', 'Into Lunch')"><label>IL</label><div class="time-display-btn" id="il-btn">00.00</div></div>
+                <div onclick="openPicker('t-actual', 'End Tour')"><label>ET</label><div class="time-display-btn" id="et-btn">00.00</div></div>
             </div>
             <input type="hidden" id="t-in"><input type="hidden" id="l-out"><input type="hidden" id="l-in"><input type="hidden" id="t-actual">
-            <div style="margin-top:20px; text-align:center; background:var(--lt-bl); padding:15px; border-radius:10px; border:2px dashed var(--bl);">
-                <span style="font-weight:900; color:var(--rd); font-size:0.8rem;">8-Hour Goal:</span><div id="t-target" style="font-size:2.2rem; font-weight:900;">00.00</div>
+            
+            <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid #eee; padding-top:15px;">
+                <span style="font-weight:900; color:var(--rd); font-size:0.7rem; text-transform:uppercase;">8-Hour Goal:</span>
+                <span id="t-target" style="font-size:1.6rem; font-weight:900; color:#004b87;">00.00</span>
             </div>
+
             <button class="btn-round btn-yel" style="width:100%; margin-top:15px;" onclick="addToLog()">Add To Log</button>
             <div id="log-table" style="margin-top:10px; max-height:100px; overflow-y:auto;"><div id="log-container"></div></div>
             <button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.7rem; text-transform:uppercase; cursor:pointer; margin-top:10px;" onclick="clearLog()">Clear Week</button>
@@ -177,7 +178,14 @@
         d.scrollTop = count*50;
     }
 
-    function openPicker(t) { activeId = t; document.getElementById('scrollPicker').style.display='flex'; initDrum('hour-drum', 24); initDrum('click-drum', 100); }
+    function openPicker(t, title) { 
+        activeId = t; 
+        document.getElementById('picker-title').innerText = "Set " + title;
+        document.getElementById('scrollPicker').style.display='flex'; 
+        initDrum('hour-drum', 24); 
+        initDrum('click-drum', 100); 
+    }
+
     function closeScroll() { document.getElementById('scrollPicker').style.display='none'; }
     function setupClock() {
         document.getElementById('confirm-time-btn').onclick = () => {
