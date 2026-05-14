@@ -4,20 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>USPS Route Finder - Vancouver WA</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; }
-        
         ::-webkit-scrollbar { width: 12px; display: block; }
         ::-webkit-scrollbar-track { background: #ddd; }
         ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 2px solid #ddd; }
-
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #d1dee8; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
         .app-container { width: 100%; max-width: 600px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.2); }
         
         #banner-wrap { transition: transform 0.4s; flex-shrink: 0; }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -140px; }
-
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 22px 15px; text-align: center; color: white; cursor: pointer; position: relative; }
         .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: var(--lt-bl); }
         .vanc-text { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; display: block; }
@@ -38,7 +35,6 @@
         .zip-scroll-area { overflow-y: auto; flex: 1; }
         .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; cursor: pointer; }
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
-
         .apply-wrap { padding: 10px; display: flex; justify-content: flex-end; background: #fff; border-top: 1px solid #eee; }
         .apply-btn { background: var(--bl); color: white; padding: 10px 25px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; border-radius: 50px; }
 
@@ -47,12 +43,6 @@
         .red { background-color: var(--rd); color: white; }
         .yel { background-color: var(--yl); color: #000; }
 
-        .ref-btn { position: absolute; bottom: 65px; z-index: 7000; background: var(--bl); color: white; width: 140px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: transform 0.4s; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; }
-        .ref-left { left: 30px; }
-        .ref-right { right: 30px; }
-        body.cards-active .ref-btn { transform: translateY(150px); }
-
-        /* CLEANER VIEWER - NO SCROLLBARS */
         #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; align-items: center; justify-content: center; }
         #viewer img { max-width: 95%; max-height: 85%; object-fit: contain; border: 2px solid white; background: #000; }
         .close-viewer { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; cursor: pointer; z-index: 100001; }
@@ -65,14 +55,15 @@
 
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
+        
+        .ref-btn { position: absolute; bottom: 65px; z-index: 7000; background: var(--bl); color: white; width: 140px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: transform 0.4s; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; }
+        .ref-left { left: 30px; }
+        .ref-right { right: 30px; }
+        body.cards-active .ref-btn { transform: translateY(150px); }
     </style>
 </head>
 <body id="mainBody">
-    <div id="viewer">
-        <button class="close-viewer" onclick="closeViewer()">×</button>
-        <img id="viewer-img" src="">
-    </div>
-
+    <div id="viewer"><button class="close-viewer" onclick="closeViewer()">×</button><img id="viewer-img" src=""></div>
     <div class="app-container">
         <div id="status-dot"></div>
         <div id="banner-wrap">
@@ -120,33 +111,40 @@
             <button id="backToListBtn" style="display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 15px; padding:18px; border-radius:8px; font-weight:900; border:none;" onclick="reopenSuggestions()">⬅ Return to Street List</button>
         </div>
         <div id="list-res"><div id="cc"></div></div>
-        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Current Rates</button>
-        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183349_Chrome.png')">Click Conversion</button>
+        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/Current%20Rates.png')">Current Rates</button>
+        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/Click%20Conversion.png')">Click Conversion</button>
     </div>
 
 <script>
     let database = {};
     const body = document.getElementById('mainBody'), dot = document.getElementById('status-dot');
-    const CSV_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-Finder/main/data.csv";
+    // POINTING TO EXCEL FILE
+    const XLSX_URL = "https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/data.xlsx";
 
     window.onload = async () => {
         try {
-            const resp = await fetch(CSV_URL);
+            const resp = await fetch(XLSX_URL);
             if (!resp.ok) throw new Error();
-            const csvText = await resp.text();
-            processData(csvText); dot.className = 'live';
+            const arrayBuffer = await resp.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+            processExcelData(jsonData); 
+            dot.className = 'live';
         } catch (e) {
             const saved = localStorage.getItem('vancouverData');
             if (saved) { database = JSON.parse(saved); dot.className = 'local'; }
         }
     };
 
-    function processData(csv) {
-        const results = Papa.parse(csv, { header: false, skipEmptyLines: true });
+    function processExcelData(rows) {
         const nDB = {};
-        results.data.forEach(c => {
+        rows.forEach(c => {
             if (c.length < 9) return;
-            const z = c[7]?.trim(), nm = c[4]?.trim(); if (!z || !nm) return;
+            // Column indexing usually matches Excel: H is Index 7 (ZIP), E is Index 4 (Street Name)
+            const z = c[7]?.toString().trim();
+            const nm = c[4]?.toString().trim();
+            if (!z || !nm || z === "ZIP") return; // Skip headers
             if (!nDB[z]) nDB[z] = [];
             const fNm = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s => s.trim()).join(" ");
             let st = nDB[z].find(s => s.displayName === fNm);
@@ -158,8 +156,7 @@
 
     function openViewer(url) { document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display = 'flex'; }
     function closeViewer() { document.getElementById('viewer').style.display = 'none'; document.getElementById('viewer-img').src = ""; }
-
-    function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { alert("Admin Box Enabled"); window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
+    function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { alert("Admin Activated"); window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
     function toggleZipList(e) { e.stopPropagation(); const list = document.getElementById('zipList'); list.style.display = list.style.display === 'flex' ? 'none' : 'flex'; }
     function checkAllZips(master) { document.querySelectorAll('.z-chk').forEach(c => c.checked = master.checked); }
     function syncMaster() { const all = document.querySelectorAll('.z-chk'), checked = document.querySelectorAll('.z-chk:checked'); document.getElementById('allZipMaster').checked = (all.length === checked.length); }
@@ -171,12 +168,11 @@
         trig.innerText = isAll ? 'ALL ZIPs' : (chks.length > 0 ? Array.from(chks).map(c => c.value).join(', ') : 'Select Zip(s)...');
         trig.style.fontSize = (chks.length >= 5 && !isAll) ? "13px" : "18px";
         document.getElementById('zipList').style.display = 'none';
-        if (chks.length > 0) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; sLb.innerText = "Street Name:"; }
+        if (chks.length > 0) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; sLb.innerText = "Street Name:"; handleSearch(); }
         else { resetZipSelection(); }
     }
 
     const strIn = document.getElementById('streetInput'), sugBox = document.getElementById('suggestionBox'), cardCont = document.getElementById('cc'), backBtn = document.getElementById('backToListBtn');
-    
     function handleSearch() {
         const activeZips = Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value), val = strIn.value.toUpperCase().trim();
         sugBox.innerHTML = ""; cardCont.innerHTML = ""; backBtn.style.display = "none"; body.classList.remove('cards-active');
@@ -192,7 +188,6 @@
             });
         } else sugBox.style.display = "none";
     }
-
     function selectStreet(item) {
         strIn.value = item.displayName; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "block"; body.classList.add('cards-active');
         item.results.forEach(res => {
@@ -201,7 +196,6 @@
             cardCont.appendChild(div);
         });
     }
-
     function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; body.classList.remove('cards-active'); handleSearch(); }
     function clearStreetOnly() { strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; body.classList.remove('cards-active'); strIn.focus(); }
     function resetZipSelection() { body.classList.remove('cards-active'); strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; document.getElementById('streetLabel').innerText = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; }
