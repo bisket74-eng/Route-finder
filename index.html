@@ -38,14 +38,24 @@
         .apply-wrap { padding: 10px; display: flex; justify-content: flex-end; background: #fff; border-top: 1px solid #eee; }
         .apply-btn { background: var(--bl); color: white; padding: 10px 25px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; border-radius: 50px; }
 
-        input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; }
+        input[type="text"], input[type="time"], select { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; text-align: center; }
         .btn-action { height: 52px; width: 90px; border-radius: 6px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         .red { background-color: var(--rd); color: white; }
         .yel { background-color: var(--yl); color: #000; }
 
-        #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; align-items: center; justify-content: center; }
+        #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100000; display: none; align-items: center; justify-content: center; overflow-y: auto; }
         #viewer img { max-width: 95%; max-height: 85%; object-fit: contain; border: 2px solid white; background: #000; }
-        .close-viewer { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; cursor: pointer; z-index: 100001; display: flex; align-items: center; justify-content: center; }
+        .close-btn { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; cursor: pointer; z-index: 100001; display: flex; align-items: center; justify-content: center; }
+
+        .time-box { background: white; width: 92%; max-width: 420px; padding: 20px; border-radius: 15px; border: 4px solid var(--bl); box-sizing: border-box; margin-top: 50px; margin-bottom: 50px; }
+        .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .time-label { font-size: 0.7rem; font-weight: 900; color: var(--bl); text-transform: uppercase; margin-bottom: 4px; display: block; text-align: center; }
+        .target-out { background: #eee !important; color: var(--rd); border: 2px dashed #aaa !important; font-size: 1.5rem !important; }
+
+        /* LOG SECTION */
+        .log-section { border-top: 2px solid #eee; margin-top: 20px; padding-top: 15px; }
+        .log-entry { font-size: 0.85rem; padding: 8px; border-bottom: 1px solid #f0f0f0; font-family: monospace; color: #333; }
+        .log-entry b { color: var(--bl); text-transform: uppercase; }
 
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 150px; -webkit-overflow-scrolling: touch; position: relative; z-index: 10; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
@@ -56,14 +66,55 @@
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 9000; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
         
-        .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 140px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: transform 0.4s; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; }
-        .ref-left { left: 30px; }
-        .ref-right { right: 30px; }
+        .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: transform 0.4s; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; }
+        .ref-left { left: 15px; }
+        .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
+        .ref-right { right: 15px; }
         body.cards-active .ref-btn { transform: translateY(200px); }
+        body.cards-active .ref-mid { transform: translate(-50%, 200px); }
     </style>
 </head>
 <body id="mainBody">
-    <div id="viewer"><button class="close-viewer" onclick="closeViewer()">×</button><img id="viewer-img" src=""></div>
+    <div id="viewer"><button class="close-btn" onclick="closeViewer()">×</button><img id="viewer-img" src=""></div>
+
+    <div id="timeModal">
+        <div class="time-box">
+            <h2 style="margin:0 0 10px 0; color:var(--bl); text-align:center; font-size: 1.4rem;">Time Calculator</h2>
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="input-wrapper">
+                    <span class="time-label">Select Day</span>
+                    <select id="t-day">
+                        <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                        <option>Thursday</option><option>Friday</option><option>Saturday</option>
+                        <option>Sunday</option>
+                    </select>
+                </div>
+            </div>
+            <div class="time-grid">
+                <div><span class="time-label">Clock In</span><input type="time" id="t-in" oninput="calcTime()"></div>
+                <div><span class="time-label">Actual Out</span><input type="time" id="t-actual"></div>
+                <div><span class="time-label">Lunch Out</span><input type="time" id="l-out" oninput="calcTime()"></div>
+                <div><span class="time-label">Lunch In</span><input type="time" id="l-in" oninput="calcTime()"></div>
+            </div>
+            <div style="margin-top:20px;">
+                <span class="time-label" style="text-align:center; color: var(--rd);">8-Hour Target Leave Time:</span>
+                <input type="text" id="t-target" class="target-out" readonly placeholder="--:--">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="apply-btn" style="flex: 1; background: var(--yl); color:black;" onclick="addToLog()">Add To Log</button>
+                <button class="apply-btn" style="flex: 1; background: var(--bl);" onclick="closeTime()">Done</button>
+            </div>
+
+            <div class="log-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span class="time-label" style="margin:0;">Weekly Log</span>
+                    <button onclick="clearLog()" style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;">Clear Log</button>
+                </div>
+                <div id="log-container"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <div id="status-dot"></div>
         <div id="banner-wrap">
@@ -111,16 +162,18 @@
             <button id="backToListBtn" style="display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 15px; padding:18px; border-radius:8px; font-weight:900; border:none;" onclick="reopenSuggestions()">⬅ Return to Street List</button>
         </div>
         <div id="list-res"><div id="cc"></div></div>
-        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Current Rates</button>
-        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183349_Chrome.png')">Click Conversion</button>
+        
+        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Rates</button>
+        <button class="ref-btn ref-mid" onclick="openTime()">Time Clock</button>
+        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183349_Chrome.png')">Conversion</button>
     </div>
 
 <script>
     let database = {};
-    const body = document.getElementById('mainBody'), dot = document.getElementById('status-dot');
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
     window.onload = async () => {
+        loadLog();
         try {
             const resp = await fetch(XLSX_URL);
             if (!resp.ok) throw new Error();
@@ -129,10 +182,10 @@
             const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
             processExcelData(jsonData); 
-            dot.className = 'live';
+            document.getElementById('status-dot').className = 'live';
         } catch (e) {
             const saved = localStorage.getItem('vancouverData');
-            if (saved) { database = JSON.parse(saved); dot.className = 'local'; }
+            if (saved) { database = JSON.parse(saved); document.getElementById('status-dot').className = 'local'; }
         }
     };
 
@@ -154,6 +207,37 @@
 
     function openViewer(url) { document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display = 'flex'; }
     function closeViewer() { document.getElementById('viewer').style.display = 'none'; document.getElementById('viewer-img').src = ""; }
+    function openTime() { document.getElementById('timeModal').style.display = 'flex'; }
+    function closeTime() { document.getElementById('timeModal').style.display = 'none'; }
+
+    // TIME LOGIC
+    function calcTime() {
+        const tIn = document.getElementById('t-in').value, lOut = document.getElementById('l-out').value, lIn = document.getElementById('l-in').value, targetField = document.getElementById('t-target');
+        if (!tIn || !lOut || !lIn) { targetField.value = "--:--"; return; }
+        const toMins = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+        const fromMins = (m) => { let h = Math.floor(m / 60), mm = m % 60, period = h >= 12 ? "PM" : "AM"; h = h % 12 || 12; return `${h}:${mm.toString().padStart(2, '0')} ${period}`; };
+        const lunchDuration = toMins(lIn) - toMins(lOut);
+        const endMins = toMins(tIn) + 480 + lunchDuration;
+        targetField.value = fromMins(endMins);
+    }
+
+    function addToLog() {
+        const day = document.getElementById('t-day').value, tIn = document.getElementById('t-in').value || "--", tAct = document.getElementById('t-actual').value || "--", lOut = document.getElementById('l-out').value || "--", lIn = document.getElementById('l-in').value || "--";
+        const entry = { day, text: `<b>${day}:</b> In: ${tIn} | L: ${lOut}-${lIn} | Out: ${tAct}` };
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log') || "[]");
+        log.push(entry);
+        localStorage.setItem('usps_weekly_log', JSON.stringify(log));
+        renderLog();
+    }
+
+    function renderLog() {
+        const cont = document.getElementById('log-container');
+        const log = JSON.parse(localStorage.getItem('usps_weekly_log') || "[]");
+        cont.innerHTML = log.map(e => `<div class="log-entry">${e.text}</div>`).join('');
+    }
+    function loadLog() { renderLog(); }
+    function clearLog() { if(confirm("Clear this week's log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
+
     function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { alert("Admin Activated"); window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
     function toggleZipList(e) { e.stopPropagation(); const list = document.getElementById('zipList'); list.style.display = list.style.display === 'flex' ? 'none' : 'flex'; }
     function checkAllZips(master) { document.querySelectorAll('.z-chk').forEach(c => c.checked = master.checked); }
@@ -161,63 +245,34 @@
     
     function finalApply(e) {
         if(e) e.stopPropagation();
-        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), sLb = document.getElementById('streetLabel');
+        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
         const isAll = document.getElementById('allZipMaster').checked;
         trig.innerText = isAll ? 'ALL ZIPs' : (chks.length > 0 ? Array.from(chks).map(c => c.value).join(', ') : 'Select Zip(s)...');
-        trig.style.fontSize = (chks.length >= 5 && !isAll) ? "13px" : "18px";
         document.getElementById('zipList').style.display = 'none';
         if (chks.length > 0) { 
-            sIn.disabled = false; 
-            sIn.placeholder = "Enter street name..."; 
-            sLb.innerText = "Street Name:";
+            sIn.disabled = false; sIn.placeholder = "Enter street name..."; 
             setTimeout(() => { sIn.focus(); }, 100);
             handleSearch(); 
         } else { resetZipSelection(); }
     }
 
     const strIn = document.getElementById('streetInput'), sugBox = document.getElementById('suggestionBox'), cardCont = document.getElementById('cc'), backBtn = document.getElementById('backToListBtn');
-    
     function handleSearch() {
         const activeZips = Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value), val = strIn.value.toUpperCase().trim();
-        sugBox.innerHTML = ""; cardCont.innerHTML = ""; backBtn.style.display = "none"; body.classList.remove('cards-active');
+        sugBox.innerHTML = ""; cardCont.innerHTML = ""; backBtn.style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active');
         if (val.length < 1 || activeZips.length === 0) { sugBox.style.display = "none"; return; }
-        
         let allM = [];
         activeZips.forEach(z => { if(database[z]) { database[z].forEach(m => { 
-            if (m.searchName.startsWith(val)) { 
-                allM.push({ ...m, zip: z, priority: 1 }); 
-            } else if (m.searchName.includes(val)) {
-                allM.push({ ...m, zip: z, priority: 2 });
-            }
+            if (m.searchName.startsWith(val)) allM.push({ ...m, zip: z, priority: 1 }); 
+            else if (m.searchName.includes(val)) allM.push({ ...m, zip: z, priority: 2 });
         }); } });
-
         if (allM.length > 0) {
             sugBox.style.display = "block";
-            
-            // IMPROVED POSTAL SORT
             allM.sort((a, b) => {
                 if (a.priority !== b.priority) return a.priority - b.priority;
-                
-                // Helper to strip suffixes and directions for base name sorting
-                const clean = (str) => {
-                    return str.toUpperCase()
-                        .replace(/\b(N|S|E|W|NE|NW|SE|SW)\b/g, '')
-                        .replace(/\b(ST|AVE|RD|DR|LN|PL|CT|CIR|WAY|LOOP|BLVD|HWY)\b/g, '')
-                        .replace(/\b(STREET|AVENUE|ROAD|DRIVE|LANE|PLACE|COURT|CIRCLE|BOULEVARD|HIGHWAY)\b/g, '')
-                        .trim();
-                };
-
-                const cleanA = clean(a.displayName);
-                const cleanB = clean(b.displayName);
-
-                // Sort by base name first (naturally)
-                const cmp = cleanA.localeCompare(cleanB, undefined, {numeric: true, sensitivity: 'base'});
-                if (cmp !== 0) return cmp;
-
-                // Tie-breaker: If base name is same, use full name
-                return a.displayName.localeCompare(b.displayName, undefined, {numeric: true, sensitivity: 'base'});
+                const clean = (s) => s.toUpperCase().replace(/\b(N|S|E|W|NE|NW|SE|SW|ST|AVE|RD|DR|LN|PL|CT|CIR|WAY|LOOP|BLVD|HWY)\b/g, '').trim();
+                return clean(a.displayName).localeCompare(clean(b.displayName), undefined, {numeric: true, sensitivity: 'base'});
             });
-
             allM.forEach(item => {
                 const div = document.createElement('div'); div.className = "s-item"; div.innerHTML = `<span>${item.displayName}</span> <span style="background:var(--bl);color:white;padding:2px 6px;border-radius:4px;font-size:0.8rem;">${item.zip}</span>`;
                 div.onclick = () => selectStreet(item); sugBox.appendChild(div);
@@ -226,18 +281,18 @@
     }
 
     function selectStreet(item) {
-        strIn.value = item.displayName; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "block"; body.classList.add('cards-active');
+        strIn.value = item.displayName; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "block"; document.getElementById('mainBody').classList.add('cards-active');
         item.results.forEach(res => {
             const div = document.createElement('div'); div.className = "list-card";
             div.innerHTML = `<div class="info-left"><span style="font-size:0.9rem;font-weight:800;color:#555;">${item.displayName}</span><span class="range-txt">${res.range}</span><span style="font-weight:900;color:var(--bl);">ZIP ${item.zip}</span></div><div class="rt-block"><small style="font-size:0.6rem;">ROUTE</small><span>${res.route}</span></div>`;
             cardCont.appendChild(div);
         });
     }
-    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; body.classList.remove('cards-active'); handleSearch(); }
-    function clearStreetOnly() { strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; body.classList.remove('cards-active'); strIn.focus(); }
-    function resetZipSelection() { body.classList.remove('cards-active'); strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; document.getElementById('streetLabel').innerText = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; }
+    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); handleSearch(); }
+    function clearStreetOnly() { strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); strIn.focus(); }
+    function resetZipSelection() { document.getElementById('mainBody').classList.remove('cards-active'); strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; }
     function resetAll() { location.reload(); }
-    window.onclick = function(event) { if (!document.getElementById('zipList').contains(event.target) && event.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; } }
+    window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; } }
 </script>
 </body>
 </html>
