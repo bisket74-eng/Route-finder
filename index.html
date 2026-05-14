@@ -39,41 +39,43 @@
         
         #backToListBtn { display: none; background-color: var(--bl); color: white; width: 180px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 0; }
 
-        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 99999; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 50vh; flex-direction: column; }
+        /* FIXED LAYERING: Sug and ZipList over buttons */
+        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 9000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 70vh; flex-direction: column; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
         .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
         .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
 
-        /* MODALS */
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; }
         #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         
         .time-box { background: white; width: 92%; max-width: 400px; max-height: 90vh; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; }
         .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 30; }
 
-        /* DRUM PICKER */
+        /* LOOSER DRUM SCROLLING */
         .drum-wrap { display: flex; justify-content: center; gap: 10px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
         .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
-        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .drum { flex: 1; overflow-y: scroll; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .drum::-webkit-scrollbar { display: none; }
-        .drum div { height: 50px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700; scroll-snap-align: center; color: #bbb; }
-        .drum div.selected { color: var(--bl); font-size: 2rem; font-weight: 900; }
+        .drum div { height: 50px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700; color: #bbb; }
+        .drum div.selected { color: var(--bl); font-size: 2.2rem; font-weight: 900; }
 
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.3rem; cursor: pointer; color: var(--bl); }
 
-        .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s ease; }
+        /* FOOTER BUTTONS: Lower z-index than results */
+        .ref-btn { position: absolute; bottom: 100px; z-index: 500; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s ease; }
         .ref-left { left: 15px; }
         .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
         .ref-right { right: 15px; }
         
-        #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 160px; }
+        #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 160px; z-index: 600; position: relative; }
         #cc { margin-top: 20px; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
         .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; line-height: 1; }
         .rt-block { background: var(--bl); color: white; padding: 15px; border-radius: 10px; text-align: center; min-width: 110px; }
         .rt-block span { font-size: 2.5rem; display: block; font-weight: 900; }
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 900; }
+        
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 8000; }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
     </style>
 </head>
@@ -165,15 +167,37 @@
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'live'; } }
     };
 
-    function initDrum(id, count) {
+    function initDrum(id, count, snaps) {
         const d = document.getElementById(id);
         const set = Array.from({length:count}, (_,i)=>i.toString().padStart(2,'0'));
         const triple = [...set, ...set, ...set];
         d.innerHTML = '<div></div>' + triple.map(n=>`<div>${n}</div>`).join('') + '<div></div>';
+        
+        let isStopped = false;
+
         d.onscroll = () => {
-            const h = 50; if(d.scrollTop < count*h) d.scrollTop += count*h; if(d.scrollTop >= count*h*2) d.scrollTop -= count*h;
-            const idx = Math.round(d.scrollTop/h);
-            Array.from(d.children).forEach((c,i) => { c.className = (i === idx+1) ? 'selected' : ''; });
+            const h = 50;
+            if(d.scrollTop < count*h) d.scrollTop += count*h;
+            if(d.scrollTop >= count*h*2) d.scrollTop -= count*h;
+            
+            const currentIdx = Math.round(d.scrollTop/h) % count;
+            const currentVal = parseInt(set[currentIdx]);
+
+            // Snap Logic: Force stop at 00, 12, or 50
+            if (snaps.includes(currentVal) && !isStopped) {
+                const targetScroll = Math.round(d.scrollTop/h) * h;
+                if (Math.abs(d.scrollTop - targetScroll) < 5) {
+                    d.style.overflowY = 'hidden'; // Briefly kill momentum
+                    setTimeout(() => { d.style.overflowY = 'scroll'; }, 50);
+                    isStopped = true;
+                }
+            } else if (!snaps.includes(currentVal)) {
+                isStopped = false;
+            }
+
+            Array.from(d.children).forEach((c,i) => {
+                c.className = (i === Math.round(d.scrollTop/h) + 1) ? 'selected' : '';
+            });
         };
         d.scrollTop = count*50;
     }
@@ -182,14 +206,17 @@
         activeId = t; 
         document.getElementById('picker-title').innerText = "Set " + title;
         document.getElementById('scrollPicker').style.display='flex'; 
-        initDrum('hour-drum', 24); 
-        initDrum('click-drum', 100); 
+        // Hour Snap: 00, 12 | Click Snap: 00, 50
+        initDrum('hour-drum', 24, [0, 12]); 
+        initDrum('click-drum', 100, [0, 50]); 
     }
 
     function closeScroll() { document.getElementById('scrollPicker').style.display='none'; }
     function setupClock() {
         document.getElementById('confirm-time-btn').onclick = () => {
-            const val = document.querySelector('#hour-drum .selected').innerText + "." + document.querySelector('#click-drum .selected').innerText;
+            const h = document.querySelector('#hour-drum .selected').innerText;
+            const c = document.querySelector('#click-drum .selected').innerText;
+            const val = h + "." + c;
             document.getElementById(activeId).value = val;
             const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
             document.getElementById(btnMap[activeId]).innerText = val;
