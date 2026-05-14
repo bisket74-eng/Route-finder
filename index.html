@@ -54,12 +54,10 @@
         .log-col { flex: 1; text-align: center; }
         .log-day { flex: 1.2; text-align: left; font-weight: 900; }
 
-        /* PICKER MODAL WITH X */
         #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200000; display: none; align-items: center; justify-content: center; }
         .picker-container { background: white; padding: 30px 20px 20px; border-radius: 12px; border: 4px solid var(--bl); width: 280px; text-align: center; position: relative; }
         .picker-x { position: absolute; top: 8px; right: 8px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; font-size: 20px; font-weight: 900; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-        /* INFINITE DRUM */
         .drum-wrap { display: flex; justify-content: center; gap: 15px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
         .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; }
         .drum::-webkit-scrollbar { display: none; }
@@ -168,28 +166,20 @@
     function initInfiniteDrum(id, count) {
         const drum = document.getElementById(id);
         const set = Array.from({length: count}, (_, i) => i.toString().padStart(2, '0'));
-        // Triple the set to simulate infinity
         const triple = [...set, ...set, ...set];
         drum.innerHTML = '<div></div>' + triple.map(n => `<div>${n}</div>`).join('') + '<div></div>';
-        
         drum.onscroll = () => {
             const itemHeight = 50;
             const currentScroll = drum.scrollTop;
             const totalHeight = count * itemHeight;
-
-            // Seamless Loop Logic
             if (currentScroll < totalHeight) { drum.scrollTop = currentScroll + totalHeight; }
             else if (currentScroll >= totalHeight * 2) { drum.scrollTop = currentScroll - totalHeight; }
-
-            // Highlight selected
             const idx = Math.round(drum.scrollTop / itemHeight);
             Array.from(drum.children).forEach((c, i) => {
                 c.className = (i === idx + 1) ? 'selected' : '';
-                // Pause effect at 00 and 50
                 if (c.innerText === "00" || c.innerText === "50") c.style.fontWeight = "900";
             });
         };
-        // Initial center
         drum.scrollTop = count * 50;
     }
 
@@ -201,25 +191,13 @@
         document.getElementById('confirm-time-btn').onclick = confirmScrollTime;
     }
 
-    function openScroll(id, title) {
-        activeTargetId = id;
-        document.getElementById('picker-title').innerText = title;
-        document.getElementById('scrollPicker').style.display = 'flex';
-        initInfiniteDrum('hour-drum', 24);
-        initInfiniteDrum('click-drum', 100);
-    }
-
+    function openScroll(id, title) { activeTargetId = id; document.getElementById('picker-title').innerText = title; document.getElementById('scrollPicker').style.display = 'flex'; initInfiniteDrum('hour-drum', 24); initInfiniteDrum('click-drum', 100); }
     function closeScroll() { document.getElementById('scrollPicker').style.display = 'none'; }
-
     function confirmScrollTime() {
-        const h = document.querySelector('#hour-drum .selected')?.innerText || "00";
-        const c = document.querySelector('#click-drum .selected')?.innerText || "00";
-        const val = `${h}.${c}`;
-        document.getElementById(activeTargetId).value = val;
+        const h = document.querySelector('#hour-drum .selected')?.innerText || "00", c = document.querySelector('#click-drum .selected')?.innerText || "00";
+        const val = `${h}.${c}`; document.getElementById(activeTargetId).value = val;
         const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
-        document.getElementById(btnMap[activeTargetId]).innerText = val;
-        closeScroll();
-        calcClicks();
+        document.getElementById(btnMap[activeTargetId]).innerText = val; closeScroll(); calcClicks();
     }
 
     function calcClicks() {
@@ -275,14 +253,21 @@
         const val = document.getElementById('streetInput').value.toUpperCase().trim();
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = ""; 
         if (val.length < 1 || activeZips.length === 0) { sugBox.style.display = "none"; return; }
-        let allM = []; activeZips.forEach(z => { if(database[z]) database[z].forEach(m => { 
-            if (m.searchName.startsWith(val)) allM.push({ ...m, zip: z, priority: 1 }); 
-            else if (m.searchName.includes(val)) allM.push({ ...m, zip: z, priority: 2 });
-        }); });
+        
+        let allM = []; 
+        activeZips.forEach(z => { 
+            if(database[z]) database[z].forEach(m => { 
+                // STRICT "STARTS WITH" FILTERING ONLY
+                if (m.searchName.startsWith(val)) {
+                    allM.push({ ...m, zip: z }); 
+                }
+            }); 
+        });
+
         if (allM.length > 0) {
             sugBox.style.display = "block";
+            // Sort strictly alphabetical
             allM.sort((a,b) => {
-                if (a.priority !== b.priority) return a.priority - b.priority;
                 const clean = (s) => s.replace(/\b(N|S|E|W|NE|NW|SE|SW|ST|AVE|RD|DR|LN|PL|CT|CIR|WAY|LOOP|BLVD|HWY)\b/g, '').trim();
                 return clean(a.displayName).localeCompare(clean(b.displayName), undefined, {numeric: true});
             });
