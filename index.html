@@ -29,10 +29,13 @@
         .input-wrapper { flex: 1; position: relative; min-width: 0; }
         label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
         
+        /* ZIP PICKER FIXED */
         .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; height: 52px; }
-        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 4px solid var(--bl); z-index: 1000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 450px; flex-direction: column; }
-        .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; font-size: 1.1rem; border-bottom: 1px solid #eee; }
+        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 4px solid var(--bl); z-index: 1000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 350px; flex-direction: column; overflow: hidden; }
+        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+        .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; }
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
+        .apply-wrap { padding: 10px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: white; flex-shrink: 0; }
 
         input[type="text"], select { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; text-align: left; }
         
@@ -40,19 +43,17 @@
         .btn-red { background-color: var(--rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
 
-        /* IMAGE VIEWER FIX */
         #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        #viewer-img { max-width: 90%; max-height: 85vh; object-fit: contain; border: 4px solid white; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        #viewer-img { max-width: 90%; max-height: 85vh; object-fit: contain; border: 4px solid white; border-radius: 8px; }
 
-        /* TIMEKEEPER & TABLE */
         #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 10000; display: none; align-items: center; justify-content: center; overflow-y: auto; }
         .time-box { background: white; width: 92%; max-width: 440px; padding: 20px; border-radius: 15px; border: 4px solid var(--bl); box-sizing: border-box; }
+        
         .log-header, .log-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ddd; }
         .log-header { font-weight: 900; font-size: 0.7rem; border-bottom: 2px solid #000; margin-top: 15px; }
         .log-col { flex: 1; text-align: center; }
         .log-day { flex: 1.2; text-align: left; font-weight: 900; }
 
-        /* DRUM PICKER */
         #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200000; display: none; align-items: center; justify-content: center; }
         .picker-container { background: white; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); width: 280px; text-align: center; }
         .drum-wrap { display: flex; justify-content: center; gap: 15px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
@@ -102,10 +103,12 @@
             <input type="hidden" id="t-in" value="0.00"><input type="hidden" id="l-out" value="0.00"><input type="hidden" id="l-in" value="0.00"><input type="hidden" id="t-actual" value="0.00">
             <div style="margin-top:12px;"><span class="time-label" style="color: var(--rd);">8-Hour Goal (ET):</span><div id="t-target" class="target-out">00.00</div></div>
             <button class="btn-round btn-yel" style="width:100%; margin-top:12px; font-size:1rem;" onclick="addToLog()">Add To Log</button>
+            
             <div id="log-table">
                 <div class="log-header"><span class="log-day">DAY</span><span class="log-col">BT</span><span class="log-col">OL</span><span class="log-col">IL</span><span class="log-col">ET</span></div>
                 <div id="log-container"></div>
             </div>
+            
             <div style="text-align:left; margin-top:5px;"><button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button></div>
             <button class="btn-round btn-red" style="width:120px; margin:20px auto 0; display:block; font-size:1rem;" onclick="closeTime()">Done</button>
         </div>
@@ -120,10 +123,13 @@
             <div class="ctrls">
                 <div class="row">
                     <div class="input-wrapper"><label>Zip Code</label><div id="zipTrig" class="zip-trigger" onclick="toggleZipList(event)">Select Zip(s)...</div>
-                        <div id="zipList" class="zip-checklist"><div class="zip-scroll-area">
-                            <label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98660"> 98660</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98661"> 98661</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98662"> 98662</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98663"> 98663</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98664"> 98664</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98665"> 98665</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98668"> 98668</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98682"> 98682</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98683"> 98683</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98684"> 98684</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98685"> 98685</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98686"> 98686</label>
-                        </div><div class="apply-wrap" style="padding:10px; display:flex; justify-content:flex-end; border-top:1px solid #eee;"><button class="btn-round btn-red" style="width:100px; height:40px;" onclick="finalApply(event)">Apply</button></div></div>
+                        <div id="zipList" class="zip-checklist">
+                            <div class="zip-scroll-area">
+                                <label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98660"> 98660</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98661"> 98661</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98662"> 98662</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98663"> 98663</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98664"> 98664</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98665"> 98665</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98668"> 98668</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98682"> 98682</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98683"> 98683</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98684"> 98684</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98685"> 98685</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98686"> 98686</label>
+                            </div>
+                            <div class="apply-wrap"><button class="btn-round btn-red" style="width:100px; height:40px;" onclick="finalApply(event)">Apply</button></div>
+                        </div>
                     </div>
                     <button class="btn-round btn-red" onclick="resetAll()">Reset</button>
                 </div>
@@ -254,8 +260,10 @@
     }
 
     function selectStreet(item) {
-        document.getElementById('streetInput').value = item.displayName; document.getElementById('suggestionBox').style.display = "none";
-        document.getElementById('backToListBtn').style.display = "block"; document.getElementById('mainBody').classList.add('cards-active');
+        document.getElementById('streetInput').value = item.displayName; 
+        document.getElementById('suggestionBox').style.display = "none";
+        document.getElementById('backToListBtn').style.display = "block"; 
+        document.getElementById('mainBody').classList.add('cards-active');
         const cc = document.getElementById('cc'); cc.innerHTML = "";
         item.results.forEach(res => {
             const div = document.createElement('div'); div.className = "list-card";
