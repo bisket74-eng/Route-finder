@@ -193,8 +193,28 @@
 
         if (allM.length > 0) {
             sugBox.style.display = "block";
+            
+            // IMPROVED POSTAL SORT
             allM.sort((a, b) => {
                 if (a.priority !== b.priority) return a.priority - b.priority;
+                
+                // Helper to strip suffixes and directions for base name sorting
+                const clean = (str) => {
+                    return str.toUpperCase()
+                        .replace(/\b(N|S|E|W|NE|NW|SE|SW)\b/g, '')
+                        .replace(/\b(ST|AVE|RD|DR|LN|PL|CT|CIR|WAY|LOOP|BLVD|HWY)\b/g, '')
+                        .replace(/\b(STREET|AVENUE|ROAD|DRIVE|LANE|PLACE|COURT|CIRCLE|BOULEVARD|HIGHWAY)\b/g, '')
+                        .trim();
+                };
+
+                const cleanA = clean(a.displayName);
+                const cleanB = clean(b.displayName);
+
+                // Sort by base name first (naturally)
+                const cmp = cleanA.localeCompare(cleanB, undefined, {numeric: true, sensitivity: 'base'});
+                if (cmp !== 0) return cmp;
+
+                // Tie-breaker: If base name is same, use full name
                 return a.displayName.localeCompare(b.displayName, undefined, {numeric: true, sensitivity: 'base'});
             });
 
