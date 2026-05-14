@@ -120,14 +120,14 @@
             <button id="backToListBtn" style="display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 15px; padding:18px; border-radius:8px; font-weight:900; border:none;" onclick="reopenSuggestions()">⬅ Return to Street List</button>
         </div>
         <div id="list-res"><div id="cc"></div></div>
-        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/Current%20Rates.png')">Current Rates</button>
-        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/Click%20Conversion.png')">Click Conversion</button>
+        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Current Rates</button>
+        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183349_Chrome.png')">Click Conversion</button>
     </div>
 
 <script>
     let database = {};
     const body = document.getElementById('mainBody'), dot = document.getElementById('status-dot');
-    const CSV_URL = "https://raw.githubusercontent.com/JackAbel1974/Vancouver-Route-Finder/main/data.csv";
+    const CSV_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-Finder/main/data.csv";
 
     window.onload = async () => {
         try {
