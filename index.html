@@ -7,6 +7,7 @@
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; }
         
+        /* HIGH-VIS SCROLLBARS */
         ::-webkit-scrollbar { width: 16px; display: block; }
         ::-webkit-scrollbar-track { background: #ddd; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 2px solid #ddd; }
@@ -59,18 +60,18 @@
         .red { background-color: var(--rd); color: white; }
         .yel { background-color: var(--yl); color: #000; }
 
-        /* RAISED CORNER BUTTONS - Lifted to clear phone navigation bars */
+        /* RAISED CORNER BUTTONS */
         .corner-btn-wrap { 
-            position: absolute; bottom: 60px; left: 15px; right: 15px; 
+            position: absolute; bottom: 65px; left: 15px; right: 15px; 
             display: flex; justify-content: space-between; z-index: 5; 
-            pointer-events: none; /* Allows list clicks to pass through wrap */
+            pointer-events: none; 
         }
         .ref-btn { 
-            pointer-events: auto; /* Makes actual buttons clickable */
-            background: var(--bl); color: white; padding: 10px 14px; 
-            border: none; border-radius: 6px; font-weight: 900; 
-            font-size: 0.7rem; text-transform: uppercase; cursor: pointer; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); border-bottom: 3px solid #002d52;
+            pointer-events: auto; 
+            background: var(--bl); color: white; padding: 12px 16px; 
+            border: none; border-radius: 8px; font-weight: 900; 
+            font-size: 0.75rem; text-transform: uppercase; cursor: pointer; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52;
         }
 
         /* VIEWER OVERLAY */
@@ -149,8 +150,8 @@
         <div id="list-res"><div id="cc"></div></div>
 
         <div class="corner-btn-wrap">
-            <button class="ref-btn" onclick="openViewer(https://github.com/bisket74-eng/Route-finder/blob/main/Screenshot_20260513-183016_Chrome.png)">Current Rates</button>
-            <button class="ref-btn" onclick="openViewer(https://github.com/bisket74-eng/Route-finder/blob/main/Screenshot_20260513-183349_Chrome.png)">Click Conversion</button>
+            <button class="ref-btn" onclick="openViewer('URL_OF_IMAGE_1')">Current Rates</button>
+            <button class="ref-btn" onclick="openViewer('URL_OF_IMAGE_2')">Click Conversion</button>
         </div>
     </div>
 
@@ -256,15 +257,4 @@
         document.getElementById('list-res').scrollTo(0,0);
     }
 
-    function reopenSuggestions() { cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; strIn.value = lastUserTyping; handleSearch(); }
-    function clearStreetOnly() { lastUserTyping = ""; strIn.value = ""; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; strIn.focus(); body.classList.remove('header-hidden'); }
-    function resetZipSelection() { body.classList.remove('header-hidden'); lastUserTyping = ""; strIn.value = ""; strIn.disabled = true; strIn.placeholder = "Select ZIP first..."; sugBox.style.display = "none"; cardCont.innerHTML = ""; backBtn.style.display = "none"; currentOpenStreet = null; }
-    function resetAll() { location.reload(); }
-    
-    window.onclick = function(event) { 
-        const list = document.getElementById('zipList'); const trig = document.getElementById('zipTrig');
-        if (!list.contains(event.target) && event.target !== trig) { list.style.display = 'none'; }
-    }
-</script>
-</body>
-</html>
+    function
