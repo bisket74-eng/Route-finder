@@ -47,9 +47,9 @@
 
         .picker-container { background: white; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); width: 280px; text-align: center; }
         .drum-wrap { display: flex; justify-content: center; gap: 15px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
-        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-padding: 50px 0; }
+        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-padding: 50px 0; -webkit-overflow-scrolling: touch; }
         .drum::-webkit-scrollbar { display: none; }
-        .drum div { height: 50px; line-height: 50px; font-size: 1.8rem; font-weight: 800; scroll-snap-align: center; color: #bbb; }
+        .drum div { height: 50px; line-height: 50px; font-size: 1.8rem; font-weight: 800; scroll-snap-align: center; color: #bbb; scroll-snap-stop: always; }
         .drum div.selected { color: var(--bl); font-size: 2.2rem; }
         .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
 
@@ -57,7 +57,7 @@
         .log-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; font-size: 0.85rem; text-align: center; padding: 5px 0; border-bottom: 1px solid #ddd; color: #000; }
 
         .btn-done { background: var(--bl); color: white; padding: 12px 40px; border: none; font-weight: 900; text-transform: uppercase; border-radius: 50px; display: block; margin: 15px auto 0; cursor: pointer; }
-        .apply-btn-blue { background: var(--bl); color: white; padding: 12px 30px; border: none; font-weight: 900; text-transform: uppercase; border-radius: 50px; cursor: pointer; }
+        .apply-btn-blue { background: var(--bl); color: white; padding: 10px 25px; border: none; font-weight: 900; text-transform: uppercase; border-radius: 50px; cursor: pointer; }
 
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 150px; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
@@ -177,10 +177,10 @@
     }
 
     function setupClockEvents() {
-        document.getElementById('bt-btn').onclick = () => openScroll('t-in', 'Set Begin Tour');
-        document.getElementById('ol-btn').onclick = () => openScroll('l-out', 'Set Out Lunch');
-        document.getElementById('il-btn').onclick = () => openScroll('l-in', 'Set In Lunch');
-        document.getElementById('et-btn').onclick = () => openScroll('t-actual', 'Set End Tour');
+        document.getElementById('bt-btn').onclick = (e) => { e.stopPropagation(); openScroll('t-in', 'Set Begin Tour'); };
+        document.getElementById('ol-btn').onclick = (e) => { e.stopPropagation(); openScroll('l-out', 'Set Out Lunch'); };
+        document.getElementById('il-btn').onclick = (e) => { e.stopPropagation(); openScroll('l-in', 'Set In Lunch'); };
+        document.getElementById('et-btn').onclick = (e) => { e.stopPropagation(); openScroll('t-actual', 'Set End Tour'); };
         document.getElementById('confirm-time-btn').onclick = confirmScrollTime;
     }
 
@@ -275,7 +275,13 @@
         });
     }
 
-    function reopenSuggestions() { document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); handleSearch(); }
+    function reopenSuggestions() { 
+        document.getElementById('cc').innerHTML = ""; 
+        document.getElementById('backToListBtn').style.display = "none"; 
+        document.getElementById('mainBody').classList.remove('cards-active'); 
+        handleSearch(); 
+    }
+
     function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
     function resetAll() { location.reload(); }
     window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; } }
