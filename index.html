@@ -43,7 +43,13 @@
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
         .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
 
-        #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
+        /* MODALS */
+        #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
+        
+        /* TIMEKEEPER LIGHT BLUE BACKGROUND */
+        #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,75,135,0.7); z-index: 20000; display: none; align-items: center; justify-content: center; }
+        #timeModal .time-box { background: var(--lt-bl); } 
+        
         #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
         
         .time-box { background: white; width: 92%; max-width: 400px; max-height: 90vh; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; }
@@ -113,7 +119,7 @@
             <input type="hidden" id="t-in"><input type="hidden" id="l-out"><input type="hidden" id="l-in"><input type="hidden" id="t-actual">
             
             <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid #eee; padding-top:15px;">
-                <span style="font-weight:900; color:var(--rd); font-size:1.1rem; text-transform:uppercase;">8-Hour Goal:</span>
+                <span style="font-weight:900; color:var(--rd); font-size:1.1rem; text-transform:uppercase;">8 Hour ET Goal:</span>
                 <span id="t-target" style="font-size:1.3rem; font-weight:900; color:#004b87;">00.00</span>
             </div>
 
@@ -189,23 +195,33 @@
             snapTimer = setTimeout(() => {
                 const currentIdx = Math.round(d.scrollTop / h) % count;
                 const currentVal = parseInt(set[currentIdx]);
-                
                 if (snaps.includes(currentVal)) {
-                    d.scrollTo({
-                        top: Math.round(d.scrollTop / h) * h,
-                        behavior: 'smooth'
-                    });
+                    d.scrollTo({ top: Math.round(d.scrollTop / h) * h, behavior: 'smooth' });
                 }
             }, 120);
 
+            // Update highlighting
             Array.from(d.children).forEach((c,i) => {
                 c.className = (i === Math.round(d.scrollTop / h) + 1) ? 'selected' : '';
             });
         };
+        // Reset to middle set and trigger highlight
         d.scrollTop = count * 50;
+        setTimeout(() => {
+             Array.from(d.children).forEach((c,i) => {
+                c.className = (i === Math.round(d.scrollTop / h) + 1) ? 'selected' : '';
+            });
+        }, 10);
     }
 
-    function openPicker(t, title) { activeId = t; document.getElementById('picker-title').innerText = "Set " + title; document.getElementById('scrollPicker').style.display='flex'; initDrum('hour-drum', 24, [0, 12]); initDrum('click-drum', 100, [0, 50]); }
+    function openPicker(t, title) { 
+        activeId = t; 
+        document.getElementById('picker-title').innerText = "Set " + title; 
+        document.getElementById('scrollPicker').style.display='flex'; 
+        initDrum('hour-drum', 24, [0, 12]); 
+        initDrum('click-drum', 100, [0, 50]); 
+    }
+
     function closeScroll() { document.getElementById('scrollPicker').style.display='none'; }
     function setupClock() {
         document.getElementById('confirm-time-btn').onclick = () => {
