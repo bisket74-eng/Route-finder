@@ -47,30 +47,34 @@
 
         #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 10000; display: none; align-items: center; justify-content: center; overflow-y: auto; }
         .time-box { background: white; width: 92%; max-width: 440px; padding: 25px 20px 20px; border-radius: 15px; border: 4px solid var(--bl); box-sizing: border-box; position: relative; }
-        .time-display-btn { width: 100%; padding: 12px 0; border: 2px solid #aaa; border-radius: 6px; font-size: 1.1rem; background: #fff; font-weight: 800; text-align: center; cursor: pointer; }
+        .modal-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 24px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10001; }
         
         .log-header, .log-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ddd; }
         .log-header { font-weight: 900; font-size: 0.7rem; border-bottom: 2px solid #000; margin-top: 15px; }
         .log-col { flex: 1; text-align: center; }
         .log-day { flex: 1.2; text-align: left; font-weight: 900; }
 
-        .modal-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 24px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10001; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-
+        /* PICKER MODAL WITH X */
         #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200000; display: none; align-items: center; justify-content: center; }
-        .picker-container { background: white; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); width: 280px; text-align: center; }
+        .picker-container { background: white; padding: 30px 20px 20px; border-radius: 12px; border: 4px solid var(--bl); width: 280px; text-align: center; position: relative; }
+        .picker-x { position: absolute; top: 8px; right: 8px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; font-size: 20px; font-weight: 900; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+        /* INFINITE DRUM */
         .drum-wrap { display: flex; justify-content: center; gap: 15px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
-        
-        /* IMPROVED SCROLL DRUM */
-        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-padding: 50px 0; -webkit-overflow-scrolling: touch; }
+        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; }
         .drum::-webkit-scrollbar { display: none; }
-        .drum div { height: 50px; line-height: 50px; font-size: 1.8rem; font-weight: 800; scroll-snap-align: center; color: #bbb; }
+        .drum div { height: 50px; line-height: 50px; font-size: 1.8rem; font-weight: 800; scroll-snap-align: center; color: #bbb; transition: color 0.1s; }
         .drum div.selected { color: var(--bl); font-size: 2.2rem; }
         .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
 
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 150px; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
         .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; line-height: 1; display: block; text-align: left; }
-        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; font-weight: 900; }
+        
+        .zip-tag-blue { background: var(--bl); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem; font-weight: 900; display: inline-block; margin-top: 6px; }
+        .rt-block { background: var(--bl); color: white; padding: 15px; border-radius: 10px; text-align: center; min-width: 110px; font-weight: 900; }
+        .rt-block small { font-size: 0.7rem; display: block; margin-bottom: 2px; letter-spacing: 1px; }
+        .rt-block span { font-size: 2.5rem; display: block; line-height: 1; }
         
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 900; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); text-align: left; }
@@ -88,6 +92,7 @@
 
     <div id="scrollPicker">
         <div class="picker-container">
+            <button class="picker-x" onclick="closeScroll()">×</button>
             <h3 id="picker-title" style="margin:0; color:var(--bl); font-size: 1.1rem;">Set Time</h3>
             <div class="drum-wrap"><div class="drum-overlay"></div><div class="drum" id="hour-drum"></div><div class="drum" id="click-drum"></div></div>
             <button class="btn-round btn-red" style="width:100%; font-size:1rem;" id="confirm-time-btn">Set Time</button>
@@ -108,11 +113,7 @@
             <input type="hidden" id="t-in" value="0.00"><input type="hidden" id="l-out" value="0.00"><input type="hidden" id="l-in" value="0.00"><input type="hidden" id="t-actual" value="0.00">
             <div style="margin-top:12px;"><span class="time-label" style="color: var(--rd);">8-Hour Goal (ET):</span><div id="t-target" class="target-out">00.00</div></div>
             <button class="btn-round btn-yel" style="width:100%; margin-top:12px; font-size:1rem;" onclick="addToLog()">Add To Log</button>
-            
-            <div id="log-table">
-                <div class="log-header"><span class="log-day">DAY</span><span class="log-col">BT</span><span class="log-col">OL</span><span class="log-col">IL</span><span class="log-col">ET</span></div>
-                <div id="log-container"></div>
-            </div>
+            <div id="log-table"><div class="log-header"><span class="log-day">DAY</span><span class="log-col">BT</span><span class="log-col">OL</span><span class="log-col">IL</span><span class="log-col">ET</span></div><div id="log-container"></div></div>
             <div style="text-align:left; margin-top:10px;"><button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button></div>
         </div>
     </div>
@@ -154,7 +155,7 @@
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
     window.onload = async () => {
-        initDrums(); renderLog(); setupClockEvents();
+        setupClockEvents(); renderLog();
         try {
             const resp = await fetch(XLSX_URL);
             const arrayBuffer = await resp.arrayBuffer();
@@ -164,31 +165,61 @@
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'local'; } }
     };
 
-    function initDrums() {
-        const hD = document.getElementById('hour-drum'), cD = document.getElementById('click-drum');
-        hD.innerHTML = '<div></div>' + Array.from({length:24}, (_,i)=>`<div>${i.toString().padStart(2,'0')}</div>`).join('') + '<div></div>';
-        cD.innerHTML = '<div></div>' + Array.from({length:100}, (_,i)=>`<div>${i.toString().padStart(2,'0')}</div>`).join('') + '<div></div>';
-        [hD, cD].forEach(d => d.addEventListener('scroll', () => {
-            const idx = Math.round(d.scrollTop / 50);
-            Array.from(d.children).forEach((c, i) => c.className = (i === idx + 1) ? 'selected' : '');
-        }));
+    function initInfiniteDrum(id, count) {
+        const drum = document.getElementById(id);
+        const set = Array.from({length: count}, (_, i) => i.toString().padStart(2, '0'));
+        // Triple the set to simulate infinity
+        const triple = [...set, ...set, ...set];
+        drum.innerHTML = '<div></div>' + triple.map(n => `<div>${n}</div>`).join('') + '<div></div>';
+        
+        drum.onscroll = () => {
+            const itemHeight = 50;
+            const currentScroll = drum.scrollTop;
+            const totalHeight = count * itemHeight;
+
+            // Seamless Loop Logic
+            if (currentScroll < totalHeight) { drum.scrollTop = currentScroll + totalHeight; }
+            else if (currentScroll >= totalHeight * 2) { drum.scrollTop = currentScroll - totalHeight; }
+
+            // Highlight selected
+            const idx = Math.round(drum.scrollTop / itemHeight);
+            Array.from(drum.children).forEach((c, i) => {
+                c.className = (i === idx + 1) ? 'selected' : '';
+                // Pause effect at 00 and 50
+                if (c.innerText === "00" || c.innerText === "50") c.style.fontWeight = "900";
+            });
+        };
+        // Initial center
+        drum.scrollTop = count * 50;
     }
 
     function setupClockEvents() {
-        document.getElementById('bt-btn').onclick = (e) => { e.stopPropagation(); openScroll('t-in', 'Set Begin Tour'); };
-        document.getElementById('ol-btn').onclick = (e) => { e.stopPropagation(); openScroll('l-out', 'Set Out Lunch'); };
-        document.getElementById('il-btn').onclick = (e) => { e.stopPropagation(); openScroll('l-in', 'Set In Lunch'); };
-        document.getElementById('et-btn').onclick = (e) => { e.stopPropagation(); openScroll('t-actual', 'Set End Tour'); };
+        document.getElementById('bt-btn').onclick = () => openScroll('t-in', 'Set Begin Tour');
+        document.getElementById('ol-btn').onclick = () => openScroll('l-out', 'Set Out Lunch');
+        document.getElementById('il-btn').onclick = () => openScroll('l-in', 'Set In Lunch');
+        document.getElementById('et-btn').onclick = () => openScroll('t-actual', 'Set End Tour');
         document.getElementById('confirm-time-btn').onclick = confirmScrollTime;
     }
 
-    function openScroll(id, title) { activeTargetId = id; document.getElementById('picker-title').innerText = title; document.getElementById('scrollPicker').style.display = 'flex'; }
+    function openScroll(id, title) {
+        activeTargetId = id;
+        document.getElementById('picker-title').innerText = title;
+        document.getElementById('scrollPicker').style.display = 'flex';
+        initInfiniteDrum('hour-drum', 24);
+        initInfiniteDrum('click-drum', 100);
+    }
+
+    function closeScroll() { document.getElementById('scrollPicker').style.display = 'none'; }
+
     function confirmScrollTime() {
-        const h = document.querySelector('#hour-drum .selected')?.innerText || "00", c = document.querySelector('#click-drum .selected')?.innerText || "00";
-        const val = `${h}.${c}`; document.getElementById(activeTargetId).value = val;
+        const h = document.querySelector('#hour-drum .selected')?.innerText || "00";
+        const c = document.querySelector('#click-drum .selected')?.innerText || "00";
+        const val = `${h}.${c}`;
+        document.getElementById(activeTargetId).value = val;
         const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
         document.getElementById(btnMap[activeTargetId]).innerText = val;
-        document.getElementById('scrollPicker').style.display = 'none'; calcClicks();
+        closeScroll();
+        calcClicks();
     }
 
     function calcClicks() {
@@ -270,7 +301,7 @@
         const cc = document.getElementById('cc'); cc.innerHTML = "";
         item.results.forEach(res => {
             const div = document.createElement('div'); div.className = "list-card";
-            div.innerHTML = `<div class="info-left"><span style="font-size:0.9rem;font-weight:800;color:#555;display:block;text-align:left;">${item.displayName}</span><span class="range-txt">${res.range}</span><span style="font-weight:900;color:var(--bl);display:block;text-align:left;">ZIP ${item.zip}</span></div><div class="rt-block"><small style="font-size:0.6rem;">ROUTE</small><span>${res.route}</span></div>`;
+            div.innerHTML = `<div class="info-left"><span style="font-size:0.9rem;font-weight:800;color:#555;display:block;text-align:left;">${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
             cc.appendChild(div);
         });
     }
