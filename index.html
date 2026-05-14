@@ -44,14 +44,10 @@
         .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
 
         #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
-        
-        /* THE MODAL OVERLAYS (Behind the cards) */
         #timeModal, #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         #scrollPicker { z-index: 999999; }
 
-        /* THE LIGHT BLUE TIMEKEEPER CARD */
         #timeModal .time-box { background: var(--lt-bl); } 
-        
         .time-box { width: 92%; max-width: 400px; max-height: 90vh; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 100; }
 
@@ -84,6 +80,12 @@
         
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
         #backToListBtn { display: none; background-color: var(--bl); color: white; width: 180px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; }
+
+        /* LOG TABLE STYLING */
+        .log-hdr { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 2px solid var(--bl); font-weight: 900; font-size: 0.75rem; color: var(--bl); margin-top: 15px; }
+        .log-hdr span { flex: 1; text-align: center; }
+        .log-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; font-weight: 700; }
+        .log-row span { flex: 1; text-align: center; }
     </style>
 </head>
 <body id="mainBody">
@@ -125,9 +127,14 @@
                 <span id="t-target" style="font-size:1.3rem; font-weight:900; color:#004b87;">00.00</span>
             </div>
 
-            <button class="btn-round btn-yel" style="width:160px; margin:15px auto 0; display:block;" onclick="addToLog()">Add To Log</button>
+            <button class="btn-round btn-yel" id="add-log-btn" style="width:160px; margin:15px auto 0; display:block;" onclick="addToLog()">Add To Log</button>
             
-            <div id="log-table" style="margin-top:10px; max-height:100px; overflow-y:auto;"><div id="log-container"></div></div>
+            <div class="log-hdr">
+                <span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span>
+            </div>
+            <div id="log-table" style="max-height:150px; overflow-y:auto; margin-bottom: 10px;">
+                <div id="log-container"></div>
+            </div>
         </div>
     </div>
 
@@ -168,18 +175,15 @@
         const set = Array.from({length:count}, (_,i)=>i.toString().padStart(2,'0'));
         const triple = [...set, ...set, ...set];
         d.innerHTML = '<div></div>' + triple.map(n=>`<div>${n}</div>`).join('') + '<div></div>';
-        
         let snapTimer;
         d.onscroll = () => {
             const h = 50;
             if(d.scrollTop < count * h) d.scrollTop += count * h;
             if(d.scrollTop >= count * h * 2) d.scrollTop -= count * h;
-            
             clearTimeout(snapTimer);
             snapTimer = setTimeout(() => {
                 d.scrollTo({ top: Math.round(d.scrollTop / h) * h, behavior: 'smooth' });
             }, 100);
-
             Array.from(d.children).forEach((c,i) => {
                 c.className = (i === Math.round(d.scrollTop / h) + 1) ? 'selected' : '';
             });
@@ -206,13 +210,21 @@
         if(bt && ol && il) document.getElementById('t-target').innerText = (bt + 8.50 + (il-ol)).toFixed(2);
     }
     
-    // FIX 2: REWORKED ADD TO LOG WITH AUTO-RESET
+    // REWORKED ADD TO LOG WITH HEADERS & 7-ENTRY LIMIT
     function addToLog() {
-        const day = document.getElementById('t-day').value, bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
-        const row = `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(0,0,0,0.1); font-size:0.8rem;"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span></div>`;
-        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         
-        // RESET ALL BOXES & DAY
+        if (log.length >= 7) {
+            alert("Week is full (7 days). Please clear week to start over.");
+            return;
+        }
+
+        const day = document.getElementById('t-day').value, bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
+        
+        const row = `<div class="log-row"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span></div>`;
+        log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
+        
+        // RESET
         document.getElementById('t-day').value = "Monday";
         const ids = ['t-in','l-out','l-in','t-actual'];
         const btns = ['bt-btn','ol-btn','il-btn','et-btn'];
