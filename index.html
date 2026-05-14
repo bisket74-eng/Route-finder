@@ -44,15 +44,18 @@
         .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
 
         #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
-        #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,75,135,0.7); z-index: 20000; display: none; align-items: center; justify-content: center; }
-        #timeModal .time-box { background: var(--lt-bl); } 
-        #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
         
-        .time-box { background: white; width: 92%; max-width: 400px; max-height: 90vh; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; }
+        /* THE MODAL OVERLAYS (Behind the cards) */
+        #timeModal, #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
+        #scrollPicker { z-index: 999999; }
+
+        /* THE LIGHT BLUE TIMEKEEPER CARD */
+        #timeModal .time-box { background: var(--lt-bl); } 
+        
+        .time-box { width: 92%; max-width: 400px; max-height: 90vh; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 100; }
 
-        /* DRUM PHYSICS */
-        .drum-wrap { display: flex; justify-content: center; gap: 10px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
+        .drum-wrap { display: flex; justify-content: center; gap: 10px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; background: white; border-radius: 8px; }
         .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
         .drum { flex: 1; overflow-y: scroll; -webkit-overflow-scrolling: touch; scrollbar-width: none; scroll-snap-type: y mandatory; }
         .drum::-webkit-scrollbar { display: none; }
@@ -87,7 +90,7 @@
     <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
     <div id="scrollPicker">
-        <div class="time-box" style="width: 280px; text-align: center; overflow: hidden;">
+        <div class="time-box" style="width: 280px; text-align: center; overflow: hidden; background:white;">
             <button class="modal-x" onclick="closeScroll()">×</button>
             <h3 id="picker-title" style="margin:0; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">Set Clock</h3>
             <div class="drum-wrap">
@@ -102,20 +105,28 @@
     <div id="timeModal">
         <div class="time-box">
             <button style="position:absolute; top:12px; left:12px; background:none; border:none; color:var(--rd); font-weight:900; font-size:0.7rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button>
-            
             <button class="modal-x" onclick="closeTime()">×</button>
             <h2 style="color:var(--bl); margin:0 0 15px;">Timekeeper</h2>
             
-            <select id="t-day" style="width:160px; padding:10px; margin:0 auto 15px; font-weight:900; border:2px solid var(--bl); border-radius:8px; display:block; text-align:center;"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+            <select id="t-day" style="width:160px; padding:10px; margin:0 auto 15px; font-weight:900; border:2px solid var(--bl); border-radius:8px; display:block; text-align:center;">
+                <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Sunday">Sunday</option>
+            </select>
+
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
                 <div onclick="openPicker('t-in', 'Begin Tour')"><label>BT</label><div class="time-display-btn" id="bt-btn">00.00</div></div>
                 <div onclick="openPicker('l-out', 'Out to Lunch')"><label>OL</label><div class="time-display-btn" id="ol-btn">00.00</div></div>
                 <div onclick="openPicker('l-in', 'Into Lunch')"><label>IL</label><div class="time-display-btn" id="il-btn">00.00</div></div>
                 <div onclick="openPicker('t-actual', 'End Tour')"><label>ET</label><div class="time-display-btn" id="et-btn">00.00</div></div>
             </div>
-            <input type="hidden" id="t-in"><input type="hidden" id="l-out"><input type="hidden" id="l-in"><input type="hidden" id="t-actual">
-            <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid #eee; padding-top:15px;"><span style="font-weight:900; color:var(--rd); font-size:1.1rem; text-transform:uppercase;">8 Hour ET Goal:</span><span id="t-target" style="font-size:1.3rem; font-weight:900; color:#004b87;">00.00</span></div>
+            <input type="hidden" id="t-in" value="00.00"><input type="hidden" id="l-out" value="00.00"><input type="hidden" id="l-in" value="00.00"><input type="hidden" id="t-actual" value="00.00">
+            
+            <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
+                <span style="font-weight:900; color:var(--rd); font-size:1.1rem; text-transform:uppercase;">8 Hour ET Goal:</span>
+                <span id="t-target" style="font-size:1.3rem; font-weight:900; color:#004b87;">00.00</span>
+            </div>
+
             <button class="btn-round btn-yel" style="width:160px; margin:15px auto 0; display:block;" onclick="addToLog()">Add To Log</button>
+            
             <div id="log-table" style="margin-top:10px; max-height:100px; overflow-y:auto;"><div id="log-container"></div></div>
         </div>
     </div>
@@ -152,7 +163,6 @@
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'live'; } }
     };
 
-    // FIX 2: OVERHAULED SNAPPING & ALIGNMENT
     function initDrum(id, count, snaps) {
         const d = document.getElementById(id);
         const set = Array.from({length:count}, (_,i)=>i.toString().padStart(2,'0'));
@@ -167,8 +177,6 @@
             
             clearTimeout(snapTimer);
             snapTimer = setTimeout(() => {
-                const centerVal = parseInt(set[Math.round(d.scrollTop / h) % count]);
-                // Snap to any number but add magnetic "hold" on 00/12/50
                 d.scrollTo({ top: Math.round(d.scrollTop / h) * h, behavior: 'smooth' });
             }, 100);
 
@@ -197,11 +205,21 @@
         const bt = parseFloat(document.getElementById('t-in').value)||0, ol = parseFloat(document.getElementById('l-out').value)||0, il = parseFloat(document.getElementById('l-in').value)||0;
         if(bt && ol && il) document.getElementById('t-target').innerText = (bt + 8.50 + (il-ol)).toFixed(2);
     }
+    
+    // FIX 2: REWORKED ADD TO LOG WITH AUTO-RESET
     function addToLog() {
         const day = document.getElementById('t-day').value, bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
-        const row = `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #eee; font-size:0.8rem;"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span></div>`;
+        const row = `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(0,0,0,0.1); font-size:0.8rem;"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span></div>`;
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
+        
+        // RESET ALL BOXES & DAY
+        document.getElementById('t-day').value = "Monday";
+        const ids = ['t-in','l-out','l-in','t-actual'];
+        const btns = ['bt-btn','ol-btn','il-btn','et-btn'];
+        ids.forEach((id, i) => { document.getElementById(id).value = "00.00"; document.getElementById(btns[i]).innerText = "00.00"; });
+        document.getElementById('t-target').innerText = "00.00";
     }
+
     function renderLog() { document.getElementById('log-container').innerHTML = (JSON.parse(localStorage.getItem('usps_weekly_log')||"[]")).join(''); }
     function clearLog() { if(confirm("Clear log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
 
