@@ -7,11 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; }
-        
-        /* PROMINENT SCROLLBAR */
-        ::-webkit-scrollbar { width: 16px; display: block; }
-        ::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; border: 3px solid #f0f0f0; }
+        ::-webkit-scrollbar { width: 12px; display: block; }
+        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; }
         
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
         .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); }
@@ -28,12 +25,13 @@
         .ctrls { padding: 15px; background: var(--lt-bl); }
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
         
+        /* ZIP PICKER - FORCED TOP PRIORITY */
         .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; cursor: pointer; box-sizing: border-box; height: 52px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 4px solid var(--bl); z-index: 8000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 60vh; flex-direction: column; overflow: hidden; }
-        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: #ffffff !important; border: 4px solid var(--bl); z-index: 99999; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 65vh; flex-direction: column; }
+        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #fff; }
         .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
         .zip-item input { width: 26px; height: 26px; margin-right: 15px; }
-        .apply-wrap { padding: 10px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: white; flex-shrink: 0; }
+        .apply-wrap { padding: 15px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; flex-shrink: 0; }
 
         input[type="text"], select { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; }
         .btn-round { height: 52px; width: 95px; border-radius: 50px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -43,46 +41,43 @@
         /* MODALS */
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; }
         #viewer-img { max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px; }
-        .time-box { background: white; width: 92%; max-width: 440px; padding: 25px 20px 20px; border-radius: 15px; border: 4px solid var(--bl); box-sizing: border-box; position: relative; }
-        .modal-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 24px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10001; }
+        .time-box { background: white; width: 92%; max-width: 440px; padding: 25px 20px; border-radius: 15px; border: 4px solid var(--bl); position: relative; }
+        .modal-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 24px; font-weight: 900; cursor: pointer; }
 
-        /* CLOCK PICKER */
-        #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200000; display: none; align-items: center; justify-content: center; }
-        .drum-wrap { display: flex; justify-content: center; gap: 15px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
-        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; }
-        .drum div { height: 50px; line-height: 50px; font-size: 1.8rem; font-weight: 800; scroll-snap-align: center; color: #bbb; transition: color 0.1s; }
-        .drum div.selected { color: var(--bl); font-size: 2.2rem; }
-        .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
-
-        /* FOOTER BUTTONS & FLY-DOWN ANIMATION */
-        .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* FOOTER BUTTONS - LOWER Z-INDEX WITH FLY-DOWN TRANSITION */
+        .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s ease; }
         .ref-left { left: 15px; }
         .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
         .ref-right { right: 15px; }
         
-        /* FLY DOWN STATES */
-        body.cards-active .ref-btn, body.zip-open .ref-btn { transform: translateY(200px); }
+        /* FLY DOWN LOGIC */
+        body.cards-active .ref-btn, 
+        body.zip-open .ref-btn, 
+        body.sug-active .ref-btn { transform: translateY(200px); }
 
-        /* RESULTS */
-        #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 150px; }
+        #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 160px; }
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
-        .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; line-height: 1; display: block; text-align: left; }
+        .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; line-height: 1; }
         .zip-tag-blue { background: var(--bl); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem; font-weight: 900; display: inline-block; margin-top: 6px; }
-        .rt-block { background: var(--bl); color: white; padding: 15px; border-radius: 10px; text-align: center; min-width: 110px; font-weight: 900; }
-        .rt-block span { font-size: 2.5rem; display: block; line-height: 1; }
+        .rt-block { background: var(--bl); color: white; padding: 15px; border-radius: 10px; text-align: center; min-width: 110px; }
+        .rt-block span { font-size: 2.5rem; display: block; font-weight: 900; }
         
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 900; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); text-align: left; }
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 900; }
+        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
     </style>
 </head>
 <body id="mainBody">
     <div id="viewer" onclick="closeViewer()"><button class="modal-x" style="top:20px; right:20px;">×</button><img id="viewer-img" src=""></div>
 
-    <div id="scrollPicker">
+    <div id="scrollPicker" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:200000; display:none; align-items:center; justify-content:center;">
         <div style="background:white; padding:30px 20px; border-radius:12px; border:4px solid var(--bl); width:280px; text-align:center; position:relative;">
             <button class="modal-x" style="width:35px; height:35px; font-size:20px;" onclick="closeScroll()">×</button>
             <h3 id="picker-title" style="margin:0; color:var(--bl);">Set Time</h3>
-            <div class="drum-wrap"><div class="drum-overlay"></div><div class="drum" id="hour-drum"></div><div class="drum" id="click-drum"></div></div>
+            <div class="drum-wrap" style="display:flex; justify-content:center; gap:15px; height:150px; overflow:hidden; margin:15px 0; position:relative;">
+                <div class="drum-overlay" style="position:absolute; top:50px; left:0; right:0; height:50px; border-top:2px solid var(--bl); border-bottom:2px solid var(--bl); pointer-events:none; background:rgba(0,75,135,0.05);"></div>
+                <div class="drum" id="hour-drum" style="flex:1; overflow-y:scroll; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch;"></div>
+                <div class="drum" id="click-drum" style="flex:1; overflow-y:scroll; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch;"></div>
+            </div>
             <button class="btn-round btn-red" style="width:100%;" id="confirm-time-btn">Set Time</button>
         </div>
     </div>
@@ -93,10 +88,10 @@
             <h2 style="text-align:center; color:var(--bl); margin:0 0 10px;">Timekeeper</h2>
             <select id="t-day" style="margin-bottom:10px;"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">BT</label><div class="time-display-btn" id="bt-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
-                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">OL</label><div class="time-display-btn" id="ol-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
-                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">IL</label><div class="time-display-btn" id="il-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
-                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">ET</label><div class="time-display-btn" id="et-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
+                <div><label>BT</label><div class="time-display-btn" id="bt-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
+                <div><label>OL</label><div class="time-display-btn" id="ol-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
+                <div><label>IL</label><div class="time-display-btn" id="il-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
+                <div><label>ET</label><div class="time-display-btn" id="et-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
             </div>
             <input type="hidden" id="t-in"><input type="hidden" id="l-out"><input type="hidden" id="l-in"><input type="hidden" id="t-actual">
             <div style="margin-top:15px; text-align:center; background:#eee; padding:10px; border-radius:8px; border:2px dashed #999;">
@@ -107,7 +102,6 @@
                 <div style="display:flex; justify-content:space-between; font-weight:900; border-bottom:2px solid #000; font-size:0.7rem;"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span></div>
                 <div id="log-container"></div>
             </div>
-            <div style="text-align:left; margin-top:10px;"><button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button></div>
         </div>
     </div>
 
@@ -139,7 +133,6 @@
             <button id="backToListBtn" style="display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 15px; padding:18px; border-radius:50px; font-weight:900; border:none;" onclick="reopenSuggestions()">⬅ Return to Street List</button>
         </div>
         <div id="list-res"><div id="cc"></div></div>
-        
         <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Rates</button>
         <button class="ref-btn ref-mid" onclick="openTime()">Timekeeper</button>
         <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183349_Chrome.png')">Conversion</button>
@@ -170,7 +163,7 @@
             const idx = Math.round(d.scrollTop/h);
             Array.from(d.children).forEach((c,i) => {
                 c.className = (i===idx+1)?'selected':'';
-                if(c.innerText==="00"||c.innerText==="50") c.style.fontWeight = "900";
+                if(c.innerText==="00"||c.innerText==="50") c.style.color = "var(--bl)";
             });
         };
         d.scrollTop = count*50;
@@ -202,10 +195,10 @@
     function addToLog() {
         const day = document.getElementById('t-day').value, bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
         const row = `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #eee; font-size:0.8rem;"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span></div>`;
-        let log = JSON.parse(localStorage.getItem('usps_weekly_log')|| "[]"); log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
     }
 
-    function renderLog() { document.getElementById('log-container').innerHTML = (JSON.parse(localStorage.getItem('usps_weekly_log')|| "[]")).join(''); }
+    function renderLog() { document.getElementById('log-container').innerHTML = (JSON.parse(localStorage.getItem('usps_weekly_log')||"[]")).join(''); }
     function clearLog() { if(confirm("Clear log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
 
     function processExcelData(rows) {
@@ -228,19 +221,25 @@
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
         const val = document.getElementById('streetInput').value.toUpperCase().trim();
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
-        if(val.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; return; }
+        if(val.length < 1 || activeZips.length === 0) { 
+            sugBox.style.display="none"; 
+            document.body.classList.remove('sug-active');
+            return; 
+        }
         let matches = [];
         activeZips.forEach(z => {
             if(database[z]) database[z].forEach(m => { if(m.searchName.startsWith(val)) matches.push({...m, zip: z}); });
         });
         if(matches.length > 0) {
             sugBox.style.display="block";
+            document.body.classList.add('sug-active');
             matches.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric:true}));
             matches.forEach(item => {
                 const d = document.createElement('div'); d.className="s-item";
                 d.innerHTML = `<span>${item.displayName}</span><span style="background:var(--bl);color:white;padding:2px 6px;border-radius:4px;font-size:0.8rem;">${item.zip}</span>`;
                 d.onclick = () => {
                     document.getElementById('streetInput').value = item.displayName; sugBox.style.display="none";
+                    document.body.classList.remove('sug-active');
                     document.getElementById('backToListBtn').style.display="block"; document.getElementById('mainBody').classList.add('cards-active');
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     item.results.forEach(res => {
@@ -251,22 +250,25 @@
                 };
                 sugBox.appendChild(d);
             });
-        } else sugBox.style.display="none";
+        } else {
+            sugBox.style.display="none";
+            document.body.classList.remove('sug-active');
+        }
     }
 
     function toggleZipList(e) { 
         e.stopPropagation(); 
         const l = document.getElementById('zipList'); 
-        const isOpen = l.style.display === 'flex';
+        const isOpen = (l.style.display==='flex');
         l.style.display = isOpen ? 'none' : 'flex';
-        document.body.classList.toggle('zip-open', !isOpen);
+        if (!isOpen) document.body.classList.add('zip-open');
+        else document.body.classList.remove('zip-open');
     }
-
+    
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); }
-
+    
     function finalApply(e) { 
-        if(e) e.stopPropagation(); 
-        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
+        if(e) e.stopPropagation(); const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
         const isAll = document.getElementById('allZipMaster').checked;
         trig.innerText = isAll ? 'ALL ZIPs' : (chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...');
         document.getElementById('zipList').style.display='none';
@@ -275,15 +277,21 @@
     }
 
     function reopenSuggestions() { document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); handleSearch(); }
-    function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
+    function clearStreetOnly() { 
+        document.getElementById('streetInput').value = ""; 
+        document.getElementById('suggestionBox').style.display = "none"; 
+        document.body.classList.remove('sug-active');
+        document.getElementById('cc').innerHTML = ""; 
+        document.getElementById('backToListBtn').style.display = "none"; 
+        document.getElementById('mainBody').classList.remove('cards-active'); 
+        document.getElementById('streetInput').focus(); 
+    }
     function resetAll() { location.reload(); }
     function openViewer(url) { document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
     function openTime() { document.getElementById('timeModal').style.display='flex'; }
     function closeTime() { document.getElementById('timeModal').style.display='none'; }
     function secretKnock() { if(!window.k) window.k=0; window.k++; if(window.k===5) alert("USPS Dev Active"); setTimeout(()=>window.k=0,2000); }
-
-    window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); } }
 </script>
 </body>
 </html>
