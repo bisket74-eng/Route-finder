@@ -64,8 +64,8 @@
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 900; }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
 
-        /* THINNER RETURN BUTTON */
-        #backToListBtn { display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 10px; padding:8px 18px; border-radius:50px; font-weight:900; border:none; font-size: 0.85rem; cursor: pointer; }
+        /* SKINNIER COMPACT RETURN BUTTON */
+        #backToListBtn { display:none; width: 160px; margin: 0 auto 8px auto; background:var(--bl); color:white; padding:6px 12px; border-radius:30px; font-weight:900; border:none; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body id="mainBody">
@@ -141,7 +141,7 @@
                     <button class="btn-round btn-yel" onclick="clearStreetOnly()">Clear</button>
                 </div>
             </div>
-            <button id="backToListBtn" onclick="reopenSuggestions()">⬅ Return to Street List</button>
+            <button id="backToListBtn" onclick="reopenSuggestions()">⬅ Return</button>
         </div>
         <div id="list-res"><div id="cc"></div></div>
         <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Rates</button>
@@ -244,7 +244,11 @@
         if(matches.length > 0) {
             sugBox.style.display="block";
             document.body.classList.add('sug-active');
-            matches.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric:true}));
+            
+            // SMART SORT: Ignore directionals and street types
+            const cleanStr = (s) => s.replace(/\b(N|S|E|W|NE|NW|SE|SW|ST|AVE|RD|DR|LN|PL|CT|CIR|WAY|LOOP|BLVD|HWY)\b/g, '').trim();
+            matches.sort((a,b) => cleanStr(a.displayName).localeCompare(cleanStr(b.displayName), undefined, {numeric:true}));
+            
             matches.forEach(item => {
                 const d = document.createElement('div'); d.className="s-item";
                 d.innerHTML = `<span>${item.displayName}</span><span style="background:var(--bl);color:white;padding:2px 6px;border-radius:4px;font-size:0.8rem;">${item.zip}</span>`;
@@ -286,7 +290,6 @@
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
         const isAll = document.getElementById('allZipMaster').checked;
         
-        // DYNAMIC FONT SCALING
         if (isAll) {
             trig.innerText = 'ALL ZIPs';
             trig.style.fontSize = '18px';
