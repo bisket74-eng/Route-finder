@@ -16,7 +16,6 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 10; }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        /* SLEEK 3-LINE HEADER */
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 18px 15px; text-align: center; color: white; cursor: pointer; }
         .hdr .line-1 { font-family: 'Times New Roman', serif; font-size: 2.8rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.9; color: var(--lt-bl); }
         .hdr .line-2 { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; display: block; margin-top: 4px; }
@@ -31,8 +30,8 @@
         .input-wrapper { flex: 1; position: relative; min-width: 0; }
         label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SYMMETRICAL INPUTS */
         .zip-trigger, input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        input[type="text"]::placeholder { color: #999; font-weight: 400; }
         .zip-trigger { cursor: pointer; }
 
         .btn-round { height: 52px; width: 95px; border-radius: 50px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -131,7 +130,11 @@
                     <button class="btn-round btn-red" onclick="resetAll()">Reset</button>
                 </div>
                 <div class="row" style="position:relative">
-                    <div class="input-wrapper"><label>Street Search</label><input type="text" id="streetInput" disabled oninput="handleSearch()" onfocus="handleSearch()"><div id="suggestionBox" class="sug"></div></div>
+                    <div class="input-wrapper">
+                        <label>Street Search</label>
+                        <input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleSearch()">
+                        <div id="suggestionBox" class="sug"></div>
+                    </div>
                     <button class="btn-round btn-yel" onclick="clearStreetOnly()">Clear</button>
                 </div>
             </div>
@@ -276,12 +279,25 @@
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); }
     
     function finalApply(e) { 
-        if(e) e.stopPropagation(); const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
+        if(e) e.stopPropagation(); 
+        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
         const isAll = document.getElementById('allZipMaster').checked;
         trig.innerText = isAll ? 'ALL ZIPs' : (chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...');
         document.getElementById('zipList').style.display='none';
         document.body.classList.remove('zip-open');
-        if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Search street..."; setTimeout(()=>sIn.focus(), 150); handleSearch(); }
+        
+        if(chks.length > 0 || isAll) { 
+            sIn.disabled = false; 
+            sIn.placeholder = "Enter street name..."; 
+            // Fly up header for space and focus to pull up keyboard
+            document.body.classList.add('header-hidden');
+            setTimeout(() => {
+                sIn.focus();
+                handleSearch();
+            }, 300);
+        } else {
+            document.body.classList.remove('header-hidden');
+        }
     }
 
     function reopenSuggestions() { document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); handleSearch(); }
