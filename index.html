@@ -65,8 +65,8 @@
         .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
         .ref-right { right: 15px; }
 
-        /* FIX 1: ALIGNED RESULT BOX */
-        #list-res { position: absolute; top: 180px; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 10px 15px 75px 15px; z-index: 200; pointer-events: none; display: none; }
+        /* TWEAK 2: LOWERED RESULT BOX TO REVEAL RETURN BUTTON */
+        #list-res { position: absolute; top: 220px; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 10px 15px 75px 15px; z-index: 200; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         
         #cc { pointer-events: auto; }
@@ -82,7 +82,6 @@
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
         #backToListBtn { display: none; background-color: var(--bl); color: white; width: 180px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; }
 
-        /* FIX 2: ALIGNED LOG GRID */
         .log-hdr, .log-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; width: 100%; text-align: center; }
         .log-hdr { padding: 8px 0; border-bottom: 2px solid var(--bl); font-weight: 900; font-size: 0.75rem; color: var(--bl); margin-top: 15px; }
         .log-row { padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; font-weight: 700; }
@@ -107,7 +106,7 @@
 
     <div id="timeModal">
         <div class="time-box">
-            <button style="position:absolute; top:12px; left:12px; background:none; border:none; color:var(--rd); font-weight:900; font-size:0.7rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button>
+            <button style="position:absolute; top:12px; left:12px; background:none; border:none; color:var(--rd); font-weight:900; font-size:0.7rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Weekly Log</button>
             <button class="modal-x" onclick="closeTime()">×</button>
             <h2 style="color:var(--bl); margin:0 0 15px;">Timekeeper</h2>
             
@@ -201,13 +200,28 @@
             document.getElementById(btnMap[activeId]).innerText = val; closeScroll(); calcGoal();
         };
     }
+
+    // TWEAK 3: IMPROVED GRAVEYARD WRAP-AROUND LOGIC
     function calcGoal() {
-        const bt = parseFloat(document.getElementById('t-in').value)||0, ol = parseFloat(document.getElementById('l-out').value)||0, il = parseFloat(document.getElementById('l-in').value)||0;
-        if(bt && ol && il) document.getElementById('t-target').innerText = (bt + 8.50 + (il-ol)).toFixed(2);
+        const btStr = document.getElementById('t-in').value || "0.0";
+        const olStr = document.getElementById('l-out').value || "0.0";
+        const ilStr = document.getElementById('l-in').value || "0.0";
+        
+        const bt = parseFloat(btStr);
+        const ol = parseFloat(olStr);
+        const il = parseFloat(ilStr);
+
+        if(btStr !== "00.00" && olStr !== "00.00" && ilStr !== "00.00") {
+            let total = bt + 8.50 + (il - ol);
+            // Wrap logic for 24-hour clock (Graveyard support)
+            if (total >= 24) total -= 24;
+            document.getElementById('t-target').innerText = total.toFixed(2).padStart(5, '0');
+        }
     }
+
     function addToLog() {
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
-        if (log.length >= 7) { alert("Week is full (7 days). Please clear week to start over."); return; }
+        if (log.length >= 7) { alert("Week is full (7 days). Please clear weekly log to start over."); return; }
         const day = document.getElementById('t-day').value, bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
         const row = `<div class="log-row"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span></div>`;
         log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
