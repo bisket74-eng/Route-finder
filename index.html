@@ -47,8 +47,19 @@
         .zip-item input { width: 26px; height: 26px; margin-right: 15px; }
         .apply-wrap { padding: 15px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; flex-shrink: 0; }
 
-        #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        .modal-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 24px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10001; }
+        /* MODAL FIXES */
+        #viewer, #timeModal, #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; }
+        .time-box { background: white; width: 90%; max-width: 400px; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; }
+        .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; }
+
+        /* DRUM PICKER STYLES */
+        .drum-wrap { display: flex; justify-content: center; gap: 15px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
+        .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
+        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; }
+        .drum div { height: 50px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 700; scroll-snap-align: center; color: #ccc; }
+        .drum div.selected { color: var(--bl); font-size: 2.2rem; font-weight: 900; }
+
+        .time-display-btn { border: 1px solid #aaa; padding: 10px; text-align: center; font-weight: 800; background: #fff; border-radius: 5px; font-size: 1.2rem; cursor: pointer; }
 
         .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s ease; }
         .ref-left { left: 15px; }
@@ -58,7 +69,7 @@
         body.cards-active .ref-btn, body.zip-open .ref-btn, body.sug-active .ref-btn { transform: translateY(200px); }
 
         #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 160px; }
-        #cc { margin-top: 25px; }
+        #cc { margin-top: 20px; }
         
         .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
         .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; line-height: 1; }
@@ -71,42 +82,41 @@
     </style>
 </head>
 <body id="mainBody">
-    <div id="viewer" onclick="closeViewer()"><button class="modal-x" style="top:20px; right:20px;">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
+    <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
-    <div id="scrollPicker" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:200000; display:none; align-items:center; justify-content:center;">
-        <div style="background:white; padding:30px 20px; border-radius:12px; border:4px solid var(--bl); width:280px; text-align:center; position:relative;">
-            <button class="modal-x" style="width:35px; height:35px; font-size:20px;" onclick="closeScroll()">×</button>
-            <h3 id="picker-title" style="margin:0; color:var(--bl);">Set Time</h3>
-            <div class="drum-wrap" style="display:flex; justify-content:center; gap:15px; height:150px; overflow:hidden; margin:15px 0; position:relative;">
-                <div class="drum-overlay" style="position:absolute; top:50px; left:0; right:0; height:50px; border-top:2px solid var(--bl); border-bottom:2px solid var(--bl); pointer-events:none; background:rgba(0,75,135,0.05);"></div>
-                <div class="drum" id="hour-drum" style="flex:1; overflow-y:scroll; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch;"></div>
-                <div class="drum" id="click-drum" style="flex:1; overflow-y:scroll; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch;"></div>
+    <div id="scrollPicker">
+        <div class="time-box" style="width: 280px; text-align: center;">
+            <button class="modal-x" onclick="closeScroll()">×</button>
+            <h3 style="margin:0; color:var(--bl);">Set Time</h3>
+            <div class="drum-wrap">
+                <div class="drum-overlay"></div>
+                <div class="drum" id="hour-drum"></div>
+                <div class="drum" id="click-drum"></div>
             </div>
-            <button class="btn-round btn-red" style="width:100%;" id="confirm-time-btn">Set Time</button>
+            <button class="btn-round btn-red" style="width:100%;" id="confirm-time-btn">Confirm</button>
         </div>
     </div>
 
     <div id="timeModal">
         <div class="time-box">
             <button class="modal-x" onclick="closeTime()">×</button>
-            <h2 style="text-align:center; color:var(--bl); margin:0 0 10px;">Timekeeper</h2>
-            <select id="t-day" style="margin-bottom:10px;"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">BT</label><div class="time-display-btn" id="bt-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
-                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">OL</label><div class="time-display-btn" id="ol-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
-                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">IL</label><div class="time-display-btn" id="il-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
-                <div><label style="font-weight:900; font-size:0.7rem; color:var(--bl);">ET</label><div class="time-display-btn" id="et-btn" style="border:1px solid #aaa; padding:10px; text-align:center; font-weight:800; background:#fff; border-radius:5px;">00.00</div></div>
+            <h2 style="text-align:center; color:var(--bl); margin:0 0 15px;">Timekeeper</h2>
+            <select id="t-day" style="width:100%; padding:10px; margin-bottom:15px; font-weight:800; border-radius:5px; border:2px solid var(--bl);"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                <div><label>BT</label><div class="time-display-btn" id="bt-btn">00.00</div></div>
+                <div><label>OL</label><div class="time-display-btn" id="ol-btn">00.00</div></div>
+                <div><label>IL</label><div class="time-display-btn" id="il-btn">00.00</div></div>
+                <div><label>ET</label><div class="time-display-btn" id="et-btn">00.00</div></div>
             </div>
             <input type="hidden" id="t-in"><input type="hidden" id="l-out"><input type="hidden" id="l-in"><input type="hidden" id="t-actual">
-            <div style="margin-top:15px; text-align:center; background:#eee; padding:10px; border-radius:8px; border:2px dashed #999;">
-                <span style="font-weight:900; color:var(--rd);">8-Hour Goal:</span><div id="t-target" style="font-size:1.8rem; font-weight:900;">00.00</div>
+            <div style="margin-top:20px; text-align:center; background:#eee; padding:15px; border-radius:10px; border:2px dashed var(--bl);">
+                <span style="font-weight:900; color:var(--rd); font-size:0.9rem;">8-Hour Goal:</span><div id="t-target" style="font-size:2.2rem; font-weight:900; color:#000;">00.00</div>
             </div>
-            <button class="btn-round btn-yel" style="width:100%; margin-top:10px;" onclick="addToLog()">Add To Log</button>
-            <div id="log-table" style="margin-top:10px; max-height:150px; overflow-y:auto;">
-                <div style="display:flex; justify-content:space-between; font-weight:900; border-bottom:2px solid #000; font-size:0.7rem;"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span></div>
+            <button class="btn-round btn-yel" style="width:100%; margin-top:15px;" onclick="addToLog()">Add To Log</button>
+            <div id="log-table" style="margin-top:15px; max-height:120px; overflow-y:auto; border-top:1px solid #ccc; padding-top:10px;">
                 <div id="log-container"></div>
             </div>
-            <div style="text-align:left; margin-top:10px;"><button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button></div>
+            <button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.7rem; text-transform:uppercase; cursor:pointer; margin-top:10px;" onclick="clearLog()">Clear Week</button>
         </div>
     </div>
 
@@ -155,7 +165,6 @@
     let database = {}; let activeId = '';
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
-    // RESTORED INITIALIZATION
     window.onload = async () => {
         setupClock(); renderLog();
         try {
@@ -197,7 +206,9 @@
             };
         });
         document.getElementById('confirm-time-btn').onclick = () => {
-            const val = `${document.querySelector('#hour-drum .selected').innerText}.${document.querySelector('#click-drum .selected').innerText}`;
+            const h = document.querySelector('#hour-drum .selected').innerText;
+            const c = document.querySelector('#click-drum .selected').innerText;
+            const val = h + "." + c;
             document.getElementById(activeId).value = val;
             const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
             document.getElementById(btnMap[activeId]).innerText = val;
@@ -260,12 +271,10 @@
                 d.onclick = () => {
                     document.getElementById('streetInput').value = item.displayName; sugBox.style.display="none";
                     document.body.classList.remove('sug-active');
-                    
                     document.getElementById('backToListBtn').style.display = 'block';
                     document.getElementById('mainBody').classList.add('cards-active');
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     document.getElementById('list-res').scrollTop = 0;
-
                     item.results.forEach(res => {
                         const card = document.createElement('div'); card.className="list-card";
                         card.innerHTML = `<div class="info-left"><span style="font-size:0.9rem; font-weight:800; color:#555;">${item.displayName}</span><br><span class="range-txt">${res.range}</span><br><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
@@ -302,16 +311,13 @@
         if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => { sIn.focus(); }, 300); }
     }
 
-    // UPDATED REOPEN FUNCTION
     function reopenSuggestions() { 
         document.getElementById('cc').innerHTML = ""; 
         document.getElementById('backToListBtn').style.display = "none"; 
         document.getElementById('mainBody').classList.remove('cards-active'); 
-        
         const sug = document.getElementById('suggestionBox');
         sug.style.display = "block";
         sug.scrollTop = 0;
-        
         handleSearch(); 
     }
     
