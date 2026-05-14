@@ -1,1 +1,294 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>USPS Route Finder - Vancouver WA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; }
+        ::-webkit-scrollbar { width: 12px; display: block; }
+        ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; }
+        
+        html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); }
+        
+        #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 10; }
+        body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -140px; }
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 22px 15px; text-align: center; color: white; cursor: pointer; }
+        .usps-sig { font-family: 'Times New Roman', serif; font-size: 3rem; font-weight: 900; font-style: italic; letter-spacing: -2px; display: block; line-height: 0.8; margin-bottom: 8px; color: var(--lt-bl); }
+        .vanc-text { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; display: block; }
+        .rt-finder-text { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); margin-top: 6px; display: block; }
+        
+        #status-dot { position: absolute; top: 15px; right: 15px; width: 10px; height: 10px; border-radius: 50%; background: #666; border: 2px solid white; z-index: 9999; }
+        #status-dot.live { background: var(--gr); }
+
+        .sticky-top { position: sticky; top: 0; z-index: 100; background: var(--lt-bl); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .ctrls { padding: 15px; background: var(--lt-bl); }
+        .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
+        .input-wrapper { flex: 1; position: relative; min-width: 0; }
+        label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* ZIP PICKER LAYER FIX */
+        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; background: #fff; font-weight: 700; cursor: pointer; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; height: 52px; }
+        .zip-checklist { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 4px solid var(--bl); z-index: 8000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); max-height: 70vh; flex-direction: column; overflow: hidden; }
+        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+        .zip-item { display: flex; align-items: center; padding: 12px; font-weight: 800; color: #333; font-size: 1.1rem; border-bottom: 1px solid #eee; }
+        .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
+        .apply-wrap { padding: 10px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: white; flex-shrink: 0; z-index: 8001; }
+
+        input[type="text"], select { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; text-align: left; }
+        
+        .btn-round { height: 52px; width: 95px; border-radius: 50px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-red { background-color: var(--rd); color: white; }
+        .btn-yel { background-color: var(--yl); color: #000; }
+
+        /* MODALS */
+        #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; }
+        #viewer-img { max-width: 90%; max-height: 85vh; object-fit: contain; border: 4px solid white; border-radius: 8px; }
+        .time-box { background: white; width: 92%; max-width: 440px; padding: 25px 20px 20px; border-radius: 15px; border: 4px solid var(--bl); box-sizing: border-box; position: relative; }
+        .modal-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 24px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10001; }
+
+        /* CLOCK PICKER */
+        #scrollPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200000; display: none; align-items: center; justify-content: center; }
+        .picker-container { background: white; padding: 30px 20px 20px; border-radius: 12px; border: 4px solid var(--bl); width: 280px; text-align: center; position: relative; }
+        .picker-x { position: absolute; top: 8px; right: 8px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; font-size: 20px; font-weight: 900; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .drum-wrap { display: flex; justify-content: center; gap: 15px; height: 150px; overflow: hidden; margin: 15px 0; position: relative; }
+        .drum { flex: 1; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; }
+        .drum div { height: 50px; line-height: 50px; font-size: 1.8rem; font-weight: 800; scroll-snap-align: center; color: #bbb; transition: color 0.1s; }
+        .drum div.selected { color: var(--bl); font-size: 2.2rem; }
+        .drum-overlay { position: absolute; top: 50px; left: 0; right: 0; height: 50px; border-top: 2px solid var(--bl); border-bottom: 2px solid var(--bl); pointer-events: none; background: rgba(0,75,135,0.05); }
+
+        /* RESULTS */
+        #list-res { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 150px; }
+        .list-card { background: white; padding: 18px; margin-bottom: 15px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; }
+        .range-txt { font-size: 2.3rem; font-weight: 900; color: #000; line-height: 1; display: block; text-align: left; }
+        .zip-tag-blue { background: var(--bl); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem; font-weight: 900; display: inline-block; margin-top: 6px; }
+        .rt-block { background: var(--bl); color: white; padding: 15px; border-radius: 10px; text-align: center; min-width: 110px; font-weight: 900; }
+        .rt-block span { font-size: 2.5rem; display: block; line-height: 1; }
+        
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 900; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); text-align: left; }
+        
+        /* BOTTOM BUTTONS */
+        .ref-btn { position: absolute; bottom: 100px; z-index: 7000; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s; }
+        .ref-left { left: 15px; }
+        .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
+        .ref-right { right: 15px; }
+        body.cards-active .ref-btn { transform: translateY(200px); }
+        .close-btn { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background: var(--rd); color: white; border: none; border-radius: 50%; font-size: 30px; font-weight: 900; z-index: 100001; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body id="mainBody">
+    <div id="viewer" onclick="closeViewer()"><button class="close-btn">×</button><img id="viewer-img" src=""></div>
+
+    <div id="scrollPicker">
+        <div class="picker-container">
+            <button class="picker-x" onclick="closeScroll()">×</button>
+            <h3 id="picker-title" style="margin:0; color:var(--bl); font-size: 1.1rem;">Set Time</h3>
+            <div class="drum-wrap"><div class="drum-overlay"></div><div class="drum" id="hour-drum"></div><div class="drum" id="click-drum"></div></div>
+            <button class="btn-round btn-red" style="width:100%; font-size:1rem;" id="confirm-time-btn">Set Time</button>
+        </div>
+    </div>
+
+    <div id="timeModal">
+        <div class="time-box">
+            <button class="modal-x" onclick="closeTime()">×</button>
+            <h2 style="margin:0 0 10px 0; color:var(--bl); text-align:center; font-size: 1.4rem;">Timekeeper</h2>
+            <select id="t-day" style="margin-bottom:10px;"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+            <div class="time-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div><span class="time-label">Begin Tour</span><div class="time-display-btn" id="bt-btn">00.00</div></div>
+                <div><span class="time-label">Out Lunch</span><div class="time-display-btn" id="ol-btn">00.00</div></div>
+                <div><span class="time-label">In Lunch</span><div class="time-display-btn" id="il-btn">00.00</div></div>
+                <div><span class="time-label">End Tour</span><div class="time-display-btn" id="et-btn">00.00</div></div>
+            </div>
+            <input type="hidden" id="t-in" value="0.00"><input type="hidden" id="l-out" value="0.00"><input type="hidden" id="l-in" value="0.00"><input type="hidden" id="t-actual" value="0.00">
+            <div style="margin-top:12px;"><span class="time-label" style="color: var(--rd);">8-Hour Goal (ET):</span><div id="t-target" class="target-out">00.00</div></div>
+            <button class="btn-round btn-yel" style="width:100%; margin-top:12px; font-size:1rem;" onclick="addToLog()">Add To Log</button>
+            <div id="log-table"><div class="log-header"><span class="log-day">DAY</span><span class="log-col">BT</span><span class="log-col">OL</span><span class="log-col">IL</span><span class="log-col">ET</span></div><div id="log-container"></div></div>
+            <div style="text-align:left; margin-top:10px;"><button style="background:none; border:none; color:var(--rd); font-weight:900; font-size:0.6rem; text-transform:uppercase; cursor:pointer;" onclick="clearLog()">Clear Week</button></div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <div id="status-dot"></div>
+        <div id="banner-wrap">
+            <div class="hdr" onclick="secretKnock()"><span class="usps-sig">USPS</span><span class="vanc-text">Vancouver, WA</span><span class="rt-finder-text">Route Finder</span></div>
+        </div>
+        <div class="sticky-top">
+            <div class="ctrls">
+                <div class="row">
+                    <div class="input-wrapper"><label>Zip Code</label><div id="zipTrig" class="zip-trigger" onclick="toggleZipList(event)">Select Zip(s)...</div>
+                        <div id="zipList" class="zip-checklist">
+                            <div class="zip-scroll-area">
+                                <label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98660"> 98660</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98661"> 98661</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98662"> 98662</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98663"> 98663</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98664"> 98664</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98665"> 98665</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98668"> 98668</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98682"> 98682</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98683"> 98683</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98684"> 98684</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98685"> 98685</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98686"> 98686</label>
+                            </div>
+                            <div class="apply-wrap"><button class="btn-round btn-red" style="width:100px; height:40px;" onclick="finalApply(event)">Apply</button></div>
+                        </div>
+                    </div>
+                    <button class="btn-round btn-red" onclick="resetAll()">Reset</button>
+                </div>
+                <div class="row" style="position:relative">
+                    <div class="input-wrapper"><label id="streetLabel">Select ZIP first...</label><input type="text" id="streetInput" placeholder="Select ZIP first..." disabled oninput="handleSearch()" onfocus="handleSearch()"><div id="suggestionBox" class="sug"></div></div>
+                    <button class="btn-round btn-yel" onclick="clearStreetOnly()">Clear</button>
+                </div>
+            </div>
+            <button id="backToListBtn" style="display:none; width:calc(100% - 30px); background:var(--bl); color:white; margin:0 15px 15px; padding:18px; border-radius:50px; font-weight:900; border:none;" onclick="reopenSuggestions()">⬅ Return to Street List</button>
+        </div>
+        <div id="list-res"><div id="cc"></div></div>
+        <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Rates</button>
+        <button class="ref-btn ref-mid" onclick="openTime()">Timekeeper</button>
+        <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183349_Chrome.png')">Conversion</button>
+    </div>
+
+<script>
+    let database = {}; let activeTargetId = '';
+    const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
+
+    window.onload = async () => {
+        setupClockEvents(); renderLog();
+        try {
+            const resp = await fetch(XLSX_URL);
+            const arrayBuffer = await resp.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            processExcelData(XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 })); 
+            document.getElementById('status-dot').className = 'live';
+        } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'local'; } }
+    };
+
+    function initInfiniteDrum(id, count) {
+        const drum = document.getElementById(id);
+        const set = Array.from({length: count}, (_, i) => i.toString().padStart(2, '0'));
+        const triple = [...set, ...set, ...set];
+        drum.innerHTML = '<div></div>' + triple.map(n => `<div>${n}</div>`).join('') + '<div></div>';
+        drum.onscroll = () => {
+            const itemHeight = 50;
+            const currentScroll = drum.scrollTop;
+            const totalHeight = count * itemHeight;
+            if (currentScroll < totalHeight) { drum.scrollTop = currentScroll + totalHeight; }
+            else if (currentScroll >= totalHeight * 2) { drum.scrollTop = currentScroll - totalHeight; }
+            const idx = Math.round(drum.scrollTop / itemHeight);
+            Array.from(drum.children).forEach((c, i) => {
+                c.className = (i === idx + 1) ? 'selected' : '';
+                if (c.innerText === "00" || c.innerText === "50") c.style.fontWeight = "900";
+            });
+        };
+        drum.scrollTop = count * 50;
+    }
+
+    function setupClockEvents() {
+        document.getElementById('bt-btn').onclick = (e) => { e.stopPropagation(); openScroll('t-in', 'Set Begin Tour'); };
+        document.getElementById('ol-btn').onclick = (e) => { e.stopPropagation(); openScroll('l-out', 'Set Out Lunch'); };
+        document.getElementById('il-btn').onclick = (e) => { e.stopPropagation(); openScroll('l-in', 'Set In Lunch'); };
+        document.getElementById('et-btn').onclick = (e) => { e.stopPropagation(); openScroll('t-actual', 'Set End Tour'); };
+        document.getElementById('confirm-time-btn').onclick = confirmScrollTime;
+    }
+
+    function openScroll(id, title) { activeTargetId = id; document.getElementById('picker-title').innerText = title; document.getElementById('scrollPicker').style.display = 'flex'; initInfiniteDrum('hour-drum', 24); initInfiniteDrum('click-drum', 100); }
+    function closeScroll() { document.getElementById('scrollPicker').style.display = 'none'; }
+    function confirmScrollTime() {
+        const h = document.querySelector('#hour-drum .selected')?.innerText || "00", c = document.querySelector('#click-drum .selected')?.innerText || "00";
+        const val = `${h}.${c}`; document.getElementById(activeTargetId).value = val;
+        const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
+        document.getElementById(btnMap[activeTargetId]).innerText = val; closeScroll(); calcClicks();
+    }
+
+    function calcClicks() {
+        const bt = parseFloat(document.getElementById('t-in').value) || 0, ol = parseFloat(document.getElementById('l-out').value) || 0, il = parseFloat(document.getElementById('l-in').value) || 0;
+        if (bt && ol && il) document.getElementById('t-target').innerText = (bt + 8.00 + (il - ol)).toFixed(2);
+    }
+
+    function addToLog() {
+        const day = document.getElementById('t-day').value, bt = document.getElementById('t-in').value || "00.00", ol = document.getElementById('l-out').value || "00.00", il = document.getElementById('l-in').value || "00.00", et = document.getElementById('t-actual').value || "00.00";
+        const row = `<div class="log-row"><span class="log-day">${day.substring(0,3)}</span><span class="log-col">${bt}</span><span class="log-col">${ol}</span><span class="log-col">${il}</span><span class="log-col">${et}</span></div>`;
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log') || "[]");
+        log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
+    }
+
+    function processExcelData(rows) {
+        const nDB = {};
+        rows.forEach(c => {
+            if (c.length < 9) return;
+            const z = c[7]?.toString().trim(), nm = c[4]?.toString().trim();
+            if (!z || !nm || z === "ZIP") return;
+            if (!nDB[z]) nDB[z] = [];
+            const fNm = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s => s.trim()).join(" ");
+            let st = nDB[z].find(s => s.displayName === fNm);
+            if (!st) { st = { searchName: nm.toUpperCase(), displayName: fNm, results: [] }; nDB[z].push(st); }
+            st.results.push({ range: c[0] + (c[1] ? "-" + c[1] : ""), route: c[8]?.trim() });
+        });
+        database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
+    }
+
+    function openViewer(url) { document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display = 'flex'; }
+    function closeViewer() { document.getElementById('viewer').style.display = 'none'; }
+    function openTime() { document.getElementById('timeModal').style.display = 'flex'; }
+    function closeTime() { document.getElementById('timeModal').style.display = 'none'; }
+    function renderLog() { document.getElementById('log-container').innerHTML = (JSON.parse(localStorage.getItem('usps_weekly_log') || "[]")).join(''); }
+    function clearLog() { if(confirm("Clear log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
+    function secretKnock() { if (!window.knockCount) window.knockCount = 0; window.knockCount++; if (window.knockCount === 5) { alert("Admin Activated"); window.knockCount = 0; } setTimeout(() => { window.knockCount = 0; }, 2000); }
+    function toggleZipList(e) { e.stopPropagation(); const l = document.getElementById('zipList'); l.style.display = l.style.display === 'flex' ? 'none' : 'flex'; if(l.style.display==='flex') document.body.classList.add('header-hidden'); }
+    function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); }
+
+    function finalApply(e) {
+        if(e) e.stopPropagation(); const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
+        const isAll = document.getElementById('allZipMaster').checked;
+        trig.innerText = isAll ? 'ALL ZIPs' : (chks.length > 0 ? Array.from(chks).map(c => c.value).join(', ') : 'Select Zip(s)...');
+        trig.style.fontSize = (!isAll && chks.length >= 5) ? '12px' : '18px';
+        document.getElementById('zipList').style.display = 'none';
+        if (chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; setTimeout(() => sIn.focus(), 150); handleSearch(); }
+    }
+
+    function handleSearch() {
+        document.body.classList.add('header-hidden');
+        const isAll = document.getElementById('allZipMaster').checked;
+        const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
+        const val = document.getElementById('streetInput').value.toUpperCase().trim();
+        const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = ""; 
+        if (val.length < 1 || activeZips.length === 0) { sugBox.style.display = "none"; return; }
+        let allM = []; 
+        activeZips.forEach(z => { 
+            if(database[z]) database[z].forEach(m => { 
+                if (m.searchName.startsWith(val)) allM.push({ ...m, zip: z }); 
+            }); 
+        });
+        if (allM.length > 0) {
+            sugBox.style.display = "block";
+            allM.sort((a,b) => {
+                const clean = (s) => s.replace(/\b(N|S|E|W|NE|NW|SE|SW|ST|AVE|RD|DR|LN|PL|CT|CIR|WAY|LOOP|BLVD|HWY)\b/g, '').trim();
+                return clean(a.displayName).localeCompare(clean(b.displayName), undefined, {numeric: true});
+            });
+            allM.forEach(item => {
+                const div = document.createElement('div'); div.className = "s-item"; div.innerHTML = `<span>${item.displayName}</span> <span style="background:var(--bl);color:white;padding:2px 6px;border-radius:4px;font-size:0.8rem;">${item.zip}</span>`;
+                div.onclick = () => selectStreet(item); sugBox.appendChild(div);
+            });
+        } else sugBox.style.display = "none";
+    }
+
+    function selectStreet(item) {
+        document.getElementById('streetInput').value = item.displayName; 
+        document.getElementById('suggestionBox').style.display = "none";
+        document.getElementById('backToListBtn').style.display = "block"; 
+        document.getElementById('mainBody').classList.add('cards-active');
+        const cc = document.getElementById('cc'); cc.innerHTML = "";
+        item.results.forEach(res => {
+            const div = document.createElement('div'); div.className = "list-card";
+            div.innerHTML = `<div class="info-left"><span style="font-size:0.9rem;font-weight:800;color:#555;display:block;text-align:left;">${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
+            cc.appendChild(div);
+        });
+    }
+
+    function reopenSuggestions() { 
+        document.getElementById('cc').innerHTML = ""; 
+        document.getElementById('backToListBtn').style.display = "none"; 
+        document.getElementById('mainBody').classList.remove('cards-active'); 
+        handleSearch(); 
+    }
+
+    function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
+    function resetAll() { location.reload(); }
+</script>
+</body>
+</html>
