@@ -60,7 +60,7 @@
         .modal-x { position: absolute; top: 10px; right: 10px; width: 45px; height: 45px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 26px; font-weight: 900; cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center; }
         .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--dr-rd); color: var(--dr-rd); font-weight: 900; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; width: 45px; height: 45px; border-radius: 8px; line-height: 1.1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-        #keypadPicker .time-box { border: none; box-shadow: none; background: #fff; padding: 0; min-height: 480px; }
+        #keypadPicker .time-box { border: none; box-shadow: none; background: #fff; padding: 0; min-height: 500px; }
         #kp-header-wrap { padding: 30px 0 15px; position: relative; display: flex; justify-content: center; align-items: center; }
 
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px 20px; }
@@ -73,7 +73,6 @@
         .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
         .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; }
         
-        /* SOFTER BLUE Logic */
         .log-row.duplicate b, .log-row.duplicate span:not(.del-x) { color: var(--soft-bl) !important; }
         .total-row { padding: 12px 0; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; }
         .total-row b { text-align: center; grid-column: 5; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; }
@@ -86,20 +85,26 @@
         .del-x { color: white !important; background: var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto; line-height: 1; border: none; }
         #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 15px center; background-size: 24px; padding-right: 45px !important; }
 
-        /* SEARCH RESULTS & CARDS */
+        /* SEARCH RESULTS & CARDS - CLEAN SANS SERIF REVERT */
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 10px 15px 75px 15px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         .list-card { background: white; padding: 12px 15px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 440px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; }
-        .range-txt { font-size: 1.8rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: auto 0; }
-        .zip-tag-blue { background: var(--bl); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 900; display: inline-block; align-self: flex-start; font-family: 'Times New Roman', serif; font-style: italic; }
-        .rt-block { background: var(--bl); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 90px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .rt-block small { display: block; margin-bottom: 2px; font-family: 'Times New Roman', serif; font-weight: 900; font-style: italic; }
-        .rt-block span { font-size: 2.2rem; display: block; font-weight: 900; line-height: 1; }
+        
+        .range-txt { font-size: 2.2rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: auto 0; letter-spacing: 1px; }
+        
+        .zip-tag-blue { background: var(--bl); color: white; padding: 4px 8px; border-radius: 4px; font-size: 1rem; font-weight: 900; display: inline-block; align-self: flex-start; letter-spacing: 2px; }
+        
+        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .rt-block small { display: block; margin-bottom: 2px; font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .rt-block span { font-size: 2.4rem; display: block; font-weight: 900; line-height: 1; letter-spacing: 2px; }
+        
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); cursor: pointer; }
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
-        #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 15px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.8rem; border: none; cursor: pointer; text-transform: uppercase; font-family: 'Times New Roman', serif; font-style: italic; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; }
+        
+        /* RETURN BUTTON - CLEAN REVERT */
+        #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 20px; height: 40px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; border: none; cursor: pointer; text-transform: uppercase; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body id="mainBody">
@@ -118,7 +123,7 @@
     <div id="keypadPicker">
         <div class="time-box" style="width: 320px; height: auto;">
             <div id="kp-header-wrap">
-                <h3 id="keypad-title" style="margin:0; color:var(--bl); font-size:1rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
+                <h3 id="keypad-title" style="margin:0; color:var(--bl); font-size:1.1rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
                 <button class="kp-modal-x" onclick="closeKeypad()" style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 18px; font-weight: 900;">×</button>
             </div>
             <div id="kp-display" class="entry-display">00.00</div>
@@ -292,7 +297,6 @@
         const container = document.getElementById('log-container');
         let html = "";
         
-        // Week 1 Rows
         html += b1.map(e => `
             <div class="log-row">
                 <span class="del-x" onclick="confirmDelete(${e.id})">X</span>
@@ -301,13 +305,11 @@
             </div>
         `).join('');
 
-        // Pinned Week 1 Total
         if(b1.length > 0) {
             const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2);
             html += `<div class="total-row"><span></span><span></span><span></span><span></span><b>TOTAL WEEK 1</b><span></span><span>${sum1}</span></div>`;
         }
 
-        // Week 2 Rows
         html += b2.map(e => `
             <div class="log-row duplicate">
                 <span class="del-x" onclick="confirmDelete(${e.id})">X</span>
@@ -316,12 +318,10 @@
             </div>
         `).join('');
 
-        // Week 2 Total
         if(b2.length > 0) {
             const sum2 = b2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2);
             html += `<div class="total-row blue-week"><span></span><span></span><span></span><span></span><b>TOTAL WEEK 2</b><span></span><span>${sum2}</span></div>`;
         }
-
         container.innerHTML = html;
     }
 
