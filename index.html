@@ -6,7 +6,7 @@
     <title>USPS Route Finder - Vancouver WA</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: --da291c; --yl: #ffde00; --gr: #00a651; --dr-rd: #da291c; }
+        :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; --dr-rd: #da291c; }
         ::-webkit-scrollbar { width: 12px; display: block; }
         ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; }
         
@@ -47,11 +47,14 @@
 
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 30000; display: none; align-items: center; justify-content: center; }
+        
+        /* OVERHAULED CLEAN KEYPAD */
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
+        #keypadPicker .time-box { border: none; box-shadow: none; background: #fff; border-radius: 12px; overflow: hidden; }
 
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px; } 
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        #keypadPicker .time-box { border: none; box-shadow: none; }
+        
         #confirmModal .time-box { height: auto; width: 240px; padding: 20px; border-width: 3px; background: #fff; }
 
         .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 100; }
@@ -92,13 +95,13 @@
         .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
         .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; }
         
-        .total-row { padding: 12px 0; background: var(--bl); color: white; border-radius: 6px; margin-top: 8px; font-weight: 900; font-size: 0.95rem; }
-        .total-row span:last-child { color: var(--yl); font-size: 1.1rem; }
+        /* CLEAN TOTAL ROW: WHITE FILL, BLACK FONT, GREEN TOTAL */
+        .total-row { padding: 12px 0; background: #fff; color: #000; border-top: 2px solid var(--bl); margin-top: 8px; font-weight: 900; font-size: 0.95rem; }
+        .total-row span:last-child { color: var(--gr); font-size: 1.1rem; }
 
-        /* SHIFT DATA RIGHT IN DAY COLUMN */
         .log-row b { text-align: left; padding-left: 6px; font-size: 0.8rem; }
-        
-        .total-col { color: var(--gr); font-weight: 900; }
+        /* HOURS IN DATA ROWS: BLACK BOLD */
+        .total-col { color: #000; font-weight: 900; }
         .del-x { color: white !important; background: var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto; line-height: 1; border: none; }
     </style>
 </head>
@@ -116,11 +119,11 @@
     </div>
 
     <div id="keypadPicker">
-        <div class="time-box" style="width: 320px; height: auto; background: var(--lt-bl);">
+        <div class="time-box" style="width: 320px; height: auto;">
             <button class="modal-x" onclick="closeKeypad()">×</button>
             <h3 id="keypad-title" style="margin:0 0 15px; color:var(--bl); font-size:1.4rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
             <div id="kp-display" class="entry-display">00.00</div>
-            <div class="keypad-container">
+            <div class="keypad-container" style="padding: 0 15px 15px;">
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
                 <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
@@ -260,7 +263,7 @@
         const totalSum = log.reduce((sum, entry) => sum + parseFloat(entry.total), 0).toFixed(2);
         const totalRow = document.getElementById('log-total-row');
         if(log.length > 0) {
-            totalRow.innerHTML = `<div class="total-row"><span>WEEKLY</span><span></span><span></span><span></span><span></span><span>TOTAL</span><span>${totalSum}</span></div>`;
+            totalRow.innerHTML = `<div class="total-row"><span>TOTAL</span><span></span><span></span><span></span><span></span><span></span><span>${totalSum}</span></div>`;
         } else {
             totalRow.innerHTML = "";
         }
