@@ -104,10 +104,6 @@
         .range-txt { font-size: 2.2rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: auto 0; letter-spacing: 1px; }
         .zip-tag-blue { background: var(--bl); color: white; padding: 4px 8px; border-radius: 4px; font-size: 1rem; font-weight: 900; display: inline-block; align-self: flex-start; letter-spacing: 2px; }
         
-        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .rt-block small { display: block; margin-bottom: 2px; font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-        .rt-block span { font-size: 2.4rem; display: block; font-weight: 900; line-height: 1; letter-spacing: 2px; }
-        
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); cursor: pointer; }
 
@@ -324,10 +320,8 @@
         recognition.onresult = (event) => {
             let transcript = event.results[0][0].transcript;
             
-            // 1. Strip punctuation cleanly
             transcript = transcript.replace(/[^\w\s]/g, "").trim();
             
-            // 2. Auto-Translate full spoken words into search abbreviations
             let tokens = transcript.split(/\s+/);
             let mappedTokens = tokens.map(token => {
                 let upperToken = token.toUpperCase();
@@ -335,7 +329,7 @@
                 if (upperToken === "STREET") return "ST";
                 if (upperToken === "AVENUE") return "AVE";
                 if (upperToken === "COURT") return "CT";
-                if (upperToken === "LOOP") return "LOOP"; // Kept loop matching layout logic
+                if (upperToken === "LOOP") return "LOOP";
                 return token;
             });
             transcript = mappedTokens.join(" ");
@@ -432,25 +426,44 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
+    // POSTAL LEFT-MATCH ENGINE
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
         const input = document.getElementById('streetInput');
-        let val = input.value.toUpperCase().trim();
+        let rawVal = input.value.toUpperCase().trim();
         
-        val = val.replace("AVENUE", "AVE").replace("STREET", "ST").replace("COURT", "CT").replace("ROAD", "RD").replace("DRIVE", "DR").replace("BOULEVARD", "BLVD").replace("LANE", "LN");
+        rawVal = rawVal.replace("AVENUE", "AVE").replace("STREET", "ST").replace("COURT", "CT").replace("ROAD", "RD").replace("DRIVE", "DR").replace("BOULEVARD", "BLVD").replace("LANE", "LN");
         if (!document.getElementById('mainBody').classList.contains('cards-active')) { lastSearchTerm = input.value; }
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
-        if(val.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
+        if(rawVal.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
         document.body.classList.add('header-hidden');
         
+        // Split tokens: first token locks left boundary, following tokens filter down remaining variants
+        let searchTokens = rawVal.split(/\s+/);
+        let leadToken = searchTokens[0];
+        let subTokens = searchTokens.slice(1);
+
         let matches = []; 
         activeZips.forEach(z => { 
             if(database[z]) {
                 database[z].forEach(m => { 
-                    // Search terms strictly verify left-alignment prefix matching to avoid internal character pollution
-                    if(m.searchName.startsWith(val) || m.displayName.toUpperCase().startsWith(val)) {
-                        matches.push({...m, zip: z}); 
+                    const targetName = m.searchName;
+                    const targetDisplay = m.displayName.toUpperCase();
+                    
+                    // First word MUST match cleanly starting from the left edge
+                    if (targetName.startsWith(leadToken) || targetDisplay.startsWith(leadToken)) {
+                        // All subsequent tokens must exist anywhere within the display name layout
+                        let validSubCheck = true;
+                        for (let i = 0; i < subTokens.length; i++) {
+                            if (!targetDisplay.includes(subTokens[i])) {
+                                validSubCheck = false;
+                                break;
+                            }
+                        }
+                        if (validSubCheck) {
+                            matches.push({...m, zip: z}); 
+                        }
                     }
                 }); 
             }
