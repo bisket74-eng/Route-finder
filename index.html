@@ -52,7 +52,7 @@
         .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #ddd; }
         .zip-item input { width: 24px; height: 24px; margin-right: 15px; accent-color: var(--bl); }
         .apply-wrap { padding: 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; }
-        .btn-apply { width: 90%; height: 52px; border-radius: 26px; border:none; font-weight:900; font-size:1.2rem; text-transform:uppercase; cursor:pointer; background: var(--bl); color: white; }
+        .btn-apply { width: 90%; height: 52px; border-radius: 26px; border:none; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; background: var(--bl); color: white; }
 
         .mic-btn { position: absolute; right: 10px; bottom: 8px; width: 36px; height: 36px; background: var(--lt-bl); border: 2px solid var(--bl); border-radius: 50%; font-size: 18px; cursor: pointer; color: var(--bl); display: flex; align-items: center; justify-content: center; z-index: 5; transition: background 0.2s ease; box-sizing: border-box; }
         .mic-btn.listening { background: var(--rd); border-color: var(--rd); color: white; animation: pulse 1.5s infinite; }
@@ -316,7 +316,7 @@
         const anyZip = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster').checked;
         if (!anyZip) { openStyledAlert("PLEASE SELECT A ZIP CODE FIRST"); return; }
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) { openStyledAlert("VOINE RECOGNITION NOT SUPPORTED ON THIS DEVICE."); return; }
+        if (!SpeechRecognition) { openStyledAlert("VOICE RECOGNITION NOT SUPPORTED ON THIS DEVICE."); return; }
         const recognition = new SpeechRecognition();
         const micBtn = document.getElementById('micBtn');
         recognition.onstart = () => micBtn.classList.add('listening');
@@ -339,6 +339,7 @@
         localStorage.removeItem('usps_temp_entries');
     }
 
+    // TIMEKEEPER INTERACTION
     function openKeypad(t, title) { 
         activeId = t; 
         const existing = document.getElementById(t).value || "00.00";
@@ -416,6 +417,7 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
+    // REVERTED: Standard Clean Prefix/Display Matching Only
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
@@ -429,26 +431,12 @@
         document.body.classList.add('header-hidden');
         
         let matches = []; 
-        // Build regex to handle boundary matching for pure numeric entries vs overall strings
-        const isNumeric = /^\d+$/.test(val);
-        const searchRegex = isNumeric ? new RegExp('\\b' + val) : null;
-
         activeZips.forEach(z => { 
             if(database[z]) {
                 database[z].forEach(m => { 
-                    const targetName = m.searchName;
-                    const targetDisplay = m.displayName.toUpperCase();
-                    
-                    if (isNumeric) {
-                        // Numeric locks must start at a word boundary (ignores 126 when typing 26)
-                        if (searchRegex.test(targetName) || searchRegex.test(targetDisplay)) {
-                            matches.push({...m, zip: z});
-                        }
-                    } else {
-                        // Standard alpha text checks anywhere to allow suffix chains
-                        if (targetName.includes(val) || targetDisplay.includes(val)) {
-                            matches.push({...m, zip: z}); 
-                        }
+                    // Matches must cleanly start with the query value from the left to prevent cross-word pollution
+                    if(m.searchName.startsWith(val) || m.displayName.toUpperCase().startsWith(val)) {
+                        matches.push({...m, zip: z}); 
                     }
                 }); 
             }
