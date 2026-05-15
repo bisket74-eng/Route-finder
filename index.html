@@ -47,6 +47,11 @@
         .apply-wrap { padding: 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; }
         .btn-apply { width: 90%; height: 52px; border-radius: 26px; border:none; font-weight:900; font-size:1.2rem; text-transform:uppercase; cursor:pointer; background: var(--bl); color: white; }
 
+        /* MIC BUTTON STYLING */
+        .mic-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 24px; cursor: pointer; color: var(--bl); padding: 5px; display: flex; align-items: center; justify-content: center; z-index: 5; }
+        .mic-btn.listening { color: var(--rd); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 30000; display: none; align-items: center; justify-content: center; }
         #confirmModal .del-box { width: auto; height: auto; padding: 25px; border: 1px solid #000; background: #e0e0e0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
@@ -200,7 +205,15 @@
                     </div>
                 </div><button class="btn-circle btn-red" onclick="resetAll()">Reset</button>
                 </div>
-                <div class="row" style="position:relative"><div class="input-wrapper"><label>Street Search</label><input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleSearch()"><div id="suggestionBox" class="sug"></div></div><button class="btn-circle btn-yel" onclick="clearStreetOnly()">Clear</button></div>
+                <div class="row" style="position:relative">
+                    <div class="input-wrapper">
+                        <label>Street Search</label>
+                        <input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleSearch()">
+                        <button id="micBtn" class="mic-btn" onclick="startVoiceSearch()">🎙️</button>
+                        <div id="suggestionBox" class="sug"></div>
+                    </div>
+                    <button class="btn-circle btn-yel" onclick="clearStreetOnly()">Clear</button>
+                </div>
                 <button id="backToListBtn" onclick="reopenSuggestions()">Return to Street Results</button>
             </div>
         </div>
@@ -233,6 +246,28 @@
     function syncLocalDay() {
         const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         document.getElementById('t-day').value = days[new Date().getDay()];
+    }
+
+    // VOICE SEARCH LOGIC
+    function startVoiceSearch() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) { alert("Voice recognition not supported on this device."); return; }
+        
+        const recognition = new SpeechRecognition();
+        const micBtn = document.getElementById('micBtn');
+        
+        recognition.onstart = () => micBtn.classList.add('listening');
+        recognition.onend = () => micBtn.classList.remove('listening');
+        
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            const input = document.getElementById('streetInput');
+            input.value = transcript;
+            lastSearchTerm = transcript;
+            handleSearch();
+        };
+        
+        recognition.start();
     }
 
     function openKeypad(t, title) { activeId = t; kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; }
@@ -283,7 +318,6 @@
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
         log.sort((a,b) => a.id - b.id);
-        
         let b1 = [], b2 = [], cnt = {};
         log.forEach(e => { cnt[e.day] = (cnt[e.day] || 0) + 1; if(cnt[e.day] === 1) b1.push(e); else b2.push(e); });
         b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
@@ -359,30 +393,16 @@
     function finalApply(e) { 
         if(e) e.stopPropagation(); 
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), isAll = document.getElementById('allZipMaster').checked; 
-        
-        if (isAll) {
-            trig.innerText = 'ALL ZIPs';
-            trig.style.fontSize = '18px';
-        } else {
-            trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...';
-            // SHRINK FONT IF 5 OR MORE
-            trig.style.fontSize = chks.length >= 5 ? '16px' : '18px';
-        }
-        
+        if (isAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = '18px'; } 
+        else { trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; trig.style.fontSize = chks.length >= 5 ? '16px' : '18px'; }
         document.getElementById('zipList').style.display='none'; 
         document.body.classList.remove('zip-open'); 
         if(chks.length > 0 || isAll) { 
             sIn.disabled = false; sIn.placeholder = "Enter street name..."; 
             document.body.classList.add('header-hidden'); 
-            if (document.getElementById('mainBody').classList.contains('cards-active')) {
-                reopenSuggestions();
-            } else {
-                handleSearch(); 
-            }
+            if (document.getElementById('mainBody').classList.contains('cards-active')) { reopenSuggestions(); } else { handleSearch(); }
             setTimeout(() => sIn.focus(), 300); 
-        } else { 
-            sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; 
-        }
+        } else { sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; }
     }
     
     function reopenSuggestions() {
