@@ -35,7 +35,6 @@
         
         .zip-trigger { cursor: pointer; }
 
-        /* CIRCULAR BUTTONS RESTORED */
         .btn-circle { height: 52px; width: 52px; border-radius: 50%; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.65rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .btn-red { background-color: var(--rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
@@ -43,8 +42,7 @@
 
         #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 5000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-height: 65vh; flex-direction: column; width: 100%; box-sizing: border-box; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; }
-        .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #ddd; transition: background 0.2s; }
-        .zip-item:hover { background: #eee; }
+        .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #ddd; }
         .zip-item input { width: 24px; height: 24px; margin-right: 15px; accent-color: var(--bl); }
         .apply-wrap { padding: 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; }
 
@@ -53,6 +51,10 @@
 
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px; } 
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        
+        /* 10-KEY NO BORDER FIX */
+        #keypadPicker .time-box { border: none; }
+
         .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 100; }
 
         .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--rd); color: var(--rd); font-weight: 900; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; width: 45px; height: 45px; border-radius: 8px; line-height: 1.1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -69,7 +71,6 @@
         .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
         .ref-right { right: 15px; }
 
-        /* LOWERED RESPONSE BLOCK */
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 10px 15px 75px 15px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         
@@ -89,11 +90,10 @@
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
         #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 15px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; }
 
-        /* SLEEK TIMEKEEPER FONT */
         .log-hdr, .log-row { display: grid; grid-template-columns: 1.1fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; }
         .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.9rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
         .log-hdr span:first-child { text-align: left; padding-left: 5px; }
-        .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 1rem; font-weight: 700; color: #333; }
+        .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 1rem; font-weight: 700; color: #333; user-select: none; }
         .log-row b { text-align: left; padding-left: 5px; }
         .total-col { color: var(--gr); font-weight: 900; }
     </style>
@@ -102,9 +102,9 @@
     <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
     <div id="keypadPicker">
-        <div class="time-box" style="width: 320px; height: auto; background: var(--lt-bl); border-width: 6px;">
+        <div class="time-box" style="width: 320px; height: auto; background: var(--lt-bl);">
             <button class="modal-x" onclick="closeKeypad()">×</button>
-            <h3 id="keypad-title" style="margin:0 0 15px; color:var(--bl); font-size:1.6rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
+            <h3 id="keypad-title" style="margin:0 0 15px; color:var(--bl); font-size:1.4rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
             <div id="kp-display" class="entry-display">00.00</div>
             <div class="keypad-container">
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
@@ -116,7 +116,7 @@
     </div>
 
     <div id="timeModal">
-        <div class="time-box">
+        <div class="time-box" id="timeScrollContainer">
             <button class="btn-clear-log" onclick="clearLog()">Clear<br>Log</button>
             <button class="modal-x" onclick="closeTime()">×</button>
             <h2 style="color:var(--bl); margin:0 0 15px; font-size: 2rem;">Timekeeper</h2>
@@ -144,7 +144,7 @@
                 <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--rd);">00.00</span>
             </div>
 
-            <button class="btn-circle btn-yel" id="add-log-btn" style="margin:20px auto 0; font-size: 0.6rem; width: 60px; height: 60px;" onclick="addToLog()">Add To<br>Log</button>
+            <button class="btn-yel" style="margin:20px auto 0; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer;" onclick="addToLog()">Add To Log</button>
             
             <div class="log-hdr"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
             <div id="log-table" style="overflow-y:visible; margin-bottom: 10px;">
@@ -159,7 +159,7 @@
         <div class="sticky-top">
             <div class="ctrls">
                 <div class="row">
-                    <div class="input-wrapper"><label>Zip Code</label><div id="zipTrig" class="zip-trigger" onclick="toggleZipList(event)">Select Zip(s)...</div><div id="zipList"><div class="zip-scroll-area" id="zipScrollBox"><label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98660"> 98660</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98661"> 98661</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98662"> 98662</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98663"> 98663</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98664"> 98664</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98665"> 98665</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98668"> 98668</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98682"> 98682</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98683"> 98683</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98684"> 98684</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98685"> 98685</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98686"> 98686</label></div><div class="apply-wrap"><button class="btn-circle btn-blu" style="width: 80px; height: 40px; border-radius: 20px;" onclick="finalApply(event)">Apply</button></div></div></div><button class="btn-circle btn-red" onclick="resetAll()">Reset</button>
+                    <div class="input-wrapper"><label>Zip Code</label><div id="zipTrig" class="zip-trigger" onclick="toggleZipList(event)">Select Zip(s)...</div><div id="zipList"><div class="zip-scroll-area" id="zipScrollBox"><label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98660"> 98660</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98661"> 98661</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98662"> 98662</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98663"> 98663</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98664"> 98664</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98665"> 98665</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98668"> 98668</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98682"> 98682</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98683"> 98683</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98684"> 98684</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98685"> 98685</label><label class="zip-item"><input type="checkbox" class="z-chk" value="98686"> 98686</label></div><div class="apply-wrap"><button class="btn-blu" style="width: 110px; height: 48px; border-radius: 24px; border:none; font-weight:900; font-size:1.1rem; text-transform:uppercase; cursor:pointer;" onclick="finalApply(event)">Apply</button></div></div></div><button class="btn-circle btn-red" onclick="resetAll()">Reset</button>
                 </div>
                 <div class="row" style="position:relative"><div class="input-wrapper"><label>Street Search</label><input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleSearch()"><div id="suggestionBox" class="sug"></div></div><button class="btn-circle btn-yel" onclick="clearStreetOnly()">Clear</button></div>
                 <button id="backToListBtn" onclick="reopenSuggestions()">Return to Street List</button>
@@ -172,7 +172,7 @@
     </div>
 
 <script>
-    let database = {}; let activeId = ''; let kpBuffer = "";
+    let database = {}; let activeId = ''; let kpBuffer = ""; let logPressTimer;
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
     window.onload = async () => {
@@ -193,8 +193,8 @@
         if (kpBuffer.length >= 4) return;
         let temp = (kpBuffer + num.toString()).padStart(4, "0");
         let firstTwo = parseInt(temp.substring(0,2));
-        // Hard limit check for 24-hour format
-        if (firstTwo > 24) { kpClr(); return; }
+        // FIX: MAX 23 FOR FIRST TWO DIGITS
+        if (firstTwo > 23) { kpClr(); return; }
         kpBuffer += num.toString(); formatKp(); 
     }
 
@@ -224,16 +224,44 @@
         let shift1 = olV - btV; if(shift1 < 0) shift1 += 24;
         let shift2 = etV - ilV; if(shift2 < 0) shift2 += 24;
         const total = (shift1 + shift2).toFixed(2);
-        const row = `<div class="log-row"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span><span class="total-col">${total}</span></div>`;
-        log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
+        
+        const logEntry = { day: day.substring(0,3), bt, ol, il, et, total, id: Date.now() };
+        log.push(logEntry); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
         document.getElementById('t-day').value = "Saturday";
         const ids = ['t-in','l-out','l-in','t-actual'], btns = ['bt-btn','ol-btn','il-btn','et-btn'];
         ids.forEach((id, i) => { document.getElementById(id).value = "00.00"; document.getElementById(btns[i]).innerText = "00.00"; });
         document.getElementById('t-target').innerText = "00.00";
     }
 
-    function renderLog() { document.getElementById('log-container').innerHTML = (JSON.parse(localStorage.getItem('usps_weekly_log')||"[]")).join(''); }
-    function clearLog() { if(confirm("Clear weekly log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
+    function renderLog() { 
+        const log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
+        const container = document.getElementById('log-container');
+        container.innerHTML = log.map(entry => `
+            <div class="log-row" 
+                 onmousedown="startLogPress(${entry.id})" 
+                 onmouseup="cancelLogPress()" 
+                 onmouseleave="cancelLogPress()" 
+                 ontouchstart="startLogPress(${entry.id})" 
+                 ontouchend="cancelLogPress()">
+                <b>${entry.day}</b><span>${entry.bt}</span><span>${entry.ol}</span><span>${entry.il}</span><span>${entry.et}</span><span class="total-col">${entry.total}</span>
+            </div>
+        `).join('');
+    }
+
+    function startLogPress(id) {
+        logPressTimer = setTimeout(() => {
+            if(confirm("Delete this entry?")) {
+                let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
+                log = log.filter(e => e.id !== id);
+                localStorage.setItem('usps_weekly_log', JSON.stringify(log));
+                renderLog();
+            }
+        }, 1000);
+    }
+
+    function cancelLogPress() { clearTimeout(logPressTimer); }
+
+    function clearLog() { if(confirm("Clear entire log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
 
     function processExcelData(rows) {
         const nDB = {};
@@ -252,7 +280,8 @@
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
         const val = document.getElementById('streetInput').value.toUpperCase().trim();
-        const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
+        const sugBox = document.getElementById('suggestionBox');
+        sugBox.innerHTML = "";
         if(val.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
         document.body.classList.add('header-hidden');
         let matches = []; activeZips.forEach(z => { if(database[z]) database[z].forEach(m => { if(m.searchName.startsWith(val)) matches.push({...m, zip: z}); }); });
@@ -272,20 +301,50 @@
                         card.innerHTML = `<div class="info-left"><span>${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
                         cc.appendChild(card);
                     });
+                    document.getElementById('list-res').scrollTop = 0; // RESET RESULT SCROLL
                 }; sugBox.appendChild(d);
             });
+            sugBox.scrollTop = 0; // RESET SUGGESTION SCROLL
         } else { sugBox.style.display="none"; document.body.classList.remove('sug-active'); }
     }
 
-    function toggleZipList(e) { e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; if (!isOpen) document.body.classList.add('zip-open', 'header-hidden'); }
+    function toggleZipList(e) { 
+        e.stopPropagation(); 
+        const l = document.getElementById('zipList'); 
+        const isOpen = (l.style.display==='flex'); 
+        l.style.display = isOpen ? 'none' : 'flex'; 
+        if (!isOpen) {
+            document.body.classList.add('zip-open', 'header-hidden');
+            document.getElementById('zipScrollBox').scrollTop = 0; // RESET ZIP SCROLL
+        }
+    }
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); }
-    function finalApply(e) { if(e) e.stopPropagation(); const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'); const isAll = document.getElementById('allZipMaster').checked; if (isAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = '18px'; } else { trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; trig.style.fontSize = chks.length >= 5 ? '12px' : '18px'; } document.getElementById('zipList').style.display='none'; document.body.classList.remove('zip-open'); if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => { sIn.focus(); }, 300); } }
+    function finalApply(e) { 
+        if(e) e.stopPropagation(); 
+        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'); 
+        const isAll = document.getElementById('allZipMaster').checked; 
+        if (isAll) { 
+            trig.innerText = 'ALL ZIPs'; 
+            trig.style.fontSize = '18px'; 
+        } else { 
+            trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; 
+            // FIX: 2 POINT FONT INCREASE FOR MULTI-ZIPS (OLD 12px -> 14px)
+            trig.style.fontSize = chks.length >= 5 ? '14px' : '18px'; 
+        } 
+        document.getElementById('zipList').style.display='none'; 
+        document.body.classList.remove('zip-open'); 
+        if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => { sIn.focus(); }, 300); } 
+    }
     function reopenSuggestions() { document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block"; handleSearch(); }
     function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    function resetAll() { document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
+    function resetAll() { document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '18px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
-    function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; }
+    function openTime() { 
+        document.body.classList.remove('header-hidden'); 
+        document.getElementById('timeModal').style.display='flex'; 
+        document.getElementById('timeScrollContainer').scrollTop = 0; // RESET TIME SCROLL
+    }
     function closeTime() { document.getElementById('timeModal').style.display='none'; }
     function secretKnock() { if(!window.k) window.k=0; window.k++; if(window.k===5) alert("USPS Dev Active"); setTimeout(()=>window.k=0,2000); }
     window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); } }
