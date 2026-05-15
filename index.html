@@ -210,6 +210,7 @@
 
 <script>
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
+    let lastSearchTerm = ""; // MEMORY FOR SEARCH REVERT
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
     window.onload = async () => {
@@ -321,7 +322,14 @@
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
-        const val = document.getElementById('streetInput').value.toUpperCase().trim();
+        const input = document.getElementById('streetInput');
+        const val = input.value.toUpperCase().trim();
+        
+        // Capture typed text in memory only when suggestions are active
+        if (val.length > 0 && !document.getElementById('mainBody').classList.contains('cards-active')) {
+            lastSearchTerm = input.value;
+        }
+
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
         if(val.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
         document.body.classList.add('header-hidden');
@@ -356,21 +364,24 @@
         else { sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; }
     }
     
-    // UPDATED ACTION PER REQUEST
     function reopenSuggestions() {
         document.getElementById('cc').innerHTML = "";
         document.getElementById('backToListBtn').style.display = "none";
         document.getElementById('mainBody').classList.remove('cards-active');
         document.getElementById('suggestionBox').style.display = "block";
         const input = document.getElementById('streetInput');
+        
+        // REVERT TO TYPED MEMORY
+        input.value = lastSearchTerm;
         input.focus();
         const len = input.value.length;
-        input.setSelectionRange(len, len); // Force cursor to end
-        handleSearch(); // Recall suggestions
+        input.setSelectionRange(len, len);
+        
+        handleSearch(); // Triggers the list to appear based on the memory term
     }
 
-    function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    function resetAll() { document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
+    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
+    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
     function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('timeScrollContainer').scrollTop = 0; }
