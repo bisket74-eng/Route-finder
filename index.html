@@ -210,7 +210,7 @@
 
 <script>
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
-    let lastSearchTerm = ""; // MEMORY FOR SEARCH REVERT
+    let lastSearchTerm = ""; 
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
     window.onload = async () => {
@@ -288,7 +288,8 @@
         b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
         b2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
         const container = document.getElementById('log-container');
-        let html = b1.map(e => `<div class="log-row"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
+        let html = "";
+        html += b1.map(e => `<div class="log-row"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
         if(b1.length > 0) { const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row"><span></span><span></span><span></span><span></span><b>TOTAL WEEK 1</b><span></span><span>${sum1}</span></div>`; }
         html += b2.map(e => `<div class="log-row duplicate"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
         if(b2.length > 0) { const sum2 = b2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row blue-week"><span></span><span></span><span></span><span></span><b>TOTAL WEEK 2</b><span></span><span>${sum2}</span></div>`; }
@@ -323,10 +324,10 @@
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
         const input = document.getElementById('streetInput');
-        const val = input.value.toUpperCase().trim();
         
-        // Capture typed text in memory only when suggestions are active
-        if (val.length > 0 && !document.getElementById('mainBody').classList.contains('cards-active')) {
+        // REFINED MEMORY: Only capture when looking at suggestions, not when results are pinned
+        const val = input.value.toUpperCase().trim();
+        if (!document.getElementById('mainBody').classList.contains('cards-active')) {
             lastSearchTerm = input.value;
         }
 
@@ -356,12 +357,31 @@
 
     function toggleZipList(e) { e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; if (!isOpen) document.body.classList.add('zip-open', 'header-hidden'); }
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); validateZipCheck(); }
+    
     function finalApply(e) { 
-        if(e) e.stopPropagation(); const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), isAll = document.getElementById('allZipMaster').checked; 
-        if (isAll) trig.innerText = 'ALL ZIPs'; else trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...';
-        document.getElementById('zipList').style.display='none'; document.body.classList.remove('zip-open'); 
-        if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => sIn.focus(), 300); }
-        else { sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; }
+        if(e) e.stopPropagation(); 
+        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), isAll = document.getElementById('allZipMaster').checked; 
+        
+        if (isAll) trig.innerText = 'ALL ZIPs'; 
+        else trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...';
+        
+        document.getElementById('zipList').style.display='none'; 
+        document.body.classList.remove('zip-open'); 
+        
+        if(chks.length > 0 || isAll) { 
+            sIn.disabled = false; sIn.placeholder = "Enter street name..."; 
+            document.body.classList.add('header-hidden'); 
+            
+            // DYNAMIC UPDATE: If results are pinned, unpin them to show the updated list based on new zips
+            if (document.getElementById('mainBody').classList.contains('cards-active')) {
+                reopenSuggestions();
+            } else {
+                handleSearch(); // Refresh the current typed search with new ZIP filters
+            }
+            setTimeout(() => sIn.focus(), 300); 
+        } else { 
+            sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; 
+        }
     }
     
     function reopenSuggestions() {
@@ -370,14 +390,11 @@
         document.getElementById('mainBody').classList.remove('cards-active');
         document.getElementById('suggestionBox').style.display = "block";
         const input = document.getElementById('streetInput');
-        
-        // REVERT TO TYPED MEMORY
         input.value = lastSearchTerm;
         input.focus();
         const len = input.value.length;
         input.setSelectionRange(len, len);
-        
-        handleSearch(); // Triggers the list to appear based on the memory term
+        handleSearch(); 
     }
 
     function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
