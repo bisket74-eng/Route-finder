@@ -28,7 +28,9 @@
         .ctrls { padding: 15px; background: var(--lt-bl); }
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; }
         .input-wrapper { flex: 1; position: relative; min-width: 0; }
-        label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* INCREASED LABEL SIZE */
+        label { display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
 
         .zip-trigger, input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .zip-trigger { cursor: pointer; }
@@ -37,6 +39,13 @@
         .btn-red { background-color: var(--rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
         
+        /* FIX: ZIP LIST TOP LAYER */
+        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 10000000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 65vh; flex-direction: column; width: 100%; box-sizing: border-box; }
+        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+        .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
+        .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
+        .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
+
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
 
@@ -74,19 +83,12 @@
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
         #backToListBtn { display: none; background-color: var(--bl); color: white; width: 180px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; }
 
-        /* LOG TABLE: 6-COLUMN GRID */
         .log-hdr, .log-row { display: grid; grid-template-columns: 1fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; width: 100%; text-align: center; }
         .log-hdr { padding: 8px 0; border-bottom: 2px solid var(--bl); font-weight: 900; font-size: 0.75rem; color: var(--bl); margin-top: 15px; }
         .log-hdr span:first-child { text-align: left; padding-left: 5px; }
         .log-row { padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.8rem; font-weight: 700; }
         .log-row b { text-align: left; padding-left: 5px; }
         .total-col { color: var(--gr); }
-
-        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 10000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 65vh; flex-direction: column; width: 100%; box-sizing: border-box; }
-        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
-        .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
-        .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
-        .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
     </style>
 </head>
 <body id="mainBody">
@@ -95,7 +97,7 @@
     <div id="keypadPicker">
         <div class="time-box" style="width: 320px; height: auto; background: var(--lt-bl); border-width: 6px;">
             <button class="modal-x" onclick="closeKeypad()">×</button>
-            <h3 id="keypad-title" style="margin:0 0 15px; color:var(--bl); font-size:1rem; text-transform:uppercase; letter-spacing:1px;">Enter Postal Time</h3>
+            <h3 id="keypad-title" style="margin:0 0 15px; color:var(--bl); font-size:1.6rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
             <div id="kp-display" class="entry-display">00.00</div>
             <div class="keypad-container">
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
@@ -177,7 +179,7 @@
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'live'; } }
     };
 
-    function openKeypad(t, title) { activeId = t; kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; document.getElementById('keypad-title').innerText = "Set " + title; document.getElementById('keypadPicker').style.display='flex'; }
+    function openKeypad(t, title) { activeId = t; kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; }
     function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
     function kpIn(num) { if (kpBuffer.length >= 4) return; kpBuffer += num.toString(); formatKp(); }
     function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
@@ -200,25 +202,16 @@
     function addToLog() {
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         if (log.length >= 7) { alert("Week is full (7 days). Please clear weekly log to start over."); return; }
-        
         const day = document.getElementById('t-day').value;
-        const bt = document.getElementById('t-in').value||"00.00";
-        const ol = document.getElementById('l-out').value||"00.00";
-        const il = document.getElementById('l-in').value||"00.00";
-        const et = document.getElementById('t-actual').value||"00.00";
-        
-        // CALC TOTAL: (OL-BT) + (ET-IL)
+        const bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
         const btV = parseFloat(bt), olV = parseFloat(ol), ilV = parseFloat(il), etV = parseFloat(et);
         let shift1 = olV - btV; if(shift1 < 0) shift1 += 24;
         let shift2 = etV - ilV; if(shift2 < 0) shift2 += 24;
         const total = (shift1 + shift2).toFixed(2);
-
         const row = `<div class="log-row"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span><span class="total-col">${total}</span></div>`;
         log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
-        
-        document.getElementById('t-day').value = "Saturday"; // Reset to start of postal week
-        const ids = ['t-in','l-out','l-in','t-actual'];
-        const btns = ['bt-btn','ol-btn','il-btn','et-btn'];
+        document.getElementById('t-day').value = "Saturday";
+        const ids = ['t-in','l-out','l-in','t-actual'], btns = ['bt-btn','ol-btn','il-btn','et-btn'];
         ids.forEach((id, i) => { document.getElementById(id).value = "00.00"; document.getElementById(btns[i]).innerText = "00.00"; });
         document.getElementById('t-target').innerText = "00.00";
     }
