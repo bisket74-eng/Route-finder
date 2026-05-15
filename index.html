@@ -32,6 +32,10 @@
 
         .zip-trigger, input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         
+        /* LIGHTER GRAY PLACEHOLDER FOR DISABLED STATE */
+        input:disabled::placeholder { color: #ccc; }
+        input:disabled { background-color: #f5f5f5; border-color: #ddd; }
+
         .btn-circle { height: 52px; width: 52px; border-radius: 50%; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.65rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .btn-red { background-color: var(--dr-rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
@@ -54,7 +58,6 @@
 
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         
-        /* MODAL SYSTEM */
         #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 30000; display: none; align-items: center; justify-content: center; }
         .del-box { width: 80%; max-width: 320px; padding: 25px; border: 1px solid #000; background: #e0e0e0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
         .del-box h3 { margin: 0 0 20px; color: var(--bl); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; font-weight: 900; line-height: 1.4; }
@@ -109,6 +112,9 @@
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
         #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 20px; height: 40px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; border: none; cursor: pointer; text-transform: uppercase; margin: 12px auto 10px; position: relative; z-index: 300; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        /* CATCH CLICK ON DISABLED INPUT */
+        .input-blocker { position: absolute; top: 25px; left: 0; right: 0; bottom: 0; z-index: 4; cursor: pointer; }
     </style>
 </head>
 <body id="mainBody">
@@ -212,6 +218,7 @@
                 <div class="row" style="position:relative">
                     <div class="input-wrapper">
                         <label>Street Name</label>
+                        <div id="blocker" class="input-blocker" onclick="checkZipBeforeType()"></div>
                         <input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleSearch()">
                         <button id="micBtn" class="mic-btn" onclick="startVoiceSearch()">🎙️</button>
                         <div id="suggestionBox" class="sug"></div>
@@ -244,7 +251,19 @@
     function validateZipCheck() {
         const anyChecked = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster').checked;
         const sIn = document.getElementById('streetInput');
-        if (!anyChecked) { sIn.disabled = true; sIn.value = ""; sIn.placeholder = "Select Zip(s) first..."; }
+        const blk = document.getElementById('blocker');
+        if (!anyChecked) { 
+            sIn.disabled = true; sIn.value = ""; sIn.placeholder = "Select Zip(s) first...";
+            blk.style.display = 'block';
+        } else {
+            sIn.disabled = false;
+            blk.style.display = 'none';
+        }
+    }
+
+    function checkZipBeforeType() {
+        const anyZip = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster').checked;
+        if (!anyZip) { openStyledAlert("PLEASE SELECT A ZIP CODE FIRST"); }
     }
 
     function syncLocalDay() {
@@ -252,7 +271,6 @@
         document.getElementById('t-day').value = days[new Date().getDay()];
     }
 
-    // CUSTOM ALERTS REPLACING BROWSER POPUPS
     function openStyledAlert(msg) {
         document.getElementById('confirmMsg').innerText = msg;
         document.getElementById('confirmBtns').style.display = 'none';
@@ -436,10 +454,14 @@
         document.body.classList.remove('zip-open'); 
         if(chks.length > 0 || isAll) { 
             sIn.disabled = false; sIn.placeholder = "Enter street name..."; 
+            document.getElementById('blocker').style.display = 'none';
             document.body.classList.add('header-hidden'); 
             if (document.getElementById('mainBody').classList.contains('cards-active')) { reopenSuggestions(); } else { handleSearch(); }
             setTimeout(() => sIn.focus(), 300); 
-        } else { sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; }
+        } else { 
+            sIn.disabled = true; sIn.placeholder = "Select Zip(s) first...";
+            document.getElementById('blocker').style.display = 'block';
+        }
     }
     
     function reopenSuggestions() {
@@ -456,7 +478,7 @@
     }
 
     function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '18px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
+    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '18px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
     function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('timeScrollContainer').scrollTop = 0; }
