@@ -102,7 +102,8 @@
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
-        #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 20px; height: 40px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; border: none; cursor: pointer; text-transform: uppercase; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        /* UPDATED BUTTON TEXT & OFFSET */
+        #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 20px; height: 40px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; border: none; cursor: pointer; text-transform: uppercase; margin: 12px auto 10px; position: relative; z-index: 300; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body id="mainBody">
@@ -201,7 +202,7 @@
                 </div><button class="btn-circle btn-red" onclick="resetAll()">Reset</button>
                 </div>
                 <div class="row" style="position:relative"><div class="input-wrapper"><label>Street Search</label><input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleSearch()"><div id="suggestionBox" class="sug"></div></div><button class="btn-circle btn-yel" onclick="clearStreetOnly()">Clear</button></div>
-                <button id="backToListBtn" onclick="reopenSuggestions()">Return to Street List</button>
+                <button id="backToListBtn" onclick="reopenSuggestions()">Return to Street Results</button>
             </div>
         </div>
         <div id="list-res"><div id="cc"></div></div>
@@ -283,6 +284,7 @@
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
         log.sort((a,b) => a.id - b.id);
+        
         let b1 = [], b2 = [], cnt = {};
         log.forEach(e => { cnt[e.day] = (cnt[e.day] || 0) + 1; if(cnt[e.day] === 1) b1.push(e); else b2.push(e); });
         b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
@@ -324,13 +326,10 @@
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
         const input = document.getElementById('streetInput');
-        
-        // REFINED MEMORY: Only capture when looking at suggestions, not when results are pinned
         const val = input.value.toUpperCase().trim();
         if (!document.getElementById('mainBody').classList.contains('cards-active')) {
             lastSearchTerm = input.value;
         }
-
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
         if(val.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
         document.body.classList.add('header-hidden');
@@ -361,22 +360,17 @@
     function finalApply(e) { 
         if(e) e.stopPropagation(); 
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), isAll = document.getElementById('allZipMaster').checked; 
-        
         if (isAll) trig.innerText = 'ALL ZIPs'; 
         else trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...';
-        
         document.getElementById('zipList').style.display='none'; 
         document.body.classList.remove('zip-open'); 
-        
         if(chks.length > 0 || isAll) { 
             sIn.disabled = false; sIn.placeholder = "Enter street name..."; 
             document.body.classList.add('header-hidden'); 
-            
-            // DYNAMIC UPDATE: If results are pinned, unpin them to show the updated list based on new zips
             if (document.getElementById('mainBody').classList.contains('cards-active')) {
                 reopenSuggestions();
             } else {
-                handleSearch(); // Refresh the current typed search with new ZIP filters
+                handleSearch(); 
             }
             setTimeout(() => sIn.focus(), 300); 
         } else { 
