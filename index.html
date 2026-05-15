@@ -102,7 +102,6 @@
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
-        /* UPDATED BUTTON TEXT & OFFSET */
         #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 20px; height: 40px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; border: none; cursor: pointer; text-transform: uppercase; margin: 12px auto 10px; position: relative; z-index: 300; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     </style>
 </head>
@@ -360,8 +359,16 @@
     function finalApply(e) { 
         if(e) e.stopPropagation(); 
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), isAll = document.getElementById('allZipMaster').checked; 
-        if (isAll) trig.innerText = 'ALL ZIPs'; 
-        else trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...';
+        
+        if (isAll) {
+            trig.innerText = 'ALL ZIPs';
+            trig.style.fontSize = '18px';
+        } else {
+            trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...';
+            // SHRINK FONT IF 5 OR MORE
+            trig.style.fontSize = chks.length >= 5 ? '16px' : '18px';
+        }
+        
         document.getElementById('zipList').style.display='none'; 
         document.body.classList.remove('zip-open'); 
         if(chks.length > 0 || isAll) { 
@@ -392,7 +399,7 @@
     }
 
     function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
+    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '18px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
     function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('timeScrollContainer').scrollTop = 0; }
