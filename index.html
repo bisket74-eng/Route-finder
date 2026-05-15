@@ -43,21 +43,23 @@
         .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
         .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
 
-        #viewer, #timeModal, #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
+        #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         
+        /* FIX 1: KEYPAD Z-INDEX BOOST */
+        #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
+
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; } 
         .time-box { width: 92%; max-width: 400px; padding: 20px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 100; }
 
         .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--rd); color: var(--rd); font-weight: 900; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; width: 45px; height: 45px; border-radius: 8px; line-height: 1.1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-        /* 10-KEYPAD STYLING */
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; }
         .key:active { background: var(--lt-bl); }
-        .key-wide { grid-column: span 3; background: var(--rd); color: white; border-color: var(--rd); }
-        .key-clr { background: #eee; border-color: #999; color: #333; }
-        .entry-display { background: white; border: 3px solid var(--bl); border-radius: 8px; padding: 10px; font-size: 2.2rem; font-weight: 900; color: var(--bl); margin-bottom: 10px; text-align: right; letter-spacing: 2px; }
+        
+        /* FIX 2: DIGITAL CLOCK LCD DISPLAY */
+        .entry-display { background: #001a33; border: 2px solid #005fa3; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: #00d2ff; margin-bottom: 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 0 15px rgba(0,210,255,0.3), 0 0 10px rgba(0,210,255,0.2); text-shadow: 0 0 10px rgba(0,210,255,0.8); }
 
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.3rem; cursor: pointer; color: var(--bl); }
 
@@ -82,8 +84,10 @@
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
         #backToListBtn { display: none; background-color: var(--bl); color: white; width: 180px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; }
 
+        /* FIX 3: RE-ALIGNED LOG HEADERS */
         .log-hdr, .log-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; width: 100%; text-align: center; }
         .log-hdr { padding: 8px 0; border-bottom: 2px solid var(--bl); font-weight: 900; font-size: 0.75rem; color: var(--bl); margin-top: 15px; }
+        .log-hdr span:first-child { text-align: left; padding-left: 5px; } /* Day label shifted left */
         .log-row { padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; font-weight: 700; }
         .log-row b { text-align: left; padding-left: 5px; }
     </style>
@@ -92,15 +96,15 @@
     <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
     <div id="keypadPicker">
-        <div class="time-box" style="width: 300px; height: auto; background: var(--lt-bl);">
+        <div class="time-box" style="width: 320px; height: auto; background: var(--lt-bl); border-width: 6px;">
             <button class="modal-x" onclick="closeKeypad()">×</button>
-            <h3 id="keypad-title" style="margin:0 0 10px; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">Set Time</h3>
+            <h3 id="keypad-title" style="margin:0 0 15px; color:var(--bl); font-size:1rem; text-transform:uppercase; letter-spacing:1px;">Enter Postal Time</h3>
             <div id="kp-display" class="entry-display">00.00</div>
             <div class="keypad-container">
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
                 <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
-                <div class="key key-clr" onclick="kpClr()">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
+                <div class="key" onclick="kpClr()" style="color:var(--rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
             </div>
         </div>
     </div>
@@ -170,7 +174,6 @@
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'live'; } }
     };
 
-    // 10-KEYPAD LOGIC
     function openKeypad(t, title) { 
         activeId = t; 
         kpBuffer = ""; 
