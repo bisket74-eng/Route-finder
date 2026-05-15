@@ -323,7 +323,23 @@
         recognition.onend = () => micBtn.classList.remove('listening');
         recognition.onresult = (event) => {
             let transcript = event.results[0][0].transcript;
+            
+            // 1. Strip punctuation cleanly
             transcript = transcript.replace(/[^\w\s]/g, "").trim();
+            
+            // 2. Auto-Translate full spoken words into search abbreviations
+            let tokens = transcript.split(/\s+/);
+            let mappedTokens = tokens.map(token => {
+                let upperToken = token.toUpperCase();
+                if (upperToken === "CIRCLE") return "CIR";
+                if (upperToken === "STREET") return "ST";
+                if (upperToken === "AVENUE") return "AVE";
+                if (upperToken === "COURT") return "CT";
+                if (upperToken === "LOOP") return "LOOP"; // Kept loop matching layout logic
+                return token;
+            });
+            transcript = mappedTokens.join(" ");
+
             const input = document.getElementById('streetInput');
             input.value = transcript;
             lastSearchTerm = transcript;
@@ -339,7 +355,6 @@
         localStorage.removeItem('usps_temp_entries');
     }
 
-    // TIMEKEEPER INTERACTION
     function openKeypad(t, title) { 
         activeId = t; 
         const existing = document.getElementById(t).value || "00.00";
@@ -417,7 +432,6 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    // REVERTED: Standard Clean Prefix/Display Matching Only
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
@@ -434,7 +448,7 @@
         activeZips.forEach(z => { 
             if(database[z]) {
                 database[z].forEach(m => { 
-                    // Matches must cleanly start with the query value from the left to prevent cross-word pollution
+                    // Search terms strictly verify left-alignment prefix matching to avoid internal character pollution
                     if(m.searchName.startsWith(val) || m.displayName.toUpperCase().startsWith(val)) {
                         matches.push({...m, zip: z}); 
                     }
