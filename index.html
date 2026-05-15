@@ -39,7 +39,6 @@
         .btn-red { background-color: var(--rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
         .btn-blu { background-color: var(--bl); color: white; }
-        .btn-grn { background-color: var(--gr); color: white; }
 
         #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 5000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-height: 65vh; flex-direction: column; width: 100%; box-sizing: border-box; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; }
@@ -48,19 +47,13 @@
         .apply-wrap { padding: 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; }
 
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
-        
-        /* FIX: CONFIRM MODAL ABOVE TIMEKEEPER */
-        #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 30000; display: none; align-items: center; justify-content: center; }
-        
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
 
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px; } 
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         
+        /* 10-KEY NO BORDER FIX */
         #keypadPicker .time-box { border: none; }
-        
-        /* SMALLER, LESS PROMINENT CONFIRM BOX */
-        #confirmModal .time-box { height: auto; width: 280px; padding: 20px; border-width: 3px; background: #fff; }
 
         .modal-x { position: absolute; top: 10px; right: 10px; width: 35px; height: 35px; background: var(--rd); color: white; border-radius: 50%; border: none; font-size: 20px; font-weight: 900; cursor: pointer; z-index: 100; }
 
@@ -97,27 +90,16 @@
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
         #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 15px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; }
 
-        .log-hdr, .log-row { display: grid; grid-template-columns: 0.9fr 0.4fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; }
-        .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.8rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
-        .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.95rem; font-weight: 700; color: #333; }
-        .log-row b { text-align: left; padding-left: 2px; font-size: 0.85rem; }
+        .log-hdr, .log-row { display: grid; grid-template-columns: 1.1fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; }
+        .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.9rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
+        .log-hdr span:first-child { text-align: left; padding-left: 5px; }
+        .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 1rem; font-weight: 700; color: #333; user-select: none; }
+        .log-row b { text-align: left; padding-left: 5px; }
         .total-col { color: var(--gr); font-weight: 900; }
-        
-        .del-x { color: white; background: var(--rd); cursor: pointer; font-weight: 900; font-size: 0.8rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto; line-height: 1; }
     </style>
 </head>
 <body id="mainBody">
     <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
-
-    <div id="confirmModal">
-        <div class="time-box">
-            <h3 style="margin:0 0 15px; color:var(--bl); text-transform:uppercase; font-size:0.9rem; letter-spacing:1px;">Delete row?</h3>
-            <div style="display:flex; justify-content:center; gap:12px;">
-                <button class="btn-grn" style="width:85px; height:36px; border:none; border-radius:18px; font-weight:900; font-size:0.75rem; text-transform:uppercase; cursor:pointer;" onclick="closeConfirm()">Return</button>
-                <button class="btn-red" style="width:85px; height:36px; border:none; border-radius:18px; font-weight:900; font-size:0.75rem; text-transform:uppercase; cursor:pointer;" onclick="executeDelete()">Delete</button>
-            </div>
-        </div>
-    </div>
 
     <div id="keypadPicker">
         <div class="time-box" style="width: 320px; height: auto; background: var(--lt-bl);">
@@ -164,7 +146,7 @@
 
             <button class="btn-yel" style="margin:20px auto 0; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer;" onclick="addToLog()">Add To Log</button>
             
-            <div class="log-hdr"><span>DAY</span><span></span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
+            <div class="log-hdr"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
             <div id="log-table" style="overflow-y:visible; margin-bottom: 10px;">
                 <div id="log-container"></div>
             </div>
@@ -190,7 +172,7 @@
     </div>
 
 <script>
-    let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
+    let database = {}; let activeId = ''; let kpBuffer = ""; let logPressTimer;
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
     window.onload = async () => {
@@ -211,6 +193,7 @@
         if (kpBuffer.length >= 4) return;
         let temp = (kpBuffer + num.toString()).padStart(4, "0");
         let firstTwo = parseInt(temp.substring(0,2));
+        // FIX: MAX 23 FOR FIRST TWO DIGITS
         if (firstTwo > 23) { kpClr(); return; }
         kpBuffer += num.toString(); formatKp(); 
     }
@@ -241,6 +224,7 @@
         let shift1 = olV - btV; if(shift1 < 0) shift1 += 24;
         let shift2 = etV - ilV; if(shift2 < 0) shift2 += 24;
         const total = (shift1 + shift2).toFixed(2);
+        
         const logEntry = { day: day.substring(0,3), bt, ol, il, et, total, id: Date.now() };
         log.push(logEntry); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
         document.getElementById('t-day').value = "Saturday";
@@ -253,25 +237,29 @@
         const log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         const container = document.getElementById('log-container');
         container.innerHTML = log.map(entry => `
-            <div class="log-row">
-                <b>${entry.day}</b>
-                <span class="del-x" onclick="confirmDelete(${entry.id})">X</span>
-                <span>${entry.bt}</span><span>${entry.ol}</span><span>${entry.il}</span><span>${entry.et}</span><span class="total-col">${entry.total}</span>
+            <div class="log-row" 
+                 onmousedown="startLogPress(${entry.id})" 
+                 onmouseup="cancelLogPress()" 
+                 onmouseleave="cancelLogPress()" 
+                 ontouchstart="startLogPress(${entry.id})" 
+                 ontouchend="cancelLogPress()">
+                <b>${entry.day}</b><span>${entry.bt}</span><span>${entry.ol}</span><span>${entry.il}</span><span>${entry.et}</span><span class="total-col">${entry.total}</span>
             </div>
         `).join('');
     }
 
-    function confirmDelete(id) { deleteTargetId = id; document.getElementById('confirmModal').style.display = 'flex'; }
-    function closeConfirm() { document.getElementById('confirmModal').style.display = 'none'; deleteTargetId = null; }
-    function executeDelete() {
-        if(deleteTargetId) {
-            let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
-            log = log.filter(e => e.id !== deleteTargetId);
-            localStorage.setItem('usps_weekly_log', JSON.stringify(log));
-            renderLog();
-        }
-        closeConfirm();
+    function startLogPress(id) {
+        logPressTimer = setTimeout(() => {
+            if(confirm("Delete this entry?")) {
+                let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
+                log = log.filter(e => e.id !== id);
+                localStorage.setItem('usps_weekly_log', JSON.stringify(log));
+                renderLog();
+            }
+        }, 1000);
     }
+
+    function cancelLogPress() { clearTimeout(logPressTimer); }
 
     function clearLog() { if(confirm("Clear entire log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
 
@@ -313,10 +301,10 @@
                         card.innerHTML = `<div class="info-left"><span>${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
                         cc.appendChild(card);
                     });
-                    document.getElementById('list-res').scrollTop = 0;
+                    document.getElementById('list-res').scrollTop = 0; // RESET RESULT SCROLL
                 }; sugBox.appendChild(d);
             });
-            sugBox.scrollTop = 0;
+            sugBox.scrollTop = 0; // RESET SUGGESTION SCROLL
         } else { sugBox.style.display="none"; document.body.classList.remove('sug-active'); }
     }
 
@@ -327,7 +315,7 @@
         l.style.display = isOpen ? 'none' : 'flex'; 
         if (!isOpen) {
             document.body.classList.add('zip-open', 'header-hidden');
-            document.getElementById('zipScrollBox').scrollTop = 0;
+            document.getElementById('zipScrollBox').scrollTop = 0; // RESET ZIP SCROLL
         }
     }
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); }
@@ -335,7 +323,14 @@
         if(e) e.stopPropagation(); 
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'); 
         const isAll = document.getElementById('allZipMaster').checked; 
-        if (isAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = '18px'; } else { trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; trig.style.fontSize = chks.length >= 5 ? '14px' : '18px'; } 
+        if (isAll) { 
+            trig.innerText = 'ALL ZIPs'; 
+            trig.style.fontSize = '18px'; 
+        } else { 
+            trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; 
+            // FIX: 2 POINT FONT INCREASE FOR MULTI-ZIPS (OLD 12px -> 14px)
+            trig.style.fontSize = chks.length >= 5 ? '14px' : '18px'; 
+        } 
         document.getElementById('zipList').style.display='none'; 
         document.body.classList.remove('zip-open'); 
         if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => { sIn.focus(); }, 300); } 
@@ -345,7 +340,11 @@
     function resetAll() { document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '18px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
-    function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('timeScrollContainer').scrollTop = 0; }
+    function openTime() { 
+        document.body.classList.remove('header-hidden'); 
+        document.getElementById('timeModal').style.display='flex'; 
+        document.getElementById('timeScrollContainer').scrollTop = 0; // RESET TIME SCROLL
+    }
     function closeTime() { document.getElementById('timeModal').style.display='none'; }
     function secretKnock() { if(!window.k) window.k=0; window.k++; if(window.k===5) alert("USPS Dev Active"); setTimeout(()=>window.k=0,2000); }
     window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); } }
