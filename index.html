@@ -10,7 +10,7 @@
         ::-webkit-scrollbar { width: 12px; display: block; }
         ::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 10px; }
         
-       html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
+        html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
         .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); }
         
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 10; }
@@ -85,13 +85,12 @@
         .del-x { color: white !important; background: var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto; line-height: 1; border: none; }
         #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 15px center; background-size: 24px; padding-right: 45px !important; }
 
-        /* SEARCH RESULTS & CARDS - CLEAN SANS SERIF REVERT */
+        /* SEARCH RESULTS & CARDS */
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 10px 15px 75px 15px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         .list-card { background: white; padding: 12px 15px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 440px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; }
         
         .range-txt { font-size: 2.2rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: auto 0; letter-spacing: 1px; }
-        
         .zip-tag-blue { background: var(--bl); color: white; padding: 4px 8px; border-radius: 4px; font-size: 1rem; font-weight: 900; display: inline-block; align-self: flex-start; letter-spacing: 2px; }
         
         .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -103,7 +102,6 @@
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
-        /* RETURN BUTTON - CLEAN REVERT */
         #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 20px; height: 40px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; border: none; cursor: pointer; text-transform: uppercase; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     </style>
 </head>
@@ -284,44 +282,15 @@
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
         log.sort((a,b) => a.id - b.id);
-        
         let b1 = [], b2 = [], cnt = {};
-        log.forEach(e => {
-            cnt[e.day] = (cnt[e.day] || 0) + 1;
-            if(cnt[e.day] === 1) b1.push(e); else b2.push(e);
-        });
-
+        log.forEach(e => { cnt[e.day] = (cnt[e.day] || 0) + 1; if(cnt[e.day] === 1) b1.push(e); else b2.push(e); });
         b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
         b2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
-
         const container = document.getElementById('log-container');
-        let html = "";
-        
-        html += b1.map(e => `
-            <div class="log-row">
-                <span class="del-x" onclick="confirmDelete(${e.id})">X</span>
-                <b>${e.day}</b>
-                <span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span>
-            </div>
-        `).join('');
-
-        if(b1.length > 0) {
-            const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2);
-            html += `<div class="total-row"><span></span><span></span><span></span><span></span><b>TOTAL WEEK 1</b><span></span><span>${sum1}</span></div>`;
-        }
-
-        html += b2.map(e => `
-            <div class="log-row duplicate">
-                <span class="del-x" onclick="confirmDelete(${e.id})">X</span>
-                <b>${e.day}</b>
-                <span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span>
-            </div>
-        `).join('');
-
-        if(b2.length > 0) {
-            const sum2 = b2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2);
-            html += `<div class="total-row blue-week"><span></span><span></span><span></span><span></span><b>TOTAL WEEK 2</b><span></span><span>${sum2}</span></div>`;
-        }
+        let html = b1.map(e => `<div class="log-row"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
+        if(b1.length > 0) { const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row"><span></span><span></span><span></span><span></span><b>TOTAL WEEK 1</b><span></span><span>${sum1}</span></div>`; }
+        html += b2.map(e => `<div class="log-row duplicate"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
+        if(b2.length > 0) { const sum2 = b2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row blue-week"><span></span><span></span><span></span><span></span><b>TOTAL WEEK 2</b><span></span><span>${sum2}</span></div>`; }
         container.innerHTML = html;
     }
 
@@ -386,7 +355,20 @@
         if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => sIn.focus(), 300); }
         else { sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; }
     }
-    function reopenSuggestions() { document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block"; handleSearch(); }
+    
+    // UPDATED ACTION PER REQUEST
+    function reopenSuggestions() {
+        document.getElementById('cc').innerHTML = "";
+        document.getElementById('backToListBtn').style.display = "none";
+        document.getElementById('mainBody').classList.remove('cards-active');
+        document.getElementById('suggestionBox').style.display = "block";
+        const input = document.getElementById('streetInput');
+        input.focus();
+        const len = input.value.length;
+        input.setSelectionRange(len, len); // Force cursor to end
+        handleSearch(); // Recall suggestions
+    }
+
     function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
     function resetAll() { document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
