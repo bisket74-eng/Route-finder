@@ -323,7 +323,10 @@
         recognition.onend = () => micBtn.classList.remove('listening');
         recognition.onresult = (event) => {
             let transcript = event.results[0][0].transcript;
-            transcript = transcript.replace(/[.\?]$/, "").trim();
+            
+            // STRICT CLEAN UP: Strip ALL punctuation and symbols completely
+            transcript = transcript.replace(/[^\w\s]/g, "").trim();
+            
             const input = document.getElementById('streetInput');
             input.value = transcript;
             lastSearchTerm = transcript;
