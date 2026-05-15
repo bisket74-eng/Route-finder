@@ -44,13 +44,11 @@
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; }
         .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #ddd; }
         .zip-item input { width: 24px; height: 24px; margin-right: 15px; accent-color: var(--bl); }
-        /* STRETCHED APPLY BUTTON */
         .apply-wrap { padding: 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; }
         .btn-apply { width: 90%; height: 52px; border-radius: 26px; border:none; font-weight:900; font-size:1.2rem; text-transform:uppercase; cursor:pointer; background: var(--bl); color: white; }
 
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         
-        /* DELETE MODAL: SOLID LIGHT GRAY, THIN BLACK BORDER, BUTTON SIZING */
         #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 30000; display: none; align-items: center; justify-content: center; }
         #confirmModal .del-box { width: auto; height: auto; padding: 25px; border: 1px solid #000; background: #e0e0e0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
         .btn-del-action { width: 110px; height: 45px; border: none; border-radius: 22px; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; }
@@ -60,48 +58,47 @@
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px; } 
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         
-        /* LARGER EXIT BUTTON */
         .modal-x { position: absolute; top: 10px; right: 10px; width: 45px; height: 45px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 26px; font-weight: 900; cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center; }
+        /* RESTORED CLEAR LOG BUTTON */
+        .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--dr-rd); color: var(--dr-rd); font-weight: 900; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; width: 45px; height: 45px; border-radius: 8px; line-height: 1.1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* TALLER 10-KEY MODAL */
+        #keypadPicker .time-box { border: none; box-shadow: none; background: #fff; padding: 0; min-height: 480px; }
+        #kp-header-wrap { padding: 30px 0 15px; position: relative; display: flex; justify-content: center; align-items: center; }
 
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px 20px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; }
         .entry-display { background: #001a33; border: 2px solid #005fa3; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: #00d2ff; margin: 0 20px 15px; text-align: center; letter-spacing: 5px; }
+
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.5rem; cursor: pointer; color: var(--bl); }
 
-        #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 10px 15px 75px 15px; z-index: 100; pointer-events: none; display: none; }
-        body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
-        
-        .list-card { background: white; padding: 12px 15px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 440px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; }
-        .info-left { display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 85px; }
-        .info-left span:first-child { font-size: 0.75rem; font-weight: 800; color: #555; display: block; }
-        .range-txt { font-size: 1.8rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: auto 0; }
-        .zip-tag-blue { background: var(--bl); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 900; display: inline-block; align-self: flex-start; font-family: 'Times New Roman', serif; font-style: italic; }
-        
-        .rt-block { background: var(--bl); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 90px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .rt-block small { display: block; margin-bottom: 2px; font-family: 'Times New Roman', serif; font-weight: 900; font-style: italic; }
-        .rt-block span { font-size: 2.2rem; display: block; font-weight: 900; line-height: 1; }
-        
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); cursor: pointer; }
-
+        /* GRID DEFINITIONS */
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
         .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
         .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; }
         
-        /* DUPLICATE ROW CLASS */
+        /* WEEK LOGIC COLORS */
         .log-row.duplicate b, .log-row.duplicate span:not(.del-x) { color: #0000ff !important; }
+        .total-row { padding: 12px 0; background: transparent; border-top: 1px solid #ccc; margin-top: 4px; font-weight: 900; font-size: 0.75rem; }
+        .total-row b { text-align: center; grid-column: 5; font-size: 0.7rem; text-transform: uppercase; }
+        .total-row span:last-child { color: #000; font-size: 1rem; grid-column: 7; font-weight: 900; }
+        .total-row.blue-week b, .total-row.blue-week span { color: #0000ff !important; }
 
-        /* TOTAL ROW */
-        .total-row { padding: 12px 0; background: transparent; color: #000; border-top: 2px solid var(--bl); margin-top: 8px; font-weight: 900; }
-        .total-row b { font-size: 0.7rem; text-align: center; grid-column: 6; }
-        .total-row span:last-child { color: var(--gr); font-size: 1.1rem; grid-column: 7; }
+        /* SEARCH RESULTS & CARDS */
+        #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 10px 15px 75px 15px; z-index: 100; pointer-events: none; display: none; }
+        body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
+        .list-card { background: white; padding: 12px 15px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 440px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; }
+        .range-txt { font-size: 1.8rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: auto 0; }
+        .zip-tag-blue { background: var(--bl); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 900; display: inline-block; align-self: flex-start; font-family: 'Times New Roman', serif; font-style: italic; }
+        .rt-block { background: var(--bl); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 90px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .rt-block small { display: block; margin-bottom: 2px; font-family: 'Times New Roman', serif; font-weight: 900; font-style: italic; }
+        .rt-block span { font-size: 2.2rem; display: block; font-weight: 900; line-height: 1; }
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); cursor: pointer; }
 
         .log-row b { text-align: center; font-size: 0.8rem; display: block; }
-        
-        /* FORCE WHITE TEXT ON X ALWAYS */
+        .total-col { font-weight: 900; }
         .del-x { color: white !important; background: var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto; line-height: 1; border: none; }
-        
-        /* PROMINENT ARROW */
         #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 15px center; background-size: 24px; padding-right: 45px !important; }
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
@@ -122,10 +119,10 @@
     </div>
 
     <div id="keypadPicker">
-        <div class="time-box" style="width: 320px; height: auto; background:#fff; border:none;">
+        <div class="time-box" style="width: 320px; height: auto;">
             <div id="kp-header-wrap">
-                <h3 id="keypad-title" style="margin:0; color:var(--bl); font-size:1.2rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
-                <button class="kp-modal-x" onclick="closeKeypad()" style="position: absolute; top: 5px; right: 5px; width: 30px; height: 30px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 18px; font-weight: 900;">×</button>
+                <h3 id="keypad-title" style="margin:0; color:var(--bl); font-size:1rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
+                <button class="kp-modal-x" onclick="closeKeypad()" style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 18px; font-weight: 900;">×</button>
             </div>
             <div id="kp-display" class="entry-display">00.00</div>
             <div class="keypad-container">
@@ -159,7 +156,6 @@
                 <div onclick="openKeypad('l-in', 'Into Lunch')"><label style="font-size: 1.1rem;">IL</label><div class="time-display-btn" id="il-btn">00.00</div></div>
                 <div onclick="openKeypad('t-actual', 'End Tour')"><label style="font-size: 1.1rem;">ET</label><div class="time-display-btn" id="et-btn">00.00</div></div>
             </div>
-            <input type="hidden" id="t-in" value="00.00"><input type="hidden" id="l-out" value="00.00"><input type="hidden" id="l-in" value="00.00"><input type="hidden" id="t-actual" value="00.00">
             
             <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
                 <span style="font-weight:900; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">8 Hour Day ET Goal:</span>
@@ -171,8 +167,9 @@
             <div class="log-hdr"><span></span><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
             <div id="log-table" style="overflow-y:visible; margin-bottom: 10px;">
                 <div id="log-container"></div>
-                <div id="log-total-row"></div>
+                <div id="log-total-area"></div>
             </div>
+            <input type="hidden" id="t-in" value="00.00"><input type="hidden" id="l-out" value="00.00"><input type="hidden" id="l-in" value="00.00"><input type="hidden" id="t-actual" value="00.00">
         </div>
     </div>
 
@@ -286,18 +283,29 @@
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
         log.sort((a,b) => a.id - b.id);
+        
         let b1 = [], b2 = [], cnt = {};
-        log.forEach(e => { cnt[e.day] = (cnt[e.day] || 0) + 1; if(cnt[e.day] === 1) b1.push(e); else b2.push(e); });
+        log.forEach(e => {
+            cnt[e.day] = (cnt[e.day] || 0) + 1;
+            if(cnt[e.day] === 1) b1.push(e); else b2.push(e);
+        });
+
         b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
         b2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
+
         const container = document.getElementById('log-container');
         let html = b1.map(e => `<div class="log-row"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
         html += b2.map(e => `<div class="log-row duplicate"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
         container.innerHTML = html;
-        const sum = log.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2);
-        const tr = document.getElementById('log-total-row');
-        if(log.length > 0) tr.innerHTML = `<div class="total-row"><span></span><span></span><span></span><span></span><span></span><b>TOTAL</b><span>${sum}</span></div>`;
-        else tr.innerHTML = "";
+
+        const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2);
+        const sum2 = b2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2);
+        const area = document.getElementById('log-total-area');
+        
+        let totalsHtml = "";
+        if(b1.length > 0) totalsHtml += `<div class="total-row"><span></span><span></span><span></span><span></span><b>WEEK 1</b><span></span><span>${sum1}</span></div>`;
+        if(b2.length > 0) totalsHtml += `<div class="total-row blue-week"><span></span><span></span><span></span><span></span><b>WEEK 2</b><span></span><span>${sum2}</span></div>`;
+        area.innerHTML = totalsHtml;
     }
 
     function confirmDelete(id) { deleteTargetId = id; document.getElementById('confirmModal').style.display = 'flex'; }
