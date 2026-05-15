@@ -51,7 +51,6 @@
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px; } 
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         
-        /* 10-KEY MODAL CLEANUP */
         #keypadPicker .time-box { border: none; box-shadow: none; background: #fff; padding: 0; }
         #kp-header-wrap { padding: 20px 0 10px; position: relative; display: flex; justify-content: center; align-items: center; }
         .kp-modal-x { position: absolute; top: 5px; right: 5px; width: 30px; height: 30px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 18px; font-weight: 900; cursor: pointer; }
@@ -64,7 +63,6 @@
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px 20px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; }
         
-        /* FLAT DISPLAY - NO GLOW */
         .entry-display { background: #001a33; border: 2px solid #005fa3; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: #00d2ff; margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: none; text-shadow: none; }
 
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.5rem; cursor: pointer; color: var(--bl); }
@@ -92,14 +90,16 @@
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
         #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 15px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; }
 
-        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 45px 30px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
+        /* GRID SWAPPED: X IN COL 1, DAY IN COL 2 */
+        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
         .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
         .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; }
         
         .total-row { padding: 12px 0; background: #fff; color: #000; border-top: 2px solid var(--bl); margin-top: 8px; font-weight: 900; font-size: 0.95rem; }
         .total-row span:last-child { color: var(--gr); font-size: 1.1rem; }
 
-        .log-row b { text-align: left; padding-left: 6px; font-size: 0.8rem; }
+        /* DAY COLUMN (NOW COL 2) SHIFT DATA RIGHT */
+        .log-row b { text-align: left; padding-left: 2px; font-size: 0.8rem; }
         .total-col { color: #000; font-weight: 900; }
         .del-x { color: white !important; background: var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto; line-height: 1; border: none; }
     </style>
@@ -164,7 +164,7 @@
 
             <button class="btn-yel" style="margin:20px auto 0; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer;" onclick="addToLog()">Add To Log</button>
             
-            <div class="log-hdr"><span>DAY</span><span></span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
+            <div class="log-hdr"><span></span><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
             <div id="log-table" style="overflow-y:visible; margin-bottom: 10px;">
                 <div id="log-container"></div>
                 <div id="log-total-row"></div>
@@ -196,7 +196,8 @@
 
     window.onload = async () => {
         renderLog();
-        syncLocalDay(); // Auto-select current day
+        syncLocalDay(); 
+        loadTempEntries(); // Memory Restore
         try {
             const resp = await fetch(XLSX_URL);
             const ab = await resp.arrayBuffer();
@@ -205,6 +206,36 @@
             document.getElementById('status-dot').className = 'live';
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'live'; } }
     };
+
+    // MEMORY LOGIC
+    function saveTempEntries() {
+        const data = {
+            bt: document.getElementById('t-in').value,
+            ol: document.getElementById('l-out').value,
+            il: document.getElementById('l-in').value,
+            et: document.getElementById('t-actual').value,
+            date: new Date().toDateString()
+        };
+        localStorage.setItem('usps_temp_entries', JSON.stringify(data));
+    }
+
+    function loadTempEntries() {
+        const saved = localStorage.getItem('usps_temp_entries');
+        if (!saved) return;
+        const data = JSON.parse(saved);
+        // Only restore if it's the SAME day
+        if (data.date === new Date().toDateString()) {
+            document.getElementById('t-in').value = data.bt;
+            document.getElementById('l-out').value = data.ol;
+            document.getElementById('l-in').value = data.il;
+            document.getElementById('t-actual').value = data.et;
+            document.getElementById('bt-btn').innerText = data.bt || "00.00";
+            document.getElementById('ol-btn').innerText = data.ol || "00.00";
+            document.getElementById('il-btn').innerText = data.il || "00.00";
+            document.getElementById('et-btn').innerText = data.et || "00.00";
+            calcGoal();
+        } else { localStorage.removeItem('usps_temp_entries'); }
+    }
 
     function syncLocalDay() {
         const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -225,7 +256,16 @@
 
     function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
     function formatKp() { let val = kpBuffer.padStart(4, "0"); let formatted = val.substring(0,2) + "." + val.substring(2,4); document.getElementById('kp-display').innerText = formatted; }
-    function kpSet() { let val = document.getElementById('kp-display').innerText; document.getElementById(activeId).value = val; const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'}; document.getElementById(btnMap[activeId]).innerText = val; closeKeypad(); calcGoal(); }
+    
+    function kpSet() { 
+        let val = document.getElementById('kp-display').innerText; 
+        document.getElementById(activeId).value = val; 
+        const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'}; 
+        document.getElementById(btnMap[activeId]).innerText = val; 
+        closeKeypad(); 
+        calcGoal(); 
+        saveTempEntries(); // SAVE ON SET
+    }
 
     function calcGoal() {
         const btStr = document.getElementById('t-in').value || "0.00";
@@ -252,18 +292,22 @@
         const logEntry = { day: day.substring(0,3), bt, ol, il, et, total, id: Date.now() };
         log.push(logEntry); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
         syncLocalDay();
+        localStorage.removeItem('usps_temp_entries'); // CLEAR TEMP ONCE ADDED
         const ids = ['t-in','l-out','l-in','t-actual'], btns = ['bt-btn','ol-btn','il-btn','et-btn'];
         ids.forEach((id, i) => { document.getElementById(id).value = "00.00"; document.getElementById(btns[i]).innerText = "00.00"; });
         document.getElementById('t-target').innerText = "00.00";
     }
 
     function renderLog() { 
-        const log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
+        const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+        log.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)); // SORT BY POSTAL WEEK
+
         const container = document.getElementById('log-container');
         container.innerHTML = log.map(entry => `
             <div class="log-row">
-                <b>${entry.day}</b>
                 <span class="del-x" onclick="confirmDelete(${entry.id})">X</span>
+                <b>${entry.day}</b>
                 <span>${entry.bt}</span><span>${entry.ol}</span><span>${entry.il}</span><span>${entry.et}</span><span class="total-col">${entry.total}</span>
             </div>
         `).join('');
@@ -271,7 +315,7 @@
         const totalSum = log.reduce((sum, entry) => sum + parseFloat(entry.total), 0).toFixed(2);
         const totalRow = document.getElementById('log-total-row');
         if(log.length > 0) {
-            totalRow.innerHTML = `<div class="total-row"><span>TOTAL</span><span></span><span></span><span></span><span></span><span></span><span>${totalSum}</span></div>`;
+            totalRow.innerHTML = `<div class="total-row"><span></span><span>TOTAL</span><span></span><span></span><span></span><span></span><span>${totalSum}</span></div>`;
         } else {
             totalRow.innerHTML = "";
         }
