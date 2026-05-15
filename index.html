@@ -31,7 +31,6 @@
         label { display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
 
         .zip-trigger, input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        
         input[type="text"]:disabled::placeholder { color: #ccc; font-weight: 400; }
         
         .zip-trigger { cursor: pointer; }
@@ -73,13 +72,12 @@
         #cc { pointer-events: auto; }
         .list-card { background: white; padding: 12px 15px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 440px; }
         
-        /* FIX: EVENLY SPACED LEFT-SIDE CONTENT */
+        /* CARD CONTENT - SMALLER STREETS & ZIP TAGS */
         .info-left { display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 85px; }
-        .info-left span:first-child { font-size: 0.9rem; font-weight: 800; color: #555; margin-bottom: auto; }
-        .info-left span:last-child { margin-top: auto; }
+        .info-left span:first-child { font-size: 0.75rem; font-weight: 800; color: #555; margin-bottom: auto; }
         
         .range-txt { font-size: 1.8rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: 8px 0; }
-        .zip-tag-blue { background: var(--bl); color: white; padding: 3px 7px; border-radius: 4px; font-size: 0.8rem; font-weight: 900; display: inline-block; }
+        .zip-tag-blue { background: var(--bl); color: white; padding: 2px 5px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; display: inline-block; margin-top: auto; align-self: flex-start; }
         
         .rt-block { background: var(--bl); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 90px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .rt-block small { display: block; margin-bottom: 2px; }
@@ -261,10 +259,7 @@
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     item.results.forEach(res => {
                         const card = document.createElement('div'); card.className="list-card";
-                        
-                        // FIX: RE-STRUCTURED INFO-LEFT FOR EVEN SPACING
                         card.innerHTML = `<div class="info-left"><span>${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
-                        
                         cc.appendChild(card);
                     });
                 }; sugBox.appendChild(d);
