@@ -46,7 +46,7 @@
         .apply-wrap { padding: 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; }
 
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
-        #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 30000; display: none; align-items: center; justify-content: center; }
+        #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 30000; display: none; align-items: center; justify-content: center; }
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
 
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px; } 
@@ -87,7 +87,7 @@
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
         #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 15px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; }
 
-        /* GRID DEFINITIONS FIXED FOR X VISIBILITY */
+        /* GRID DEFINITIONS */
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 45px 30px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
         .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
         .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; }
@@ -95,7 +95,9 @@
         .total-row { padding: 12px 0; background: var(--bl); color: white; border-radius: 6px; margin-top: 8px; font-weight: 900; font-size: 0.95rem; }
         .total-row span:last-child { color: var(--yl); font-size: 1.1rem; }
 
-        .log-row b { text-align: left; padding-left: 2px; font-size: 0.8rem; }
+        /* SHIFT DATA RIGHT IN DAY COLUMN */
+        .log-row b { text-align: left; padding-left: 6px; font-size: 0.8rem; }
+        
         .total-col { color: var(--gr); font-weight: 900; }
         .del-x { color: white !important; background: var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto; line-height: 1; border: none; }
     </style>
