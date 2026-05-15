@@ -38,6 +38,10 @@
         .btn-blu { background-color: var(--bl); color: white; }
         .btn-grn { background-color: var(--gr); color: white; }
 
+        /* ROUND TIMEKEEPER BUTTON */
+        .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 85px; height: 85px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.6rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
+        .btn-round-tk span { font-size: 1.5rem; margin-bottom: 2px; }
+
         #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 5000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-height: 65vh; flex-direction: column; width: 100%; box-sizing: border-box; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; }
         .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #ddd; }
@@ -45,12 +49,11 @@
         .apply-wrap { padding: 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; }
 
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
-        #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 30000; display: none; align-items: center; justify-content: center; }
+        #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 30000; display: none; align-items: center; justify-content: center; }
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
 
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px; } 
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        
         #keypadPicker .time-box { border: none; box-shadow: none; background: #fff; padding: 0; }
         #kp-header-wrap { padding: 20px 0 10px; position: relative; display: flex; justify-content: center; align-items: center; }
         .kp-modal-x { position: absolute; top: 5px; right: 5px; width: 30px; height: 30px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 18px; font-weight: 900; cursor: pointer; }
@@ -62,46 +65,34 @@
 
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px 20px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; }
-        
-        .entry-display { background: #001a33; border: 2px solid #005fa3; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: #00d2ff; margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: none; text-shadow: none; }
+        .entry-display { background: #001a33; border: 2px solid #005fa3; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: #00d2ff; margin: 0 20px 15px; text-align: center; letter-spacing: 5px; }
 
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.5rem; cursor: pointer; color: var(--bl); }
 
         .ref-btn { position: absolute; bottom: 100px; z-index: 50; background: var(--bl); color: white; width: 110px; height: 45px; border: none; border-radius: 8px; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border-bottom: 3px solid #002d52; transition: transform 0.4s ease; pointer-events: auto; }
         .ref-left { left: 15px; }
-        .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
         .ref-right { right: 15px; }
 
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 10px 15px 75px 15px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         
-        .list-card { background: white; padding: 12px 15px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 440px; }
-        .info-left { display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 85px; }
-        .info-left span:first-child { font-size: 0.75rem; font-weight: 800; color: #555; display: block; }
-        .range-txt { font-size: 1.8rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: auto 0; }
-        .zip-tag-blue { background: var(--bl); color: white; padding: 2px 5px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; display: inline-block; align-self: flex-start; }
-        .rt-block { background: var(--bl); color: white; padding: 10px; border-radius: 8px; text-align: center; min-width: 90px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .rt-block small { display: block; margin-bottom: 2px; }
-        .rt-block span { font-size: 2.2rem; display: block; font-weight: 900; line-height: 1; }
-        
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; }
-        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
-        
-        body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
-        #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 15px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; }
-
-        /* GRID SWAPPED: X IN COL 1, DAY IN COL 2 */
+        /* GRID LOGOUT - X, DAY, BT, OL, IL, ET, HOURS */
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
         .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
         .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; }
         
-        .total-row { padding: 12px 0; background: #fff; color: #000; border-top: 2px solid var(--bl); margin-top: 8px; font-weight: 900; font-size: 0.95rem; }
+        /* TOTAL ROW: NO BACKGROUND, SMALLER 'TOTAL' FONT */
+        .total-row { padding: 12px 0; background: transparent; color: #000; border-top: 2px solid var(--bl); margin-top: 8px; font-weight: 900; }
+        .total-row b { font-size: 0.75rem; text-align: right; padding-right: 4px; }
         .total-row span:last-child { color: var(--gr); font-size: 1.1rem; }
 
-        /* DAY COLUMN (NOW COL 2) SHIFT DATA RIGHT */
-        .log-row b { text-align: left; padding-left: 2px; font-size: 0.8rem; }
+        /* CENTER DAY TEXT UNDER HEADER */
+        .log-row b { text-align: center; font-size: 0.8rem; display: block; }
         .total-col { color: #000; font-weight: 900; }
         .del-x { color: white !important; background: var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto; line-height: 1; border: none; }
+        
+        body.zip-open .ref-btn, body.zip-open .btn-round-tk, body.sug-active .ref-btn, body.sug-active .btn-round-tk, body.cards-active .ref-btn, body.cards-active .btn-round-tk { transform: translateY(200px); }
+        #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 15px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; }
     </style>
 </head>
 <body id="mainBody">
@@ -186,7 +177,7 @@
         </div>
         <div id="list-res"><div id="cc"></div></div>
         <button class="ref-btn ref-left" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183016_Chrome.png')">Rates</button>
-        <button class="ref-btn ref-mid" onclick="openTime()">Timekeeper</button>
+        <button class="btn-round-tk" onclick="openTime()"><span>🕒</span>TIME<br>KEEPER</button>
         <button class="ref-btn ref-right" onclick="openViewer('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/Screenshot_20260513-183349_Chrome.png')">Conversion</button>
     </div>
 
@@ -197,7 +188,7 @@
     window.onload = async () => {
         renderLog();
         syncLocalDay(); 
-        loadTempEntries(); // Memory Restore
+        loadTempEntries();
         try {
             const resp = await fetch(XLSX_URL);
             const ab = await resp.arrayBuffer();
@@ -207,40 +198,26 @@
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'live'; } }
     };
 
-    // MEMORY LOGIC
     function saveTempEntries() {
         const data = {
-            bt: document.getElementById('t-in').value,
-            ol: document.getElementById('l-out').value,
-            il: document.getElementById('l-in').value,
-            et: document.getElementById('t-actual').value,
-            date: new Date().toDateString()
-        };
-        localStorage.setItem('usps_temp_entries', JSON.stringify(data));
+            bt: document.getElementById('t-in').value, ol: document.getElementById('l-out').value, il: document.getElementById('l-in').value, et: document.getElementById('t-actual').value, date: new Date().toDateString()
+        }; localStorage.setItem('usps_temp_entries', JSON.stringify(data));
     }
 
     function loadTempEntries() {
         const saved = localStorage.getItem('usps_temp_entries');
         if (!saved) return;
         const data = JSON.parse(saved);
-        // Only restore if it's the SAME day
         if (data.date === new Date().toDateString()) {
-            document.getElementById('t-in').value = data.bt;
-            document.getElementById('l-out').value = data.ol;
-            document.getElementById('l-in').value = data.il;
-            document.getElementById('t-actual').value = data.et;
-            document.getElementById('bt-btn').innerText = data.bt || "00.00";
-            document.getElementById('ol-btn').innerText = data.ol || "00.00";
-            document.getElementById('il-btn').innerText = data.il || "00.00";
-            document.getElementById('et-btn').innerText = data.et || "00.00";
+            document.getElementById('t-in').value = data.bt; document.getElementById('l-out').value = data.ol; document.getElementById('l-in').value = data.il; document.getElementById('t-actual').value = data.et;
+            document.getElementById('bt-btn').innerText = data.bt || "00.00"; document.getElementById('ol-btn').innerText = data.ol || "00.00"; document.getElementById('il-btn').innerText = data.il || "00.00"; document.getElementById('et-btn').innerText = data.et || "00.00";
             calcGoal();
         } else { localStorage.removeItem('usps_temp_entries'); }
     }
 
     function syncLocalDay() {
         const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const today = days[new Date().getDay()];
-        document.getElementById('t-day').value = today;
+        document.getElementById('t-day').value = days[new Date().getDay()];
     }
 
     function openKeypad(t, title) { activeId = t; kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; }
@@ -249,60 +226,47 @@
     function kpIn(num) { 
         if (kpBuffer.length >= 4) return;
         let temp = (kpBuffer + num.toString()).padStart(4, "0");
-        let firstTwo = parseInt(temp.substring(0,2));
-        if (firstTwo > 23) { kpClr(); return; }
+        if (parseInt(temp.substring(0,2)) > 23) { kpClr(); return; }
         kpBuffer += num.toString(); formatKp(); 
     }
 
     function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
-    function formatKp() { let val = kpBuffer.padStart(4, "0"); let formatted = val.substring(0,2) + "." + val.substring(2,4); document.getElementById('kp-display').innerText = formatted; }
-    
+    function formatKp() { let val = kpBuffer.padStart(4, "0"); document.getElementById('kp-display').innerText = val.substring(0,2) + "." + val.substring(2,4); }
     function kpSet() { 
-        let val = document.getElementById('kp-display').innerText; 
-        document.getElementById(activeId).value = val; 
-        const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'}; 
-        document.getElementById(btnMap[activeId]).innerText = val; 
-        closeKeypad(); 
-        calcGoal(); 
-        saveTempEntries(); // SAVE ON SET
+        let val = document.getElementById('kp-display').innerText; document.getElementById(activeId).value = val;
+        const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
+        document.getElementById(btnMap[activeId]).innerText = val; closeKeypad(); calcGoal(); saveTempEntries();
     }
 
     function calcGoal() {
-        const btStr = document.getElementById('t-in').value || "0.00";
-        const olStr = document.getElementById('l-out').value || "0.00";
-        const ilStr = document.getElementById('l-in').value || "0.00";
+        const btStr = document.getElementById('t-in').value || "0.00", olStr = document.getElementById('l-out').value || "0.00", ilStr = document.getElementById('l-in').value || "0.00";
         if(btStr !== "00.00") {
             const bt = parseFloat(btStr), ol = parseFloat(olStr), il = parseFloat(ilStr);
             let result = bt + 8.00 + (il - ol);
-            while (result >= 24) result -= 24;
-            while (result < 0) result += 24;
+            while (result >= 24) result -= 24; while (result < 0) result += 24;
             document.getElementById('t-target').innerText = result.toFixed(2).padStart(5, '0');
         }
     }
 
     function addToLog() {
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
-        if (log.length >= 7) { alert("Week is full (7 days). Please clear weekly log to start over."); return; }
-        const day = document.getElementById('t-day').value;
-        const bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
+        if (log.length >= 7) { alert("Week is full (7 days)."); return; }
+        const day = document.getElementById('t-day').value, bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
         const btV = parseFloat(bt), olV = parseFloat(ol), ilV = parseFloat(il), etV = parseFloat(et);
         let shift1 = olV - btV; if(shift1 < 0) shift1 += 24;
         let shift2 = etV - ilV; if(shift2 < 0) shift2 += 24;
         const total = (shift1 + shift2).toFixed(2);
-        const logEntry = { day: day.substring(0,3), bt, ol, il, et, total, id: Date.now() };
-        log.push(logEntry); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
-        syncLocalDay();
-        localStorage.removeItem('usps_temp_entries'); // CLEAR TEMP ONCE ADDED
-        const ids = ['t-in','l-out','l-in','t-actual'], btns = ['bt-btn','ol-btn','il-btn','et-btn'];
-        ids.forEach((id, i) => { document.getElementById(id).value = "00.00"; document.getElementById(btns[i]).innerText = "00.00"; });
+        log.push({ day: day.substring(0,3), bt, ol, il, et, total, id: Date.now() });
+        localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog(); syncLocalDay(); localStorage.removeItem('usps_temp_entries');
+        ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
+        ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => document.getElementById(id).innerText = "00.00");
         document.getElementById('t-target').innerText = "00.00";
     }
 
     function renderLog() { 
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
-        log.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)); // SORT BY POSTAL WEEK
-
+        log.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
         const container = document.getElementById('log-container');
         container.innerHTML = log.map(entry => `
             <div class="log-row">
@@ -311,14 +275,11 @@
                 <span>${entry.bt}</span><span>${entry.ol}</span><span>${entry.il}</span><span>${entry.et}</span><span class="total-col">${entry.total}</span>
             </div>
         `).join('');
-        
         const totalSum = log.reduce((sum, entry) => sum + parseFloat(entry.total), 0).toFixed(2);
         const totalRow = document.getElementById('log-total-row');
         if(log.length > 0) {
-            totalRow.innerHTML = `<div class="total-row"><span></span><span>TOTAL</span><span></span><span></span><span></span><span></span><span>${totalSum}</span></div>`;
-        } else {
-            totalRow.innerHTML = "";
-        }
+            totalRow.innerHTML = `<div class="total-row"><span></span><b>TOTAL</b><span></span><span></span><span></span><span></span><span>${totalSum}</span></div>`;
+        } else { totalRow.innerHTML = ""; }
     }
 
     function confirmDelete(id) { deleteTargetId = id; document.getElementById('confirmModal').style.display = 'flex'; }
@@ -327,10 +288,8 @@
         if(deleteTargetId) {
             let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
             log = log.filter(e => e.id !== deleteTargetId);
-            localStorage.setItem('usps_weekly_log', JSON.stringify(log));
-            renderLog();
-        }
-        closeConfirm();
+            localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
+        } closeConfirm();
     }
 
     function clearLog() { if(confirm("Clear entire log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
@@ -352,15 +311,13 @@
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
         const val = document.getElementById('streetInput').value.toUpperCase().trim();
-        const sugBox = document.getElementById('suggestionBox');
-        sugBox.innerHTML = "";
+        const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
         if(val.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
         document.body.classList.add('header-hidden');
         let matches = []; activeZips.forEach(z => { if(database[z]) database[z].forEach(m => { if(m.searchName.startsWith(val)) matches.push({...m, zip: z}); }); });
         if(matches.length > 0) {
             sugBox.style.display="block"; document.body.classList.add('sug-active');
-            const cleanStr = (s) => s.replace(/\b(N|S|E|W|NE|NW|SE|SW|ST|AVE|RD|DR|LN|PL|CT|CIR|WAY|LOOP|BLVD|HWY)\b/g, '').trim();
-            matches.sort((a,b) => cleanStr(a.displayName).localeCompare(cleanStr(b.displayName), undefined, {numeric:true}));
+            matches.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric:true}));
             matches.forEach(item => {
                 const d = document.createElement('div'); d.className="s-item";
                 d.innerHTML = `<span>${item.displayName}</span><span style="background:var(--bl);color:white;padding:2px 6px;border-radius:4px;font-size:0.8rem;">${item.zip}</span>`;
@@ -372,33 +329,23 @@
                         const card = document.createElement('div'); card.className="list-card";
                         card.innerHTML = `<div class="info-left"><span>${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
                         cc.appendChild(card);
-                    });
-                    document.getElementById('list-res').scrollTop = 0;
+                    }); document.getElementById('list-res').scrollTop = 0;
                 }; sugBox.appendChild(d);
-            });
-            sugBox.scrollTop = 0;
+            }); sugBox.scrollTop = 0;
         } else { sugBox.style.display="none"; document.body.classList.remove('sug-active'); }
     }
 
     function toggleZipList(e) { 
-        e.stopPropagation(); 
-        const l = document.getElementById('zipList'); 
-        const isOpen = (l.style.display==='flex'); 
-        l.style.display = isOpen ? 'none' : 'flex'; 
-        if (!isOpen) {
-            document.body.classList.add('zip-open', 'header-hidden');
-            document.getElementById('zipScrollBox').scrollTop = 0;
-        }
+        e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); 
+        l.style.display = isOpen ? 'none' : 'flex'; if (!isOpen) { document.body.classList.add('zip-open', 'header-hidden'); document.getElementById('zipScrollBox').scrollTop = 0; }
     }
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); }
     function finalApply(e) { 
-        if(e) e.stopPropagation(); 
-        const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'); 
+        if(e) e.stopPropagation(); const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'); 
         const isAll = document.getElementById('allZipMaster').checked; 
         if (isAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = '18px'; } else { trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; trig.style.fontSize = chks.length >= 5 ? '14px' : '18px'; } 
-        document.getElementById('zipList').style.display='none'; 
-        document.body.classList.remove('zip-open'); 
-        if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => { sIn.focus(); }, 300); } 
+        document.getElementById('zipList').style.display='none'; document.body.classList.remove('zip-open'); 
+        if(chks.length > 0 || isAll) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.body.classList.add('header-hidden'); setTimeout(() => sIn.focus(), 300); } 
     }
     function reopenSuggestions() { document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block"; handleSearch(); }
     function clearStreetOnly() { document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
