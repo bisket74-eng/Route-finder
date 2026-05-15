@@ -31,13 +31,16 @@
         label { display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; }
 
         .zip-trigger, input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        
+        /* FIX: LIGHTENED PLACEHOLDER FOR DISABLED STATE */
+        input[type="text"]:disabled::placeholder { color: #ccc; font-weight: 400; }
+        
         .zip-trigger { cursor: pointer; }
 
         .btn-round { height: 52px; width: 95px; border-radius: 50px; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0; }
         .btn-red { background-color: var(--rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
         
-        /* ZIP LIST LAYERED ABOVE CARDS BUT BELOW MODALS */
         #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 5000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-height: 65vh; flex-direction: column; width: 100%; box-sizing: border-box; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
         .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
@@ -65,7 +68,6 @@
         .ref-mid { left: 50%; transform: translateX(-50%); background: var(--gr); border-bottom-color: #007037; }
         .ref-right { right: 15px; }
 
-        /* CARRIER RESULTS POSITIONED TO NOT COVER BUTTON */
         #list-res { position: absolute; top: 220px; left: 0; right: 0; bottom: 0; overflow-y: auto; padding: 10px 15px 75px 15px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         
@@ -80,8 +82,6 @@
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); }
         
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
-        
-        /* NO-WRAP RETURN BUTTON */
         #backToListBtn { display: none; background-color: var(--bl); color: white; min-width: 180px; width: auto; padding: 0 15px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; white-space: nowrap; }
 
         .log-hdr, .log-row { display: grid; grid-template-columns: 1fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; width: 100%; text-align: center; }
