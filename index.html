@@ -37,15 +37,7 @@
         .btn-red { background-color: var(--rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
         
-        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 10000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 65vh; flex-direction: column; width: 100%; box-sizing: border-box; }
-        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
-        .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
-        .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
-        .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
-
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
-        
-        /* FIX 1: KEYPAD Z-INDEX BOOST */
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
 
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; } 
@@ -57,8 +49,6 @@
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; }
         .key:active { background: var(--lt-bl); }
-        
-        /* FIX 2: DIGITAL CLOCK LCD DISPLAY */
         .entry-display { background: #001a33; border: 2px solid #005fa3; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: #00d2ff; margin-bottom: 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 0 15px rgba(0,210,255,0.3), 0 0 10px rgba(0,210,255,0.2); text-shadow: 0 0 10px rgba(0,210,255,0.8); }
 
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.3rem; cursor: pointer; color: var(--bl); }
@@ -84,12 +74,19 @@
         body.zip-open .ref-btn, body.sug-active .ref-btn, body.cards-active .ref-btn { transform: translateY(200px); }
         #backToListBtn { display: none; background-color: var(--bl); color: white; width: 180px; height: 36px; border-radius: 20px; font-weight: 900; font-size: 0.7rem; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin: 5px auto 10px; position: relative; z-index: 300; }
 
-        /* FIX 3: RE-ALIGNED LOG HEADERS */
-        .log-hdr, .log-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; width: 100%; text-align: center; }
+        /* LOG TABLE: 6-COLUMN GRID */
+        .log-hdr, .log-row { display: grid; grid-template-columns: 1fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr; width: 100%; text-align: center; }
         .log-hdr { padding: 8px 0; border-bottom: 2px solid var(--bl); font-weight: 900; font-size: 0.75rem; color: var(--bl); margin-top: 15px; }
-        .log-hdr span:first-child { text-align: left; padding-left: 5px; } /* Day label shifted left */
-        .log-row { padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; font-weight: 700; }
+        .log-hdr span:first-child { text-align: left; padding-left: 5px; }
+        .log-row { padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.8rem; font-weight: 700; }
         .log-row b { text-align: left; padding-left: 5px; }
+        .total-col { color: var(--gr); }
+
+        #zipList { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 4px solid var(--bl); z-index: 10000; display: none; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); max-height: 65vh; flex-direction: column; width: 100%; box-sizing: border-box; }
+        .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+        .zip-item { display: flex; align-items: center; padding: 15px; font-weight: 800; color: #333; font-size: 1.2rem; border-bottom: 1px solid #eee; }
+        .zip-item input { width: 24px; height: 24px; margin-right: 12px; }
+        .apply-wrap { padding: 12px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; background: #fff; }
     </style>
 </head>
 <body id="mainBody">
@@ -116,7 +113,13 @@
             <h2 style="color:var(--bl); margin:0 0 15px;">Timekeeper</h2>
             
             <select id="t-day" style="width:160px; padding:10px; margin:0 auto 15px; font-weight:900; border:2px solid var(--bl); border-radius:8px; display:block; text-align:center;">
-                <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Sunday">Sunday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
             </select>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
@@ -134,7 +137,7 @@
 
             <button class="btn-round btn-yel" id="add-log-btn" style="width:160px; margin:15px auto 0; display:block;" onclick="addToLog()">Add To Log</button>
             
-            <div class="log-hdr"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span></div>
+            <div class="log-hdr"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>TOTAL</span></div>
             <div id="log-table" style="overflow-y:visible; margin-bottom: 10px;">
                 <div id="log-container"></div>
             </div>
@@ -174,41 +177,12 @@
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'live'; } }
     };
 
-    function openKeypad(t, title) { 
-        activeId = t; 
-        kpBuffer = ""; 
-        document.getElementById('kp-display').innerText = "00.00";
-        document.getElementById('keypad-title').innerText = "Set " + title; 
-        document.getElementById('keypadPicker').style.display='flex'; 
-    }
-
+    function openKeypad(t, title) { activeId = t; kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; document.getElementById('keypad-title').innerText = "Set " + title; document.getElementById('keypadPicker').style.display='flex'; }
     function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
-
-    function kpIn(num) {
-        if (kpBuffer.length >= 4) return;
-        kpBuffer += num.toString();
-        formatKp();
-    }
-
-    function kpClr() {
-        kpBuffer = "";
-        document.getElementById('kp-display').innerText = "00.00";
-    }
-
-    function formatKp() {
-        let val = kpBuffer.padStart(4, "0");
-        let formatted = val.substring(0,2) + "." + val.substring(2,4);
-        document.getElementById('kp-display').innerText = formatted;
-    }
-
-    function kpSet() {
-        let val = document.getElementById('kp-display').innerText;
-        document.getElementById(activeId).value = val;
-        const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
-        document.getElementById(btnMap[activeId]).innerText = val; 
-        closeKeypad(); 
-        calcGoal();
-    }
+    function kpIn(num) { if (kpBuffer.length >= 4) return; kpBuffer += num.toString(); formatKp(); }
+    function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
+    function formatKp() { let val = kpBuffer.padStart(4, "0"); let formatted = val.substring(0,2) + "." + val.substring(2,4); document.getElementById('kp-display').innerText = formatted; }
+    function kpSet() { let val = document.getElementById('kp-display').innerText; document.getElementById(activeId).value = val; const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'}; document.getElementById(btnMap[activeId]).innerText = val; closeKeypad(); calcGoal(); }
 
     function calcGoal() {
         const btStr = document.getElementById('t-in').value || "0.00";
@@ -226,10 +200,23 @@
     function addToLog() {
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         if (log.length >= 7) { alert("Week is full (7 days). Please clear weekly log to start over."); return; }
-        const day = document.getElementById('t-day').value, bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
-        const row = `<div class="log-row"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span></div>`;
+        
+        const day = document.getElementById('t-day').value;
+        const bt = document.getElementById('t-in').value||"00.00";
+        const ol = document.getElementById('l-out').value||"00.00";
+        const il = document.getElementById('l-in').value||"00.00";
+        const et = document.getElementById('t-actual').value||"00.00";
+        
+        // CALC TOTAL: (OL-BT) + (ET-IL)
+        const btV = parseFloat(bt), olV = parseFloat(ol), ilV = parseFloat(il), etV = parseFloat(et);
+        let shift1 = olV - btV; if(shift1 < 0) shift1 += 24;
+        let shift2 = etV - ilV; if(shift2 < 0) shift2 += 24;
+        const total = (shift1 + shift2).toFixed(2);
+
+        const row = `<div class="log-row"><b>${day.substring(0,3)}</b><span>${bt}</span><span>${ol}</span><span>${il}</span><span>${et}</span><span class="total-col">${total}</span></div>`;
         log.push(row); localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
-        document.getElementById('t-day').value = "Monday";
+        
+        document.getElementById('t-day').value = "Saturday"; // Reset to start of postal week
         const ids = ['t-in','l-out','l-in','t-actual'];
         const btns = ['bt-btn','ol-btn','il-btn','et-btn'];
         ids.forEach((id, i) => { document.getElementById(id).value = "00.00"; document.getElementById(btns[i]).innerText = "00.00"; });
@@ -237,7 +224,7 @@
     }
 
     function renderLog() { document.getElementById('log-container').innerHTML = (JSON.parse(localStorage.getItem('usps_weekly_log')||"[]")).join(''); }
-    function clearLog() { if(confirm("Clear log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
+    function clearLog() { if(confirm("Clear weekly log?")) { localStorage.removeItem('usps_weekly_log'); renderLog(); } }
 
     function processExcelData(rows) {
         const nDB = {};
