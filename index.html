@@ -330,6 +330,14 @@
                 if (upperToken === "AVENUE") return "AVE";
                 if (upperToken === "COURT") return "CT";
                 if (upperToken === "LOOP") return "LOOP";
+                if (upperToken === "SOUTHEAST") return "SE";
+                if (upperToken === "NORTHEAST") return "NE";
+                if (upperToken === "NORTHWEST") return "NW";
+                if (upperToken === "SOUTHWEST") return "SW";
+                if (upperToken === "NORTH") return "N";
+                if (upperToken === "SOUTH") return "S";
+                if (upperToken === "EAST") return "E";
+                if (upperToken === "WEST") return "W";
                 return token;
             });
             transcript = mappedTokens.join(" ");
@@ -426,7 +434,7 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    // STRICT WORD REGEX FILTER
+    // SYMMETRICAL CORE-FIRST ENGINE
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
@@ -434,12 +442,22 @@
         let rawVal = input.value.toUpperCase().trim();
         
         rawVal = rawVal.replace("AVENUE", "AVE").replace("STREET", "ST").replace("COURT", "CT").replace("ROAD", "RD").replace("DRIVE", "DR").replace("BOULEVARD", "BLVD").replace("LANE", "LN");
+        rawVal = rawVal.replace("SOUTHEAST", "SE").replace("NORTHEAST", "NE").replace("NORTHWEST", "NW").replace("SOUTHWEST", "SW").replace("NORTH", "N").replace("SOUTH", "S").replace("EAST", "E").replace("WEST", "W");
+
         if (!document.getElementById('mainBody').classList.contains('cards-active')) { lastSearchTerm = input.value; }
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
         if(rawVal.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
         document.body.classList.add('header-hidden');
         
         let searchTokens = rawVal.split(/\s+/);
+        const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
+        let trailingDir = null;
+
+        // Strip directional tracking *only* if it is trailing at the back of the sequence
+        if (searchTokens.length > 1 && directionalList.includes(searchTokens[searchTokens.length - 1])) {
+            trailingDir = searchTokens.pop();
+        }
+
         let leadToken = searchTokens[0];
         let subTokens = searchTokens.slice(1);
 
@@ -450,19 +468,28 @@
                     const targetName = m.searchName;
                     const targetDisplay = m.displayName.toUpperCase();
                     
-                    // First token must match the start of the street cleanly
-                    if (targetName.startsWith(leadToken) || targetDisplay.startsWith(leadToken)) {
-                        let validSubCheck = true;
+                    // 1. Core verification: Must map precisely to left edge of database base target string
+                    if (targetName.startsWith(leadToken) || targetDisplay.startsWith(leadToken) || targetDisplay.split(/\s+/).slice(1).join(" ").startsWith(leadToken)) {
+                        let validCheck = true;
                         
-                        // Remaining suffix tokens must match whole words, avoiding inside-character matches
+                        // 2. Suffix matching: Strict word match inside database representation text
                         for (let i = 0; i < subTokens.length; i++) {
                             let boundRegex = new RegExp('\\b' + subTokens[i] + '\\b');
                             if (!boundRegex.test(targetDisplay)) {
-                                validSubCheck = false;
+                                validCheck = false;
                                 break;
                             }
                         }
-                        if (validSubCheck) {
+                        
+                        // 3. Directional isolation: Validate it occupies index position 0 at structural front
+                        if (validCheck && trailingDir) {
+                            let displayTokens = targetDisplay.split(/\s+/);
+                            if (displayTokens[0] !== trailingDir) {
+                                validCheck = false;
+                            }
+                        }
+
+                        if (validCheck) {
                             matches.push({...m, zip: z}); 
                         }
                     }
@@ -531,7 +558,7 @@
     function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('timeScrollContainer').scrollTop = 0; }
     function closeTime() { document.getElementById('timeModal').style.display='none'; }
     function saveTempEntries() { const data = { bt: document.getElementById('t-in').value, ol: document.getElementById('l-out').value, il: document.getElementById('l-in').value, et: document.getElementById('t-actual').value, date: new Date().toDateString() }; localStorage.setItem('usps_temp_entries', JSON.stringify(data)); }
-    function loadTempEntries() { const saved = localStorage.getItem('usps_temp_entries'); if (!saved) return; const data = JSON.parse(saved); if (data.date === new Date().toDateString()) { document.getElementById('t-in').value = data.bt; document.getElementById('l-out').value = data.ol; document.getElementById('l-in').value = data.il; document.getElementById('t-actual').value = data.et; document.getElementById('bt-btn').innerText = data.bt || "00.00"; document.getElementById('ol-btn').innerText = data.ol || "00.00"; document.getElementById('il-btn').innerText = data.il || "00.00"; document.getElementById('et-btn').innerText = data.et || "00.00"; calcGoal(); } }
+    function loadTempEntries() { const saved = localStorage.getItem('usps_temp_entries'); if (!saved) return; const data = JSON.parse(saved); if (data.date === new Date().toDateString()) { document.getElementById('t-in').value = data.bt; document.getElementById('l-out').value = data.ol; document.getElementById('l-in').value = data.il; document.getElementById('t-actual').value = data.et; document.getElementById('bt-btn').innerText = data.bt || "00.00"; document.getElementById('ol-btn').innerText = data.ol || "00.00"; document.getElementById('l-in').innerText = data.il || "00.00"; document.getElementById('et-btn').innerText = data.et || "00.00"; calcGoal(); } }
     function secretKnock() { if(!window.k) window.k=0; window.k++; if(window.k===5) alert("USPS Dev Active"); setTimeout(()=>window.k=0,2000); }
     window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); validateZipCheck(); } }
 </script>
