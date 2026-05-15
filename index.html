@@ -47,8 +47,8 @@
         .apply-wrap { padding: 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; }
         .btn-apply { width: 90%; height: 52px; border-radius: 26px; border:none; font-weight:900; font-size:1.2rem; text-transform:uppercase; cursor:pointer; background: var(--bl); color: white; }
 
-        /* CENTERED CIRCULAR MIC BUTTON - FIXED POSITION */
-        .mic-btn { position: absolute; right: 10px; top: 26px; transform: translateY(-50%); width: 36px; height: 36px; background: var(--lt-bl); border: 2px solid var(--bl); border-radius: 50%; font-size: 18px; cursor: pointer; color: var(--bl); display: flex; align-items: center; justify-content: center; z-index: 5; transition: background 0.2s ease; box-sizing: border-box; }
+        /* MIC BUTTON - CENTERED VERTICALLY IN STREET ROW */
+        .mic-btn { position: absolute; right: 10px; bottom: 8px; width: 36px; height: 36px; background: var(--lt-bl); border: 2px solid var(--bl); border-radius: 50%; font-size: 18px; cursor: pointer; color: var(--bl); display: flex; align-items: center; justify-content: center; z-index: 5; transition: background 0.2s ease; box-sizing: border-box; }
         .mic-btn.listening { background: var(--rd); border-color: var(--rd); color: white; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
@@ -145,7 +145,7 @@
             <button class="modal-x" onclick="closeTime()">×</button>
             <h2 style="color:var(--bl); margin:0 0 15px; font-size: 2rem;">Timekeeper</h2>
             
-            <select id="t-day" style="width:180px; padding:12px; margin:0 auto 15px; font-weight:900; border:3px solid var(--bl); border-radius:8px; display:block; text-align:center; font-size: 1.2rem;">
+            <select id="t-day" onchange="clearTimeInputs()" style="width:180px; padding:12px; margin:0 auto 15px; font-weight:900; border:3px solid var(--bl); border-radius:8px; display:block; text-align:center; font-size: 1.2rem;">
                 <option value="Saturday">Saturday</option>
                 <option value="Sunday">Sunday</option>
                 <option value="Monday">Monday</option>
@@ -249,49 +249,68 @@
     }
 
     function startVoiceSearch() {
-        // ENFORCE ZIP RULE
         const anyZip = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster').checked;
         if (!anyZip) { alert("Please select a Zip Code first."); return; }
-
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) { alert("Voice recognition not supported on this device."); return; }
-        
         const recognition = new SpeechRecognition();
         const micBtn = document.getElementById('micBtn');
-        
         recognition.onstart = () => micBtn.classList.add('listening');
         recognition.onend = () => micBtn.classList.remove('listening');
-        
         recognition.onresult = (event) => {
             let transcript = event.results[0][0].transcript;
-            
-            // CLEAN UP: Remove trailing periods or punctuation
             transcript = transcript.replace(/[.\?]$/, "").trim();
-            
             const input = document.getElementById('streetInput');
             input.value = transcript;
             lastSearchTerm = transcript;
             handleSearch();
         };
-        
         recognition.start();
     }
 
-    function openKeypad(t, title) { activeId = t; kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; }
+    // TIMEKEEPER LOGIC
+    function clearTimeInputs() {
+        ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
+        ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => document.getElementById(id).innerText = "00.00");
+        document.getElementById('t-target').innerText = "00.00";
+        localStorage.removeItem('usps_temp_entries');
+    }
+
+    function openKeypad(t, title) { 
+        activeId = t; 
+        const existing = document.getElementById(t).value || "00.00";
+        kpBuffer = existing.replace(".", ""); // Pull existing time into buffer
+        document.getElementById('kp-display').innerText = existing; 
+        document.getElementById('keypad-title').innerText = title; 
+        document.getElementById('keypadPicker').style.display='flex'; 
+    }
+    
     function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
+    
     function kpIn(num) { 
-        if (kpBuffer.length >= 4) return;
-        let temp = (kpBuffer + num.toString()).padStart(4, "0");
-        if (parseInt(temp.substring(0,2)) > 23) { kpClr(); return; }
-        kpBuffer += num.toString(); formatKp(); 
+        if (kpBuffer.length >= 4) {
+            kpBuffer = num.toString(); // Start fresh if 4 digits reached
+        } else {
+            kpBuffer += num.toString();
+        }
+        formatKp(); 
     }
+    
     function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
-    function formatKp() { let val = kpBuffer.padStart(4, "0"); document.getElementById('kp-display').innerText = val.substring(0,2) + "." + val.substring(2,4); }
-    function kpSet() { 
-        let val = document.getElementById('kp-display').innerText; document.getElementById(activeId).value = val;
-        const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
-        document.getElementById(btnMap[activeId]).innerText = val; closeKeypad(); calcGoal(); saveTempEntries();
+    
+    function formatKp() { 
+        let val = kpBuffer.padStart(4, "0"); 
+        document.getElementById('kp-display').innerText = val.substring(0,2) + "." + val.substring(2,4); 
     }
+    
+    function kpSet() { 
+        let val = document.getElementById('kp-display').innerText; 
+        document.getElementById(activeId).value = val;
+        const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
+        document.getElementById(btnMap[activeId]).innerText = val; 
+        closeKeypad(); calcGoal(); saveTempEntries();
+    }
+    
     function calcGoal() {
         const btStr = document.getElementById('t-in').value || "0.00", olStr = document.getElementById('l-out').value || "0.00", ilStr = document.getElementById('l-in').value || "0.00";
         if(btStr !== "00.00") {
@@ -316,9 +335,7 @@
         const total = (s1 + s2).toFixed(2);
         log.push({ day: shortDay, bt, ol, il, et, total, id: Date.now() });
         localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog(); syncLocalDay(); localStorage.removeItem('usps_temp_entries');
-        ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
-        ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => document.getElementById(id).innerText = "00.00");
-        document.getElementById('t-target').innerText = "00.00";
+        clearTimeInputs();
     }
 
     function renderLog() { 
