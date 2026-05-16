@@ -6,7 +6,6 @@
     <title>USPS Route Finder - Vancouver WA</title>
     <link rel="preload" href="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" as="image" fetchpriority="high">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; --dr-rd: #da291c; --soft-bl: #4a90e2; }
         
@@ -34,7 +33,6 @@
             overflow: hidden; 
         }
 
-        /* NATIVE LAYER SYNC ARCHITECTURE */
         .bg-flag-surface {
             position: absolute;
             left: 0;
@@ -216,6 +214,8 @@
     </style>
 </head>
 <body id="mainBody">
+    <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" class="bg-flag-surface" fetchpriority="high" loading="eager">
+
     <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
     <div id="confirmModal">
@@ -305,7 +305,7 @@
                 
                 <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
                     <span style="font-weight:900; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">8 Hour Day ET Goal:</span>
-                    <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd);">--.--</span>
+                    <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd);">--:--</span>
                 </div>
 
                 <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
@@ -323,8 +323,6 @@
     </div>
 
     <div class="app-container">
-        <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" class="bg-flag-surface" fetchpriority="high" loading="eager">
-        
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
                 <span class="line-1">USPS</span>
@@ -598,7 +596,7 @@
             const btn = document.getElementById(id);
             btn.innerText = "00.00"; btn.classList.add('unpopulated');
         });
-        document.getElementById('t-target').innerText = "--.--"; localStorage.removeItem('usps_temp_entries');
+        document.getElementById('t-target').innerText = "--:--"; localStorage.removeItem('usps_temp_entries');
         explicitKeypadOverride = false;
     }
 
@@ -609,7 +607,6 @@
         document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; 
         explicitKeypadOverride = false;
         
-        /* NONE BUTTON DISPLAY ROUTER LOGIC */
         const noneBtn = document.getElementById('kp-none-btn');
         if (t === 'l-out' || t === 'adj-l-out') { noneBtn.style.display = 'block'; }
         else { noneBtn.style.display = 'none'; }
@@ -651,10 +648,21 @@
             activeBtn.classList.remove('unpopulated'); 
         }
         
+        /* DYNAMIC RESET INTERACTION HOOK FOR LUNCH ADJUSTMENTS AWAY FROM NONE */
+        if (activeId === 'l-out') {
+            document.getElementById('l-in').value = "00.00";
+            const ilBtn = document.getElementById('il-btn');
+            ilBtn.innerText = "00.00"; ilBtn.classList.add('unpopulated');
+        }
+        if (activeId === 'adj-l-out') {
+            document.getElementById('adj-l-in').value = "00.00";
+            const adjIlBtn = document.getElementById('adj-il-btn');
+            adjIlBtn.innerText = "00.00"; adjIlBtn.classList.add('unpopulated');
+        }
+        
         closeKeypad(); if(!activeId.startsWith('adj-')) { calcGoal(); saveTempEntries(); }
     }
 
-    /* LUNCH NON-ATTENDANCE OVERRIDE EXECUTION METHOD */
     function kpSetNone() {
         if (activeId === 'l-out') {
             document.getElementById('l-out').value = "NONE";
@@ -672,7 +680,6 @@
         closeKeypad(); if(!activeId.startsWith('adj-')) { calcGoal(); saveTempEntries(); }
     }
     
-    /* CONDITIONAL TARGET GOAL ENGINE: BLANKS MATRIX UNTIL MANDATORY COMPONENTS POPULATE */
     function calcGoal() {
         const btStr = document.getElementById('t-in').value || "00.00";
         const olStr = document.getElementById('l-out').value || "00.00";
@@ -680,7 +687,7 @@
         const targetEl = document.getElementById('t-target');
         
         if (btStr === "00.00" || olStr === "00.00" || ilStr === "00.00") {
-            targetEl.innerText = "--.--";
+            targetEl.innerText = "--:--";
             return;
         }
         
@@ -933,5 +940,7 @@
     }
     window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); validateZipCheck(); } }
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 </body>
 </html>
