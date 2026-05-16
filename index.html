@@ -33,7 +33,6 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        /* PRIMARY BANNER BORDER: TOP RED STRIP STRIPPED DOWN SLIGHTLY UNTIL SHARP AND THIN */
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 15px; text-align: center; color: white; cursor: pointer; border-top: 1.5px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; border-radius: 0; box-sizing: border-box; position: relative; }
         
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
@@ -93,8 +92,6 @@
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); box-sizing: border-box; }
         
         .time-fixed-top { flex-shrink: 0; }
-        
-        /* TIMEKEEPER INNER SCROLL PORTION SHIFTED SLIGHTLY TO THE LEFT TO SHIELD DATA COLUMNS FROM SCROLLBAR CLIPPING */
         .time-log-scroll-wrapper { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; margin-top: 5px; padding-right: 4px; }
 
         .modal-x { position: absolute; top: 10px; right: 10px; width: 45px; height: 45px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 26px; font-weight: 900; cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center; }
@@ -111,7 +108,6 @@
         .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; }
         .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-size: 2.1rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; padding-top: 16px; }
 
-        /* INCREASED GAP RATIO MODIFIED BY EXPLICIT RIGHT-HAND DISPLACEMENT PADDING TO FORCE TOTAL RECORD TO BREATHE CLEAR */
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 44px 44px 44px 44px 44px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 3px; }
         .log-hdr { padding: 12px 18px 12px 4px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; }
         .log-row { padding: 10px 18px 10px 4px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; }
@@ -190,7 +186,7 @@
             <div class="keypad-container">
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
                 <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
-                <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(99)">9</div>
+                <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
                 <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
             </div>
         </div>
@@ -372,6 +368,7 @@
 
     function closeConfirm() { document.getElementById('confirmModal').style.display = 'none'; deleteTargetId = null; currentAction = ""; }
 
+    // RETAINED INTENTIONALLY INTACT FOR VOICE SEARCH TOKENS
     function startVoiceSearch() {
         const anyZip = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster').checked;
         if (!anyZip) { openStyledAlert("PLEASE SELECT A ZIP CODE FIRST"); return; }
@@ -384,22 +381,11 @@
         recognition.onresult = (event) => {
             let transcript = event.results[0][0].transcript;
             transcript = transcript.replace(/[^\w\s]/g, "").trim();
-            let tokens = transcript.split(/\s+/);
-            let mappedTokens = [];
-            
+            let tokens = transcript.split(/\s+/); let mappedTokens = [];
             for (let i = 0; i < tokens.length; i++) {
-                let currentToken = tokens[i].toUpperCase();
-                let nextToken = (i + 1 < tokens.length) ? tokens[i+1].toUpperCase() : "";
-
-                if (currentToken === "FOURTH" && (nextToken === "PLAIN" || nextToken === "PLANE" || nextToken === "PLAYNE" || nextToken === "PLAN")) {
-                    mappedTokens.push("FOURTH");
-                    continue;
-                }
-                if (currentToken === "4TH" && (nextToken === "PLAIN" || nextToken === "PLANE" || nextToken === "PLAYNE" || nextToken === "PLAN")) {
-                    mappedTokens.push("FOURTH");
-                    continue;
-                }
-
+                let currentToken = tokens[i].toUpperCase(); let nextToken = (i + 1 < tokens.length) ? tokens[i+1].toUpperCase() : "";
+                if (currentToken === "FOURTH" && (nextToken === "PLAIN" || nextToken === "PLANE" || nextToken === "PLAYNE" || nextToken === "PLAN")) { mappedTokens.push("FOURTH"); continue; }
+                if (currentToken === "4TH" && (nextToken === "PLAIN" || nextToken === "PLANE" || nextToken === "PLAYNE" || nextToken === "PLAN")) { mappedTokens.push("FOURTH"); continue; }
                 if (currentToken === "FIRST") { mappedTokens.push("1ST"); continue; }
                 if (currentToken === "SECOND") { mappedTokens.push("2ND"); continue; }
                 if (currentToken === "THIRD") { mappedTokens.push("3RD"); continue; }
@@ -410,7 +396,6 @@
                 if (currentToken === "EIGHTH") { mappedTokens.push("8TH"); continue; }
                 if (currentToken === "NINTH") { mappedTokens.push("9TH"); continue; }
                 if (currentToken === "TENTH") { mappedTokens.push("10TH"); continue; }
-
                 if (currentToken === "CIRCLE") { mappedTokens.push("CIR"); continue; }
                 if (currentToken === "STREET") { mappedTokens.push("ST"); continue; }
                 if (currentToken === "AVENUE") { mappedTokens.push("AVE"); continue; }
@@ -424,18 +409,13 @@
                 if (currentToken === "SOUTH") { mappedTokens.push("S"); continue; }
                 if (currentToken === "EAST") { mappedTokens.push("E"); continue; }
                 if (currentToken === "WEST") { mappedTokens.push("W"); continue; }
-                
                 mappedTokens.push(tokens[i]);
             }
             transcript = mappedTokens.join(" ");
-
             transcript = transcript.replace(/\bMILL\s+(PLANE|PLAYNE|PLAN)\b/gi, "MILL PLAIN");
             transcript = transcript.replace(/\bFOURTH\s+(PLANE|PLAYNE|PLAN)\b/gi, "FOURTH PLAIN");
-
-            const input = document.getElementById('streetInput');
-            input.value = transcript;
-            lastSearchTerm = transcript;
-            handleSearch();
+            const input = document.getElementById('streetInput'); input.value = transcript;
+            lastSearchTerm = transcript; handleSearch();
         };
         recognition.start();
     }
@@ -443,36 +423,28 @@
     function clearTimeInputs() {
         ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
         ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => document.getElementById(id).innerText = "00.00");
-        document.getElementById('t-target').innerText = "00.00";
-        localStorage.removeItem('usps_temp_entries');
+        document.getElementById('t-target').innerText = "00.00"; localStorage.removeItem('usps_temp_entries');
     }
 
     function openKeypad(t, title) { 
-        activeId = t; 
-        const existing = document.getElementById(t).value || "00.00";
-        kpBuffer = existing.replace(".", "");
-        document.getElementById('kp-display').innerText = existing; 
-        document.getElementById('keypad-title').innerText = title; 
-        document.getElementById('keypadPicker').style.display='flex'; 
+        activeId = t; const existing = document.getElementById(t).value || "00.00";
+        kpBuffer = existing.replace(".", ""); document.getElementById('kp-display').innerText = existing; 
+        document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; 
     }
-    
     function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
     function kpIn(num) { if (kpBuffer.length >= 4) { kpBuffer = num.toString(); } else { kpBuffer += num.toString(); } formatKp(); }
     function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
     function formatKp() { let val = kpBuffer.padStart(4, "0"); document.getElementById('kp-display').innerText = val.substring(0,2) + "." + val.substring(2,4); }
     function kpSet() { 
-        let val = document.getElementById('kp-display').innerText; 
-        document.getElementById(activeId).value = val;
+        let val = document.getElementById('kp-display').innerText; document.getElementById(activeId).value = val;
         const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
-        document.getElementById(btnMap[activeId]).innerText = val; 
-        closeKeypad(); calcGoal(); saveTempEntries();
+        document.getElementById(btnMap[activeId]).innerText = val; closeKeypad(); calcGoal(); saveTempEntries();
     }
     
     function calcGoal() {
         const btStr = document.getElementById('t-in').value || "0.00", olStr = document.getElementById('l-out').value || "0.00", ilStr = document.getElementById('l-in').value || "0.00";
         if(btStr !== "00.00") {
-            const bt = parseFloat(btStr), ol = parseFloat(olStr), il = parseFloat(ilStr);
-            let result = bt + 8.00 + (il - ol);
+            const bt = parseFloat(btStr), ol = parseFloat(olStr), il = parseFloat(ilStr); let result = bt + 8.00 + (il - ol);
             while (result >= 24) result -= 24; while (result < 0) result += 24;
             document.getElementById('t-target').innerText = result.toFixed(2).padStart(5, '0');
         }
@@ -481,33 +453,24 @@
     function addToLog() {
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         if (log.length >= 14) { openStyledAlert("LOG IS FULL (14 DAYS MAX)"); return; }
-        const day = document.getElementById('t-day').value;
-        const shortDay = day.substring(0,3);
+        const day = document.getElementById('t-day').value; const shortDay = day.substring(0,3);
         const count = log.filter(e => e.day === shortDay).length;
         if (count >= 2) { openStyledAlert("TWO ENTRIES ALREADY EXIST FOR " + day); return; }
         const bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
         const btV = parseFloat(bt), olV = parseFloat(ol), ilV = parseFloat(il), etV = parseFloat(et);
         let s1 = olV - btV; if(s1 < 0) s1 += 24;
         let s2 = etV - ilV; if(s2 < 0) s2 += 24;
-        const total = (s1 + s2).toFixed(2);
-        log.push({ day: shortDay, bt, ol, il, et, total, id: Date.now() });
+        const total = (s1 + s2).toFixed(2); log.push({ day: shortDay, bt, ol, il, et, total, id: Date.now() });
         localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog(); syncLocalDay(); localStorage.removeItem('usps_temp_entries');
         clearTimeInputs();
-        
-        setTimeout(() => {
-            const frame = document.getElementById('logScrollFrame');
-            if(frame) frame.scrollTop = 0;
-        }, 50);
+        setTimeout(() => { const frame = document.getElementById('logScrollFrame'); if(frame) frame.scrollTop = 0; }, 50);
     }
 
     function renderLog() { 
-        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
-        const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
-        log.sort((a,b) => a.id - b.id);
-        let b1 = [], b2 = [], cnt = {};
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+        log.sort((a,b) => a.id - b.id); let b1 = [], b2 = [], cnt = {};
         log.forEach(e => { cnt[e.day] = (cnt[e.day] || 0) + 1; if(cnt[e.day] === 1) b1.push(e); else b2.push(e); });
-        b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
-        b2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
+        b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)); b2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
         const container = document.getElementById('log-container');
         let html = b1.map(e => `<div class="log-row"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
         if(b1.length > 0) { const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row"><span></span><span></span><span></span><span></span><b>TOTAL WEEK 1</b><span></span><span>${sum1}</span></div>`; }
@@ -519,17 +482,11 @@
     function processExcelData(rows) {
         const nDB = {};
         rows.forEach(c => {
-            const z = c[7]?.toString().trim(), nm = c[4]?.toString().trim();
-            if(!z || !nm || z==="ZIP") return;
+            const z = c[7]?.toString().trim(), nm = c[4]?.toString().trim(); if(!z || !nm || z==="ZIP") return;
             if(!nDB[z]) nDB[z] = [];
-            const dir = c[3]?.toString().trim() || "";
-            const suf = c[5]?.toString().trim() || "";
-            
-            let rawColumnC = c[2]?.toString().trim().toUpperCase() || "";
-            let oeType = "";
-            if (rawColumnC.includes("O")) oeType = "O";
-            else if (rawColumnC.includes("E")) oeType = "E";
-            
+            const dir = c[3]?.toString().trim() || ""; const suf = c[5]?.toString().trim() || "";
+            let rawColumnC = c[2]?.toString().trim().toUpperCase() || ""; let oeType = "";
+            if (rawColumnC.includes("O")) oeType = "O"; else if (rawColumnC.includes("E")) oeType = "E";
             const fNm = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s=>s.trim()).join(" ");
             let st = nDB[z].find(s=>s.displayName === fNm);
             if(!st){ st = { searchName: nm.toUpperCase(), displayName: fNm, directional: dir.toUpperCase(), suffix: suf.toUpperCase(), results: [] }; nDB[z].push(st); }
@@ -537,63 +494,39 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    function formatRangeStrings(str) {
-        return str.replace(/([a-zA-Z]+)/g, '<span class="range-letter-sub">$1</span>');
-    }
+    function formatRangeStrings(str) { return str.replace(/([a-zA-Z]+)/g, '<span class="range-letter-sub">$1</span>'); }
 
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
-        const input = document.getElementById('streetInput');
-        let rawVal = input.value.toUpperCase().trim();
-        
+        const input = document.getElementById('streetInput'); let rawVal = input.value.toUpperCase().trim();
         rawVal = rawVal.replace("AVENUE", "AVE").replace("STREET", "ST").replace("COURT", "CT").replace("ROAD", "RD").replace("DRIVE", "DR").replace("BOULEVARD", "BLVD").replace("LANE", "LN");
         rawVal = rawVal.replace("SOUTHEAST", "SE").replace("NORTHEAST", "NE").replace("NORTHWEST", "NW").replace("SOUTHWEST", "SW").replace("NORTH", "N").replace("SOUTH", "S").replace("EAST", "E").replace("WEST", "W");
-
-        rawVal = rawVal.replace(/\bMILL\s+(PLANE|PLAYNE|PLAN)\b/g, "MILL PLAIN");
-        rawVal = rawVal.replace(/\bFOURTH\s+(PLANE|PLAYNE|PLAN)\b/g, "FOURTH PLAIN");
+        rawVal = rawVal.replace(/\bMILL\s+(PLANE|PLAYNE|PLAN)\b/g, "MILL PLAIN").replace(/\bFOURTH\s+(PLANE|PLAYNE|PLAN)\b/g, "FOURTH PLAIN");
 
         if (!document.getElementById('mainBody').classList.contains('cards-active')) { lastSearchTerm = input.value; }
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
         if(rawVal.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
         document.body.classList.add('header-hidden');
         
-        let searchTokens = rawVal.split(/\s+/);
-        const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
+        let searchTokens = rawVal.split(/\s+/); const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
         let explicitDirFilter = null;
-
         if (searchTokens.length > 0 && directionalList.includes(searchTokens[0])) { explicitDirFilter = searchTokens.shift(); }
         if (searchTokens.length > 0 && directionalList.includes(searchTokens[searchTokens.length - 1])) { explicitDirFilter = searchTokens.pop(); }
-
-        let coreQueryName = searchTokens.join(" ");
-        let suffixToken = null;
-        const knownSuffixes = ["ST", "AVE", "CIR", "CT", "RD", "DR", "BLVD", "LN", "LOOP"];
-
-        if (searchTokens.length > 1 && knownSuffixes.includes(searchTokens[searchTokens.length - 1])) {
-            suffixToken = searchTokens.pop();
-            coreQueryName = searchTokens.join(" ");
-        }
+        let coreQueryName = searchTokens.join(" "); let suffixToken = null; const knownSuffixes = ["ST", "AVE", "CIR", "CT", "RD", "DR", "BLVD", "LN", "LOOP"];
+        if (searchTokens.length > 1 && knownSuffixes.includes(searchTokens[searchTokens.length - 1])) { suffixToken = searchTokens.pop(); coreQueryName = searchTokens.join(" "); }
 
         let matches = []; 
         activeZips.forEach(z => { 
             if(database[z]) {
                 database[z].forEach(m => { 
-                    const targetName = m.searchName; 
-                    const targetDisplay = m.displayName.toUpperCase(); 
-                    
+                    const targetName = m.searchName; const targetDisplay = m.displayName.toUpperCase(); 
                     let baseMatch = false;
                     if (coreQueryName.length === 0 && explicitDirFilter) { baseMatch = true; } else { baseMatch = targetName.startsWith(coreQueryName); }
-                    
                     if (baseMatch) {
                         let validCheck = true;
-                        if (suffixToken) {
-                            let suffixRegex = new RegExp('\\b' + suffixToken + '\\b');
-                            if (!suffixRegex.test(targetDisplay)) { validCheck = false; }
-                        }
-                        if (validCheck && explicitDirFilter) {
-                            let displayTokens = targetDisplay.split(/\s+/);
-                            if (displayTokens[0] !== explicitDirFilter) { validCheck = false; }
-                        }
+                        if (suffixToken) { let suffixRegex = new RegExp('\\b' + suffixToken + '\\b'); if (!suffixRegex.test(targetDisplay)) { validCheck = false; } }
+                        if (validCheck && explicitDirFilter) { let displayTokens = targetDisplay.split(/\s+/); if (displayTokens[0] !== explicitDirFilter) { validCheck = false; } }
                         if (validCheck) { matches.push({...m, zip: z}); }
                     }
                 }); 
@@ -601,105 +534,90 @@
         });
         if(matches.length > 0) {
             sugBox.style.display="block"; document.body.classList.add('sug-active');
-            
             matches.sort((a, b) => {
                 let nameA = a.searchName; let nameB = b.searchName;
                 let cleanA = nameA.replace(/(ST|ND|RD|TH)$/g, ""); let cleanB = nameB.replace(/(ST|ND|RD|TH)$/g, "");
                 let isNumA = !isNaN(cleanA) && cleanA !== ""; let isNumB = !isNaN(cleanB) && cleanB !== "";
-
                 let coreComp = 0;
                 if (isNumA && isNumB) { coreComp = parseInt(cleanA, 10) - parseInt(cleanB, 10); } 
-                else if (isNumA && !isNumB) { return -1; } 
-                else if (!isNumA && isNumB) { return 1; } 
+                else if (isNumA && !isNumB) { return -1; } else if (!isNumA && isNumB) { return 1; } 
                 else { coreComp = nameA.localeCompare(nameB, undefined, {numeric: true}); }
-
                 if (coreComp !== 0) return coreComp;
-                let sufComp = (a.suffix || "").localeCompare(b.suffix || "");
-                if (sufComp !== 0) return sufComp;
+                let sufComp = (a.suffix || "").localeCompare(b.suffix || ""); if (sufComp !== 0) return sufComp;
                 return (a.directional || "").localeCompare(b.directional || "");
             });
-
             matches.forEach(item => {
-                const d = document.createElement('div'); d.className="s-item";
-                let computedFontSize = "1.25rem";
-                if (item.displayName.length > 22) computedFontSize = "1.1rem";
-                if (item.displayName.length > 26) computedFontSize = "0.95rem";
-                if (item.displayName.length > 30) computedFontSize = "0.85rem";
-
+                const d = document.createElement('div'); d.className="s-item"; let computedFontSize = "1.25rem";
+                if (item.displayName.length > 22) computedFontSize = "1.1rem"; if (item.displayName.length > 26) computedFontSize = "0.95rem"; if (item.displayName.length > 30) computedFontSize = "0.85rem";
                 d.innerHTML = `<span style="font-size: ${computedFontSize}; font-weight: 800; text-transform: uppercase;">${item.displayName}</span><span class="zip-badge-blue">${item.zip}</span>`;
                 d.onclick = () => {
                     document.getElementById('streetInput').value = item.displayName; sugBox.style.display="none"; document.body.classList.remove('sug-active');
                     document.getElementById('backToListBtn').style.display = 'block'; document.getElementById('mainBody').classList.add('cards-active');
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     item.results.forEach(res => {
-                        const card = document.createElement('div'); card.className="list-card";
-                        let oeHtml = "";
+                        const card = document.createElement('div'); card.className="list-card"; let oeHtml = "";
                         if (res.houseType === "O" || res.houseType === "E") { oeHtml = `<span class="red-oe-stamp">${res.houseType}</span>`; }
                         let polishedRange = formatRangeStrings(res.range);
-
-                        card.innerHTML = `
-                            <div class="info-left">
-                                <span class="street-txt">${item.displayName}</span>
-                                <span class="range-txt">${polishedRange}</span>
-                                <div class="bottom-meta-row">
-                                    <span class="zip-tag-blue">ZIP ${item.zip}</span>
-                                    ${oeHtml}
-                                </div>
-                            </div>
-                            <div class="rt-block">
-                                <small>ROUTE</small>
-                                <span>${res.route}</span>
-                            </div>`;
+                        card.innerHTML = `<div class="info-left"><span class="street-txt">${item.displayName}</span><span class="range-txt">${polishedRange}</span><div class="bottom-meta-row"><span class="zip-tag-blue">ZIP ${item.zip}</span>${oeHtml}</div></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
                         cc.appendChild(card);
                     }); 
                     document.getElementById('list-res').scrollTop = 0;
                 }; sugBox.appendChild(d);
-            }); 
-            sugBox.scrollTop = 0;
+            }); sugBox.scrollTop = 0;
         } else { sugBox.style.display="none"; document.body.classList.remove('sug-active'); }
     }
 
     function toggleZipList(e) { 
         e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; 
-        if (!isOpen) {
-            document.body.classList.add('zip-open', 'header-hidden');
-            document.getElementById('zipScrollBox').scrollTop = 0;
-        } 
+        if (!isOpen) { document.body.classList.add('zip-open', 'header-hidden'); document.getElementById('zipScrollBox').scrollTop = 0; } 
     }
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); validateZipCheck(); }
     
     function finalApply(e) { 
         if(e) e.stopPropagation(); 
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), isAll = document.getElementById('allZipMaster').checked; 
-        
-        let displayStr = 'Select Zip(s)...';
-        if (isAll) { displayStr = 'ALL ZIPs'; } else if (chks.length > 0) { displayStr = Array.from(chks).map(c=>c.value).join(', '); }
+        let displayStr = 'Select Zip(s)...'; if (isAll) { displayStr = 'ALL ZIPs'; } else if (chks.length > 0) { displayStr = Array.from(chks).map(c=>c.value).join(', '); }
         trig.innerText = displayStr;
-        
         if (isAll) { trig.style.fontSize = '22px'; } else {
             const selectionCount = chks.length;
-            if (selectionCount <= 3) { trig.style.fontSize = '22px'; } 
-            else if (selectionCount === 4) { trig.style.fontSize = '18px'; } 
-            else if (selectionCount === 5) { trig.style.fontSize = '15px'; } 
-            else { trig.style.fontSize = '12px'; }
+            if (selectionCount <= 3) { trig.style.fontSize = '22px'; } else if (selectionCount === 4) { trig.style.fontSize = '18px'; } else if (selectionCount === 5) { trig.style.fontSize = '15px'; } else { trig.style.fontSize = '12px'; }
         }
-
-        document.getElementById('zipList').style.display='none'; 
-        document.body.classList.remove('zip-open'); 
+        document.getElementById('zipList').style.display='none'; document.body.classList.remove('zip-open'); 
         if(chks.length > 0 || isAll) { 
-            sIn.disabled = false; sIn.placeholder = "Enter street name..."; 
-            document.getElementById('blocker').style.display = 'none';
-            document.body.classList.add('header-hidden'); 
+            sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.getElementById('blocker').style.display = 'none'; document.body.classList.add('header-hidden'); 
             if (document.getElementById('mainBody').classList.contains('cards-active')) { reopenSuggestions(); } else { handleSearch(); }
             setTimeout(() => sIn.focus(), 300); 
-        } else { 
-            sIn.disabled = true; sIn.placeholder = "Select Zip(s) first...";
-            document.getElementById('blocker').style.display = 'block';
-        }
+        } else { sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; }
     }
     
     function reopenSuggestions() {
-        document.getElementById('cc').innerHTML = "";
-        document.getElementById('backToListBtn').style.display = "none";
-        document.getElementById('mainBody').classList.remove('cards-active');
-        document.getElementById('suggestionBox').style
+        document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none";
+        document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block";
+        const input = document.getElementById('streetInput'); input.value = lastSearchTerm; input.focus();
+        const len = input.value.length; input.setSelectionRange(len, len); handleSearch(); 
+    }
+
+    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
+    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
+    function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
+    function closeViewer() { document.getElementById('viewer').style.display='none'; }
+    function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('logScrollFrame').scrollTop = 0; }
+    function closeTime() { document.getElementById('timeModal').style.display='none'; }
+    function saveTempEntries() { const data = { bt: document.getElementById('t-in').value, ol: document.getElementById('l-out').value, il: document.getElementById('l-in').value, et: document.getElementById('t-actual').value, date: new Date().toDateString() }; localStorage.setItem('usps_temp_entries', JSON.stringify(data)); }
+    function loadTempEntries() { const saved = localStorage.getItem('usps_temp_entries'); if (!saved) return; const data = JSON.parse(saved); if (data.date === new Date().toDateString()) { document.getElementById('t-in').value = data.bt; document.getElementById('l-out').value = data.ol; document.getElementById('l-in').value = data.il; document.getElementById('t-actual').value = data.et; document.getElementById('bt-btn').innerText = data.bt || "00.00"; document.getElementById('ol-btn').innerText = data.ol || "00.00"; document.getElementById('l-in').innerText = data.il || "00.00"; document.getElementById('et-btn').innerText = data.et || "00.00"; calcGoal(); } }
+    
+    function secretKnock() { 
+        if(!window.k) window.k=0; window.k++; 
+        if(window.k===5) {
+            const liveStateHTML = `<div id="status-dot" class="${isDataLive ? 'live' : ''}"></div>`;
+            const popup = document.createElement('div');
+            popup.style = "position:fixed; bottom:140px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); color:white; padding:12px 20px; border-radius:30px; font-weight:900; font-size:0.85rem; z-index:999999; display:flex; align-items:center; gap:10px; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(0,0,0,0.4);";
+            popup.innerHTML = `<span>Database Connected</span>${liveStateHTML}`; document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 3500);
+        } 
+        setTimeout(()=>window.k=0,2000); 
+    }
+    window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); validateZipCheck(); } }
+</script>
+</body>
+</html>
