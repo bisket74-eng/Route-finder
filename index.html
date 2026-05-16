@@ -18,7 +18,6 @@
         
         .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); overflow: hidden; }
         
-        /* FLAG ENTRANCE ANIMATION: ELIMINATES LAG JUMP BY FADING IN SMOOTHLY */
         .app-container::before { 
             content: ""; 
             position: absolute; 
@@ -130,10 +129,8 @@
         .log-row b { text-align: left; font-size: 0.85rem; display: block; width: 100%; }
         .total-col { font-weight: 900; text-align: center; font-size: 0.95rem; }
         
-        /* NEW STATIC LIVE CLOCK DISPLAY FOR MAIN TIMEKEEPER */
         .static-day-label { background: #eef4f9; border: 3px solid var(--bl); border-radius: 8px; font-size: 1.3rem; font-weight: 900; color: var(--bl); padding: 10px 20px; margin: 0 auto 15px; width: 200px; display: block; text-align: center; box-sizing: border-box; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
         
-        /* NEW CONDENSED NARROW SELECTOR FOR THE ADJUSTMENT POPUP */
         .narrow-select { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center; background-size: 18px; padding: 8px 30px 8px 15px; width: 140px; margin: 0 auto 18px; font-weight: 900; border: 3px solid var(--bl); border-radius: 8px; display: block; text-align: center; font-size: 1rem; box-sizing: border-box; color: var(--bl); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
 
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 8px 120px 8px; z-index: 100; pointer-events: none; display: none; }
@@ -356,6 +353,17 @@
             isDataLive = true;
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); isDataLive = true; } }
     };
+
+    /* DYNAMIC PAY PERIOD CALENDAR ENGINE: ANCHORED MAY 16 2026 AS WEEK 1 START */
+    function getUSPSWeek(ms) {
+        const anchor = new Date(2026, 4, 16).getTime(); 
+        const d = new Date(ms);
+        const day = d.getDay();
+        const diff = (day === 6) ? 0 : (day + 1);
+        const sat = new Date(d.getFullYear(), d.getMonth(), d.getDate() - diff).getTime();
+        const weeks = Math.round((sat - anchor) / (7 * 24 * 60 * 60 * 1000));
+        return (Math.abs(weeks) % 2 === 0) ? 1 : 2;
+    }
 
     function toggleStationGroup(station, masterEl) {
         const targetList = (station === 'EAST') ? EAST_ZIPS : MAIN_ZIPS;
@@ -597,12 +605,14 @@
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
         if (log.length >= 14) { openStyledAlert("LOG IS FULL (14 DAYS MAX)"); return; }
         
-        // PULLS THE DYNAMIC CLOCK DAY FOR NEW ENTRIES
         const daysMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         const shortDay = daysMap[new Date().getDay()];
         
-        const count = log.filter(e => e.day === shortDay).length;
+        /* CALENDAR-AWARE PROTECTION: CHECKS DUPLICATES WITHIN THE EXCLUSIVE WEEK LIMITS BLOCK */
+        const currentEntryWeek = getUSPSWeek(Date.now());
+        const count = log.filter(e => e.day === shortDay && getUSPSWeek(e.id) === currentEntryWeek).length;
         if (count >= 2) { openStyledAlert("TWO ENTRIES ALREADY EXIST FOR TODAY"); return; }
+        
         const bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
         const btV = parseFloat(bt), olV = parseFloat(ol), ilV = parseFloat(il), etV = parseFloat(et);
         let s1 = olV - btV; if(s1 < 0) s1 += 24;
@@ -613,19 +623,34 @@
         setTimeout(() => { const frame = document.getElementById('logScrollFrame'); if(frame) frame.scrollTop = 0; }, 50);
     }
 
+    /* RENDER SYSTEM SORTING CHANNELS BASED ON DYNAMIC CALENDAR FLOATING RULES */
     function renderLog() { 
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
-        log.sort((a,b) => a.id - b.id); let b1 = [], b2 = [], cnt = {};
-        log.forEach(e => { cnt[e.day] = (cnt[e.day] || 0) + 1; if(cnt[e.day] === 1) b1.push(e); else b2.push(e); });
-        b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)); b2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
+        log.sort((a,b) => a.id - b.id); 
+        
+        let w1 = [], w2 = [];
+        log.forEach(e => {
+            if (getUSPSWeek(e.id) === 1) { w1.push(e); } else { w2.push(e); }
+        });
+        
+        w1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
+        w2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
+        
+        const currentWeekNum = getUSPSWeek(Date.now());
         const container = document.getElementById('log-container');
         
-        let html = b1.map(e => `<div class="log-row" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
-        if(b1.length > 0) { const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row"><b>TOTAL WEEK 1</b><span>${sum1}</span></div>`; }
+        let htmlW1 = w1.map(e => `<div class="log-row" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
+        if(w1.length > 0) { const sum1 = w1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); htmlW1 += `<div class="total-row"><b>TOTAL WEEK 1</b><span>${sum1}</span></div>`; }
         
-        html += b2.map(e => `<div class="log-row duplicate" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
-        if(b2.length > 0) { const sum2 = b2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row blue-week"><b>TOTAL WEEK 2</b><span>${sum2}</span></div>`; }
-        container.innerHTML = html;
+        let htmlW2 = w2.map(e => `<div class="log-row duplicate" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
+        if(w2.length > 0) { const sum2 = w2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); htmlW2 += `<div class="total-row blue-week"><b>TOTAL WEEK 2</b><span>${sum2}</span></div>`; }
+        
+        /* CONDITIONAL INJECTION DOCK: CURRENT ACTIVE PAY WEEK IS FLOATED HIGHER OVER THE BACKUP WEEK BLOCK */
+        if (currentWeekNum === 1) {
+            container.innerHTML = htmlW1 + htmlW2;
+        } else {
+            container.innerHTML = htmlW2 + htmlW1;
+        }
     }
 
     function processExcelData(rows) {
