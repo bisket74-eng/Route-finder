@@ -84,7 +84,6 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        /* FIXED HEIGHT OPTIMIZATION MODAL BOX: PREVENTS LAPTOP SCREEN CLIPPING LAYOUT BREAKS */
         #zipList { 
             position: absolute; 
             top: 96px; 
@@ -208,20 +207,34 @@
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 8px 120px 8px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: rgba(238, 244, 249, 0.85); backdrop-filter: blur(2px); }
         
-        .list-card { background: white; padding: 12px 14px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
+        /* RE-COMPRESSED GLOBAL VERTICAL footprint MAP RULES */
+        .list-card { background: white; padding: 6px 12px; margin: 0 auto 6px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
         
-        .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 1.05; display: inline-block; text-align: center; margin: 4px 0; letter-spacing: -0.5px; }
+        .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 0px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 1.02; display: inline-block; text-align: center; margin: 0; letter-spacing: -0.5px; }
         
-        .bottom-meta-row { display: flex; align-items: center; gap: 15px; margin-top: 4px; }
-        .zip-tag-blue { background: var(--bl); color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.95rem; font-weight: 700; display: inline-block; letter-spacing: 1px; text-align: center; width: auto; text-transform: uppercase; }
+        .bottom-meta-row { display: flex; align-items: center; gap: 15px; margin-top: 2px; }
+        .zip-tag-blue { background: var(--bl); color: #ffffff; padding: 3px 8px; border-radius: 4px; font-size: 0.95rem; font-weight: 700; display: inline-block; letter-spacing: 1px; text-align: center; width: auto; text-transform: uppercase; }
         
         .red-oe-stamp { font-size: 1.7rem; font-weight: 900; color: var(--dr-rd); text-transform: uppercase; display: inline-block; line-height: 1; font-family: 'Segoe UI', Arial, sans-serif; }
 
-        .rt-block { background: var(--bl); color: white; padding: 12px 6px; border-radius: 8px; text-align: center; min-width: 165px; width: 165px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; flex-shrink: 0; }
-        .rt-block small { display: block; margin-bottom: 2px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .rt-block { background: var(--bl); color: white; padding: 6px 6px; border-radius: 8px; text-align: center; min-width: 165px; width: 165px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; flex-shrink: 0; }
+        .rt-block small { display: block; margin-bottom: 1px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
         .rt-block span { font-size: 3.4rem; display: block; font-weight: 900; line-height: 0.85; letter-spacing: 1px; }
+        
+        /* SMART SCALING SYSTEM FOR SHARED LAPTOP TERMINALS AND LARGE MONITORS */
+        @media (min-width: 501px) {
+            .list-card { padding: 4px 12px; margin-bottom: 5px; }
+            .info-left .street-txt { font-size: 1.0rem; }
+            .range-txt { font-size: 2.1rem; }
+            .bottom-meta-row { gap: 12px; margin-top: 1px; }
+            .zip-tag-blue { font-size: 0.85rem; padding: 2px 6px; }
+            .red-oe-stamp { font-size: 1.4rem; }
+            .rt-block { min-width: 135px; width: 135px; padding: 4px 6px; }
+            .rt-block small { font-size: 0.8rem; margin-bottom: 0px; }
+            .rt-block span { font-size: 2.7rem; }
+        }
         
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 250px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         
@@ -883,6 +896,7 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
+    // UPDATED FORMATTING WITH INTEGRATED EM DYNAMIC FRACTION UNIT SCALING
     function formatRangeStrings(str) { 
         let parts = str.split('-');
         function formatSingleSegment(p) {
@@ -900,13 +914,13 @@
             
             if(!frac && !letter) return num;
             
-            return `${num}<span style="display: inline-flex; flex-direction: column; vertical-align: middle; line-height: 1.0; margin-left: 3px; height: 2.7rem; justify-content: center; text-align: left;"><span style="font-size: 0.95rem; font-weight: 800; color: #111; line-height: 1; display: block; min-height: 0.95rem;">${frac || '&nbsp;'}</span><span style="font-size: 1.35rem; font-weight: 800; color: #111; line-height: 1; display: block; min-height: 1.35rem; margin-top: 1px;">${letter || '&nbsp;'}</span></span>`;
+            return `${num}<span style="display: inline-flex; flex-direction: column; vertical-align: middle; line-height: 1.0; margin-left: 3px; height: 1em; justify-content: center; text-align: left;"><span style="font-size: 0.35em; font-weight: 800; color: #111; line-height: 1; display: block; min-height: 0.35em;">${frac || '&nbsp;'}</span><span style="font-size: 0.5em; font-weight: 800; color: #111; line-height: 1; display: block; min-height: 0.5em; margin-top: 1px;">${letter || '&nbsp;'}</span></span>`;
         }
         
         let startFormatted = formatSingleSegment(parts[0]);
         if (parts.length > 1 && parts[1].trim() !== "") {
             let endFormatted = formatSingleSegment(parts[1]);
-            return `${startFormatted}<br><span style="font-size: 2.2rem; display: block; line-height: 0.3; margin: 4px 0; color: #333; font-weight: 800; text-align: center; width: 100%;">-</span>${endFormatted}`;
+            return `${startFormatted}<br><span style="font-size: 0.7em; display: block; line-height: 0.1; margin: 1px 0; color: #333; font-weight: 800; text-align: center; width: 100%;">-</span>${endFormatted}`;
         }
         return startFormatted;
     }
@@ -1044,8 +1058,6 @@
         if(chks.length > 0 || isAll) { 
             sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.getElementById('blocker').style.display = 'none'; 
             if (document.getElementById('mainBody').classList.contains('cards-active')) { reopenSuggestions(); } else { handleSearch(); }
-            
-            // GLOBAL HARD LOCK FOCUS ENGAGEMENT: TRIGGER REGARDLESS OF CLICKEVENT OR REBOOT LIFECYCLES
             setTimeout(() => sIn.focus(), 300); 
         } else { sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; }
     }
