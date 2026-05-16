@@ -125,19 +125,20 @@
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px 20px 20px; background: #dceaf5; border-radius: 0 0 8px 8px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; user-select: none; }
         
-        /* UNPOPULATED KEYPAD THEME COLORING RULES */
+        /* STANDARDIZED CORE MONOSPACE FAMILY MATRIX FOR ALIGNED DIGITAL TIMERS */
         .entry-display { background: #fff; border: 3px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 3rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.08); }
-        .entry-display.kp-unpopulated { color: #7f9bb2; }
+        .entry-display.kp-unpopulated { color: #7f9bb2; font-family: 'Courier New', monospace; }
         
         .tk-trigger-node { position: relative; background: #fff; border: 3px solid var(--bl); border-radius: 8px; min-height: 90px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; z-index: 2; }
-        .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-family: 'Arial Narrow', -apple-system, sans-serif; font-size: 2.6rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; margin: 0; height: 100%; line-height: 1; position: relative; top: 4px; z-index: 1; }
-        .tk-trigger-node .time-display-btn.unpopulated { color: #7f9bb2; }
+        
+        .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-family: 'Courier New', monospace; font-size: 2.3rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; margin: 0; height: 100%; line-height: 1; position: relative; top: 2px; z-index: 1; }
+        .tk-trigger-node .time-display-btn.unpopulated { color: #7f9bb2; font-family: 'Courier New', monospace; }
 
         .log-hdr, .log-row, .total-row { 
             display: grid; 
-            grid-template-columns: 46px 44px 44px 44px 44px 54px; 
-            column-gap: 6px; 
+            grid-template-columns: 46px 54px 54px 54px 54px 54px; 
+            column-gap: 4px; 
             width: 100%; 
             font-family: 'Segoe UI Semibold', sans-serif; 
             align-items: center; 
@@ -165,7 +166,9 @@
         
         .total-row { padding: 12px 6px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; }
         
-        .log-hdr span, .log-row span { text-align: center; display: block; width: 100%; }
+        .log-hdr span { text-align: center; display: block; width: 100%; }
+        .log-row span, .total-row span { text-align: center; display: block; width: 100%; font-family: 'Courier New', monospace; font-weight: 900; }
+        
         .log-hdr span:first-child, .log-row b { text-align: left; padding-left: 2px; }
         .log-hdr span:last-child, .log-row span:last-child { text-align: right; padding-right: 2px; }
         
@@ -188,10 +191,9 @@
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
         
         .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 1.05; display: block; margin: 4px 0; letter-spacing: -0.5px; }
         
-        .range-letter-sub { font-size: 0.5em; font-weight: 800; vertical-align: baseline; margin-left: 1px; color: #111; }
-        .range-fraction-sub { font-size: 0.42em; font-weight: 800; vertical-align: super; margin-left: 1px; color: #111; position: relative; top: -0.32em; }
+        /* HOUSING COMPACT STACK DISPLAY RULES */
+        .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 1.05; display: block; margin: 4px 0; letter-spacing: -0.5px; }
         
         .bottom-meta-row { display: flex; align-items: center; gap: 15px; margin-top: 4px; }
         .zip-tag-blue { background: var(--bl); color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.95rem; font-weight: 700; display: inline-block; letter-spacing: 1px; text-align: center; width: auto; text-transform: uppercase; }
@@ -285,7 +287,7 @@
                 <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
                 <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
-                <div id="kp-none-btn" class="key" style="grid-column: span 3; background: var(--bl); color: white; border-color: var(--bl); display: none; text-align: center; width: 55%; margin: 0 auto; padding: 10px 0; font-size: 1.3rem;" onclick="kpSetNone()">NONE</div>
+                <div id="kp-none-btn" class="key" style="grid-column: span 3; background: var(--bl); color: white; border-color: var(--bl); display: none; text-align: center; width: 55%; margin: 0 auto; padding: 10px 0; font-size: 0.95rem; font-weight: 900;" onclick="kpSetNone()">NONE</div>
             </div>
         </div>
     </div>
@@ -308,7 +310,7 @@
                 
                 <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
                     <span style="font-weight:900; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">8 Hour Day ET Goal:</span>
-                    <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd);">--:--</span>
+                    <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd); font-family:'Courier New', monospace;">--:--</span>
                 </div>
 
                 <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
@@ -832,19 +834,32 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
+    /* RE-ENGINEERED SEGMENTATION CORE: PINPOINTS MODIFIERS AND COLLATES COLUMNS ON THE RIGHT EXTENSION */
     function formatRangeStrings(str) { 
         let parts = str.split('-');
         function formatSingleSegment(p) {
             if(!p) return "";
             let txt = p.trim();
-            txt = txt.replace(/(\d+\/\d+)/g, '<span class="range-fraction-sub">$1</span>');
-            txt = txt.replace(/([a-zA-Z]+)/g, '<span class="range-letter-sub">$1</span>');
-            return txt;
+            let numMatch = txt.match(/^(\d+)/);
+            if(!numMatch) return txt;
+            let num = numMatch[1];
+            
+            let fracMatch = txt.match(/(\d+\/\d+)/);
+            let frac = fracMatch ? fracMatch[1] : "";
+            
+            let letterMatch = txt.match(/([A-Z]+)/);
+            let letter = letterMatch ? letterMatch[1] : "";
+            
+            if(!frac && !letter) return num;
+            
+            return `${num}<span style="display: inline-flex; flex-direction: column; vertical-align: middle; line-height: 1.0; margin-left: 3px; height: 2.7rem; justify-content: center;"><span style="font-size: 0.95rem; font-weight: 800; color: #111; line-height: 1; display: block; min-height: 0.95rem;">${frac || '&nbsp;'}</span><span style="font-size: 1.35rem; font-weight: 800; color: #111; line-height: 1; display: block; min-height: 1.35rem; margin-top: 1px;">${letter || '&nbsp;'}</span></span>`;
         }
+        
         let startFormatted = formatSingleSegment(parts[0]);
         if (parts.length > 1 && parts[1].trim() !== "") {
             let endFormatted = formatSingleSegment(parts[1]);
-            return `${startFormatted}<br>${endFormatted}`;
+            /* WAVED TILDE HOUSING BLOCK INJECTED IN BETWEEN STACK ROWS */
+            return `${startFormatted}<br><span style="font-size: 1.1rem; display: block; line-height: 0.4; margin: 2px 0 2px 4px; color: #444; font-weight: 800; text-align: left;">~</span>${endFormatted}`;
         }
         return startFormatted;
     }
