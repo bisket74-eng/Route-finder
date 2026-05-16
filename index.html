@@ -16,14 +16,14 @@
         
         .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); overflow: hidden; }
         
-        /* REPOSITORY BACKGROUND LAYER CONFIGURATION */
+        /* REPOSITORY BACKGROUND LAYER CONFIGURATION - OPACITY LOWERED TO 0.12 FOR A CLEAN GHOST LOOK */
         .app-container::before { 
             content: ""; 
             position: absolute; 
             left: 0; right: 0; bottom: 0; top: 0; 
             background: url('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg') no-repeat center bottom;
             background-size: cover;
-            opacity: 0.35; 
+            opacity: 0.12; 
             pointer-events: none; 
             z-index: 1;
             transform: translate3d(0,0,0);
@@ -51,7 +51,6 @@
         label { font-size: 0.9rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
         .label-sub { font-size: 0.65rem; font-weight: 700; color: #777; text-transform: none; letter-spacing: 0; }
 
-        /* INCREASED BASELINE ZIP CODE TRIGGER TYPOGRAPHY SCALE SIZE TO FULLY MATCH THE STREET BOX */
         .zip-trigger { width: 100%; padding: 10px 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 22px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; transition: font-size 0.15s ease; }
         input[type="text"] { width: 100%; padding: 10px 48px 10px 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 22px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         
@@ -67,8 +66,7 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        /* DEEP DEPLOYMENT HEIGHT EXTENSION GIVES AMPLE REAL ESTATE WITHOUT CLIPPING */
-        #zipList { position: absolute; top: 114px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 520px; height: auto; flex-direction: column; overflow: hidden; }
+        #zipList { position: absolute; top: 104px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 60vh; height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
         .zip-item { display: flex; align-items: center; padding: 14px 18px; font-weight: 900; color: #111; font-size: 1.6rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
@@ -103,10 +101,9 @@
         
         .entry-display { background: #fff; border: 3px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 3rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.08); }
         
-        /* COCKPIT WRAPPER GRID: LABELS REMOVED FROM EXTERIOR OVERHEAD AND REANCHORED INSIDE FLUID WINDOW BOXES */
-        .tk-trigger-node { position: relative; background: #fff; border: 2px solid #ccc; border-radius: 6px; min-height: 62px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .tk-trigger-node .tk-corner-tag { position: absolute; top: 3px; left: 6px; font-size: 0.75rem; font-weight: 900; color: #888; text-transform: uppercase; line-height: 1; pointer-events: none; }
-        .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-size: 1.6rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; box-shadow: none; box-sizing: border-box; padding-top: 14px; }
+        .tk-trigger-node { position: relative; background: #fff; border: 3px solid var(--bl); border-radius: 8px; min-height: 80px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; }
+        .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-size: 1.8rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; padding-top: 15px; }
 
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
         .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
@@ -124,7 +121,7 @@
         
         .del-x { color: var(--dr-rd) !important; background: #ffffff !important; border: 2px solid var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin: 0 auto; line-height: 1; box-sizing: border-box; padding: 0; }
         
-        #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center; background-size: 20px; padding: 10px 35px 10px 15px !important; width: 145px; margin: 0 auto 15px; font-weight: 900; border: 3px solid var(--bl); border-radius: 8px; display: block; text-align: center; font-size: 1.1rem; box-sizing: border-box; }
+        #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 16px center; background-size: 22px; padding: 12px 40px 12px 20px !important; width: 200px; margin: 0 auto 20px; font-weight: 900; border: 3px solid var(--bl); border-radius: 8px; display: block; text-align: center; font-size: 1.3rem; box-sizing: border-box; color: var(--bl); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
 
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 15px 120px 15px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: rgba(238, 244, 249, 0.85); backdrop-filter: blur(2px); }
@@ -196,7 +193,7 @@
         <div class="time-box" id="timeScrollContainer">
             <button class="btn-clear-log" onclick="triggerClearLog()">Clear<br>Log</button>
             <button class="modal-x" onclick="closeTime()">×</button>
-            <h2 style="color:var(--bl); margin:0 0 15px; font-size: 2rem;">Timekeeper</h2>
+            <h2 style="color:var(--bl); margin:0 0 20px; font-size: 2.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">Timekeeper</h2>
             
             <select id="t-day" onchange="clearTimeInputs()">
                 <option value="Saturday">Saturday</option>
@@ -698,7 +695,6 @@
         
         trig.innerText = displayStr;
         
-        /* SCALING LOGIC KEEPS FONT AT FULL 22PX WHEN ALL ZIPS IS ACTIVATED */
         if (isAll) {
             trig.style.fontSize = '22px';
         } else {
