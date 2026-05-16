@@ -101,8 +101,13 @@
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         .list-card { background: white; padding: 12px 15px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 440px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; }
         
+        .info-left span { font-weight: 800; color: #333; font-size: 1.1rem; display: block; margin-bottom: 4px; }
         .range-txt { font-size: 2.2rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: auto 0; letter-spacing: 1px; }
-        .zip-tag-blue { background: var(--bl); color: white; padding: 4px 8px; border-radius: 4px; font-size: 1rem; font-weight: 900; display: inline-block; align-self: flex-start; letter-spacing: 2px; }
+        .zip-tag-blue { background: var(--bl); color: white; padding: 4px 8px; border-radius: 4px; font-size: 1rem; font-weight: 900; display: inline-block; align-self: flex-start; letter-spacing: 2px; margin-top: 4px; }
+        
+        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; }
+        .rt-block small { display: block; margin-bottom: 2px; font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .rt-block span { font-size: 2.4rem; display: block; font-weight: 900; line-height: 1; letter-spacing: 2px; }
         
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); cursor: pointer; }
@@ -434,7 +439,6 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    // SYMMETRICAL CORE-FIRST ENGINE
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
@@ -453,7 +457,6 @@
         const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
         let trailingDir = null;
 
-        // Strip directional tracking *only* if it is trailing at the back of the sequence
         if (searchTokens.length > 1 && directionalList.includes(searchTokens[searchTokens.length - 1])) {
             trailingDir = searchTokens.pop();
         }
@@ -468,11 +471,9 @@
                     const targetName = m.searchName;
                     const targetDisplay = m.displayName.toUpperCase();
                     
-                    // 1. Core verification: Must map precisely to left edge of database base target string
                     if (targetName.startsWith(leadToken) || targetDisplay.startsWith(leadToken) || targetDisplay.split(/\s+/).slice(1).join(" ").startsWith(leadToken)) {
                         let validCheck = true;
                         
-                        // 2. Suffix matching: Strict word match inside database representation text
                         for (let i = 0; i < subTokens.length; i++) {
                             let boundRegex = new RegExp('\\b' + subTokens[i] + '\\b');
                             if (!boundRegex.test(targetDisplay)) {
@@ -481,7 +482,6 @@
                             }
                         }
                         
-                        // 3. Directional isolation: Validate it occupies index position 0 at structural front
                         if (validCheck && trailingDir) {
                             let displayTokens = targetDisplay.split(/\s+/);
                             if (displayTokens[0] !== trailingDir) {
