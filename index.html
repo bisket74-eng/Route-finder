@@ -125,7 +125,7 @@
     <div id="confirmModal">
         <div class="del-box">
             <h3 id="confirmMsg">Delete row?</h3>
-            <div id="confirmBtns; display:flex; justify-content:center; gap:15px;">
+            <div id="confirmBtns" style="display:flex; justify-content:center; gap:15px;">
                 <button class="btn-del-action btn-grn" onclick="closeConfirm()">Return</button>
                 <button id="executeBtn" class="btn-del-action btn-red" onclick="executeDelete()">Delete</button>
             </div>
@@ -432,10 +432,8 @@
             const z = c[7]?.toString().trim(), nm = c[4]?.toString().trim();
             if(!z || !nm || z==="ZIP") return;
             if(!nDB[z]) nDB[z] = [];
-            // Parse directional prefix vs core name vs suffix traits safely
             const dir = c[3]?.toString().trim() || "";
             const suf = c[5]?.toString().trim() || "";
-            const postDir = c[6]?.toString().trim() || "";
             const fNm = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s=>s.trim()).join(" ");
             let st = nDB[z].find(s=>s.displayName === fNm);
             if(!st){ st = { searchName: nm.toUpperCase(), displayName: fNm, directional: dir.toUpperCase(), suffix: suf.toUpperCase(), results: [] }; nDB[z].push(st); }
@@ -443,7 +441,7 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    // INTERIOR HIERARCHICAL PRIORITY MATCHING ENGINE
+    // RE-ENGINEERED COMPREHENSIVE MATCH ENGINE
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
@@ -483,9 +481,12 @@
                     const targetDisplay = m.displayName.toUpperCase(); 
                     
                     let baseMatch = false;
-                    if (coreQueryName.length <= 2) {
+                    // Strict character matching block
+                    if (coreQueryName.length === 1) {
+                        // Exactly 1 character input ONLY maps to an exact 1-letter street match
                         baseMatch = (targetName === coreQueryName);
                     } else {
+                        // 2 or more characters immediately opens up progressive left-boundary matching
                         baseMatch = targetName.startsWith(coreQueryName);
                     }
                     
@@ -516,17 +517,13 @@
         if(matches.length > 0) {
             sugBox.style.display="block"; document.body.classList.add('sug-active');
             
-            // HIERARCHICAL PRIORITY SORT FUNCTION
             matches.sort((a, b) => {
-                // Priority 1: Alpha-Numeric sort exclusively on the base Core Street Name
                 let coreComp = a.searchName.localeCompare(b.searchName, undefined, {numeric: true});
                 if (coreComp !== 0) return coreComp;
                 
-                // Priority 2: Suffix comparison handles sorting ONLY when core street names match perfectly
                 let sufComp = (a.suffix || "").localeCompare(b.suffix || "");
                 if (sufComp !== 0) return sufComp;
                 
-                // Priority 3: Directional validation sorts geographically ONLY when core name and suffix match perfectly
                 return (a.directional || "").localeCompare(b.directional || "");
             });
 
