@@ -8,7 +8,6 @@
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; --dr-rd: #da291c; --soft-bl: #4a90e2; }
         
-        /* HIGH-CONTRAST SCROLL BAR LOGIC FOR IMMEDIATE VISIBILITY */
         ::-webkit-scrollbar { width: 14px; display: block; }
         ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #003a6a; border: 2px solid white; border-radius: 10px; }
@@ -101,7 +100,6 @@
         .del-x { color: white !important; background: var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto; line-height: 1; border: none; }
         #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 15px center; background-size: 24px; padding-right: 45px !important; }
 
-        /* INCREASED BOTTOM PADDING SO CARDS SCROLL FLUIDLY PAST THE FRAME BOUNDARY */
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 15px 120px 15px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         
@@ -109,7 +107,16 @@
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 15px; overflow: hidden; }
         
         .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .range-txt { font-size: 3.1rem; font-weight: 700; color: #000; line-height: 0.9; display: block; margin: 4px 0; letter-spacing: -0.5px; }
+        
+        /* HOUSING CONTAINER WRAPPER FOR RANGE AND EXTRA BOUNDARY INDICATORS */
+        .range-wrapper { display: flex; align-items: center; gap: 12px; margin: 4px 0; }
+        .range-txt { font-size: 3.1rem; font-weight: 700; color: #000; line-height: 0.9; display: block; letter-spacing: -0.5px; }
+        
+        /* PROMINENT HIGH-VISIBILITY ODD / EVEN EXTRA FLAGS */
+        .oe-flag-badge { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border-radius: 4px; }
+        .oe-flag-badge.odd { color: #bf4040; background: #fce8e6; border: 2px solid #bf4040; }
+        .oe-flag-badge.even { color: #004b87; background: #eef4f9; border: 2px solid #004b87; }
+
         .zip-tag-blue { background: var(--bl); color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.95rem; font-weight: 700; display: inline-block; align-self: flex-start; letter-spacing: 1px; margin-top: 2px; text-align: center; width: auto; text-transform: uppercase; }
         
         .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 145px; width: 145px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; }
@@ -473,10 +480,15 @@
             if(!nDB[z]) nDB[z] = [];
             const dir = c[3]?.toString().trim() || "";
             const suf = c[5]?.toString().trim() || "";
+            
+            // EXTRACT COLUMN C O/E SYSTEM VALUE SAFELY
+            let oeType = c[2]?.toString().trim().toUpperCase() || "";
+            if (oeType !== "O" && oeType !== "E") oeType = ""; // Scrub out text blocks like "Every" or "B" to stay blank
+            
             const fNm = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s=>s.trim()).join(" ");
             let st = nDB[z].find(s=>s.displayName === fNm);
             if(!st){ st = { searchName: nm.toUpperCase(), displayName: fNm, directional: dir.toUpperCase(), suffix: suf.toUpperCase(), results: [] }; nDB[z].push(st); }
-            st.results.push({ range: c[0]+(c[1]?"-"+c[1]:""), route: c[8]?.trim() });
+            st.results.push({ range: c[0]+(c[1]?"-"+c[1]:""), route: c[8]?.trim(), houseType: oeType });
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
@@ -604,7 +616,25 @@
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     item.results.forEach(res => {
                         const card = document.createElement('div'); card.className="list-card";
-                        card.innerHTML = `<div class="info-left"><span class="street-txt">${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
+                        
+                        // CONDITIONAL RENDER RULES FOR THE O/E EXTRA FIELD LAYERS
+                        let oeHtml = "";
+                        if (res.houseType === "O") oeHtml = `<span class="oe-flag-badge odd">ODD</span>`;
+                        if (res.houseType === "E") oeHtml = `<span class="oe-flag-badge even">EVEN</span>`;
+
+                        card.innerHTML = `
+                            <div class="info-left">
+                                <span class="street-txt">${item.displayName}</span>
+                                <div class="range-wrapper">
+                                    <span class="range-txt">${res.range}</span>
+                                    ${oeHtml}
+                                </div>
+                                <span class="zip-tag-blue">ZIP ${item.zip}</span>
+                            </div>
+                            <div class="rt-block">
+                                <small>ROUTE</small>
+                                <span>${res.route}</span>
+                            </div>`;
                         cc.appendChild(card);
                     }); document.getElementById('list-res').scrollTop = 0;
                 }; sugBox.appendChild(d);
