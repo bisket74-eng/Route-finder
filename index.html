@@ -32,8 +32,8 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        /* HEADER PROFILE RIGGED UP SLIGHTLY THICKER AT THE UPPER ACCENT LINE */
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 15px; text-align: center; color: white; cursor: pointer; border-top: 2.5px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; border-radius: 0; box-sizing: border-box; position: relative; }
+        /* ADJUSTED ACCENT LINE RE-CALIBRATED TO A PERFECT MIDDLE GROUND 2.0PX PROFILE THICKNESS */
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 15px; text-align: center; color: white; cursor: pointer; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; border-radius: 0; box-sizing: border-box; position: relative; }
         
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
@@ -69,7 +69,6 @@
         #zipList { position: absolute; top: 96px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: calc(100vh - 210px); height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
-        /* SCALED DOWN INDIVIDUAL ZIP GRID SELECTIONS SLIGHTLY SMALLER PER USER SPECIFICATIONS */
         .zip-item { display: flex; align-items: center; padding: 10px 18px; font-weight: 900; color: #111; font-size: 1.35rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
         .zip-item input { width: 22px; height: 22px; margin-right: 15px; accent-color: var(--bl); flex-shrink: 0; }
         
@@ -105,23 +104,22 @@
         
         .entry-display { background: #fff; border: 3px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 3rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.08); }
         
+        /* HOISTED UPPER SEGMENTS UPWARD AND COMPELLED PERFECT RE-CENTERING VIA FLEX BOX MATH FOR THE NUMBERS LAYER */
         .tk-trigger-node { position: relative; background: #fff; border: 3px solid var(--bl); border-radius: 8px; min-height: 90px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; }
-        
-        /* UNPOPULATED PLACES RENDER IN AN INACTIVE SLATE GRAY COLOR CLASS PROFILE */
-        .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-family: 'Arial Narrow', -apple-system, sans-serif; font-size: 2.4rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; padding-top: 18px; }
+        .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; z-index: 2; }
+        .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-family: 'Arial Narrow', -apple-system, sans-serif; font-size: 2.6rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; margin: 0; height: 100%; line-height: 1; position: relative; top: 4px; z-index: 1; }
         .tk-trigger-node .time-display-btn.unpopulated { color: #7f9bb2; }
 
-        /* REALIGNED COLUMNS TO PROVIDE EVEN, BALANCED CHANNELS SPACING ACROSS LOG GRIDS */
-        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 24px 44px 1fr 1fr 1fr 1fr 62px; width: 100%; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; }
+        /* ABSOLUTE STRUCTURAL WIDTH LIMIT HOVER PRESET: FORCED SPACING PREVENTS SQUISHING COLLIDERS */
+        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 24px 44px 46px 46px 46px 46px 1fr; width: 100%; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; text-align: center; }
         
-        .log-hdr { padding: 12px 24px 12px 2px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.72rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; text-align: center; }
-        .log-row { padding: 10px 24px 10px 2px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; text-align: center; }
+        .log-hdr { padding: 12px 24px 12px 2px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.72rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; }
+        .log-row { padding: 10px 24px 10px 2px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; }
         
         .log-row.duplicate b, .log-row.duplicate span:not(.del-x) { color: var(--soft-bl) !important; }
         
         .total-row { padding: 12px 24px 12px 2px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; box-sizing: border-box; }
-        .total-row b { text-align: right; grid-column: 3 / span 3; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 8px; }
+        .total-row b { text-align: right; grid-column: 3 / span 3; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 6px; }
         .total-row span:last-child { color: #000; font-size: 1.05rem; grid-column: 7; font-weight: 900; text-align: center; }
         .total-row.blue-week { border-top: none; border-bottom: 2px solid var(--soft-bl); }
         .total-row.blue-week b, .total-row.blue-week span { color: var(--soft-bl) !important; }
@@ -306,6 +304,7 @@
 <script>
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
     let lastSearchTerm = ""; let currentAction = ""; let isDataLive = false;
+    let explicitKeypadOverride = false; // FLAG PINS CONSCIOUS USER MIDNIGHT ACTIONS
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
     const EAST_ZIPS = ["98662", "98682", "98664", "98683", "98684"];
@@ -459,16 +458,17 @@
             btn.classList.add('unpopulated');
         });
         document.getElementById('t-target').innerText = "00.00"; localStorage.removeItem('usps_temp_entries');
+        explicitKeypadOverride = false;
     }
 
     function openKeypad(t, title) { 
         activeId = t; const existing = document.getElementById(t).value || "00.00";
         kpBuffer = existing.replace(".", ""); document.getElementById('kp-display').innerText = existing; 
         document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; 
+        explicitKeypadOverride = false;
     }
     function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
     
-    /* MODIFIED INPUT PROCESSOR LOGIC TO FLUSH IMMEDIATELY UPON BREAKING THE 24-HOUR RANGE HOVER LIMIT */
     function kpIn(num) { 
         let tempBuffer = (kpBuffer.length >= 4) ? num.toString() : kpBuffer + num.toString();
         let checkVal = tempBuffer.padStart(4, "0"); 
@@ -479,10 +479,11 @@
             return;
         }
         kpBuffer = tempBuffer;
+        explicitKeypadOverride = true; // RECOGNIZE USER IS TYPING
         formatKp(); 
     }
     
-    function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
+    function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; explicitKeypadOverride = true; }
     function formatKp() { let val = kpBuffer.padStart(4, "0"); document.getElementById('kp-display').innerText = val.substring(0,2) + "." + val.substring(2,4); }
     
     function kpSet() { 
@@ -494,7 +495,12 @@
         const activeBtn = document.getElementById(btnMap[activeId]);
         activeBtn.innerText = val; 
         
-        if (val === "00.00") { activeBtn.classList.add('unpopulated'); } else { activeBtn.classList.remove('unpopulated'); }
+        // MIDNIGHT UNPOPULATED TO ACTIVE BLUE LOGIC FIX TRIGGER
+        if (val === "00.00" && !explicitKeypadOverride) { 
+            activeBtn.classList.add('unpopulated'); 
+        } else { 
+            activeBtn.classList.remove('unpopulated'); 
+        }
         
         closeKeypad(); calcGoal(); saveTempEntries();
     }
@@ -649,7 +655,6 @@
         const isMain = document.getElementById('mainMaster').checked;
         const isEast = document.getElementById('eastMaster').checked;
         
-        /* CUSTOM OVERRIDE DICTIONARY TO POPULATE EXPLICIT LABELS FOR PRESET COMBINATIONS */
         let displayStr = 'Select Zip(s)...'; 
         if (isAll) { displayStr = 'ALL ZIPs'; } 
         else if (isMain && !isEast && chks.length === MAIN_ZIPS.length) { displayStr = 'All Vanc MOU'; }
