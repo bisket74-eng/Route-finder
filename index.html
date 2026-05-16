@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>USPS Route Finder - Vancouver WA</title>
+    <link rel="preload" href="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" as="image">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; --dr-rd: #da291c; --soft-bl: #4a90e2; }
@@ -32,7 +34,6 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        /* ADJUSTED ACCENT LINE RE-CALIBRATED TO A PERFECT MIDDLE GROUND 2.0PX PROFILE THICKNESS */
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 15px; text-align: center; color: white; cursor: pointer; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; border-radius: 0; box-sizing: border-box; position: relative; }
         
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
@@ -81,14 +82,14 @@
 
         #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
         
-        #confirmModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 30000; display: none; align-items: center; justify-content: center; }
+        #confirmModal, #rowOptModal, #adjustModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 30000; display: none; align-items: center; justify-content: center; }
         .del-box { width: 80%; max-width: 320px; padding: 25px; border: 1px solid #000; background: #e0e0e0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
         .del-box h3 { margin: 0 0 20px; color: var(--bl); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; font-weight: 900; line-height: 1.4; }
         .btn-del-action { width: 110px; height: 45px; border: none; border-radius: 22px; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; }
 
-        #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
+        #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999999; display: none; align-items: center; justify-content: center; }
 
-        #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px 25px 15px 25px; display: flex; flex-direction: column; overflow: hidden; } 
+        #timeModal .time-box, #adjustModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px 25px 15px 25px; display: flex; flex-direction: column; overflow: hidden; } 
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); box-sizing: border-box; }
         
         .time-fixed-top { flex-shrink: 0; }
@@ -104,30 +105,30 @@
         
         .entry-display { background: #fff; border: 3px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 3rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.08); }
         
-        /* HOISTED UPPER SEGMENTS UPWARD AND COMPELLED PERFECT RE-CENTERING VIA FLEX BOX MATH FOR THE NUMBERS LAYER */
         .tk-trigger-node { position: relative; background: #fff; border: 3px solid var(--bl); border-radius: 8px; min-height: 90px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; z-index: 2; }
         .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-family: 'Arial Narrow', -apple-system, sans-serif; font-size: 2.6rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; margin: 0; height: 100%; line-height: 1; position: relative; top: 4px; z-index: 1; }
         .tk-trigger-node .time-display-btn.unpopulated { color: #7f9bb2; }
 
-        /* ABSOLUTE STRUCTURAL WIDTH LIMIT HOVER PRESET: FORCED SPACING PREVENTS SQUISHING COLLIDERS */
-        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 24px 44px 46px 46px 46px 46px 1fr; width: 100%; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; text-align: center; }
+        /* WIDENED AND EVENLY SPREAD GRID ARCHITECTURE: NO RED X - PERFECT CHUNKING */
+        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 50px 1fr 1fr 1fr 1fr 65px; width: 100%; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; text-align: center; }
         
-        .log-hdr { padding: 12px 24px 12px 2px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.72rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; }
-        .log-row { padding: 10px 24px 10px 2px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; }
+        .log-hdr { padding: 12px 12px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.72rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; }
+        
+        /* ROWS CONFIGURED FOR FULL-ROW TAPPING INTERACTION */
+        .log-row { padding: 12px 12px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; cursor: pointer; transition: background 0.1s ease; }
+        .log-row:active { background-color: rgba(0, 75, 135, 0.15); border-radius: 6px; }
         
         .log-row.duplicate b, .log-row.duplicate span:not(.del-x) { color: var(--soft-bl) !important; }
         
-        .total-row { padding: 12px 24px 12px 2px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; box-sizing: border-box; }
-        .total-row b { text-align: right; grid-column: 3 / span 3; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 6px; }
-        .total-row span:last-child { color: #000; font-size: 1.05rem; grid-column: 7; font-weight: 900; text-align: center; }
+        .total-row { padding: 12px 12px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; box-sizing: border-box; }
+        .total-row b { text-align: right; grid-column: 2 / span 4; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 12px; }
+        .total-row span:last-child { color: #000; font-size: 1.05rem; grid-column: 6; font-weight: 900; text-align: center; }
         .total-row.blue-week { border-top: none; border-bottom: 2px solid var(--soft-bl); }
         .total-row.blue-week b, .total-row.blue-week span { color: var(--soft-bl) !important; }
 
-        .log-row b { text-align: center; font-size: 0.85rem; display: block; width: 100%; margin: 0 auto; }
+        .log-row b { text-align: left; font-size: 0.85rem; display: block; width: 100%; }
         .total-col { font-weight: 900; text-align: center; font-size: 0.95rem; }
-        
-        .del-x { color: var(--dr-rd) !important; background: #ffffff !important; border: 2px solid var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.7rem; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin: 0 auto; line-height: 1; box-sizing: border-box; padding: 0; }
         
         #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 16px center; background-size: 22px; padding: 12px 40px 12px 20px !important; width: 200px; margin: 0 auto 15px; font-weight: 900; border: 3px solid var(--bl); border-radius: 8px; display: block; text-align: center; font-size: 1.3rem; box-sizing: border-box; color: var(--bl); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
 
@@ -181,6 +182,34 @@
         </div>
     </div>
 
+    <div id="rowOptModal">
+        <div class="del-box">
+            <h3 id="rowOptTitle" style="font-size: 1.1rem; color: #111;">EDIT LOG ENTRY</h3>
+            <div style="display:flex; justify-content:space-between; gap:15px; margin-top:20px;">
+                <button class="btn-del-action btn-red" onclick="quickDeleteRow()">Delete</button>
+                <button class="btn-del-action btn-yel" onclick="openAdjustModal()">Adjust</button>
+            </div>
+            <button style="margin-top:25px; width:100%; background:#777; color:white; border:none; padding:12px; border-radius:20px; font-weight:900; font-size: 0.85rem; text-transform: uppercase; cursor: pointer;" onclick="closeRowOpt()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="adjustModal">
+        <div class="time-box" style="width: 92%; max-width: 380px; height: auto; padding: 25px 20px; background: var(--lt-bl);">
+            <h3 style="margin:0 0 18px; color:var(--bl); font-size:1.8rem; font-weight:900; text-transform:uppercase;">ADJUST TIME</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
+                <div class="tk-trigger-node" onclick="openKeypad('adj-t-in', 'Adjust BT')"><span class="tk-corner-tag">BT</span><div class="time-display-btn" id="adj-bt-btn">00.00</div></div>
+                <div class="tk-trigger-node" onclick="openKeypad('adj-l-out', 'Adjust OL')"><span class="tk-corner-tag">OL</span><div class="time-display-btn" id="adj-ol-btn">00.00</div></div>
+                <div class="tk-trigger-node" onclick="openKeypad('adj-l-in', 'Adjust IL')"><span class="tk-corner-tag">IL</span><div class="time-display-btn" id="adj-il-btn">00.00</div></div>
+                <div class="tk-trigger-node" onclick="openKeypad('adj-t-actual', 'Adjust ET')"><span class="tk-corner-tag">ET</span><div class="time-display-btn" id="adj-et-btn">00.00</div></div>
+            </div>
+            <input type="hidden" id="adj-t-in"><input type="hidden" id="adj-l-out"><input type="hidden" id="adj-l-in"><input type="hidden" id="adj-t-actual">
+            <div style="display:flex; justify-content:space-between; gap:12px; margin-top:25px;">
+                <button class="btn-del-action" style="background:#777; color:white; width: 100%;" onclick="closeAdjust()">Cancel</button>
+                <button class="btn-del-action btn-grn" style="width: 100%;" onclick="saveAdjust()">Apply</button>
+            </div>
+        </div>
+    </div>
+
     <div id="keypadPicker">
         <div class="time-box" style="width: 320px; height: auto; padding: 0; overflow: hidden; background: var(--lt-bl);">
             <div id="kp-header-wrap">
@@ -228,7 +257,7 @@
 
                 <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
                 
-                <div class="log-hdr"><span></span><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
+                <div class="log-hdr"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
             </div>
             
             <div class="time-log-scroll-wrapper" id="logScrollFrame">
@@ -304,7 +333,7 @@
 <script>
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
     let lastSearchTerm = ""; let currentAction = ""; let isDataLive = false;
-    let explicitKeypadOverride = false; // FLAG PINS CONSCIOUS USER MIDNIGHT ACTIONS
+    let explicitKeypadOverride = false; let editingRowId = null;
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
     const EAST_ZIPS = ["98662", "98682", "98664", "98683", "98684"];
@@ -374,27 +403,67 @@
         document.getElementById('confirmModal').style.display = 'flex';
     }
 
-    function confirmDelete(id) {
-        deleteTargetId = id;
-        document.getElementById('confirmMsg').innerText = "DELETE ROW?";
-        document.getElementById('confirmBtns').style.display = 'flex';
-        document.getElementById('alertBtns').style.display = 'none';
-        currentAction = "deleteRow";
-        document.getElementById('confirmModal').style.display = 'flex';
+    /* DIRECT ROW MANAGEMENT SYSTEM LINKS INTERACTIVE ROW EVENTS TO POPUPS */
+    function openRowOptions(id) {
+        editingRowId = id;
+        document.getElementById('rowOptModal').style.display = 'flex';
+    }
+    function closeRowOpt() { document.getElementById('rowOptModal').style.display = 'none'; }
+
+    function quickDeleteRow() {
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
+        log = log.filter(e => e.id !== editingRowId);
+        localStorage.setItem('usps_weekly_log', JSON.stringify(log)); 
+        renderLog(); closeRowOpt(); editingRowId = null;
+    }
+
+    function openAdjustModal() {
+        document.getElementById('rowOptModal').style.display = 'none';
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
+        let row = log.find(e => e.id === editingRowId);
+        if(row) {
+            document.getElementById('adj-t-in').value = row.bt;
+            document.getElementById('adj-l-out').value = row.ol;
+            document.getElementById('adj-l-in').value = row.il;
+            document.getElementById('adj-t-actual').value = row.et;
+            
+            const map = {'adj-bt-btn':row.bt, 'adj-ol-btn':row.ol, 'adj-il-btn':row.il, 'adj-et-btn':row.et};
+            for(let key in map) {
+                document.getElementById(key).innerText = map[key];
+                if(map[key] === "00.00") document.getElementById(key).classList.add('unpopulated');
+                else document.getElementById(key).classList.remove('unpopulated');
+            }
+        }
+        document.getElementById('adjustModal').style.display = 'flex';
+    }
+    function closeAdjust() { document.getElementById('adjustModal').style.display = 'none'; editingRowId = null; }
+
+    function saveAdjust() {
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
+        let idx = log.findIndex(e => e.id === editingRowId);
+        if(idx > -1) {
+            let bt = document.getElementById('adj-t-in').value || "00.00";
+            let ol = document.getElementById('adj-l-out').value || "00.00";
+            let il = document.getElementById('adj-l-in').value || "00.00";
+            let et = document.getElementById('adj-t-actual').value || "00.00";
+            
+            let btV = parseFloat(bt), olV = parseFloat(ol), ilV = parseFloat(il), etV = parseFloat(et);
+            let s1 = olV - btV; if(s1 < 0) s1 += 24;
+            let s2 = etV - ilV; if(s2 < 0) s2 += 24;
+            let total = (s1 + s2).toFixed(2);
+            
+            log[idx].bt = bt; log[idx].ol = ol; log[idx].il = il; log[idx].et = et; log[idx].total = total;
+            localStorage.setItem('usps_weekly_log', JSON.stringify(log));
+            renderLog();
+        }
+        closeAdjust();
     }
 
     function executeDelete() {
-        if (currentAction === "deleteRow" && deleteTargetId) {
-            let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
-            log = log.filter(e => e.id !== deleteTargetId);
-            localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
-        } else if (currentAction === "clearLog") {
-            localStorage.removeItem('usps_weekly_log'); renderLog();
-        }
+        if (currentAction === "clearLog") { localStorage.removeItem('usps_weekly_log'); renderLog(); }
         closeConfirm();
     }
-
-    function closeConfirm() { document.getElementById('confirmModal').style.display = 'none'; deleteTargetId = null; currentAction = ""; }
+    function closeConfirm() { document.getElementById('confirmModal').style.display = 'none'; currentAction = ""; }
 
     function startVoiceSearch() {
         document.getElementById('cc').innerHTML = ""; 
@@ -454,8 +523,7 @@
         ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
         ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => {
             const btn = document.getElementById(id);
-            btn.innerText = "00.00";
-            btn.classList.add('unpopulated');
+            btn.innerText = "00.00"; btn.classList.add('unpopulated');
         });
         document.getElementById('t-target').innerText = "00.00"; localStorage.removeItem('usps_temp_entries');
         explicitKeypadOverride = false;
@@ -479,30 +547,33 @@
             return;
         }
         kpBuffer = tempBuffer;
-        explicitKeypadOverride = true; // RECOGNIZE USER IS TYPING
+        explicitKeypadOverride = true; 
         formatKp(); 
     }
     
     function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; explicitKeypadOverride = true; }
     function formatKp() { let val = kpBuffer.padStart(4, "0"); document.getElementById('kp-display').innerText = val.substring(0,2) + "." + val.substring(2,4); }
     
+    /* SYSTEM EXPANDED TO ACCEPT DYNAMIC ADJUSTMENT TARGET FIELDS ALONGSIDE STANDARD MASTER ENTRY FIELDS */
     function kpSet() { 
         let val = document.getElementById('kp-display').innerText; let hrCheck = parseInt(val.substring(0, 2), 10);
         if (hrCheck > 23) { val = "00.00"; kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
         document.getElementById(activeId).value = val;
         
-        const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
+        const btnMap = {
+            't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn',
+            'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn'
+        };
         const activeBtn = document.getElementById(btnMap[activeId]);
         activeBtn.innerText = val; 
         
-        // MIDNIGHT UNPOPULATED TO ACTIVE BLUE LOGIC FIX TRIGGER
         if (val === "00.00" && !explicitKeypadOverride) { 
             activeBtn.classList.add('unpopulated'); 
         } else { 
             activeBtn.classList.remove('unpopulated'); 
         }
         
-        closeKeypad(); calcGoal(); saveTempEntries();
+        closeKeypad(); if(!activeId.startsWith('adj-')) { calcGoal(); saveTempEntries(); }
     }
     
     function calcGoal() {
@@ -537,11 +608,12 @@
         b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)); b2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
         const container = document.getElementById('log-container');
         
-        let html = b1.map(e => `<div class="log-row"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
-        if(b1.length > 0) { const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row"><span class="del-x" style="opacity:0"></span><b>TOTAL WEEK 1</b><span>${sum1}</span></div>`; }
+        // RED X OVERRIDES REMOVED: BINDING ENTIRE LOG ROW ELEMENT FOR TACTILE ONCLICK ACTIVATION
+        let html = b1.map(e => `<div class="log-row" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
+        if(b1.length > 0) { const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row"><b>TOTAL WEEK 1</b><span>${sum1}</span></div>`; }
         
-        html += b2.map(e => `<div class="log-row duplicate"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
-        if(b2.length > 0) { const sum2 = b2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row blue-week"><span class="del-x" style="opacity:0"></span><b>TOTAL WEEK 2</b><span>${sum2}</span></div>`; }
+        html += b2.map(e => `<div class="log-row duplicate" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
+        if(b2.length > 0) { const sum2 = b2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row blue-week"><b>TOTAL WEEK 2</b><span>${sum2}</span></div>`; }
         container.innerHTML = html;
     }
 
