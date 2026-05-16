@@ -108,21 +108,22 @@
         .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; }
         .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-size: 2.1rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; padding-top: 16px; }
 
-        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 44px 44px 44px 44px 44px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 3px; }
-        .log-hdr { padding: 12px 18px 12px 4px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; }
-        .log-row { padding: 10px 18px 10px 4px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; }
+        /* RE-CALIBRATED GRID: COMPRESSED COLUMNS SHIFT EVERYTHING FULLY TO THE LEFT TO UNCOVER TOTAL READOUTS */
+        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 24px 38px 38px 38px 38px 38px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 3px; }
+        .log-hdr { padding: 12px 30px 12px 2px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; }
+        .log-row { padding: 10px 30px 10px 2px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; }
         
         .log-row.duplicate b, .log-row.duplicate span:not(.del-x) { color: var(--soft-bl) !important; }
-        .total-row { padding: 12px 18px 12px 4px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; box-sizing: border-box; }
-        .total-row b { text-align: center; grid-column: 5; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; }
-        .total-row span:last-child { color: #000; font-size: 1rem; grid-column: 7; font-weight: 900; }
+        .total-row { padding: 12px 30px 12px 2px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; box-sizing: border-box; }
+        .total-row b { text-align: center; grid-column: 5; font-size: 0.61rem; text-transform: uppercase; line-height: 1; white-space: nowrap; }
+        .total-row span:last-child { color: #000; font-size: 1rem; grid-column: 7; font-weight: 900; text-align: center; }
         .total-row.blue-week { border-top: none; border-bottom: 2px solid var(--soft-bl); }
         .total-row.blue-week b, .total-row.blue-week span { color: var(--soft-bl) !important; }
 
         .log-row b { text-align: center; font-size: 0.8rem; display: block; }
-        .total-col { font-weight: 900; }
+        .total-col { font-weight: 900; text-align: center; }
         
-        .del-x { color: var(--dr-rd) !important; background: #ffffff !important; border: 2px solid var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin: 0 auto; line-height: 1; box-sizing: border-box; padding: 0; }
+        .del-x { color: var(--dr-rd) !important; background: #ffffff !important; border: 2px solid var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin: 0 auto; line-height: 1; box-sizing: border-box; padding: 0; }
         
         #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 16px center; background-size: 22px; padding: 12px 40px 12px 20px !important; width: 200px; margin: 0 auto 15px; font-weight: 900; border: 3px solid var(--bl); border-radius: 8px; display: block; text-align: center; font-size: 1.3rem; box-sizing: border-box; color: var(--bl); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
 
@@ -155,7 +156,8 @@
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
-        #backToListBtn { display: none; background-color: var(--bl); color: white; width: 145px; padding: 0 10px; height: 42px; border-radius: 20px; font-weight: 900; font-size: 0.72rem; border: none; cursor: pointer; text-transform: uppercase; position: absolute; right: 15px; bottom: -54px; z-index: 999; white-space: normal; line-height: 1.2; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); margin: 0; box-sizing: border-box; }
+        /* Z-INDEX LAYER SUNK BELOW THE STREET SUGGESTIONS SYSTEM PER REQUEST */
+        #backToListBtn { display: none; background-color: var(--bl); color: white; width: 145px; padding: 0 10px; height: 42px; border-radius: 20px; font-weight: 900; font-size: 0.72rem; border: none; cursor: pointer; text-transform: uppercase; position: absolute; right: 15px; bottom: -54px; z-index: 99; white-space: normal; line-height: 1.2; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); margin: 0; box-sizing: border-box; }
         
         .input-blocker { position: absolute; top: 25px; left: 0; right: 0; bottom: 0; z-index: 4; cursor: pointer; }
     </style>
@@ -279,7 +281,7 @@
                             <span class="label-sub">(No house numbers)</span>
                         </div>
                         <div id="blocker" class="input-blocker" onclick="checkZipBeforeType()"></div>
-                        <input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleSearch()">
+                        <input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleInputFocus()">
                         <button id="micBtn" class="mic-btn" onclick="startVoiceSearch()">🎙️</button>
                         <div id="suggestionBox" class="sug"></div>
                     </div>
@@ -368,8 +370,9 @@
 
     function closeConfirm() { document.getElementById('confirmModal').style.display = 'none'; deleteTargetId = null; currentAction = ""; }
 
-    // RETAINED INTENTIONALLY INTACT FOR VOICE SEARCH TOKENS
+    /* INTEGRATED CARD CLEAR FUNCTION ON VOICE SEARCH DISPATCH TRIPPERS */
     function startVoiceSearch() {
+        document.getElementById('cc').innerHTML = ""; 
         const anyZip = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster').checked;
         if (!anyZip) { openStyledAlert("PLEASE SELECT A ZIP CODE FIRST"); return; }
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -420,6 +423,11 @@
         recognition.start();
     }
 
+    function handleInputFocus() {
+        document.getElementById('cc').innerHTML = ""; 
+        handleSearch();
+    }
+
     function clearTimeInputs() {
         ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
         ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => document.getElementById(id).innerText = "00.00");
@@ -432,11 +440,24 @@
         document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; 
     }
     function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
-    function kpIn(num) { if (kpBuffer.length >= 4) { kpBuffer = num.toString(); } else { kpBuffer += num.toString(); } formatKp(); }
+    
+    /* REINSTATED THE MANDATORY HOUR RANGE RULE: ELEVATION PAST 23 AUTO-RESETS TO PREVENT OVERFLOWS */
+    function kpIn(num) { 
+        if (kpBuffer.length >= 4) { kpBuffer = num.toString(); } else { kpBuffer += num.toString(); }
+        let checkVal = kpBuffer.padStart(4, "0");
+        let hrPart = parseInt(checkVal.substring(0, 2), 10);
+        if (hrPart > 23) { kpBuffer = num.toString(); }
+        formatKp(); 
+    }
+    
     function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
     function formatKp() { let val = kpBuffer.padStart(4, "0"); document.getElementById('kp-display').innerText = val.substring(0,2) + "." + val.substring(2,4); }
+    
     function kpSet() { 
-        let val = document.getElementById('kp-display').innerText; document.getElementById(activeId).value = val;
+        let val = document.getElementById('kp-display').innerText; 
+        let hrCheck = parseInt(val.substring(0, 2), 10);
+        if (hrCheck > 23) { val = "00.00"; kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
+        document.getElementById(activeId).value = val;
         const btnMap = {'t-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn'};
         document.getElementById(btnMap[activeId]).innerText = val; closeKeypad(); calcGoal(); saveTempEntries();
     }
@@ -590,6 +611,7 @@
         } else { sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; }
     }
     
+    /* AUTOMATICALLY CLEARS CARDS WHEN USER RE-OPENS RESULTS LIST BOX */
     function reopenSuggestions() {
         document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none";
         document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block";
