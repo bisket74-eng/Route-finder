@@ -19,7 +19,11 @@
         }
         ::-webkit-scrollbar-thumb { background: #002c52; border: 2px solid white; border-radius: 8px; }
         
+        /* THE VISUAL SYNCHRONIZATION CONTAINER LOCK */
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
+        
+        body { opacity: 0; }
+        body.app-ready { opacity: 1; }
         
         .app-container { 
             width: 100%; 
@@ -33,7 +37,6 @@
             overflow: hidden; 
         }
 
-        /* FIXED BACKGROUND LIFECYCLE: CONSTANT IMMEDIATE VISIBILITY TO PREVENT POP-IN/FADE-IN VISUAL FLASHES */
         .bg-flag-surface {
             position: absolute;
             left: 0;
@@ -174,7 +177,7 @@
         .log-hdr span:first-child, .log-row b { text-align: left; padding-left: 2px; }
         .log-hdr span:last-child, .log-row span:last-child { text-align: right; padding-right: 2px; }
         
-        /* HARD FORCED BOLD WEIGHT SPECIFICATION MAP ATTACHED ON LOG ROW HOUR FIELD PLUGINS */
+        /* EXPLICIT HEAVY-WEIGHT EMPHASIS RULES FOR LOG TOTAL COLUMNS */
         .total-col { font-weight: 900 !important; font-size: 0.95rem; }
         
         .total-row b { text-align: right; grid-column: 1 / span 5; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 4px; }
@@ -221,7 +224,7 @@
     </style>
 </head>
 <body id="mainBody">
-    <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" class="bg-flag-surface" fetchpriority="high" loading="eager">
+    <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" class="bg-flag-surface" fetchpriority="high" loading="eager" onload="document.body.classList.add('app-ready')">
 
     <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
@@ -401,6 +404,8 @@
 
     window.onload = async () => {
         renderLog(); syncLocalDay(); loadTempEntries();
+        // HIGH-SPEED RENDERING BREAK FALLBACK IF NETWORK ASSETS EXPERIENCING DELAYS
+        setTimeout(() => { document.body.classList.add('app-ready'); }, 280);
         try {
             const resp = await fetch(XLSX_URL);
             const ab = await resp.arrayBuffer();
@@ -586,7 +591,7 @@
                 if (currentToken === "AVENUE") { mappedTokens.push("AVE"); continue; }
                 if (currentToken === "COURT") { mappedTokens.push("CT"); continue; }
                 if (currentToken === "LOOP") { mappedTokens.push("LOOP"); continue; }
-                if (currentToken === "SOUTHEAST") { mappedTokens.push("SE"); continue; }
+                if (currentToken === "SOUTHEAST") { mappedTokens.push("SE").toUpperCase(); continue; }
                 if (currentToken === "NORTHEAST") { mappedTokens.push("NE"); continue; }
                 if (currentToken === "NORTHWEST") { mappedTokens.push("NW"); continue; }
                 if (currentToken === "SOUTHWEST") { mappedTokens.push("SW"); continue; }
