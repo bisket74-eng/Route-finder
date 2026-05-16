@@ -33,7 +33,10 @@
         label { font-size: 0.9rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
         .label-sub { font-size: 0.65rem; font-weight: 700; color: #777; text-transform: none; letter-spacing: 0; }
 
-        .zip-trigger, input[type="text"] { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        
+        /* EXPANDED QUERY TEXT BOX SIZE SPECIFICATION */
+        input[type="text"] { width: 100%; padding: 10px 48px 10px 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 22px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         
         input:disabled::placeholder { color: #ccc; }
         input:disabled { background-color: #f5f5f5; border-color: #ddd; }
@@ -100,25 +103,25 @@
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 15px 75px 15px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         
-        /* UNIFORM STRUCTURAL CARD SPECIFICATIONS */
         .list-card { background: white; padding: 12px 15px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 440px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; }
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 15px; }
         
-        /* SYNCHRONIZED APP-WIDE TYPOGRAPHY */
         .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        /* REFINED RANGE WEIGHT AND LINE SPACING FOR GRACEFUL TWO-LINE BEHAVIOR */
         .range-txt { font-size: 3.1rem; font-weight: 700; color: #000; line-height: 0.9; display: block; margin: 4px 0; letter-spacing: -0.5px; }
-        
         .zip-tag-blue { background: var(--bl); color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.95rem; font-weight: 700; display: inline-block; align-self: flex-start; letter-spacing: 1px; margin-top: 2px; text-align: center; width: auto; text-transform: uppercase; }
         
-        /* ABSOLUTE HEIGHT EXTENSION FOR PERMANENT RIGHT-FLANK SQUARE SYMMETRY */
-        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 125px; width: 125px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; }
+        /* INCREASED WIDTH OF CARRIER ROUTE BOX TO ALLOW ROOM ON SIDES OF TEXT */
+        .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 145px; width: 145px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; }
         .rt-block small { display: block; margin-bottom: 2px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
         .rt-block span { font-size: 3.1rem; display: block; font-weight: 700; line-height: 0.9; letter-spacing: 1px; }
         
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 270px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--bl); cursor: pointer; }
+        
+        /* EXPANDED TEXT SIZES FOR RESPONSE LINE ITEMS INSIDE PICK-LIST */
+        .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 1.25rem; font-weight: 800; color: var(--bl); cursor: pointer; }
+        
+        /* INCREASED SCALE AND PADDING FOR SUGGESTION LINE BLUE ZIP LABELS */
+        .s-item .zip-badge-blue { background: var(--bl); color: white; padding: 4px 10px; border-radius: 4px; font-size: 1rem; font-weight: 800; font-family: 'Times New Roman', serif; font-style: italic; letter-spacing: 0.5px; }
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
@@ -152,7 +155,7 @@
             <div id="kp-display" class="entry-display">00.00</div>
             <div class="keypad-container">
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
-                <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
+                <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5).toString()">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
                 <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
             </div>
@@ -564,7 +567,7 @@
 
             matches.forEach(item => {
                 const d = document.createElement('div'); d.className="s-item";
-                d.innerHTML = `<span>${item.displayName}</span><span style="background:var(--bl);color:white;padding:2px 6px;border-radius:4px;font-size:0.8rem; font-family: 'Times New Roman', serif; font-style: italic;">${item.zip}</span>`;
+                d.innerHTML = `<span>${item.displayName}</span><span class="zip-badge-blue">${item.zip}</span>`;
                 d.onclick = () => {
                     document.getElementById('streetInput').value = item.displayName; sugBox.style.display="none"; document.body.classList.remove('sug-active');
                     document.getElementById('backToListBtn').style.display = 'block'; document.getElementById('mainBody').classList.add('cards-active');
