@@ -8,9 +8,10 @@
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; --dr-rd: #da291c; --soft-bl: #4a90e2; }
         
-        ::-webkit-scrollbar { width: 14px; display: block; }
-        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.08); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #003a6a; border: 2px solid white; border-radius: 10px; }
+        /* PROMINENT, HIGH-VISIBILITY SCROLLBAR DESIGN FOR FASTER GRABBING */
+        ::-webkit-scrollbar { width: 16px; display: block; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.12); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: #002c52; border: 2px solid white; border-radius: 8px; }
         
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
         
@@ -66,13 +67,17 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        /* ADAPTIVE ZIP SELECTION BOX EXTENDS FULL VERTICAL REAP TO SCREEN FOOTER LINE WITH AUTOMATIC LAPTOP OVERRIDE */
-        #zipList { position: absolute; top: 100px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: calc(100vh - 120px); height: auto; flex-direction: column; overflow: hidden; }
+        /* BRUNG UP EXTENSION LINE TO top:96px AND RESCUED BOTTOM TO STAY COMFORTABLY WITHIN PORTABLE VIEWPORTS */
+        #zipList { position: absolute; top: 96px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: calc(100vh - 180px); height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
         .zip-item { display: flex; align-items: center; padding: 14px 18px; font-weight: 900; color: #111; font-size: 1.6rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
         .zip-item input { width: 26px; height: 26px; margin-right: 15px; accent-color: var(--bl); flex-shrink: 0; }
         
+        /* SPECIAL STATION TYPE TOGGLES COLOR PROFILE */
+        .zip-item.station-node { background: #e3effa; color: var(--bl); border-bottom: 2px dashed #004b87; }
+        .zip-item.station-node input { accent-color: var(--dr-rd); }
+
         .apply-wrap { padding: 12px 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; box-sizing: border-box; }
         .btn-apply { width: 100%; height: 46px; border-radius: 23px; border:none; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; background: var(--bl); color: white; box-sizing: border-box; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
 
@@ -107,20 +112,14 @@
         
         .tk-trigger-node { position: relative; background: #fff; border: 3px solid var(--bl); border-radius: 8px; min-height: 90px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; }
-        
-        /* DIGIT READOUT FIELDS MODIFIED TO CONDENSED ARIAL STACK FOR EXTRA VERTICAL TALLNESS SCALE WEIGHT */
         .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-family: 'Arial Narrow', -apple-system, sans-serif; font-size: 2.4rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; padding-top: 18px; }
 
-        /* EVENLY APPORTIONED COLUMNS SPREAD INPUT SEGMENTS BALANCED OUT ACROSS CONTAINER TRACKS */
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 22px 35px 1fr 1fr 1fr 1fr 42px; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; }
-        
-        /* LOG LAYOUT SPACERS WITH SAFETY BUFFERS */
         .log-hdr { padding: 12px 20px 12px 0px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; }
         .log-row { padding: 10px 20px 10px 0px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; }
         
         .log-row.duplicate b, .log-row.duplicate span:not(.del-x) { color: var(--soft-bl) !important; }
         
-        /* TOTAL COLUMN LINEUP MOVED FULL RIGHT BUFFER SAFETY POSITION */
         .total-row { padding: 12px 20px 12px 0px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; box-sizing: border-box; }
         .total-row b { text-align: center; grid-column: 3 / span 4; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; }
         .total-row span:last-child { color: #000; font-size: 1.05rem; grid-column: 7; font-weight: 900; text-align: right; padding-right: 2px; }
@@ -154,8 +153,8 @@
         .rt-block small { display: block; margin-bottom: 2px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
         .rt-block span { font-size: 3.1rem; display: block; font-weight: 700; line-height: 0.9; letter-spacing: 1px; }
         
-        /* ADAPTIVE EXTENSION EXPANDS SUGGESTIONS DRAWER RIGHT TO THE BASE PANELS DYNAMICALLY FOR LARGE PHONES */
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: calc(100vh - 270px); overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        /* RESTORED SUGGESTION DRAWER BACK TO ONLY FIVE HUNDRED LINES MAX HEIGHT PATTERN LAYER CAPACITIES */
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 250px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 1.25rem; font-weight: 800; color: var(--bl); cursor: pointer; overflow: hidden; gap: 10px; }
         .s-item span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; display: block; }
@@ -264,6 +263,9 @@
                 
                 <div id="zipList">
                     <div class="zip-scroll-area" id="zipScrollBox">
+                        <label class="zip-item station-node"><input type="checkbox" id="eastMaster" onchange="toggleStationGroup('EAST', this)"> [STATION] EAST</label>
+                        <label class="zip-item station-node"><input type="checkbox" id="mainMaster" onchange="toggleStationGroup('MAIN', this)"> [STATION] MAIN</label>
+                        
                         <label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label>
                         <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="validateZipCheck()"> 98660</label>
                         <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="validateZipCheck()"> 98661</label>
@@ -271,6 +273,7 @@
                         <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="validateZipCheck()"> 98663</label>
                         <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="validateZipCheck()"> 98664</label>
                         <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="validateZipCheck()"> 98665</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98666" onchange="validateZipCheck()"> 98666</label>
                         <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="validateZipCheck()"> 98668</label>
                         <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="validateZipCheck()"> 98682</label>
                         <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="validateZipCheck()"> 98683</label>
@@ -306,6 +309,10 @@
     let lastSearchTerm = ""; let currentAction = ""; let isDataLive = false;
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
+    // EXPLICIT GROUP MATRICES CONFIGURED FOR BULK TOGGLING MATCHES
+    const EAST_ZIPS = ["98662", "98682", "98664", "98683", "98684"];
+    const MAIN_ZIPS = ["98660", "98661", "98663", "98665", "98685", "98686", "98666"];
+
     window.onload = async () => {
         renderLog(); syncLocalDay(); loadTempEntries();
         try {
@@ -316,6 +323,17 @@
             isDataLive = true;
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); isDataLive = true; } }
     };
+
+    function toggleStationGroup(station, masterEl) {
+        const targetList = (station === 'EAST') ? EAST_ZIPS : MAIN_ZIPS;
+        document.querySelectorAll('.z-chk').forEach(c => {
+            if (targetList.includes(c.value)) { c.checked = masterEl.checked; }
+        });
+        if (!masterEl.checked) {
+            document.getElementById('allZipMaster').checked = false;
+        }
+        validateZipCheck();
+    }
 
     function validateZipCheck() {
         const anyChecked = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster').checked;
@@ -328,6 +346,13 @@
             sIn.disabled = false;
             blk.style.display = 'none';
         }
+        
+        // DE-COUPLE PRESET BOX HEADERS IF VALUES DO NOT CORRESPOND
+        let allEastChecked = true; EAST_ZIPS.forEach(z => { if(!document.querySelector(`.z-chk[value="${z}"]`)?.checked) allEastChecked = false; });
+        document.getElementById('eastMaster').checked = allEastChecked;
+        
+        let allMainChecked = true; MAIN_ZIPS.forEach(z => { if(!document.querySelector(`.z-chk[value="${z}"]`)?.checked) allMainChecked = false; });
+        document.getElementById('mainMaster').checked = allMainChecked;
     }
 
     function checkZipBeforeType() {
@@ -494,7 +519,6 @@
         b1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)); b2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
         const container = document.getElementById('log-container');
         
-        /* UPDATED STRUCTURAL MAPPING GRIDS FOR BALANCED MIDDLE-SPACING SHIFTS */
         let html = b1.map(e => `<div class="log-row"><span class="del-x" onclick="confirmDelete(${e.id})">X</span><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
         if(b1.length > 0) { const sum1 = b1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); html += `<div class="total-row"><span class="del-x" style="opacity:0"></span><b>TOTAL WEEK 1</b><span>${sum1}</span></div>`; }
         
@@ -595,7 +619,12 @@
         e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; 
         if (!isOpen) { document.body.classList.add('zip-open', 'header-hidden'); document.getElementById('zipScrollBox').scrollTop = 0; } 
     }
-    function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); validateZipCheck(); }
+    function checkAllZips(m) { 
+        document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); 
+        document.getElementById('eastMaster').checked = m.checked;
+        document.getElementById('mainMaster').checked = m.checked;
+        validateZipCheck(); 
+    }
     
     function finalApply(e) { 
         if(e) e.stopPropagation(); 
@@ -622,7 +651,7 @@
     }
 
     function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
+    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster, #eastMaster, #mainMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
     function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('logScrollFrame').scrollTop = 0; }
