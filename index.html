@@ -16,34 +16,14 @@
         
         .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); overflow: hidden; }
         
+        /* ENHANCED TRUE-WAVING AMERICAN FLAG PICTURE AT RICH 24% OPACITY */
         .app-container::before { 
             content: ""; 
             position: absolute; 
             left: 0; right: 0; bottom: 0; top: 0; 
-            background: 
-                radial-gradient(circle at 15% 15%, rgba(255,255,255,0.1) 2px, transparent 3px),
-                radial-gradient(circle at 25% 35%, rgba(255,255,255,0.1) 2px, transparent 3px),
-                radial-gradient(circle at 10% 45%, rgba(255,255,255,0.1) 2px, transparent 3px),
-                radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 2px, transparent 3px),
-                linear-gradient(90deg, rgba(0,38,100,0.35) 40%, transparent 40%),
-                linear-gradient(to bottom, 
-                    rgba(218,41,28,0.3) 0%, rgba(218,41,28,0.3) 7.69%, 
-                    transparent 7.69%, transparent 15.38%, 
-                    rgba(218,41,28,0.3) 15.38%, rgba(218,41,28,0.3) 23.07%, 
-                    transparent 23.07%, transparent 30.76%, 
-                    rgba(218,41,28,0.3) 30.76%, rgba(218,41,28,0.3) 38.46%, 
-                    transparent 38.46%, transparent 46.15%, 
-                    rgba(218,41,28,0.3) 46.15%, rgba(218,41,28,0.3) 53.84%, 
-                    transparent 53.84%, transparent 61.53%, 
-                    rgba(218,41,28,0.3) 61.53%, rgba(218,41,28,0.3) 69.23%, 
-                    transparent 69.23%, transparent 76.92%, 
-                    rgba(218,41,28,0.3) 76.92%, rgba(218,41,28,0.3) 84.61%, 
-                    transparent 84.61%, transparent 92.3%, 
-                    rgba(218,41,28,0.3) 92.3%, rgba(218,41,28,0.3) 100%
-                ),
-                linear-gradient(115deg, rgba(255,255,255,0.35) 0%, rgba(0,0,0,0.15) 30%, rgba(255,255,255,0.4) 55%, rgba(0,0,0,0.2) 80%, rgba(255,255,255,0.25) 100%);
-            background-size: auto, auto, auto, auto, 100% 53.84%, 100% 100%, 100% 100%;
-            opacity: 0.07; 
+            background: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States_%28waving%29.jpg') no-repeat center bottom;
+            background-size: cover;
+            opacity: 0.24; 
             pointer-events: none; 
             z-index: 1; 
         }
@@ -53,10 +33,8 @@
         
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 18px 15px; text-align: center; color: white; cursor: pointer; box-shadow: inset 0 0 0 3px var(--dr-rd); border-radius: 0; box-sizing: border-box; }
         
-        /* FIXED INLINE GEOMETRY HEADER: EXPLICIT DRAW TRACKS PREVENT ALL INTERIOR OVERLAPS */
-        .hdr .line-1 { display: block; height: 52px; margin: 0 auto; width: 100%; max-width: 260px; }
-        .hdr .line-1 svg { width: 100%; height: 100%; overflow: visible; }
-        .hdr .line-1 path { fill: #ffffff; stroke: var(--dr-rd); stroke-width: 1.25px; stroke-linejoin: round; }
+        /* EXECUTIVE ITALIC TYPOGRAPHY EQUIPPED WITH RE-CALIBRATED ARTIFACT-FREE THIN OUTLINE SYSTEM */
+        .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 2.9rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
         .hdr .line-3 { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); display: block; margin-top: 2px; }
@@ -247,16 +225,7 @@
         <div id="banner-wrap">
             <div id="status-dot"></div>
             <div class="hdr" onclick="secretKnock()">
-                <div class="line-1">
-                    <svg viewBox="0 0 260 52">
-                        <g transform="skewX(-12)">
-                            <path d="M15 2 Q15 44, 34 44 Q53 44, 53 2 L67 2 Q67 50, 34 50 Q1 50, 1 2 Z" />
-                            <path d="M110 13 C110 4, 80 1, 80 9 C80 14, 112 14, 112 28 C112 43, 76 44, 73 35 L86 32 C87 36, 98 37, 98 32 C98 26, 66 26, 66 14 C66 0, 105 -2, 109 10 Z" />
-                            <path d="M124 2 L158 2 C176 2, 176 25, 158 25 L138 25 L138 50 L124 50 Z M138 12 L154 12 C161 12, 161 16, 154 16 L138 16 Z" />
-                            <path d="M217 13 C217 4, 187 1, 187 9 C187 14, 219 14, 219 28 C219 43, 183 44, 180 35 L193 32 C194 36, 205 37, 205 32 C205 26, 173 26, 173 14 C173 0, 212 -2, 216 10 Z" />
-                        </g>
-                    </svg>
-                </div>
+                <span class="line-1">USPS</span>
                 <span class="line-2">Vancouver, Washington</span>
                 <span class="line-3">Route Finder</span>
             </div>
