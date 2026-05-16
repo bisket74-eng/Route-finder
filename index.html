@@ -33,14 +33,13 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        /* REMOVED LEFT/RIGHT BORDER FRAMING - TOP AND BOTTOM HORIZONTAL ACCENTS PRESERVED */
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 15px; text-align: center; color: white; cursor: pointer; border-top: 3px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; border-radius: 0; box-sizing: border-box; position: relative; }
+        /* PRIMARY BANNER BORDER: TOP RED STRIP STRIPPED DOWN SLIGHTLY UNTIL SHARP AND THIN */
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 15px; text-align: center; color: white; cursor: pointer; border-top: 1.5px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; border-radius: 0; box-sizing: border-box; position: relative; }
         
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
         .hdr .line-3 { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); display: block; margin-top: 2px; }
         
-        /* STATUS DOT RECONFIGURED: HIDDEN ON PRIMARY VIEW LAYER, MANAGED BY DEV PANEL INTERFACES */
         #status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; border: 2px solid white; display: inline-block; vertical-align: middle; margin-left: 8px; }
         #status-dot.live { background: var(--gr); }
 
@@ -68,7 +67,6 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        /* NUDGED UP SLIGHTLY HIGHER TO COVER STREET INPUT TEXT INSTRUCTION FIELDS */
         #zipList { position: absolute; top: 100px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 60vh; height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
@@ -91,14 +89,13 @@
 
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
 
-        /* TIMEKEEPER SCROLL ARCHITECTURE MODIFIED SO JUST THE BOTTOM LOG SECTION IS INTERNALLY FLUID */
         #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px 25px 15px 25px; display: flex; flex-direction: column; overflow: hidden; } 
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); box-sizing: border-box; }
         
         .time-fixed-top { flex-shrink: 0; }
         
-        /* LOCKED ISOLATED CONTAINER PERMITS PURE SUB-SECTION LOG SELECTION SCROLLING */
-        .time-log-scroll-wrapper { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; margin-top: 5px; padding-right: 2px; }
+        /* TIMEKEEPER INNER SCROLL PORTION SHIFTED SLIGHTLY TO THE LEFT TO SHIELD DATA COLUMNS FROM SCROLLBAR CLIPPING */
+        .time-log-scroll-wrapper { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; margin-top: 5px; padding-right: 4px; }
 
         .modal-x { position: absolute; top: 10px; right: 10px; width: 45px; height: 45px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 26px; font-weight: 900; cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center; }
         .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--dr-rd); color: var(--dr-rd); font-weight: 900; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; width: 45px; height: 45px; border-radius: 8px; line-height: 1.1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -112,16 +109,15 @@
         
         .tk-trigger-node { position: relative; background: #fff; border: 3px solid var(--bl); border-radius: 8px; min-height: 85px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; }
-        
-        /* HOUSING TIMES FIELD DATA READOUTS MAXIMIZED TO 2.1REM INTENSE SELECTION SCALES */
         .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-size: 2.1rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; padding-top: 16px; }
 
-        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
-        .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; }
-        .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; }
+        /* INCREASED GAP RATIO MODIFIED BY EXPLICIT RIGHT-HAND DISPLACEMENT PADDING TO FORCE TOTAL RECORD TO BREATHE CLEAR */
+        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 44px 44px 44px 44px 44px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 3px; }
+        .log-hdr { padding: 12px 18px 12px 4px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; }
+        .log-row { padding: 10px 18px 10px 4px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; }
         
         .log-row.duplicate b, .log-row.duplicate span:not(.del-x) { color: var(--soft-bl) !important; }
-        .total-row { padding: 12px 0; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; }
+        .total-row { padding: 12px 18px 12px 4px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; box-sizing: border-box; }
         .total-row b { text-align: center; grid-column: 5; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; }
         .total-row span:last-child { color: #000; font-size: 1rem; grid-column: 7; font-weight: 900; }
         .total-row.blue-week { border-top: none; border-bottom: 2px solid var(--soft-bl); }
@@ -194,7 +190,7 @@
             <div class="keypad-container">
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
                 <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
-                <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
+                <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(99)">9</div>
                 <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
             </div>
         </div>
@@ -498,7 +494,6 @@
         localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog(); syncLocalDay(); localStorage.removeItem('usps_temp_entries');
         clearTimeInputs();
         
-        /* LOG SUB-SECTION SNAP BACK DISPATCH SELECTION LOCK */
         setTimeout(() => {
             const frame = document.getElementById('logScrollFrame');
             if(frame) frame.scrollTop = 0;
@@ -657,7 +652,6 @@
                             </div>`;
                         cc.appendChild(card);
                     }); 
-                    /* AUTOMATIC RESPONSE SCROLL BAR AUTO-TOP TRACKING RESET BUTTON LOCK */
                     document.getElementById('list-res').scrollTop = 0;
                 }; sugBox.appendChild(d);
             }); 
@@ -669,7 +663,6 @@
         e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; 
         if (!isOpen) {
             document.body.classList.add('zip-open', 'header-hidden');
-            /* INTERIOR EXPANDABLE DROPDOWN AUTOMATIC TOP ALIGNMENT LOCK */
             document.getElementById('zipScrollBox').scrollTop = 0;
         } 
     }
@@ -709,41 +702,4 @@
         document.getElementById('cc').innerHTML = "";
         document.getElementById('backToListBtn').style.display = "none";
         document.getElementById('mainBody').classList.remove('cards-active');
-        document.getElementById('suggestionBox').style.display = "block";
-        const input = document.getElementById('streetInput');
-        input.value = lastSearchTerm; input.focus();
-        const len = input.value.length; input.setSelectionRange(len, len);
-        handleSearch(); 
-    }
-
-    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
-    function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
-    function closeViewer() { document.getElementById('viewer').style.display='none'; }
-    
-    function openTime() { 
-        document.body.classList.remove('header-hidden'); 
-        document.getElementById('timeModal').style.display='flex'; 
-        document.getElementById('logScrollFrame').scrollTop = 0; 
-    }
-    function closeTime() { document.getElementById('timeModal').style.display='none'; }
-    function saveTempEntries() { const data = { bt: document.getElementById('t-in').value, ol: document.getElementById('l-out').value, il: document.getElementById('l-in').value, et: document.getElementById('t-actual').value, date: new Date().toDateString() }; localStorage.setItem('usps_temp_entries', JSON.stringify(data)); }
-    function loadTempEntries() { const saved = localStorage.getItem('usps_temp_entries'); if (!saved) return; const data = JSON.parse(saved); if (data.date === new Date().toDateString()) { document.getElementById('t-in').value = data.bt; document.getElementById('l-out').value = data.ol; document.getElementById('l-in').value = data.il; document.getElementById('t-actual').value = data.et; document.getElementById('bt-btn').innerText = data.bt || "00.00"; document.getElementById('ol-btn').innerText = data.ol || "00.00"; document.getElementById('l-in').innerText = data.il || "00.00"; document.getElementById('et-btn').innerText = data.et || "00.00"; calcGoal(); } }
-    
-    /* SECRET DEPRECIATION PORTAL HOUSES THE MASTER CONNECTIVITY DATA INDICATOR DOT */
-    function secretKnock() { 
-        if(!window.k) window.k=0; window.k++; 
-        if(window.k===5) {
-            const liveStateHTML = `<div id="status-dot" class="${isDataLive ? 'live' : ''}"></div>`;
-            const popup = document.createElement('div');
-            popup.style = "position:fixed; bottom:140px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); color:white; padding:12px 20px; border-radius:30px; font-weight:900; font-size:0.85rem; z-index:999999; display:flex; align-items:center; gap:10px; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(0,0,0,0.4);";
-            popup.innerHTML = `<span>Database Connected</span>${liveStateHTML}`;
-            document.body.appendChild(popup);
-            setTimeout(() => popup.remove(), 3500);
-        } 
-        setTimeout(()=>window.k=0,2000); 
-    }
-    window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); validateZipCheck(); } }
-</script>
-</body>
-</html>
+        document.getElementById('suggestionBox').style
