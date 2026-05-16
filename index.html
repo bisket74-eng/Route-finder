@@ -11,25 +11,19 @@
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; --dr-rd: #da291c; --soft-bl: #4a90e2; }
         
         ::-webkit-scrollbar { width: 16px; display: block; }
-        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.12); border-radius: 8px; }
+        
+        /* VISUAL SCROLLBAR TRUNCATION: ALIGNS VISUAL RAIL TO MATCH THE TOTAL ROW LOWER LIMIT HEIGHT BOUNDARY */
+        ::-webkit-scrollbar-track { 
+            background: rgba(0, 0, 0, 0.12); 
+            border-radius: 8px; 
+            border-bottom: 15px solid var(--lt-bl); 
+            background-clip: padding-box; 
+        }
         ::-webkit-scrollbar-thumb { background: #002c52; border: 2px solid white; border-radius: 8px; }
         
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
         
         .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); overflow: hidden; }
-        
-        /* STATIC INSTANT RENDER PROFILE: DELAY PARAMS COMPLETELY REMOVED FROM GRAPHIC ENGINE */
-        .app-container::before { 
-            content: ""; 
-            position: absolute; 
-            left: 0; right: 0; bottom: 0; top: 0; 
-            background: url('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg') no-repeat center bottom;
-            background-size: cover;
-            opacity: 0.12; 
-            pointer-events: none; 
-            z-index: 1;
-            transform: translate3d(0,0,0);
-        }
 
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
@@ -93,7 +87,16 @@
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); box-sizing: border-box; }
         
         .time-fixed-top { flex-shrink: 0; }
-        .time-log-scroll-wrapper { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; margin-top: 5px; padding-right: 4px; }
+        
+        /* SCROLL RIGID PROTECTION: ENFORCES CONSTANT AREA PREVENTING HORIZONTAL COMPRESSION SHIFTS */
+        .time-log-scroll-wrapper { 
+            flex: 1; 
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; 
+            margin-top: 5px; 
+            padding-right: 4px; 
+            scrollbar-gutter: stable;
+        }
 
         .modal-x { position: absolute; top: 10px; right: 10px; width: 45px; height: 45px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 26px; font-weight: 900; cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center; }
         .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--dr-rd); color: var(--dr-rd); font-weight: 900; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; width: 45px; height: 45px; border-radius: 8px; line-height: 1.1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -110,23 +113,51 @@
         .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-family: 'Arial Narrow', -apple-system, sans-serif; font-size: 2.6rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; margin: 0; height: 100%; line-height: 1; position: relative; top: 4px; z-index: 1; }
         .tk-trigger-node .time-display-btn.unpopulated { color: #7f9bb2; }
 
-        .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 50px 1fr 1fr 1fr 1fr 65px; width: 100%; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; text-align: center; }
+        /* RIGID TIMEKEEPER SPACING GRID WITH BETTER SEPARATION GAP VALUES */
+        .log-hdr, .log-row, .total-row { 
+            display: grid; 
+            grid-template-columns: 55px 52px 52px 52px 52px 1fr; 
+            column-gap: 10px; 
+            width: 100%; 
+            font-family: 'Segoe UI Semibold', sans-serif; 
+            align-items: center; 
+            box-sizing: border-box; 
+        }
         
-        .log-hdr { padding: 12px 12px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.72rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; box-sizing: border-box; }
+        .log-hdr { padding: 12px 10px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.72rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; }
         
-        .log-row { padding: 12px 12px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; box-sizing: border-box; cursor: pointer; transition: background 0.1s ease; }
-        .log-row:active { background-color: rgba(0, 75, 135, 0.15); border-radius: 6px; }
+        /* INTERACTIVE CARD-STYLE LOG ENTRY ROWS (NON-INTRUSIVE TABLE REPLACEMENT) */
+        .log-row { 
+            padding: 12px 10px; 
+            border-bottom: 1px solid rgba(0,0,0,0.06); 
+            background-color: rgba(255, 255, 255, 0.45);
+            margin-bottom: 4px;
+            border-radius: 6px;
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            color: #333; 
+            cursor: pointer; 
+            transition: background-color 0.15s ease, transform 0.1s ease; 
+        }
+        .log-row:hover { background-color: rgba(255, 255, 255, 0.85); }
+        .log-row:active { background-color: rgba(0, 75, 135, 0.12); transform: scale(0.99); }
         
-        .log-row.duplicate b, .log-row.duplicate span:not(.del-x) { color: var(--soft-bl) !important; }
+        .log-row.duplicate b, .log-row.duplicate span { color: var(--soft-bl) !important; }
         
-        .total-row { padding: 12px 12px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; box-sizing: border-box; }
-        .total-row b { text-align: right; grid-column: 2 / span 4; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 12px; }
-        .total-row span:last-child { color: #000; font-size: 1.05rem; grid-column: 6; font-weight: 900; text-align: center; }
+        .total-row { padding: 12px 10px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; }
+        
+        /* COLUMN MATRIX HEADER POSITION ALIGNMENTS */
+        .log-hdr span, .log-row span { text-align: center; display: block; width: 100%; }
+        .log-hdr span:first-child, .log-row b { text-align: left; }
+        .log-hdr span:last-child, .log-row span:last-child { text-align: right; }
+        
+        .total-row b { text-align: right; grid-column: 1 / span 5; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 10px; }
+        .total-row span:last-child { color: #000; font-size: 1.05rem; grid-column: 6; font-weight: 900; text-align: right; }
         .total-row.blue-week { border-top: none; border-bottom: 2px solid var(--soft-bl); }
         .total-row.blue-week b, .total-row.blue-week span { color: var(--soft-bl) !important; }
 
-        .log-row b { text-align: left; font-size: 0.85rem; display: block; width: 100%; }
-        .total-col { font-weight: 900; text-align: center; font-size: 0.95rem; }
+        .log-row b { font-size: 0.85rem; font-weight: 900; }
+        .total-col { font-weight: 900; font-size: 0.95rem; }
         
         .static-day-label { background: #eef4f9; border: 3px solid var(--bl); border-radius: 8px; font-size: 1.3rem; font-weight: 900; color: var(--bl); padding: 10px 20px; margin: 0 auto 15px; width: 200px; display: block; text-align: center; box-sizing: border-box; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
         
@@ -135,8 +166,12 @@
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 8px 120px 8px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: rgba(238, 244, 249, 0.85); backdrop-filter: blur(2px); }
         
-        .list-card { background: white; padding: 12px 14px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
-        .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
+        /* CARDS CONTENT DISPLAY GRID WITH INTERMEDIATE CENTERING GAP FOR O/E */
+        .list-card { background: white; padding: 12px 14px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
+        .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 4px; overflow: hidden; }
+        
+        /* 3-COLUMN CARD MATRIX INTERMEDIATE CENTERING GAP */
+        .oe-middle-space { display: flex; align-items: center; justify-content: center; width: 60px; flex-shrink: 0; text-align: center; }
         
         .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 0.95; display: block; margin: 4px 0; letter-spacing: -0.5px; }
@@ -273,6 +308,8 @@
     </div>
 
     <div class="app-container">
+        <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.12; pointer-events: none; z-index: 1;" fetchpriority="high" loading="eager">
+        
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
                 <span class="line-1">USPS</span>
@@ -607,7 +644,6 @@
         const shortDay = daysMap[new Date().getDay()];
         const currentEntryWeek = getUSPSWeek(Date.now());
         
-        /* HARD DAY-CAP MODIFICATION SET TO LOCK REPEATED DAILY STAMPS WITHIN THE SAME PAY WEEK BLOCK */
         const count = log.filter(e => e.day === shortDay && getUSPSWeek(e.id) === currentEntryWeek).length;
         if (count >= 1) { openStyledAlert("AN ENTRY ALREADY EXISTS FOR THIS DAY THIS WEEK"); return; }
         
@@ -731,7 +767,9 @@
                         const card = document.createElement('div'); card.className="list-card"; let oeHtml = "";
                         if (res.houseType === "O" || res.houseType === "E") { oeHtml = `<span class="red-oe-stamp">${res.houseType}</span>`; }
                         let polishedRange = formatRangeStrings(res.range);
-                        card.innerHTML = `<div class="info-left"><span class="street-txt">${item.displayName}</span><span class="range-txt">${polishedRange}</span><div class="bottom-meta-row"><span class="zip-tag-blue">ZIP ${item.zip}</span>${oeHtml}</div></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
+                        
+                        /* RE-ARCHITECTED 3-COLUMN LAYOUT TO CENTER THE O/E STAMP IN THE MID-VOID ZONE */
+                        card.innerHTML = `<div class="info-left"><span class="street-txt">${item.displayName}</span><span class="range-txt">${polishedRange}</span><div class="bottom-meta-row"><span class="zip-tag-blue">ZIP ${item.zip}</span></div></div><div class="oe-middle-space">${oeHtml}</div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
                         cc.appendChild(card);
                     }); 
                     document.getElementById('list-res').scrollTop = 0;
