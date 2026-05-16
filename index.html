@@ -55,8 +55,6 @@
         
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
-        
-        /* EXPANDED APPLICATION SUBTITLE TYPOGRAPHY WITH LOWERED POSITIONING MARGINS */
         .hdr .line-3 { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); display: block; margin-top: 6px; }
         
         #status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; border: 2px solid white; display: inline-block; vertical-align: middle; margin-left: 8px; }
@@ -95,7 +93,6 @@
         input[type="text"] { width: 100%; padding: 10px 45px 10px 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 22px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
         input[type="text"].listening-active { border-color: var(--rd); box-shadow: 0 0 8px rgba(218, 41, 28, 0.3); }
 
-        /* SCALED DOWN GRAY BASELINE FORM FIELD PLACEHOLDER VALUES */
         input::placeholder { color: #ccc; font-size: 18px; }
         input:disabled::placeholder { color: #ccc; font-size: 18px; }
 
@@ -256,7 +253,10 @@
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 8px 120px 8px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: rgba(238, 244, 249, 0.85); backdrop-filter: blur(2px); }
         
+        /* RESULT POSITIONING PACKS WITH SEPARATION TOPPING */
         .list-card { background: white; padding: 4px 12px; margin: 0 auto 5px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
+        .list-card:first-child { margin-top: 10px; }
+        
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
         
         .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.925rem; display: block; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -292,28 +292,29 @@
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
+        /* TRUE EXTRA COMPACT HALF-SCALE NAVIGATION INTERFACE NODE OVERLAY */
         #backToListBtn { 
             display: none; 
             background-color: var(--bl); 
             color: white; 
-            width: calc(100% - 30px); 
-            padding: 0 15px; 
-            height: 48px; 
-            border-radius: 24px; 
+            width: 140px; 
+            padding: 0 4px; 
+            height: 24px; 
+            border-radius: 12px; 
             font-weight: 900; 
-            font-size: 1.05rem; 
+            font-size: 0.65rem; 
             border: none; 
             cursor: pointer; 
             text-transform: uppercase; 
             position: absolute; 
-            left: 15px;
-            right: 15px; 
-            bottom: -58px; 
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -34px; 
             z-index: 99; 
             white-space: nowrap; 
-            line-height: 48px; 
+            line-height: 24px; 
             text-align: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.25); 
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2); 
             margin: 0; 
             box-sizing: border-box; 
             overflow: hidden;
@@ -730,12 +731,12 @@
                 if (currentToken === "AVENUE") { mappedTokens.push("AVE"); continue; }
                 if (currentToken === "COURT") { mappedTokens.push("CT"); continue; }
                 if (currentToken === "LOOP") { mappedTokens.push("LOOP"); continue; }
-                if (currentToken === "SOUTHEAST") { mappedTokens.push("SE"); continue; }
+                if (currentToken === "SOUTHEAST") { mappedTokens.push("SE").continue; }
                 if (currentToken === "NORTHEAST") { mappedTokens.push("NE"); continue; }
                 if (currentToken === "NORTHWEST") { mappedTokens.push("NW"); continue; }
                 if (currentToken === "SOUTHWEST") { mappedTokens.push("SW"); continue; }
                 if (currentToken === "NORTH") { mappedTokens.push("N"); continue; }
-                if (currentToken === "SOUTH") { mapped鍵Tokens.push("S"); continue; }
+                if (currentToken === "SOUTH") { mappedTokens.push("S"); continue; }
                 if (currentToken === "EAST") { mappedTokens.push("E"); continue; }
                 if (currentToken === "WEST") { mappedTokens.push("W"); continue; }
                 mappedTokens.push(tokens[i]);
@@ -749,7 +750,13 @@
         recognition.start();
     }
 
-    function handleInputFocus() { document.getElementById('cc').innerHTML = ""; handleSearch(); }
+    /* FORCED TRANSITION DISCHARGE TERMINALS: CLEANING CONTAINER AND SURFACE STRIPS ON RETURNING CURSOR FOCUS */
+    function handleInputFocus() { 
+        document.getElementById('cc').innerHTML = ""; 
+        document.getElementById('backToListBtn').style.display = "none";
+        document.getElementById('mainBody').classList.remove('cards-active');
+        handleSearch(); 
+    }
 
     function clearTimeInputs() {
         ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
@@ -1168,7 +1175,6 @@
             displayStr = 'ALL ZIPs'; 
             evalLen = displayStr.length;
         } 
-        /* MODIFIED CUSTOM INTERCEPT: RE-MAPPED MAIN PROFILE TEXT DISPLAY FOR THE TARGET HOUSING UNIT */
         else if (isMain && chks.length === MAIN_ZIPS.length) { 
             displayStr = 'All Vancouver MOU zips'; 
             evalLen = 4; 
