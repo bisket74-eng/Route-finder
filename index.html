@@ -33,6 +33,7 @@
             overflow: hidden; 
         }
 
+        /* ANTI-FLASH SMOOTH BACKGROUND TRANSITION BUFFER */
         .bg-flag-surface {
             position: absolute;
             left: 0;
@@ -40,9 +41,13 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.12;
+            opacity: 0;
             pointer-events: none;
             z-index: 1;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .bg-flag-surface.loaded {
+            opacity: 0.12;
         }
 
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
@@ -125,18 +130,17 @@
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px 20px 20px; background: #dceaf5; border-radius: 0 0 8px 8px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; user-select: none; }
         
-        /* 10-KEYPAD DISPLAY REMAINS COURIER MONOSPACE FOR STABLE POSITIONING */
         .entry-display { background: #fff; border: 3px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 3rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.08); }
         .entry-display.kp-unpopulated { color: #7f9bb2; font-family: 'Courier New', monospace; }
         
         .tk-trigger-node { position: relative; background: #fff; border: 3px solid var(--bl); border-radius: 8px; min-height: 90px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; z-index: 2; }
         
-        /* TIME BOX CHANNELS REVERTED TO ARIAL NARROW FOR STANDARD POPULATED VALUES */
         .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-family: 'Arial Narrow', -apple-system, sans-serif; font-size: 2.6rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; margin: 0; height: 100%; line-height: 1; position: relative; top: 4px; z-index: 1; }
-        
-        /* TARGETED FONT MATRIX SPECIFICALLY FOR THE UNPOPULATED DASH SYMBOLS */
         .tk-trigger-node .time-display-btn.unpopulated { color: #7f9bb2; font-family: 'Courier New', monospace; font-size: 2.3rem; top: 2px; }
+        
+        /* TIME TRIGGER NODE "NONE" SUBORDINATE FONT COMPRESSION SELECTOR */
+        .tk-trigger-node .time-display-btn.none-active { font-size: 1.3rem; font-family: 'Segoe UI', sans-serif; top: 4px; }
 
         .log-hdr, .log-row, .total-row { 
             display: grid; 
@@ -167,6 +171,9 @@
         
         .log-row.duplicate b, .log-row.duplicate span { color: var(--soft-bl) !important; }
         
+        /* LOWER LOG OVERRIDE TARGET INJECTED 2 POINTS SMALLER THAN STANDARD NUMBERS */
+        .log-row .none-log-text { font-size: 0.72rem; text-align: center; display: block; width: 100%; font-weight: 700; }
+        
         .total-row { padding: 12px 6px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; }
         
         .log-hdr span, .log-row span { text-align: center; display: block; width: 100%; }
@@ -192,8 +199,6 @@
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
         
         .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
-        /* INLINE-BLOCK WRAPPER ENABLES MULTI-ROW NUMERIC BLOCK CENTER ALIGNMENT */
         .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 1.05; display: inline-block; text-align: center; margin: 4px 0; letter-spacing: -0.5px; }
         
         .bottom-meta-row { display: flex; align-items: center; gap: 15px; margin-top: 4px; }
@@ -220,7 +225,7 @@
     </style>
 </head>
 <body id="mainBody">
-    <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" class="bg-flag-surface" fetchpriority="high" loading="eager">
+    <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" class="bg-flag-surface" fetchpriority="high" loading="eager" onload="this.classList.add('loaded')">
 
     <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
@@ -498,12 +503,16 @@
             
             const map = {'adj-bt-btn':row.bt, 'adj-ol-btn':row.ol, 'adj-il-btn':row.il, 'adj-et-btn':row.et};
             for(let key in map) {
+                const element = document.getElementById(key);
+                element.classList.remove('none-active', 'unpopulated');
                 if(map[key] === "00.00") {
-                    document.getElementById(key).innerText = "--:--";
-                    document.getElementById(key).classList.add('unpopulated');
+                    element.innerText = "--:--";
+                    element.classList.add('unpopulated');
+                } else if(map[key] === "NONE") {
+                    element.innerText = "NONE";
+                    element.classList.add('none-active');
                 } else {
-                    document.getElementById(key).innerText = map[key];
-                    document.getElementById(key).classList.remove('unpopulated');
+                    element.innerText = map[key];
                 }
             }
         }
@@ -604,7 +613,7 @@
         ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
         ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => {
             const btn = document.getElementById(id);
-            btn.innerText = "--:--"; btn.classList.add('unpopulated');
+            btn.innerText = "--:--"; btn.className = "time-display-btn unpopulated";
         });
         document.getElementById('t-target').innerText = "--:--"; localStorage.removeItem('usps_temp_entries');
         explicitKeypadOverride = false;
@@ -690,6 +699,7 @@
         };
         const activeBtn = document.getElementById(btnMap[activeId]);
         
+        activeBtn.classList.remove('none-active');
         if (kpBuffer === "") {
             document.getElementById(activeId).value = "00.00";
             activeBtn.innerText = "--:--";
@@ -703,12 +713,12 @@
         if (activeId === 'l-out') {
             document.getElementById('l-in').value = "00.00";
             const ilBtn = document.getElementById('il-btn');
-            ilBtn.innerText = "--:--"; ilBtn.classList.add('unpopulated');
+            ilBtn.innerText = "--:--"; ilBtn.className = "time-display-btn unpopulated";
         }
         if (activeId === 'adj-l-out') {
             document.getElementById('adj-l-in').value = "00.00";
             const adjIlBtn = document.getElementById('adj-il-btn');
-            adjIlBtn.innerText = "--:--"; adjIlBtn.classList.add('unpopulated');
+            adjIlBtn.innerText = "--:--"; adjIlBtn.className = "time-display-btn unpopulated";
         }
         
         closeKeypad(); if(!activeId.startsWith('adj-')) { calcGoal(); saveTempEntries(); }
@@ -719,14 +729,14 @@
             document.getElementById('l-out').value = "NONE";
             document.getElementById('l-in').value = "NONE";
             
-            const ol = document.getElementById('ol-btn'); ol.innerText = "NONE"; ol.classList.remove('unpopulated');
-            const il = document.getElementById('il-btn'); il.innerText = "NONE"; il.classList.remove('unpopulated');
+            const ol = document.getElementById('ol-btn'); ol.innerText = "NONE"; ol.className = "time-display-btn none-active";
+            const il = document.getElementById('il-btn'); il.innerText = "NONE"; il.className = "time-display-btn none-active";
         } else if (activeId === 'adj-l-out') {
             document.getElementById('adj-l-out').value = "NONE";
             document.getElementById('adj-l-in').value = "NONE";
             
-            const adjOl = document.getElementById('adj-ol-btn'); adjOl.innerText = "NONE"; adjOl.classList.remove('unpopulated');
-            const adjIl = document.getElementById('adj-il-btn'); adjIl.innerText = "NONE"; adjIl.classList.remove('unpopulated');
+            const adjOl = document.getElementById('adj-ol-btn'); adjOl.innerText = "NONE"; adjOl.className = "time-display-btn none-active";
+            const adjIl = document.getElementById('adj-il-btn'); adjIl.innerText = "NONE"; adjIl.className = "time-display-btn none-active";
         }
         closeKeypad(); if(!activeId.startsWith('adj-')) { calcGoal(); saveTempEntries(); }
     }
@@ -807,10 +817,18 @@
         const currentWeekNum = getUSPSWeek(Date.now());
         const container = document.getElementById('log-container');
         
-        let htmlW1 = w1.map(e => `<div class="log-row" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
+        let htmlW1 = w1.map(e => {
+            let olStr = e.ol === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.ol}</span>`;
+            let ilStr = e.il === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.il}</span>`;
+            return `<div class="log-row" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span>${olStr}${ilStr}<span>${e.et}</span><span class="total-col">${e.total}</span></div>`;
+        }).join('');
         if(w1.length > 0) { const sum1 = w1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); htmlW1 += `<div class="total-row"><b>TOTAL WEEK 1</b><span>${sum1}</span></div>`; }
         
-        let htmlW2 = w2.map(e => `<div class="log-row duplicate" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
+        let htmlW2 = w2.map(e => {
+            let olStr = e.ol === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.ol}</span>`;
+            let ilStr = e.il === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.il}</span>`;
+            return `<div class="log-row duplicate" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span>${olStr}${ilStr}<span>${e.et}</span><span class="total-col">${e.total}</span></div>`;
+        }).join('');
         if(w2.length > 0) { const sum2 = w2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); htmlW2 += `<div class="total-row blue-week"><b>TOTAL WEEK 2</b><span>${sum2}</span></div>`; }
         
         if (currentWeekNum === 1) {
@@ -835,7 +853,6 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    /* RE-ENGINEERED FORMATTING MODULE PACKS STACKED MODIFIERS PRESERVING CENTER LAYOUT BOUNDS */
     function formatRangeStrings(str) { 
         let parts = str.split('-');
         function formatSingleSegment(p) {
@@ -859,8 +876,8 @@
         let startFormatted = formatSingleSegment(parts[0]);
         if (parts.length > 1 && parts[1].trim() !== "") {
             let endFormatted = formatSingleSegment(parts[1]);
-            /* AMPLIFIED TILDE ROW POSITIONED DEAD CENTER SYMMETRICALLY WITH STACKED RANGES */
-            return `${startFormatted}<br><span style="font-size: 2.2rem; display: block; line-height: 0.3; margin: 4px 0; color: #333; font-weight: 800; text-align: center; width: 100%;">~</span>${endFormatted}`;
+            /* STANDARD DASH RESTORED BUT KEPT PERFECTLY BALANCED AND HORIZONTALLY CENTERED */
+            return `${startFormatted}<br><span style="font-size: 2.2rem; display: block; line-height: 0.3; margin: 4px 0; color: #333; font-weight: 800; text-align: center; width: 100%;">-</span>${endFormatted}`;
         }
         return startFormatted;
     }
@@ -1001,12 +1018,15 @@
             for (let id in mapping) {
                 const element = document.getElementById(id);
                 const val = mapping[id] || "00.00";
+                element.classList.remove('none-active', 'unpopulated');
                 if (val === "00.00") {
                     element.innerText = "--:--";
                     element.classList.add('unpopulated');
+                } else if (val === "NONE") {
+                    element.innerText = "NONE";
+                    element.classList.add('none-active');
                 } else {
                     element.innerText = val;
-                    element.classList.remove('unpopulated');
                 }
             }
             calcGoal(); 
