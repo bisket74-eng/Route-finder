@@ -18,19 +18,18 @@
         
         .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); overflow: hidden; }
         
+        /* STATIC INSTANT RENDER PROFILE: DELAY PARAMS COMPLETELY REMOVED FROM GRAPHIC ENGINE */
         .app-container::before { 
             content: ""; 
             position: absolute; 
             left: 0; right: 0; bottom: 0; top: 0; 
             background: url('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg') no-repeat center bottom;
             background-size: cover;
-            opacity: 0; 
+            opacity: 0.12; 
             pointer-events: none; 
             z-index: 1;
             transform: translate3d(0,0,0);
-            animation: flagFadeIn 0.8s ease-out 0.1s forwards;
         }
-        @keyframes flagFadeIn { 0% { opacity: 0; } 100% { opacity: 0.12; } }
 
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
@@ -354,7 +353,6 @@
         } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); isDataLive = true; } }
     };
 
-    /* DYNAMIC PAY PERIOD CALENDAR ENGINE: ANCHORED MAY 16 2026 AS WEEK 1 START */
     function getUSPSWeek(ms) {
         const anchor = new Date(2026, 4, 16).getTime(); 
         const d = new Date(ms);
@@ -607,11 +605,11 @@
         
         const daysMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         const shortDay = daysMap[new Date().getDay()];
-        
-        /* CALENDAR-AWARE PROTECTION: CHECKS DUPLICATES WITHIN THE EXCLUSIVE WEEK LIMITS BLOCK */
         const currentEntryWeek = getUSPSWeek(Date.now());
+        
+        /* HARD DAY-CAP MODIFICATION SET TO LOCK REPEATED DAILY STAMPS WITHIN THE SAME PAY WEEK BLOCK */
         const count = log.filter(e => e.day === shortDay && getUSPSWeek(e.id) === currentEntryWeek).length;
-        if (count >= 2) { openStyledAlert("TWO ENTRIES ALREADY EXIST FOR TODAY"); return; }
+        if (count >= 1) { openStyledAlert("AN ENTRY ALREADY EXISTS FOR THIS DAY THIS WEEK"); return; }
         
         const bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
         const btV = parseFloat(bt), olV = parseFloat(ol), ilV = parseFloat(il), etV = parseFloat(et);
@@ -623,7 +621,6 @@
         setTimeout(() => { const frame = document.getElementById('logScrollFrame'); if(frame) frame.scrollTop = 0; }, 50);
     }
 
-    /* RENDER SYSTEM SORTING CHANNELS BASED ON DYNAMIC CALENDAR FLOATING RULES */
     function renderLog() { 
         let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
         log.sort((a,b) => a.id - b.id); 
@@ -645,7 +642,6 @@
         let htmlW2 = w2.map(e => `<div class="log-row duplicate" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span><span>${e.ol}</span><span>${e.il}</span><span>${e.et}</span><span class="total-col">${e.total}</span></div>`).join('');
         if(w2.length > 0) { const sum2 = w2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); htmlW2 += `<div class="total-row blue-week"><b>TOTAL WEEK 2</b><span>${sum2}</span></div>`; }
         
-        /* CONDITIONAL INJECTION DOCK: CURRENT ACTIVE PAY WEEK IS FLOATED HIGHER OVER THE BACKUP WEEK BLOCK */
         if (currentWeekNum === 1) {
             container.innerHTML = htmlW1 + htmlW2;
         } else {
