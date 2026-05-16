@@ -12,7 +12,7 @@
         
         ::-webkit-scrollbar { width: 16px; display: block; }
         
-        /* VISUAL SCROLLBAR TRUNCATION: ALIGNS VISUAL RAIL TO MATCH THE TOTAL ROW LOWER LIMIT HEIGHT BOUNDARY */
+        /* VISUAL SCROLLBAR TRUNCATION RAIL CONFIGURATION */
         ::-webkit-scrollbar-track { 
             background: rgba(0, 0, 0, 0.12); 
             border-radius: 8px; 
@@ -23,7 +23,19 @@
         
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
         
-        .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); overflow: hidden; }
+        /* INSTANT GRAPHICS ENGINE: FLAG BAKED DIRECTLY INTO THE CONTAINER BACKGROUND PATTERN LAYER */
+        .app-container { 
+            width: 100%; 
+            max-width: 500px; 
+            background: linear-gradient(rgba(238, 244, 249, 0.88), rgba(238, 244, 249, 0.88)), url('https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg') no-repeat center bottom;
+            background-size: cover;
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            position: relative; 
+            box-shadow: 0 0 40px rgba(0,0,0,0.3); 
+            overflow: hidden; 
+        }
 
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
@@ -83,12 +95,13 @@
 
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999999; display: none; align-items: center; justify-content: center; }
 
-        #timeModal .time-box, #adjustModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px 25px 15px 25px; display: flex; flex-direction: column; overflow: hidden; } 
+        /* MODAL CONTENT PANEL WITH INTEGRATED LATERAL PROFILE WIDTH PADDING */
+        #timeModal .time-box, #adjustModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px 12px 15px 12px; display: flex; flex-direction: column; overflow: hidden; } 
         .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); box-sizing: border-box; }
         
         .time-fixed-top { flex-shrink: 0; }
         
-        /* SCROLL RIGID PROTECTION: ENFORCES CONSTANT AREA PREVENTING HORIZONTAL COMPRESSION SHIFTS */
+        /* SCROLL BAR RIGID FRAMEWORK SYSTEM */
         .time-log-scroll-wrapper { 
             flex: 1; 
             overflow-y: auto; 
@@ -113,22 +126,22 @@
         .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-family: 'Arial Narrow', -apple-system, sans-serif; font-size: 2.6rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; margin: 0; height: 100%; line-height: 1; position: relative; top: 4px; z-index: 1; }
         .tk-trigger-node .time-display-btn.unpopulated { color: #7f9bb2; }
 
-        /* RIGID TIMEKEEPER SPACING GRID WITH BETTER SEPARATION GAP VALUES */
+        /* ULTRA-COMPRESSED GRID LAYOUT MATRIX: SHIFTS DATA LEFT CLEARING THE SCROLLBAR TRACK CONTAINER */
         .log-hdr, .log-row, .total-row { 
             display: grid; 
-            grid-template-columns: 55px 52px 52px 52px 52px 1fr; 
-            column-gap: 10px; 
+            grid-template-columns: 46px 44px 44px 44px 44px 54px; 
+            column-gap: 6px; 
             width: 100%; 
             font-family: 'Segoe UI Semibold', sans-serif; 
             align-items: center; 
             box-sizing: border-box; 
         }
         
-        .log-hdr { padding: 12px 10px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.72rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; }
+        .log-hdr { padding: 12px 6px; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.72rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; }
         
-        /* INTERACTIVE CARD-STYLE LOG ENTRY ROWS (NON-INTRUSIVE TABLE REPLACEMENT) */
+        /* CARD INTERFACE PROFILE TEMPLATE WITH BALANCED HOVER HOOKS */
         .log-row { 
-            padding: 12px 10px; 
+            padding: 12px 6px; 
             border-bottom: 1px solid rgba(0,0,0,0.06); 
             background-color: rgba(255, 255, 255, 0.45);
             margin-bottom: 4px;
@@ -144,15 +157,15 @@
         
         .log-row.duplicate b, .log-row.duplicate span { color: var(--soft-bl) !important; }
         
-        .total-row { padding: 12px 10px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; }
+        .total-row { padding: 12px 6px; background: transparent; border-top: 1px solid #ccc; border-bottom: 2px solid var(--bl); margin: 4px 0 10px; font-weight: 900; font-size: 0.75rem; }
         
-        /* COLUMN MATRIX HEADER POSITION ALIGNMENTS */
+        /* LOG CONTENT CHANNEL ROW & HEADER TRACK DIRECT CENTERING HOOKS */
         .log-hdr span, .log-row span { text-align: center; display: block; width: 100%; }
-        .log-hdr span:first-child, .log-row b { text-align: left; }
-        .log-hdr span:last-child, .log-row span:last-child { text-align: right; }
+        .log-hdr span:first-child, .log-row b { text-align: left; padding-left: 2px; }
+        .log-hdr span:last-child, .log-row span:last-child { text-align: right; padding-right: 2px; }
         
-        .total-row b { text-align: right; grid-column: 1 / span 5; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 10px; }
-        .total-row span:last-child { color: #000; font-size: 1.05rem; grid-column: 6; font-weight: 900; text-align: right; }
+        .total-row b { text-align: right; grid-column: 1 / span 5; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 4px; }
+        .total-row span:last-child { color: #000; font-size: 1.05rem; grid-column: 6; font-weight: 900; text-align: right; padding-right: 2px; }
         .total-row.blue-week { border-top: none; border-bottom: 2px solid var(--soft-bl); }
         .total-row.blue-week b, .total-row.blue-week span { color: var(--soft-bl) !important; }
 
@@ -166,12 +179,9 @@
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 8px 120px 8px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: rgba(238, 244, 249, 0.85); backdrop-filter: blur(2px); }
         
-        /* CARDS CONTENT DISPLAY GRID WITH INTERMEDIATE CENTERING GAP FOR O/E */
-        .list-card { background: white; padding: 12px 14px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
-        .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 4px; overflow: hidden; }
-        
-        /* 3-COLUMN CARD MATRIX INTERMEDIATE CENTERING GAP */
-        .oe-middle-space { display: flex; align-items: center; justify-content: center; width: 60px; flex-shrink: 0; text-align: center; }
+        /* REVERTED STREET DATA CARD TEMPLATE CONFIGURATION */
+        .list-card { background: white; padding: 12px 14px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
+        .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
         
         .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 0.95; display: block; margin: 4px 0; letter-spacing: -0.5px; }
@@ -308,8 +318,6 @@
     </div>
 
     <div class="app-container">
-        <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.12; pointer-events: none; z-index: 1;" fetchpriority="high" loading="eager">
-        
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
                 <span class="line-1">USPS</span>
@@ -768,8 +776,8 @@
                         if (res.houseType === "O" || res.houseType === "E") { oeHtml = `<span class="red-oe-stamp">${res.houseType}</span>`; }
                         let polishedRange = formatRangeStrings(res.range);
                         
-                        /* RE-ARCHITECTED 3-COLUMN LAYOUT TO CENTER THE O/E STAMP IN THE MID-VOID ZONE */
-                        card.innerHTML = `<div class="info-left"><span class="street-txt">${item.displayName}</span><span class="range-txt">${polishedRange}</span><div class="bottom-meta-row"><span class="zip-tag-blue">ZIP ${item.zip}</span></div></div><div class="oe-middle-space">${oeHtml}</div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
+                        /* FULL REVERSION TO ORIGINAL LOWER BLOCK INTERFACE POSITION NEXT TO ZIP STAMP */
+                        card.innerHTML = `<div class="info-left"><span class="street-txt">${item.displayName}</span><span class="range-txt">${polishedRange}</span><div class="bottom-meta-row"><span class="zip-tag-blue">ZIP ${item.zip}</span>${oeHtml}</div></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
                         cc.appendChild(card);
                     }); 
                     document.getElementById('list-res').scrollTop = 0;
