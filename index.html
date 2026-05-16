@@ -55,8 +55,9 @@
         
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
-        .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
-        .hdr .line-3 { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); display: block; margin-top: 2px; }
+        
+        /* EXPANDED APPLICATION SUBTITLE TYPOGRAPHY WITH LOWERED POSITIONING MARGINS */
+        .hdr .line-3 { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); display: block; margin-top: 6px; }
         
         #status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; border: 2px solid white; display: inline-block; vertical-align: middle; margin-left: 8px; }
         #status-dot.live { background: var(--gr); }
@@ -66,7 +67,6 @@
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; position: relative; z-index: 220; }
         .input-wrapper { flex: 1; position: relative; min-width: 0; }
         
-        /* HEADING MARGIN ALIGNMENT SHIFTS FOR FLUSH BOX BOUNDS */
         .label-row { display: flex; align-items: baseline; gap: 5px; margin-bottom: 5px; margin-left: 14px; }
         label { font-size: 0.9rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
         .label-main-zip { display: flex; align-items: baseline; gap: 5px; margin-bottom: 5px; margin-left: 14px; }
@@ -95,6 +95,10 @@
         input[type="text"] { width: 100%; padding: 10px 45px 10px 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 22px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
         input[type="text"].listening-active { border-color: var(--rd); box-shadow: 0 0 8px rgba(218, 41, 28, 0.3); }
 
+        /* SCALED DOWN GRAY BASELINE FORM FIELD PLACEHOLDER VALUES */
+        input::placeholder { color: #ccc; font-size: 18px; }
+        input:disabled::placeholder { color: #ccc; font-size: 18px; }
+
         .street-audio-wave { 
             position: absolute; 
             right: 14px; 
@@ -118,7 +122,6 @@
             50% { transform: scaleY(1.0); }
         }
         
-        input:disabled::placeholder { color: #ccc; }
         input:disabled { background-color: #f5f5f5; border-color: #ddd; }
 
         .btn-circle { height: 52px; width: 52px; border-radius: 50%; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.65rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; line-height: 1; }
@@ -256,13 +259,11 @@
         .list-card { background: white; padding: 4px 12px; margin: 0 auto 5px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
         
-        /* SHRUNK STREET DISPLAY TRACKS DOWN BY 2 POINTS */
         .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.925rem; display: block; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .range-txt { font-size: 2.7rem; font-weight: 700; color: var(--bl); line-height: 1.0; display: inline-block; text-align: center; margin: 0; letter-spacing: -0.5px; }
         
         .red-oe-stamp { font-size: 1.15rem; font-weight: 900; color: var(--rd); text-transform: uppercase; display: inline-block; line-height: 1; font-family: 'Segoe UI', Arial, sans-serif; margin-left: 6px; vertical-align: middle; }
 
-        /* INCREASED ROUTE ENGINE DISPLAY 4 POINTS & STAMP SIZE UP 2 POINTS */
         .rt-block { 
             background: var(--bl); 
             color: white; 
@@ -625,7 +626,7 @@
             document.getElementById('adj-l-in').value = row.il;
             document.getElementById('adj-t-actual').value = row.et;
             
-            const map = {'adj-bt-btn':row.bt, 'adj-ol-btn':row.ol, 'adj-il-btn':row.il, 'adj-et-btn':row.et};
+            const map = {'adj-bt-btn':row.bt, 'adj-ol-btn':row.ol, 'adj-il-btn':row.il, 'adj-t-actual':row.et};
             for(let key in map) {
                 const element = document.getElementById(key);
                 element.classList.remove('none-active', 'unpopulated');
@@ -734,7 +735,7 @@
                 if (currentToken === "NORTHWEST") { mappedTokens.push("NW"); continue; }
                 if (currentToken === "SOUTHWEST") { mappedTokens.push("SW"); continue; }
                 if (currentToken === "NORTH") { mappedTokens.push("N"); continue; }
-                if (currentToken === "SOUTH") { mappedTokens.push("S"); continue; }
+                if (currentToken === "SOUTH") { mapped鍵Tokens.push("S"); continue; }
                 if (currentToken === "EAST") { mappedTokens.push("E"); continue; }
                 if (currentToken === "WEST") { mappedTokens.push("W"); continue; }
                 mappedTokens.push(tokens[i]);
@@ -1167,8 +1168,9 @@
             displayStr = 'ALL ZIPs'; 
             evalLen = displayStr.length;
         } 
+        /* MODIFIED CUSTOM INTERCEPT: RE-MAPPED MAIN PROFILE TEXT DISPLAY FOR THE TARGET HOUSING UNIT */
         else if (isMain && chks.length === MAIN_ZIPS.length) { 
-            displayStr = 'All Vancouver Main Zips'; 
+            displayStr = 'All Vancouver MOU zips'; 
             evalLen = 4; 
         }
         else if (isEast && chks.length === EAST_ZIPS.length) { 
@@ -1182,7 +1184,6 @@
         
         trig.innerText = displayStr;
         
-        /* SYNCHRONIZED SIZE CONSTANTS FOR STEADY LAYOUT ENGAGEMENT */
         if (evalLen <= 13) trig.style.fontSize = '22px';
         else if (evalLen <= 20) trig.style.fontSize = '18px';
         else if (evalLen <= 25) trig.style.fontSize = '15px';
