@@ -125,7 +125,7 @@
     <div id="confirmModal">
         <div class="del-box">
             <h3 id="confirmMsg">Delete row?</h3>
-            <div id="confirmBtns" style="display:flex; justify-content:center; gap:15px;">
+            <div id="confirmBtns; display:flex; justify-content:center; gap:15px;">
                 <button class="btn-del-action btn-grn" onclick="closeConfirm()">Return</button>
                 <button id="executeBtn" class="btn-del-action btn-red" onclick="executeDelete()">Delete</button>
             </div>
@@ -432,14 +432,18 @@
             const z = c[7]?.toString().trim(), nm = c[4]?.toString().trim();
             if(!z || !nm || z==="ZIP") return;
             if(!nDB[z]) nDB[z] = [];
+            // Parse directional prefix vs core name vs suffix traits safely
+            const dir = c[3]?.toString().trim() || "";
+            const suf = c[5]?.toString().trim() || "";
+            const postDir = c[6]?.toString().trim() || "";
             const fNm = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s=>s.trim()).join(" ");
             let st = nDB[z].find(s=>s.displayName === fNm);
-            if(!st){ st = { searchName: nm.toUpperCase(), displayName: fNm, results: [] }; nDB[z].push(st); }
+            if(!st){ st = { searchName: nm.toUpperCase(), displayName: fNm, directional: dir.toUpperCase(), suffix: suf.toUpperCase(), results: [] }; nDB[z].push(st); }
             st.results.push({ range: c[0]+(c[1]?"-"+c[1]:""), route: c[8]?.trim() });
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    // SEQUENTIAL STRICT MATCHING ENGINE
+    // INTERIOR HIERARCHICAL PRIORITY MATCHING ENGINE
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
@@ -458,12 +462,10 @@
         const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
         
         let trailingDir = null;
-        // Directional mapping rules apply ONLY if sitting at the absolute tail
         if (searchTokens.length > 1 && directionalList.includes(searchTokens[searchTokens.length - 1])) {
             trailingDir = searchTokens.pop();
         }
 
-        // Reassemble core query terms vs suffix items
         let coreQueryName = searchTokens.join(" ");
         let suffixToken = null;
         const knownSuffixes = ["ST", "AVE", "CIR", "CT", "RD", "DR", "BLVD", "LN", "LOOP"];
@@ -477,14 +479,19 @@
         activeZips.forEach(z => { 
             if(database[z]) {
                 database[z].forEach(m => { 
-                    const targetName = m.searchName; // E.g. "MILL PLAIN" or "132ND"
-                    const targetDisplay = m.displayName.toUpperCase(); // E.g. "SE MILL PLAIN BLVD"
+                    const targetName = m.searchName; 
+                    const targetDisplay = m.displayName.toUpperCase(); 
                     
-                    // RULE 1: Digit/character searching MUST strictly align with the very left boundary of target core name
-                    if (targetName.startsWith(coreQueryName)) {
+                    let baseMatch = false;
+                    if (coreQueryName.length <= 2) {
+                        baseMatch = (targetName === coreQueryName);
+                    } else {
+                        baseMatch = targetName.startsWith(coreQueryName);
+                    }
+                    
+                    if (baseMatch) {
                         let validCheck = true;
                         
-                        // RULE 2: Suffix evaluation is triggered ONLY if the clerk completely finishes the name block and appends a valid suffix modifier
                         if (suffixToken) {
                             let suffixRegex = new RegExp('\\b' + suffixToken + '\\b');
                             if (!suffixRegex.test(targetDisplay)) {
@@ -492,7 +499,6 @@
                             }
                         }
                         
-                        // RULE 3: Directional validation operates at absolute structural index position 0
                         if (validCheck && trailingDir) {
                             let displayTokens = targetDisplay.split(/\s+/);
                             if (displayTokens[0] !== trailingDir) {
@@ -509,7 +515,21 @@
         });
         if(matches.length > 0) {
             sugBox.style.display="block"; document.body.classList.add('sug-active');
-            matches.sort((a,b) => a.displayName.localeCompare(b.displayName, undefined, {numeric:true}));
+            
+            // HIERARCHICAL PRIORITY SORT FUNCTION
+            matches.sort((a, b) => {
+                // Priority 1: Alpha-Numeric sort exclusively on the base Core Street Name
+                let coreComp = a.searchName.localeCompare(b.searchName, undefined, {numeric: true});
+                if (coreComp !== 0) return coreComp;
+                
+                // Priority 2: Suffix comparison handles sorting ONLY when core street names match perfectly
+                let sufComp = (a.suffix || "").localeCompare(b.suffix || "");
+                if (sufComp !== 0) return sufComp;
+                
+                // Priority 3: Directional validation sorts geographically ONLY when core name and suffix match perfectly
+                return (a.directional || "").localeCompare(b.directional || "");
+            });
+
             matches.forEach(item => {
                 const d = document.createElement('div'); d.className="s-item";
                 d.innerHTML = `<span>${item.displayName}</span><span style="background:var(--bl);color:white;padding:2px 6px;border-radius:4px;font-size:0.8rem; font-family: 'Times New Roman', serif; font-style: italic;">${item.zip}</span>`;
