@@ -439,6 +439,7 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
+    // SEQUENTIAL STRICT MATCHING ENGINE
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
@@ -455,33 +456,43 @@
         
         let searchTokens = rawVal.split(/\s+/);
         const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
+        
         let trailingDir = null;
-
+        // Directional mapping rules apply ONLY if sitting at the absolute tail
         if (searchTokens.length > 1 && directionalList.includes(searchTokens[searchTokens.length - 1])) {
             trailingDir = searchTokens.pop();
         }
 
-        let leadToken = searchTokens[0];
-        let subTokens = searchTokens.slice(1);
+        // Reassemble core query terms vs suffix items
+        let coreQueryName = searchTokens.join(" ");
+        let suffixToken = null;
+        const knownSuffixes = ["ST", "AVE", "CIR", "CT", "RD", "DR", "BLVD", "LN", "LOOP"];
+
+        if (searchTokens.length > 1 && knownSuffixes.includes(searchTokens[searchTokens.length - 1])) {
+            suffixToken = searchTokens.pop();
+            coreQueryName = searchTokens.join(" ");
+        }
 
         let matches = []; 
         activeZips.forEach(z => { 
             if(database[z]) {
                 database[z].forEach(m => { 
-                    const targetName = m.searchName;
-                    const targetDisplay = m.displayName.toUpperCase();
+                    const targetName = m.searchName; // E.g. "MILL PLAIN" or "132ND"
+                    const targetDisplay = m.displayName.toUpperCase(); // E.g. "SE MILL PLAIN BLVD"
                     
-                    if (targetName.startsWith(leadToken) || targetDisplay.startsWith(leadToken) || targetDisplay.split(/\s+/).slice(1).join(" ").startsWith(leadToken)) {
+                    // RULE 1: Digit/character searching MUST strictly align with the very left boundary of target core name
+                    if (targetName.startsWith(coreQueryName)) {
                         let validCheck = true;
                         
-                        for (let i = 0; i < subTokens.length; i++) {
-                            let boundRegex = new RegExp('\\b' + subTokens[i] + '\\b');
-                            if (!boundRegex.test(targetDisplay)) {
+                        // RULE 2: Suffix evaluation is triggered ONLY if the clerk completely finishes the name block and appends a valid suffix modifier
+                        if (suffixToken) {
+                            let suffixRegex = new RegExp('\\b' + suffixToken + '\\b');
+                            if (!suffixRegex.test(targetDisplay)) {
                                 validCheck = false;
-                                break;
                             }
                         }
                         
+                        // RULE 3: Directional validation operates at absolute structural index position 0
                         if (validCheck && trailingDir) {
                             let displayTokens = targetDisplay.split(/\s+/);
                             if (displayTokens[0] !== trailingDir) {
