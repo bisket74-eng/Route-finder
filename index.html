@@ -16,7 +16,7 @@
         
         .app-container { width: 100%; max-width: 500px; background: var(--lt-bl); display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.3); overflow: hidden; }
         
-        /* REPOSITORY BACKGROUND LAYER CONFIGURATION - OPACITY LOWERED TO 0.12 FOR A CLEAN GHOST LOOK */
+        /* REPOSITORY BACKGROUND LAYER CONFIGURATION */
         .app-container::before { 
             content: ""; 
             position: absolute; 
@@ -33,13 +33,15 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 15px; text-align: center; color: white; cursor: pointer; box-shadow: inset 0 0 0 3px var(--dr-rd); border-radius: 0; box-sizing: border-box; }
+        /* REMOVED LEFT/RIGHT BORDER FRAMING - TOP AND BOTTOM HORIZONTAL ACCENTS PRESERVED */
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 15px; text-align: center; color: white; cursor: pointer; border-top: 3px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; border-radius: 0; box-sizing: border-box; position: relative; }
         
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
         .hdr .line-3 { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); display: block; margin-top: 2px; }
         
-        #status-dot { position: absolute; top: 12px; right: 12px; width: 10px; height: 10px; border-radius: 50%; background: #666; border: 2px solid white; z-index: 9999; }
+        /* STATUS DOT RECONFIGURED: HIDDEN ON PRIMARY VIEW LAYER, MANAGED BY DEV PANEL INTERFACES */
+        #status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; border: 2px solid white; display: inline-block; vertical-align: middle; margin-left: 8px; }
         #status-dot.live { background: var(--gr); }
 
         .sticky-top { position: sticky; top: 0; z-index: 200; background: transparent; flex-shrink: 0; }
@@ -66,7 +68,8 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        #zipList { position: absolute; top: 104px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 60vh; height: auto; flex-direction: column; overflow: hidden; }
+        /* NUDGED UP SLIGHTLY HIGHER TO COVER STREET INPUT TEXT INSTRUCTION FIELDS */
+        #zipList { position: absolute; top: 100px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 60vh; height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
         .zip-item { display: flex; align-items: center; padding: 14px 18px; font-weight: 900; color: #111; font-size: 1.6rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
@@ -88,9 +91,15 @@
 
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; align-items: center; justify-content: center; }
 
-        #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px; } 
-        .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; overflow-y: auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        /* TIMEKEEPER SCROLL ARCHITECTURE MODIFIED SO JUST THE BOTTOM LOG SECTION IS INTERNALLY FLUID */
+        #timeModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px 25px 15px 25px; display: flex; flex-direction: column; overflow: hidden; } 
+        .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); box-sizing: border-box; }
         
+        .time-fixed-top { flex-shrink: 0; }
+        
+        /* LOCKED ISOLATED CONTAINER PERMITS PURE SUB-SECTION LOG SELECTION SCROLLING */
+        .time-log-scroll-wrapper { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; margin-top: 5px; padding-right: 2px; }
+
         .modal-x { position: absolute; top: 10px; right: 10px; width: 45px; height: 45px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 26px; font-weight: 900; cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center; }
         .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--dr-rd); color: var(--dr-rd); font-weight: 900; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; width: 45px; height: 45px; border-radius: 8px; line-height: 1.1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         
@@ -101,12 +110,14 @@
         
         .entry-display { background: #fff; border: 3px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 3rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.08); }
         
-        .tk-trigger-node { position: relative; background: #fff; border: 3px solid var(--bl); border-radius: 8px; min-height: 80px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .tk-trigger-node { position: relative; background: #fff; border: 3px solid var(--bl); border-radius: 8px; min-height: 85px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .tk-trigger-node .tk-corner-tag { position: absolute; top: 4px; left: 8px; font-size: 0.95rem; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1; pointer-events: none; letter-spacing: 0.5px; }
-        .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-size: 1.8rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; padding-top: 15px; }
+        
+        /* HOUSING TIMES FIELD DATA READOUTS MAXIMIZED TO 2.1REM INTENSE SELECTION SCALES */
+        .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-size: 2.1rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; box-shadow: none; box-sizing: border-box; padding-top: 16px; }
 
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
-        .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
+        .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 10px; text-transform: uppercase; }
         .log-row { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-weight: 700; color: #333; }
         
         .log-row.duplicate b, .log-row.duplicate span:not(.del-x) { color: var(--soft-bl) !important; }
@@ -121,7 +132,7 @@
         
         .del-x { color: var(--dr-rd) !important; background: #ffffff !important; border: 2px solid var(--dr-rd) !important; cursor: pointer; font-weight: 900; font-size: 0.75rem; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin: 0 auto; line-height: 1; box-sizing: border-box; padding: 0; }
         
-        #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 16px center; background-size: 22px; padding: 12px 40px 12px 20px !important; width: 200px; margin: 0 auto 20px; font-weight: 900; border: 3px solid var(--bl); border-radius: 8px; display: block; text-align: center; font-size: 1.3rem; box-sizing: border-box; color: var(--bl); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        #t-day { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 16px center; background-size: 22px; padding: 12px 40px 12px 20px !important; width: 200px; margin: 0 auto 15px; font-weight: 900; border: 3px solid var(--bl); border-radius: 8px; display: block; text-align: center; font-size: 1.3rem; box-sizing: border-box; color: var(--bl); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
 
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 15px 120px 15px; z-index: 100; pointer-events: none; display: none; }
         body.cards-active #list-res { display: block; pointer-events: auto; background: rgba(238, 244, 249, 0.85); backdrop-filter: blur(2px); }
@@ -191,37 +202,42 @@
 
     <div id="timeModal">
         <div class="time-box" id="timeScrollContainer">
-            <button class="btn-clear-log" onclick="triggerClearLog()">Clear<br>Log</button>
-            <button class="modal-x" onclick="closeTime()">×</button>
-            <h2 style="color:var(--bl); margin:0 0 20px; font-size: 2.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">Timekeeper</h2>
-            
-            <select id="t-day" onchange="clearTimeInputs()">
-                <option value="Saturday">Saturday</option>
-                <option value="Sunday">Sunday</option>
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
-            </select>
+            <div class="time-fixed-top">
+                <button class="btn-clear-log" onclick="triggerClearLog()">Clear<br>Log</button>
+                <button class="modal-x" onclick="closeTime()">×</button>
+                <h2 style="color:var(--bl); margin:0 0 20px; font-size: 2.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">Timekeeper</h2>
+                
+                <select id="t-day" onchange="clearTimeInputs()">
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
-                <div class="tk-trigger-node" onclick="openKeypad('t-in', 'Begin Tour')"><span class="tk-corner-tag">BT</span><div class="time-display-btn" id="bt-btn">00.00</div></div>
-                <div class="tk-trigger-node" onclick="openKeypad('l-out', 'Out to Lunch')"><span class="tk-corner-tag">OL</span><div class="time-display-btn" id="ol-btn">00.00</div></div>
-                <div class="tk-trigger-node" onclick="openKeypad('l-in', 'Into Lunch')"><span class="tk-corner-tag">IL</span><div class="time-display-btn" id="il-btn">00.00</div></div>
-                <div class="tk-trigger-node" onclick="openKeypad('t-actual', 'End Tour')"><span class="tk-corner-tag">ET</span><div class="time-display-btn" id="et-btn">00.00</div></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
+                    <div class="tk-trigger-node" onclick="openKeypad('t-in', 'Begin Tour')"><span class="tk-corner-tag">BT</span><div class="time-display-btn" id="bt-btn">00.00</div></div>
+                    <div class="tk-trigger-node" onclick="openKeypad('l-out', 'Out to Lunch')"><span class="tk-corner-tag">OL</span><div class="time-display-btn" id="ol-btn">00.00</div></div>
+                    <div class="tk-trigger-node" onclick="openKeypad('l-in', 'Into Lunch')"><span class="tk-corner-tag">IL</span><div class="time-display-btn" id="il-btn">00.00</div></div>
+                    <div class="tk-trigger-node" onclick="openKeypad('t-actual', 'End Tour')"><span class="tk-corner-tag">ET</span><div class="time-display-btn" id="et-btn">00.00</div></div>
+                </div>
+                
+                <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
+                    <span style="font-weight:900; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">8 Hour Day ET Goal:</span>
+                    <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd);">00.00</span>
+                </div>
+
+                <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
+                
+                <div class="log-hdr"><span></span><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
             </div>
             
-            <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
-                <span style="font-weight:900; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">8 Hour Day ET Goal:</span>
-                <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd);">00.00</span>
-            </div>
-
-            <button class="btn-yel" style="margin:20px auto 0; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer;" onclick="addToLog()">Add To Log</button>
-            
-            <div class="log-hdr"><span></span><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
-            <div id="log-table" style="overflow-y:visible; margin-bottom: 10px;">
-                <div id="log-container"></div>
+            <div class="time-log-scroll-wrapper" id="logScrollFrame">
+                <div id="log-table" style="overflow-y:visible; margin-bottom: 5px;">
+                    <div id="log-container"></div>
+                </div>
             </div>
             <input type="hidden" id="t-in" value="00.00"><input type="hidden" id="l-out" value="00.00"><input type="hidden" id="l-in" value="00.00"><input type="hidden" id="t-actual" value="00.00">
         </div>
@@ -229,7 +245,6 @@
 
     <div class="app-container">
         <div id="banner-wrap">
-            <div id="status-dot"></div>
             <div class="hdr" onclick="secretKnock()">
                 <span class="line-1">USPS</span>
                 <span class="line-2">Vancouver, Washington</span>
@@ -287,7 +302,7 @@
 
 <script>
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
-    let lastSearchTerm = ""; let currentAction = "";
+    let lastSearchTerm = ""; let currentAction = ""; let isDataLive = false;
     const XLSX_URL = "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx";
 
     window.onload = async () => {
@@ -297,8 +312,8 @@
             const ab = await resp.arrayBuffer();
             const wb = XLSX.read(ab, { type: 'array' });
             processExcelData(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 })); 
-            document.getElementById('status-dot').className = 'live';
-        } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); document.getElementById('status-dot').className = 'live'; } }
+            isDataLive = true;
+        } catch (e) { if(localStorage.getItem('vancouverData')) { database = JSON.parse(localStorage.getItem('vancouverData')); isDataLive = true; } }
     };
 
     function validateZipCheck() {
@@ -372,9 +387,7 @@
         recognition.onend = () => micBtn.classList.remove('listening');
         recognition.onresult = (event) => {
             let transcript = event.results[0][0].transcript;
-            
             transcript = transcript.replace(/[^\w\s]/g, "").trim();
-            
             let tokens = transcript.split(/\s+/);
             let mappedTokens = [];
             
@@ -484,6 +497,12 @@
         log.push({ day: shortDay, bt, ol, il, et, total, id: Date.now() });
         localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog(); syncLocalDay(); localStorage.removeItem('usps_temp_entries');
         clearTimeInputs();
+        
+        /* LOG SUB-SECTION SNAP BACK DISPATCH SELECTION LOCK */
+        setTimeout(() => {
+            const frame = document.getElementById('logScrollFrame');
+            if(frame) frame.scrollTop = 0;
+        }, 50);
     }
 
     function renderLog() { 
@@ -546,16 +565,10 @@
         
         let searchTokens = rawVal.split(/\s+/);
         const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
-        
         let explicitDirFilter = null;
 
-        if (searchTokens.length > 0 && directionalList.includes(searchTokens[0])) {
-            explicitDirFilter = searchTokens.shift();
-        }
-
-        if (searchTokens.length > 0 && directionalList.includes(searchTokens[searchTokens.length - 1])) {
-            explicitDirFilter = searchTokens.pop();
-        }
+        if (searchTokens.length > 0 && directionalList.includes(searchTokens[0])) { explicitDirFilter = searchTokens.shift(); }
+        if (searchTokens.length > 0 && directionalList.includes(searchTokens[searchTokens.length - 1])) { explicitDirFilter = searchTokens.pop(); }
 
         let coreQueryName = searchTokens.join(" ");
         let suffixToken = null;
@@ -574,32 +587,19 @@
                     const targetDisplay = m.displayName.toUpperCase(); 
                     
                     let baseMatch = false;
-                    if (coreQueryName.length === 0 && explicitDirFilter) {
-                        baseMatch = true; 
-                    } else {
-                        baseMatch = targetName.startsWith(coreQueryName);
-                    }
+                    if (coreQueryName.length === 0 && explicitDirFilter) { baseMatch = true; } else { baseMatch = targetName.startsWith(coreQueryName); }
                     
                     if (baseMatch) {
                         let validCheck = true;
-                        
                         if (suffixToken) {
                             let suffixRegex = new RegExp('\\b' + suffixToken + '\\b');
-                            if (!suffixRegex.test(targetDisplay)) {
-                                validCheck = false;
-                            }
+                            if (!suffixRegex.test(targetDisplay)) { validCheck = false; }
                         }
-                        
                         if (validCheck && explicitDirFilter) {
                             let displayTokens = targetDisplay.split(/\s+/);
-                            if (displayTokens[0] !== explicitDirFilter) {
-                                validCheck = false;
-                            }
+                            if (displayTokens[0] !== explicitDirFilter) { validCheck = false; }
                         }
-
-                        if (validCheck) {
-                            matches.push({...m, zip: z}); 
-                        }
+                        if (validCheck) { matches.push({...m, zip: z}); }
                     }
                 }); 
             }
@@ -608,37 +608,24 @@
             sugBox.style.display="block"; document.body.classList.add('sug-active');
             
             matches.sort((a, b) => {
-                let nameA = a.searchName;
-                let nameB = b.searchName;
-
-                let cleanA = nameA.replace(/(ST|ND|RD|TH)$/g, "");
-                let cleanB = nameB.replace(/(ST|ND|RD|TH)$/g, "");
-
-                let isNumA = !isNaN(cleanA) && cleanA !== "";
-                let isNumB = !isNaN(cleanB) && cleanB !== "";
+                let nameA = a.searchName; let nameB = b.searchName;
+                let cleanA = nameA.replace(/(ST|ND|RD|TH)$/g, ""); let cleanB = nameB.replace(/(ST|ND|RD|TH)$/g, "");
+                let isNumA = !isNaN(cleanA) && cleanA !== ""; let isNumB = !isNaN(cleanB) && cleanB !== "";
 
                 let coreComp = 0;
-                if (isNumA && isNumB) {
-                    coreComp = parseInt(cleanA, 10) - parseInt(cleanB, 10);
-                } else if (isNumA && !isNumB) {
-                    return -1;
-                } else if (!isNumA && isNumB) {
-                    return 1;
-                } else {
-                    coreComp = nameA.localeCompare(nameB, undefined, {numeric: true});
-                }
+                if (isNumA && isNumB) { coreComp = parseInt(cleanA, 10) - parseInt(cleanB, 10); } 
+                else if (isNumA && !isNumB) { return -1; } 
+                else if (!isNumA && isNumB) { return 1; } 
+                else { coreComp = nameA.localeCompare(nameB, undefined, {numeric: true}); }
 
                 if (coreComp !== 0) return coreComp;
-                
                 let sufComp = (a.suffix || "").localeCompare(b.suffix || "");
                 if (sufComp !== 0) return sufComp;
-                
                 return (a.directional || "").localeCompare(b.directional || "");
             });
 
             matches.forEach(item => {
                 const d = document.createElement('div'); d.className="s-item";
-                
                 let computedFontSize = "1.25rem";
                 if (item.displayName.length > 22) computedFontSize = "1.1rem";
                 if (item.displayName.length > 26) computedFontSize = "0.95rem";
@@ -651,12 +638,8 @@
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     item.results.forEach(res => {
                         const card = document.createElement('div'); card.className="list-card";
-                        
                         let oeHtml = "";
-                        if (res.houseType === "O" || res.houseType === "E") {
-                            oeHtml = `<span class="red-oe-stamp">${res.houseType}</span>`;
-                        }
-
+                        if (res.houseType === "O" || res.houseType === "E") { oeHtml = `<span class="red-oe-stamp">${res.houseType}</span>`; }
                         let polishedRange = formatRangeStrings(res.range);
 
                         card.innerHTML = `
@@ -673,13 +656,23 @@
                                 <span>${res.route}</span>
                             </div>`;
                         cc.appendChild(card);
-                    }); document.getElementById('list-res').scrollTop = 0;
+                    }); 
+                    /* AUTOMATIC RESPONSE SCROLL BAR AUTO-TOP TRACKING RESET BUTTON LOCK */
+                    document.getElementById('list-res').scrollTop = 0;
                 }; sugBox.appendChild(d);
-            }); sugBox.scrollTop = 0;
+            }); 
+            sugBox.scrollTop = 0;
         } else { sugBox.style.display="none"; document.body.classList.remove('sug-active'); }
     }
 
-    function toggleZipList(e) { e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; if (!isOpen) document.body.classList.add('zip-open', 'header-hidden'); }
+    function toggleZipList(e) { 
+        e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; 
+        if (!isOpen) {
+            document.body.classList.add('zip-open', 'header-hidden');
+            /* INTERIOR EXPANDABLE DROPDOWN AUTOMATIC TOP ALIGNMENT LOCK */
+            document.getElementById('zipScrollBox').scrollTop = 0;
+        } 
+    }
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); validateZipCheck(); }
     
     function finalApply(e) { 
@@ -687,27 +680,15 @@
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), isAll = document.getElementById('allZipMaster').checked; 
         
         let displayStr = 'Select Zip(s)...';
-        if (isAll) { 
-            displayStr = 'ALL ZIPs'; 
-        } else if (chks.length > 0) {
-            displayStr = Array.from(chks).map(c=>c.value).join(', ');
-        }
-        
+        if (isAll) { displayStr = 'ALL ZIPs'; } else if (chks.length > 0) { displayStr = Array.from(chks).map(c=>c.value).join(', '); }
         trig.innerText = displayStr;
         
-        if (isAll) {
-            trig.style.fontSize = '22px';
-        } else {
+        if (isAll) { trig.style.fontSize = '22px'; } else {
             const selectionCount = chks.length;
-            if (selectionCount <= 3) {
-                trig.style.fontSize = '22px';
-            } else if (selectionCount === 4) {
-                trig.style.fontSize = '18px';
-            } else if (selectionCount === 5) {
-                trig.style.fontSize = '15px';
-            } else {
-                trig.style.fontSize = '12px';
-            }
+            if (selectionCount <= 3) { trig.style.fontSize = '22px'; } 
+            else if (selectionCount === 4) { trig.style.fontSize = '18px'; } 
+            else if (selectionCount === 5) { trig.style.fontSize = '15px'; } 
+            else { trig.style.fontSize = '12px'; }
         }
 
         document.getElementById('zipList').style.display='none'; 
@@ -730,10 +711,8 @@
         document.getElementById('mainBody').classList.remove('cards-active');
         document.getElementById('suggestionBox').style.display = "block";
         const input = document.getElementById('streetInput');
-        input.value = lastSearchTerm;
-        input.focus();
-        const len = input.value.length;
-        input.setSelectionRange(len, len);
+        input.value = lastSearchTerm; input.focus();
+        const len = input.value.length; input.setSelectionRange(len, len);
         handleSearch(); 
     }
 
@@ -741,11 +720,29 @@
     function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
-    function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('timeScrollContainer').scrollTop = 0; }
+    
+    function openTime() { 
+        document.body.classList.remove('header-hidden'); 
+        document.getElementById('timeModal').style.display='flex'; 
+        document.getElementById('logScrollFrame').scrollTop = 0; 
+    }
     function closeTime() { document.getElementById('timeModal').style.display='none'; }
     function saveTempEntries() { const data = { bt: document.getElementById('t-in').value, ol: document.getElementById('l-out').value, il: document.getElementById('l-in').value, et: document.getElementById('t-actual').value, date: new Date().toDateString() }; localStorage.setItem('usps_temp_entries', JSON.stringify(data)); }
     function loadTempEntries() { const saved = localStorage.getItem('usps_temp_entries'); if (!saved) return; const data = JSON.parse(saved); if (data.date === new Date().toDateString()) { document.getElementById('t-in').value = data.bt; document.getElementById('l-out').value = data.ol; document.getElementById('l-in').value = data.il; document.getElementById('t-actual').value = data.et; document.getElementById('bt-btn').innerText = data.bt || "00.00"; document.getElementById('ol-btn').innerText = data.ol || "00.00"; document.getElementById('l-in').innerText = data.il || "00.00"; document.getElementById('et-btn').innerText = data.et || "00.00"; calcGoal(); } }
-    function secretKnock() { if(!window.k) window.k=0; window.k++; if(window.k===5) alert("USPS Dev Active"); setTimeout(()=>window.k=0,2000); }
+    
+    /* SECRET DEPRECIATION PORTAL HOUSES THE MASTER CONNECTIVITY DATA INDICATOR DOT */
+    function secretKnock() { 
+        if(!window.k) window.k=0; window.k++; 
+        if(window.k===5) {
+            const liveStateHTML = `<div id="status-dot" class="${isDataLive ? 'live' : ''}"></div>`;
+            const popup = document.createElement('div');
+            popup.style = "position:fixed; bottom:140px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); color:white; padding:12px 20px; border-radius:30px; font-weight:900; font-size:0.85rem; z-index:999999; display:flex; align-items:center; gap:10px; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(0,0,0,0.4);";
+            popup.innerHTML = `<span>Database Connected</span>${liveStateHTML}`;
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 3500);
+        } 
+        setTimeout(()=>window.k=0,2000); 
+    }
     window.onclick = function(e) { if (!document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); validateZipCheck(); } }
 </script>
 </body>
