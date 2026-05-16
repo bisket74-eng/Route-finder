@@ -51,7 +51,7 @@
         label { font-size: 0.9rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
         .label-sub { font-size: 0.65rem; font-weight: 700; color: #777; text-transform: none; letter-spacing: 0; }
 
-        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; transition: font-size 0.15s ease; }
         input[type="text"] { width: 100%; padding: 10px 48px 10px 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 22px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         
         input:disabled::placeholder { color: #ccc; }
@@ -66,15 +66,15 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        /* BRING LOWER ON THE SCREEN, ADD TOP MARGIN, FORCE MASTER OVERRIDE HEIGHT LAYER INDEX */
-        #zipList { position: fixed; top: 55%; left: 50%; transform: translate(-50%, -45%); width: 85%; max-width: 290px; background: #fff; border: 4px solid var(--bl); z-index: 50000; display: none; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); max-height: 70vh; height: auto; flex-direction: column; overflow: hidden; margin-top: 20px; }
+        /* ABSOLUTELY RE-POSITIONED DIRECTLY UNDER THE SELECTION TRACK - DROPS DOWN, PREVENTS OFF-SCREEN FLYING */
+        #zipList { position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 3px solid var(--bl); z-index: 999999; display: none; border-radius: 8px; box-shadow: 0 12px 30px rgba(0,0,0,0.4); max-height: 250px; height: auto; flex-direction: column; overflow: hidden; margin-top: 4px; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
-        .zip-item { display: flex; align-items: center; padding: 14px 18px; font-weight: 900; color: #111; font-size: 1.65rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
-        .zip-item input { width: 26px; height: 26px; margin-right: 15px; accent-color: var(--bl); flex-shrink: 0; }
+        .zip-item { display: flex; align-items: center; padding: 12px 16px; font-weight: 900; color: #111; font-size: 1.4rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
+        .zip-item input { width: 24px; height: 24px; margin-right: 15px; accent-color: var(--bl); flex-shrink: 0; }
         
-        .apply-wrap { padding: 12px 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; box-sizing: border-box; }
-        .btn-apply { width: 100%; height: 48px; border-radius: 24px; border:none; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; background: var(--bl); color: white; box-sizing: border-box; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+        .apply-wrap { padding: 10px 12px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; box-sizing: border-box; }
+        .btn-apply { width: 100%; height: 42px; border-radius: 21px; border:none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; background: var(--bl); color: white; box-sizing: border-box; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
 
         .mic-btn { position: absolute; right: 10px; bottom: 8px; width: 36px; height: 36px; background: var(--lt-bl); border: 2px solid var(--bl); border-radius: 50%; font-size: 18px; cursor: pointer; color: var(--bl); display: flex; align-items: center; justify-content: center; z-index: 5; transition: background 0.2s ease; box-sizing: border-box; }
         .mic-btn.listening { background: var(--rd); border-color: var(--rd); color: white; animation: pulse 1.5s infinite; }
@@ -98,7 +98,9 @@
         #kp-header-wrap { padding: 30px 0 15px; position: relative; display: flex; justify-content: center; align-items: center; }
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px 20px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; }
-        .entry-display { background: #001a33; border: 2px solid #005fa3; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: #00d2ff; margin: 0 20px 15px; text-align: center; letter-spacing: 5px; }
+        
+        /* 10 KEY READOUT DISPLAY RECONFIGURED TO CUSTOM LIGHT BLUE BACKDROP EXECUTIONS */
+        .entry-display { background: #dceaf5; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; }
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.5rem; cursor: pointer; color: var(--bl); }
 
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
@@ -148,7 +150,6 @@
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
-        /* RAISED SLIGHTLY, LEFT EDGE LEVEL WITH BLUE BLOCK CARRIER NUMBER FIELD */
         #backToListBtn { display: none; background-color: var(--bl); color: white; width: 145px; padding: 0 10px; height: 42px; border-radius: 20px; font-weight: 900; font-size: 0.72rem; border: none; cursor: pointer; text-transform: uppercase; position: absolute; right: 15px; bottom: -54px; z-index: 999; white-space: normal; line-height: 1.2; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); margin: 0; box-sizing: border-box; }
         
         .input-blocker { position: absolute; top: 25px; left: 0; right: 0; bottom: 0; z-index: 4; cursor: pointer; }
@@ -179,7 +180,7 @@
             <div id="kp-display" class="entry-display">00.00</div>
             <div class="keypad-container">
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
-                <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5).">5</div><div class="key" onclick="kpIn(6)">6</div>
+                <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
                 <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
             </div>
@@ -236,29 +237,30 @@
         <div class="sticky-top">
             <div class="ctrls">
                 <div class="row">
-                    <div class="input-wrapper">
+                    <div class="input-wrapper" style="position:relative;">
                         <label>Zip Code</label>
                         <div id="zipTrig" class="zip-trigger" onclick="toggleZipList(event)">Select Zip(s)...</div>
                     
-                    <div id="zipList">
-                        <div class="zip-scroll-area" id="zipScrollBox">
-                            <label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="validateZipCheck()"> 98660</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="validateZipCheck()"> 98661</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="validateZipCheck()"> 98662</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="validateZipCheck()"> 98663</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="validateZipCheck()"> 98664</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="validateZipCheck()"> 98665</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="validateZipCheck()"> 98668</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="validateZipCheck()"> 98682</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="validateZipCheck()"> 98683</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="validateZipCheck()"> 98684</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="validateZipCheck()"> 98685</label>
-                            <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="validateZipCheck()"> 98686</label>
+                        <div id="zipList">
+                            <div class="zip-scroll-area" id="zipScrollBox">
+                                <label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="validateZipCheck()"> 98660</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="validateZipCheck()"> 98661</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="validateZipCheck()"> 98662</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="validateZipCheck()"> 98663</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="validateZipCheck()"> 98664</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="validateZipCheck()"> 98665</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="validateZipCheck()"> 98668</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="validateZipCheck()"> 98682</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="validateZipCheck()"> 98683</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="validateZipCheck()"> 98684</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="validateZipCheck()"> 98685</label>
+                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="validateZipCheck()"> 98686</label>
+                            </div>
+                            <div class="apply-wrap"><button class="btn-apply" onclick="finalApply(event)">Apply</button></div>
                         </div>
-                        <div class="apply-wrap"><button class="btn-apply" onclick="finalApply(event)">Apply</button></div>
                     </div>
-                </div><button class="btn-circle btn-red" onclick="resetAll()">Reset</button>
+                    <button class="btn-circle btn-red" onclick="resetAll()">Reset</button>
                 </div>
                 <div class="row" style="position:relative">
                     <div class="input-wrapper">
@@ -680,8 +682,28 @@
     function finalApply(e) { 
         if(e) e.stopPropagation(); 
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput'), isAll = document.getElementById('allZipMaster').checked; 
-        if (isAll) { trig.innerText = 'ALL ZIPs'; trig.style.fontSize = '18px'; } 
-        else { trig.innerText = chks.length > 0 ? Array.from(chks).map(c=>c.value).join(', ') : 'Select Zip(s)...'; trig.style.fontSize = chks.length >= 5 ? '16px' : '18px'; }
+        
+        let displayStr = 'Select Zip(s)...';
+        if (isAll) { 
+            displayStr = 'ALL ZIPs'; 
+        } else if (chks.length > 0) {
+            displayStr = Array.from(chks).map(c=>c.value).join(', ');
+        }
+        
+        trig.innerText = displayStr;
+        
+        /* ADAPTIVE FONT SIZE ENGINE DETECTS ITEM SELECTION LOAD AND SCALES GRAPHICS DOWN TO PREVENT OVERFLOW */
+        const selectionCount = isAll ? 13 : chks.length;
+        if (selectionCount <= 3) {
+            trig.style.fontSize = '18px';
+        } else if (selectionCount === 4) {
+            trig.style.fontSize = '16px';
+        } else if (selectionCount === 5) {
+            trig.style.fontSize = '13.5px';
+        } else {
+            trig.style.fontSize = '11px';
+        }
+
         document.getElementById('zipList').style.display='none'; 
         document.body.classList.remove('zip-open'); 
         if(chks.length > 0 || isAll) { 
