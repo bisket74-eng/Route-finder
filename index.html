@@ -441,7 +441,7 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    // RE-ENGINEERED COMPREHENSIVE MATCH ENGINE
+    // SYMMETRICAL COMPREHENSIVE SEARCH ENGINE WITH LEADING/TRAILING SIGNAL EXTRACTION
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
         const activeZips = isAll ? Object.keys(database) : Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value);
@@ -459,9 +459,16 @@
         let searchTokens = rawVal.split(/\s+/);
         const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
         
-        let trailingDir = null;
-        if (searchTokens.length > 1 && directionalList.includes(searchTokens[searchTokens.length - 1])) {
-            trailingDir = searchTokens.pop();
+        let explicitDirFilter = null;
+
+        // 1. EXTRACT LEADING DIRECTIONAL (e.g., "SE 146th")
+        if (searchTokens.length > 0 && directionalList.includes(searchTokens[0])) {
+            explicitDirFilter = searchTokens.shift();
+        }
+
+        // 2. EXTRACT TRAILING DIRECTIONAL (e.g., "146th SE")
+        if (searchTokens.length > 0 && directionalList.includes(searchTokens[searchTokens.length - 1])) {
+            explicitDirFilter = searchTokens.pop();
         }
 
         let coreQueryName = searchTokens.join(" ");
@@ -481,12 +488,12 @@
                     const targetDisplay = m.displayName.toUpperCase(); 
                     
                     let baseMatch = false;
-                    // Strict character matching block
-                    if (coreQueryName.length === 1) {
-                        // Exactly 1 character input ONLY maps to an exact 1-letter street match
+                    // If no name is typed yet but a leading directional exists, show single-character entries for that layout
+                    if (coreQueryName.length === 0 && explicitDirFilter) {
+                        baseMatch = true; 
+                    } else if (coreQueryName.length === 1) {
                         baseMatch = (targetName === coreQueryName);
                     } else {
-                        // 2 or more characters immediately opens up progressive left-boundary matching
                         baseMatch = targetName.startsWith(coreQueryName);
                     }
                     
@@ -500,9 +507,10 @@
                             }
                         }
                         
-                        if (validCheck && trailingDir) {
+                        // Explicitly bind spatial index checking onto the designated prefix block
+                        if (validCheck && explicitDirFilter) {
                             let displayTokens = targetDisplay.split(/\s+/);
-                            if (displayTokens[0] !== trailingDir) {
+                            if (displayTokens[0] !== explicitDirFilter) {
                                 validCheck = false;
                             }
                         }
