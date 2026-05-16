@@ -66,8 +66,8 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        /* ABSOLUTELY RE-POSITIONED DIRECTLY UNDER THE SELECTION TRACK - DROPS DOWN, PREVENTS OFF-SCREEN FLYING */
-        #zipList { position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 3px solid var(--bl); z-index: 999999; display: none; border-radius: 8px; box-shadow: 0 12px 30px rgba(0,0,0,0.4); max-height: 250px; height: auto; flex-direction: column; overflow: hidden; margin-top: 4px; }
+        /* ABSOLUTE OVERRIDE DRAWER: FORCED TO HIGH LAYERING DEPTH RANK WITH HEIGHT EXTENDED TO 400PX FOR SCROLL COMFORT */
+        #zipList { position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); max-height: 400px; height: auto; flex-direction: column; overflow: hidden; margin-top: 4px; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
         .zip-item { display: flex; align-items: center; padding: 12px 16px; font-weight: 900; color: #111; font-size: 1.4rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
@@ -96,11 +96,13 @@
         .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--dr-rd); color: var(--dr-rd); font-weight: 900; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; width: 45px; height: 45px; border-radius: 8px; line-height: 1.1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         
         #kp-header-wrap { padding: 30px 0 15px; position: relative; display: flex; justify-content: center; align-items: center; }
-        .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px 20px; }
+        
+        /* 10-KEY KEYPAD HOUSING LAYER SWITCHED ENTIRELY TO LIGHT BLUE BACKDROP MATRIX */
+        .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px 20px 20px; background: #dceaf5; border-radius: 0 0 8px 8px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; }
         
-        /* 10 KEY READOUT DISPLAY RECONFIGURED TO CUSTOM LIGHT BLUE BACKDROP EXECUTIONS */
-        .entry-display { background: #dceaf5; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; }
+        /* ORIGINAL HIGHER CONTRAST LOGIC RESTORED FOR THE DISPLAY FRAME READOUT */
+        .entry-display { background: #001a33; border: 2px solid #005fa3; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: #00d2ff; margin: 0 20px 15px; text-align: center; letter-spacing: 5px; }
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.5rem; cursor: pointer; color: var(--bl); }
 
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
@@ -172,8 +174,8 @@
     </div>
 
     <div id="keypadPicker">
-        <div class="time-box" style="width: 320px; height: auto;">
-            <div id="kp-header-wrap">
+        <div class="time-box" style="width: 320px; height: auto; padding-bottom: 0; overflow: hidden;">
+            <div id="kp-header-wrap" style="background: var(--lt-bl);">
                 <h3 id="keypad-title" style="margin:0; color:var(--bl); font-size:1.1rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
                 <button class="kp-modal-x" onclick="closeKeypad()" style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 18px; font-weight: 900;">×</button>
             </div>
@@ -692,7 +694,6 @@
         
         trig.innerText = displayStr;
         
-        /* ADAPTIVE FONT SIZE ENGINE DETECTS ITEM SELECTION LOAD AND SCALES GRAPHICS DOWN TO PREVENT OVERFLOW */
         const selectionCount = isAll ? 13 : chks.length;
         if (selectionCount <= 3) {
             trig.style.fontSize = '18px';
