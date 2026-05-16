@@ -51,7 +51,8 @@
         label { font-size: 0.9rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
         .label-sub { font-size: 0.65rem; font-weight: 700; color: #777; text-transform: none; letter-spacing: 0; }
 
-        .zip-trigger { width: 100%; padding: 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 18px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; transition: font-size 0.15s ease; }
+        /* INCREASED BASELINE ZIP CODE TRIGGER TYPOGRAPHY SCALE SIZE TO FULLY MATCH THE STREET BOX */
+        .zip-trigger { width: 100%; padding: 10px 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 22px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; transition: font-size 0.15s ease; }
         input[type="text"] { width: 100%; padding: 10px 48px 10px 14px; border: 1px solid #aaa; border-radius: 6px; font-size: 22px; box-sizing: border-box; background: #fff; font-weight: 700; height: 52px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         
         input:disabled::placeholder { color: #ccc; }
@@ -66,8 +67,8 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        /* EXTRACTED ZIP PICKER: ANCHORED ON INDEPENDENT STRUCTURE LAYER TO AVOID ROW CLIPPING INTERFERENCE */
-        #zipList { position: absolute; top: 114px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 440px; height: auto; flex-direction: column; overflow: hidden; }
+        /* DEEP DEPLOYMENT HEIGHT EXTENSION GIVES AMPLE REAL ESTATE WITHOUT CLIPPING */
+        #zipList { position: absolute; top: 114px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 520px; height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
         .zip-item { display: flex; align-items: center; padding: 14px 18px; font-weight: 900; color: #111; font-size: 1.6rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
@@ -97,13 +98,15 @@
         
         #kp-header-wrap { padding: 25px 0 10px; position: relative; display: flex; justify-content: center; align-items: center; background: var(--lt-bl); }
         
-        /* 10 KEY CONTAINER SET ENTIRELY TO SOFT BLUE INTERIOR ELEMENTS */
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px 20px 20px; background: #dceaf5; border-radius: 0 0 8px 8px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; }
         
-        /* CLEAN SOFT LIGHT OVERRIDE INSTALLED ON THE DIGITAL ENTRANCE PORT WITH INCREASED TYPE WEIGHT */
         .entry-display { background: #fff; border: 3px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 3rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.08); }
-        .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.5rem; cursor: pointer; color: var(--bl); }
+        
+        /* COCKPIT WRAPPER GRID: LABELS REMOVED FROM EXTERIOR OVERHEAD AND REANCHORED INSIDE FLUID WINDOW BOXES */
+        .tk-trigger-node { position: relative; background: #fff; border: 2px solid #ccc; border-radius: 6px; min-height: 62px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .tk-trigger-node .tk-corner-tag { position: absolute; top: 3px; left: 6px; font-size: 0.75rem; font-weight: 900; color: #888; text-transform: uppercase; line-height: 1; pointer-events: none; }
+        .tk-trigger-node .time-display-btn { border: none; padding: 0; background: transparent; font-size: 1.6rem; color: var(--bl); font-weight: 900; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; box-shadow: none; box-sizing: border-box; padding-top: 14px; }
 
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
         .log-hdr { padding: 12px 0; border-bottom: 3px solid var(--bl); font-weight: 900; font-size: 0.7rem; color: var(--bl); margin-top: 15px; text-transform: uppercase; }
@@ -206,10 +209,10 @@
             </select>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
-                <div onclick="openKeypad('t-in', 'Begin Tour')"><label style="font-size: 1.1rem;">BT</label><div class="time-display-btn" id="bt-btn">00.00</div></div>
-                <div onclick="openKeypad('l-out', 'Out to Lunch')"><label style="font-size: 1.1rem;">OL</label><div class="time-display-btn" id="ol-btn">00.00</div></div>
-                <div onclick="openKeypad('l-in', 'Into Lunch')"><label style="font-size: 1.1rem;">IL</label><div class="time-display-btn" id="il-btn">00.00</div></div>
-                <div onclick="openKeypad('t-actual', 'End Tour')"><label style="font-size: 1.1rem;">ET</label><div class="time-display-btn" id="et-btn">00.00</div></div>
+                <div class="tk-trigger-node" onclick="openKeypad('t-in', 'Begin Tour')"><span class="tk-corner-tag">BT</span><div class="time-display-btn" id="bt-btn">00.00</div></div>
+                <div class="tk-trigger-node" onclick="openKeypad('l-out', 'Out to Lunch')"><span class="tk-corner-tag">OL</span><div class="time-display-btn" id="ol-btn">00.00</div></div>
+                <div class="tk-trigger-node" onclick="openKeypad('l-in', 'Into Lunch')"><span class="tk-corner-tag">IL</span><div class="time-display-btn" id="il-btn">00.00</div></div>
+                <div class="tk-trigger-node" onclick="openKeypad('t-actual', 'End Tour')"><span class="tk-corner-tag">ET</span><div class="time-display-btn" id="et-btn">00.00</div></div>
             </div>
             
             <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
@@ -695,15 +698,20 @@
         
         trig.innerText = displayStr;
         
-        const selectionCount = isAll ? 13 : chks.length;
-        if (selectionCount <= 3) {
-            trig.style.fontSize = '18px';
-        } else if (selectionCount === 4) {
-            trig.style.fontSize = '16px';
-        } else if (selectionCount === 5) {
-            trig.style.fontSize = '13.5px';
+        /* SCALING LOGIC KEEPS FONT AT FULL 22PX WHEN ALL ZIPS IS ACTIVATED */
+        if (isAll) {
+            trig.style.fontSize = '22px';
         } else {
-            trig.style.fontSize = '11px';
+            const selectionCount = chks.length;
+            if (selectionCount <= 3) {
+                trig.style.fontSize = '22px';
+            } else if (selectionCount === 4) {
+                trig.style.fontSize = '18px';
+            } else if (selectionCount === 5) {
+                trig.style.fontSize = '15px';
+            } else {
+                trig.style.fontSize = '12px';
+            }
         }
 
         document.getElementById('zipList').style.display='none'; 
@@ -734,7 +742,7 @@
     }
 
     function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '18px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
+    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
     function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('timeScrollContainer').scrollTop = 0; }
