@@ -107,16 +107,19 @@
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 15px; overflow: hidden; }
         
         .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .range-txt { font-size: 3.1rem; font-weight: 700; color: #000; line-height: 0.9; display: block; margin: 4px 0; letter-spacing: -0.5px; }
         
-        /* BOTTOM ROW IN LEFT CELL CONTAINING BLUE ZIP AND RED BOUNDARY INDICATOR SIDE-BY-SIDE */
-        .bottom-meta-row { display: flex; align-items: center; gap: 15px; margin-top: 2px; }
+        /* ADJUSTED RANGE TEXT CONFIGURATION TO A CLEAN 2.7rem SCALE */
+        .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 0.95; display: block; margin: 4px 0; letter-spacing: -0.5px; }
+        
+        /* STYLE FOR INJECTED HALF-SIZE ALPHABETIC CHARACTERS */
+        .range-letter-sub { font-size: 0.5em; font-weight: 800; vertical-align: baseline; margin-left: 1px; color: #111; }
+        
+        .bottom-meta-row { display: flex; align-items: center; gap: 15px; margin-top: 4px; }
         .zip-tag-blue { background: var(--bl); color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.95rem; font-weight: 700; display: inline-block; letter-spacing: 1px; text-align: center; width: auto; text-transform: uppercase; }
         
-        /* HIGH-VISIBILITY BOLD RED STAMP FOR O/E LOGIC */
-        .red-oe-stamp { font-size: 1.5rem; font-weight: 900; color: var(--dr-rd); text-transform: uppercase; display: inline-block; line-height: 1; }
+        /* CRISP BOLD CRIMSON STAMP ALIGNED EXACTLY TO THE RIGHT OF THE ZIP CODE BOX */
+        .red-oe-stamp { font-size: 1.7rem; font-weight: 900; color: var(--dr-rd); text-transform: uppercase; display: inline-block; line-height: 1; font-family: 'Segoe UI', Arial, sans-serif; }
 
-        /* REVERTED TO SOLID ORIGINAL FULL SCALE CARRIER ROUTE BLOCK WITH DEAD-CENTERED TYPES */
         .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 145px; width: 145px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; }
         .rt-block small { display: block; margin-bottom: 2px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
         .rt-block span { font-size: 3.1rem; display: block; font-weight: 700; line-height: 0.9; letter-spacing: 1px; }
@@ -479,14 +482,22 @@
             const dir = c[3]?.toString().trim() || "";
             const suf = c[5]?.toString().trim() || "";
             
-            let oeType = c[2]?.toString().trim().toUpperCase() || "";
-            if (oeType !== "O" && oeType !== "E") oeType = ""; 
+            // CONTEXT SEARCH LOOKUP: Find "O" or "E" anywhere inside column C string content safely
+            let rawColumnC = c[2]?.toString().trim().toUpperCase() || "";
+            let oeType = "";
+            if (rawColumnC.includes("O")) oeType = "O";
+            else if (rawColumnC.includes("E")) oeType = "E";
             
             const fNm = [c[3], c[4], c[5], c[6]].filter(Boolean).map(s=>s.trim()).join(" ");
             let st = nDB[z].find(s=>s.displayName === fNm);
             if(!st){ st = { searchName: nm.toUpperCase(), displayName: fNm, directional: dir.toUpperCase(), suffix: suf.toUpperCase(), results: [] }; nDB[z].push(st); }
             st.results.push({ range: c[0]+(c[1]?"-"+c[1]:""), route: c[8]?.trim(), houseType: oeType });
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
+    }
+
+    // REGEX FILTER TO CAPTURE TRAILING LETTERS AND SHRINK THEM TO HALF-SCALE DYNAMICALLY
+    function formatRangeStrings(str) {
+        return str.replace(/([a-zA-Z]+)/g, '<span class="range-letter-sub">$1</span>');
     }
 
     function handleSearch() {
@@ -614,16 +625,18 @@
                     item.results.forEach(res => {
                         const card = document.createElement('div'); card.className="list-card";
                         
-                        // INJECT DIRECT SEPARATE RED META FIELD ELEMENT IF VALS MATCH SPEC
                         let oeHtml = "";
                         if (res.houseType === "O" || res.houseType === "E") {
                             oeHtml = `<span class="red-oe-stamp">${res.houseType}</span>`;
                         }
 
+                        // PASS THROUGH FORMATTER FILTER TO PROCESS HALF-SIZED HOUSING EXTENSION CHARACTERS
+                        let polishedRange = formatRangeStrings(res.range);
+
                         card.innerHTML = `
                             <div class="info-left">
                                 <span class="street-txt">${item.displayName}</span>
-                                <span class="range-txt">${res.range}</span>
+                                <span class="range-txt">${polishedRange}</span>
                                 <div class="bottom-meta-row">
                                     <span class="zip-tag-blue">ZIP ${item.zip}</span>
                                     ${oeHtml}
