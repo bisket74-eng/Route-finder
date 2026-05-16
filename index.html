@@ -101,9 +101,9 @@
         body.cards-active #list-res { display: block; pointer-events: auto; background: var(--lt-bl); }
         .list-card { background: white; padding: 12px 15px; margin: 0 auto 10px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 440px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; }
         
-        .info-left span { font-weight: 800; color: #333; font-size: 1.1rem; display: block; margin-bottom: 4px; }
-        .range-txt { font-size: 2.2rem; font-weight: 900; color: #000; line-height: 1; display: block; margin: auto 0; letter-spacing: 1px; }
-        .zip-tag-blue { background: var(--bl); color: white; padding: 4px 8px; border-radius: 4px; font-size: 1rem; font-weight: 900; display: inline-block; align-self: flex-start; letter-spacing: 2px; margin-top: 4px; }
+        .info-left .street-txt { font-weight: 400; color: #555; font-size: 1rem; display: block; margin-bottom: 2px; text-transform: uppercase; }
+        .range-txt { font-size: 3.1rem; font-weight: 900; color: #000; line-height: 0.95; display: block; margin: 2px 0 4px 0; letter-spacing: 0px; }
+        .zip-tag-blue { background: var(--bl); color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.95rem; font-weight: 900; display: inline-block; align-self: flex-start; letter-spacing: 1px; margin-top: 2px; text-align: center; width: auto; }
         
         .rt-block { background: var(--bl); color: white; padding: 12px; border-radius: 8px; text-align: center; min-width: 100px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; }
         .rt-block small { display: block; margin-bottom: 2px; font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
@@ -221,7 +221,7 @@
                     <div class="input-wrapper">
                         <div class="label-row">
                             <label>Street Name</label>
-                            <span class="label-sub">(No directional or house numbers)</span>
+                            <span class="label-sub">(No house numbers)</span>
                         </div>
                         <div id="blocker" class="input-blocker" onclick="checkZipBeforeType()"></div>
                         <input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleSearch()">
@@ -508,7 +508,7 @@
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     item.results.forEach(res => {
                         const card = document.createElement('div'); card.className="list-card";
-                        card.innerHTML = `<div class="info-left"><span>${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
+                        card.innerHTML = `<div class="info-left"><span class="street-txt">${item.displayName}</span><span class="range-txt">${res.range}</span><span class="zip-tag-blue">ZIP ${item.zip}</span></div><div class="rt-block"><small>ROUTE</small><span>${res.route}</span></div>`;
                         cc.appendChild(card);
                     }); document.getElementById('list-res').scrollTop = 0;
                 }; sugBox.appendChild(d);
