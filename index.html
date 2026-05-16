@@ -66,15 +66,15 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        /* ABSOLUTE OVERRIDE DRAWER: FORCED TO HIGH LAYERING DEPTH RANK WITH HEIGHT EXTENDED TO 400PX FOR SCROLL COMFORT */
-        #zipList { position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); max-height: 400px; height: auto; flex-direction: column; overflow: hidden; margin-top: 4px; }
+        /* EXTRACTED ZIP PICKER: ANCHORED ON INDEPENDENT STRUCTURE LAYER TO AVOID ROW CLIPPING INTERFERENCE */
+        #zipList { position: absolute; top: 114px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 440px; height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
-        .zip-item { display: flex; align-items: center; padding: 12px 16px; font-weight: 900; color: #111; font-size: 1.4rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
-        .zip-item input { width: 24px; height: 24px; margin-right: 15px; accent-color: var(--bl); flex-shrink: 0; }
+        .zip-item { display: flex; align-items: center; padding: 14px 18px; font-weight: 900; color: #111; font-size: 1.6rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px; }
+        .zip-item input { width: 26px; height: 26px; margin-right: 15px; accent-color: var(--bl); flex-shrink: 0; }
         
-        .apply-wrap { padding: 10px 12px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; box-sizing: border-box; }
-        .btn-apply { width: 100%; height: 42px; border-radius: 21px; border:none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; background: var(--bl); color: white; box-sizing: border-box; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+        .apply-wrap { padding: 12px 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; box-sizing: border-box; }
+        .btn-apply { width: 100%; height: 46px; border-radius: 23px; border:none; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; background: var(--bl); color: white; box-sizing: border-box; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
 
         .mic-btn { position: absolute; right: 10px; bottom: 8px; width: 36px; height: 36px; background: var(--lt-bl); border: 2px solid var(--bl); border-radius: 50%; font-size: 18px; cursor: pointer; color: var(--bl); display: flex; align-items: center; justify-content: center; z-index: 5; transition: background 0.2s ease; box-sizing: border-box; }
         .mic-btn.listening { background: var(--rd); border-color: var(--rd); color: white; animation: pulse 1.5s infinite; }
@@ -95,14 +95,14 @@
         .modal-x { position: absolute; top: 10px; right: 10px; width: 45px; height: 45px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 26px; font-weight: 900; cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center; }
         .btn-clear-log { position: absolute; top: 12px; left: 12px; background: white; border: 2px solid var(--dr-rd); color: var(--dr-rd); font-weight: 900; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; width: 45px; height: 45px; border-radius: 8px; line-height: 1.1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         
-        #kp-header-wrap { padding: 30px 0 15px; position: relative; display: flex; justify-content: center; align-items: center; }
+        #kp-header-wrap { padding: 25px 0 10px; position: relative; display: flex; justify-content: center; align-items: center; background: var(--lt-bl); }
         
-        /* 10-KEY KEYPAD HOUSING LAYER SWITCHED ENTIRELY TO LIGHT BLUE BACKDROP MATRIX */
+        /* 10 KEY CONTAINER SET ENTIRELY TO SOFT BLUE INTERIOR ELEMENTS */
         .keypad-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px 20px 20px; background: #dceaf5; border-radius: 0 0 8px 8px; }
         .key { background: #fff; border: 2px solid var(--bl); border-radius: 8px; padding: 15px; font-size: 1.5rem; font-weight: 900; color: var(--bl); cursor: pointer; }
         
-        /* ORIGINAL HIGHER CONTRAST LOGIC RESTORED FOR THE DISPLAY FRAME READOUT */
-        .entry-display { background: #001a33; border: 2px solid #005fa3; border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 2.8rem; font-weight: 900; color: #00d2ff; margin: 0 20px 15px; text-align: center; letter-spacing: 5px; }
+        /* CLEAN SOFT LIGHT OVERRIDE INSTALLED ON THE DIGITAL ENTRANCE PORT WITH INCREASED TYPE WEIGHT */
+        .entry-display { background: #fff; border: 3px solid var(--bl); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; font-size: 3rem; font-weight: 900; color: var(--bl); margin: 0 20px 15px; text-align: center; letter-spacing: 5px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.08); }
         .time-display-btn { border: 2px solid #ccc; padding: 10px; text-align: center; font-weight: 900; background: #fff; border-radius: 6px; font-size: 1.5rem; cursor: pointer; color: var(--bl); }
 
         .log-hdr, .log-row, .total-row { display: grid; grid-template-columns: 30px 45px 45px 45px 45px 45px 1fr; width: 100%; text-align: center; font-family: 'Segoe UI Semibold', sans-serif; align-items: center; gap: 4px; }
@@ -174,10 +174,10 @@
     </div>
 
     <div id="keypadPicker">
-        <div class="time-box" style="width: 320px; height: auto; padding-bottom: 0; overflow: hidden;">
-            <div id="kp-header-wrap" style="background: var(--lt-bl);">
-                <h3 id="keypad-title" style="margin:0; color:var(--bl); font-size:1.1rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
-                <button class="kp-modal-x" onclick="closeKeypad()" style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 18px; font-weight: 900;">×</button>
+        <div class="time-box" style="width: 320px; height: auto; padding: 0; overflow: hidden; background: var(--lt-bl);">
+            <div id="kp-header-wrap">
+                <h3 id="keypad-title" style="margin:0; color:var(--bl); font-size:1.5rem; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BEGIN TOUR</h3>
+                <button class="kp-modal-x" onclick="closeKeypad()" style="position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; background: var(--dr-rd); color: white; border-radius: 50%; border: none; font-size: 22px; font-weight: 900; display:flex; align-items:center; justify-content:center;">×</button>
             </div>
             <div id="kp-display" class="entry-display">00.00</div>
             <div class="keypad-container">
@@ -239,31 +239,32 @@
         <div class="sticky-top">
             <div class="ctrls">
                 <div class="row">
-                    <div class="input-wrapper" style="position:relative;">
+                    <div class="input-wrapper">
                         <label>Zip Code</label>
                         <div id="zipTrig" class="zip-trigger" onclick="toggleZipList(event)">Select Zip(s)...</div>
-                    
-                        <div id="zipList">
-                            <div class="zip-scroll-area" id="zipScrollBox">
-                                <label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="validateZipCheck()"> 98660</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="validateZipCheck()"> 98661</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="validateZipCheck()"> 98662</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="validateZipCheck()"> 98663</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="validateZipCheck()"> 98664</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="validateZipCheck()"> 98665</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="validateZipCheck()"> 98668</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="validateZipCheck()"> 98682</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="validateZipCheck()"> 98683</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="validateZipCheck()"> 98684</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="validateZipCheck()"> 98685</label>
-                                <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="validateZipCheck()"> 98686</label>
-                            </div>
-                            <div class="apply-wrap"><button class="btn-apply" onclick="finalApply(event)">Apply</button></div>
-                        </div>
                     </div>
                     <button class="btn-circle btn-red" onclick="resetAll()">Reset</button>
                 </div>
+                
+                <div id="zipList">
+                    <div class="zip-scroll-area" id="zipScrollBox">
+                        <label class="zip-item"><input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98660" onchange="validateZipCheck()"> 98660</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98661" onchange="validateZipCheck()"> 98661</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98662" onchange="validateZipCheck()"> 98662</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98663" onchange="validateZipCheck()"> 98663</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98664" onchange="validateZipCheck()"> 98664</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98665" onchange="validateZipCheck()"> 98665</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98668" onchange="validateZipCheck()"> 98668</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98682" onchange="validateZipCheck()"> 98682</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98683" onchange="validateZipCheck()"> 98683</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98684" onchange="validateZipCheck()"> 98684</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98685" onchange="validateZipCheck()"> 98685</label>
+                        <label class="zip-item"><input type="checkbox" class="z-chk" value="98686" onchange="validateZipCheck()"> 98686</label>
+                    </div>
+                    <div class="apply-wrap"><button class="btn-apply" onclick="finalApply(event)">Apply</button></div>
+                </div>
+
                 <div class="row" style="position:relative">
                     <div class="input-wrapper">
                         <div class="label-row">
