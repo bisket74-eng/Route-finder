@@ -186,9 +186,13 @@
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
         
         .info-left .street-txt { font-weight: 700; color: #333; font-size: 1.1rem; display: block; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 0.95; display: block; margin: 4px 0; letter-spacing: -0.5px; }
         
+        /* ADJUSTED LINE HEIGHT STACK FOR DUAL RANGE NUMBER OUTPUT ROWS */
+        .range-txt { font-size: 2.7rem; font-weight: 700; color: #000; line-height: 1.05; display: block; margin: 4px 0; letter-spacing: -0.5px; }
+        
+        /* MULTI-TIER REVISED TYPOGRAPHY EXTENSIONS FOR INLINE ASSETS */
         .range-letter-sub { font-size: 0.5em; font-weight: 800; vertical-align: baseline; margin-left: 1px; color: #111; }
+        .range-fraction-sub { font-size: 0.42em; font-weight: 800; vertical-align: super; margin-left: 1px; color: #111; position: relative; top: -0.32em; }
         
         .bottom-meta-row { display: flex; align-items: center; gap: 15px; margin-top: 4px; }
         .zip-tag-blue { background: var(--bl); color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.95rem; font-weight: 700; display: inline-block; letter-spacing: 1px; text-align: center; width: auto; text-transform: uppercase; }
@@ -282,7 +286,7 @@
                 <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
                 <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
-                <div id="kp-none-btn" class="key" style="grid-column: span 3; background: var(--bl); color: white; border-color: var(--bl); display: none; text-align: center;" onclick="kpSetNone()">NONE</div>
+                <div id="kp-none-btn" class="key" style="grid-column: span 3; background: var(--bl); color: white; border-color: var(--bl); display: none; text-align: center; width: 55%; margin: 0 auto; padding: 10px 0; font-size: 1.3rem;" onclick="kpSetNone()">NONE</div>
             </div>
         </div>
     </div>
@@ -603,8 +607,23 @@
     function openKeypad(t, title) { 
         activeId = t; let existing = document.getElementById(t).value || "00.00";
         if (existing === "NONE") existing = "00.00";
-        kpBuffer = existing.replace(".", ""); document.getElementById('kp-display').innerText = existing; 
-        document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; 
+        
+        const btnMap = {
+            't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn',
+            'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn'
+        };
+        const activeBtn = document.getElementById(btnMap[activeId]);
+        
+        if (activeBtn && activeBtn.classList.contains('unpopulated')) {
+            kpBuffer = ""; 
+            document.getElementById('kp-display').innerText = "00.00";
+        } else {
+            kpBuffer = existing.replace(".", ""); 
+            document.getElementById('kp-display').innerText = existing; 
+        }
+        
+        document.getElementById('keypad-title').innerText = title; 
+        document.getElementById('keypadPicker').style.display='flex'; 
         explicitKeypadOverride = false;
         
         const noneBtn = document.getElementById('kp-none-btn');
@@ -630,25 +649,27 @@
     function kpClr() { kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; explicitKeypadOverride = true; }
     function formatKp() { let val = kpBuffer.padStart(4, "0"); document.getElementById('kp-display').innerText = val.substring(0,2) + "." + val.substring(2,4); }
     
+    /* RE-CALIBRATED KEYPAD SET RETRIEVAL ENGINE FOR CLR/SET LOGIC VS EXPLICIT 0000 */
     function kpSet() { 
         let val = document.getElementById('kp-display').innerText; let hrCheck = parseInt(val.substring(0, 2), 10);
         if (hrCheck > 23) { val = "00.00"; kpBuffer = ""; document.getElementById('kp-display').innerText = "00.00"; }
-        document.getElementById(activeId).value = val;
         
         const btnMap = {
             't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn',
             'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn'
         };
         const activeBtn = document.getElementById(btnMap[activeId]);
-        activeBtn.innerText = val; 
         
-        if (val === "00.00" && !explicitKeypadOverride) { 
-            activeBtn.classList.add('unpopulated'); 
-        } else { 
+        if (kpBuffer === "") {
+            document.getElementById(activeId).value = "00.00";
+            activeBtn.innerText = "00.00";
+            activeBtn.classList.add('unpopulated');
+        } else {
+            document.getElementById(activeId).value = val;
+            activeBtn.innerText = val; 
             activeBtn.classList.remove('unpopulated'); 
         }
         
-        /* DYNAMIC RESET INTERACTION HOOK FOR LUNCH ADJUSTMENTS AWAY FROM NONE */
         if (activeId === 'l-out') {
             document.getElementById('l-in').value = "00.00";
             const ilBtn = document.getElementById('il-btn');
@@ -686,7 +707,11 @@
         const ilStr = document.getElementById('l-in').value || "00.00";
         const targetEl = document.getElementById('t-target');
         
-        if (btStr === "00.00" || olStr === "00.00" || ilStr === "00.00") {
+        const btBtn = document.getElementById('bt-btn');
+        const olBtn = document.getElementById('ol-btn');
+        const ilBtn = document.getElementById('il-btn');
+        
+        if (btBtn.classList.contains('unpopulated') || olBtn.classList.contains('unpopulated') || ilBtn.classList.contains('unpopulated')) {
             targetEl.innerText = "--:--";
             return;
         }
@@ -780,7 +805,23 @@
         }); database = nDB; localStorage.setItem('vancouverData', JSON.stringify(database));
     }
 
-    function formatRangeStrings(str) { return str.replace(/([a-zA-Z]+)/g, '<span class="range-letter-sub">$1</span>'); }
+    /* FORCED STACKED RANGE GENERATOR & FLYING FRACTION PARSER MODULE ENGINE */
+    function formatRangeStrings(str) { 
+        let parts = str.split('-');
+        function formatSingleSegment(p) {
+            if(!p) return "";
+            let txt = p.trim();
+            txt = txt.replace(/(\d+\/\d+)/g, '<span class="range-fraction-sub">$1</span>');
+            txt = txt.replace(/([a-zA-Z]+)/g, '<span class="range-letter-sub">$1</span>');
+            return txt;
+        }
+        let startFormatted = formatSingleSegment(parts[0]);
+        if (parts.length > 1 && parts[1].trim() !== "") {
+            let endFormatted = formatSingleSegment(parts[1]);
+            return `${startFormatted}<br>${endFormatted}`;
+        }
+        return startFormatted;
+    }
 
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster').checked;
