@@ -19,7 +19,6 @@
         }
         ::-webkit-scrollbar-thumb { background: #002c52; border: 2px solid white; border-radius: 8px; }
         
-        /* THE VISUAL SYNCHRONIZATION CONTAINER LOCK */
         html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #abb8c3; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; }
         
         body { opacity: 0; }
@@ -177,7 +176,6 @@
         .log-hdr span:first-child, .log-row b { text-align: left; padding-left: 2px; }
         .log-hdr span:last-child, .log-row span:last-child { text-align: right; padding-right: 2px; }
         
-        /* EXPLICIT HEAVY-WEIGHT EMPHASIS RULES FOR LOG TOTAL COLUMNS */
         .total-col { font-weight: 900 !important; font-size: 0.95rem; }
         
         .total-row b { text-align: right; grid-column: 1 / span 5; font-size: 0.65rem; text-transform: uppercase; line-height: 1; white-space: nowrap; padding-right: 4px; }
@@ -404,7 +402,21 @@
 
     window.onload = async () => {
         renderLog(); syncLocalDay(); loadTempEntries();
-        // HIGH-SPEED RENDERING BREAK FALLBACK IF NETWORK ASSETS EXPERIENCING DELAYS
+        
+        // MEMORY RETRIEVAL INTERFACE ON COLD LOAD LIFECYCLE
+        const savedZips = localStorage.getItem('usps_remembered_zips');
+        if (savedZips) {
+            const data = JSON.parse(savedZips);
+            document.getElementById('allZipMaster').checked = data.allChecked || false;
+            document.getElementById('mainMaster').checked = data.mainChecked || false;
+            document.getElementById('eastMaster').checked = data.eastChecked || false;
+            document.querySelectorAll('.z-chk').forEach(c => {
+                if (data.chks && data.chks.includes(c.value)) c.checked = true;
+            });
+            validateZipCheck();
+            finalApply(null);
+        }
+
         setTimeout(() => { document.body.classList.add('app-ready'); }, 280);
         try {
             const resp = await fetch(XLSX_URL);
@@ -591,7 +603,7 @@
                 if (currentToken === "AVENUE") { mappedTokens.push("AVE"); continue; }
                 if (currentToken === "COURT") { mappedTokens.push("CT"); continue; }
                 if (currentToken === "LOOP") { mappedTokens.push("LOOP"); continue; }
-                if (currentToken === "SOUTHEAST") { mappedTokens.push("SE").toUpperCase(); continue; }
+                if (currentToken === "SOUTHEAST") { mappedTokens.push("SE"); continue; }
                 if (currentToken === "NORTHEAST") { mappedTokens.push("NE"); continue; }
                 if (currentToken === "NORTHWEST") { mappedTokens.push("NW"); continue; }
                 if (currentToken === "SOUTHWEST") { mappedTokens.push("SW"); continue; }
@@ -897,8 +909,15 @@
 
         if (!document.getElementById('mainBody').classList.contains('cards-active')) { lastSearchTerm = input.value; }
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
-        if(rawVal.length < 1 || activeZips.length === 0) { sugBox.style.display="none"; document.body.classList.remove('sug-active'); return; }
-        document.body.classList.add('header-hidden');
+        
+        if(rawVal.length < 1 || activeZips.length === 0) { 
+            sugBox.style.display="none"; 
+            document.body.classList.remove('sug-active'); 
+            if (!document.getElementById('mainBody').classList.contains('cards-active')) {
+                document.body.classList.remove('header-hidden');
+            }
+            return; 
+        }
         
         let searchTokens = rawVal.split(/\s+/); const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
         let explicitDirFilter = null;
@@ -923,8 +942,11 @@
                 }); 
             }
         });
+        
+        // TARGETED COORDINATED HEADER ENGINE TRANSITION FOR RESULTS DRAW LIFECYCLE
         if(matches.length > 0) {
-            sugBox.style.display="block"; document.body.classList.add('sug-active');
+            sugBox.style.display="block"; 
+            document.body.classList.add('sug-active', 'header-hidden');
             matches.sort((a, b) => {
                 let nameA = a.searchName; let nameB = b.searchName;
                 let cleanA = nameA.replace(/(ST|ND|RD|TH)$/g, ""); let cleanB = nameB.replace(/(ST|ND|RD|TH)$/g, "");
@@ -944,6 +966,7 @@
                 d.onclick = () => {
                     document.getElementById('streetInput').value = item.displayName; sugBox.style.display="none"; document.body.classList.remove('sug-active');
                     document.getElementById('backToListBtn').style.display = 'block'; document.getElementById('mainBody').classList.add('cards-active');
+                    document.body.classList.add('header-hidden');
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     item.results.forEach(res => {
                         const card = document.createElement('div'); card.className="list-card"; let oeHtml = "";
@@ -956,12 +979,18 @@
                     document.getElementById('list-res').scrollTop = 0;
                 }; sugBox.appendChild(d);
             }); sugBox.scrollTop = 0;
-        } else { sugBox.style.display="none"; document.body.classList.remove('sug-active'); }
+        } else { 
+            sugBox.style.display="none"; 
+            document.body.classList.remove('sug-active'); 
+            if (!document.getElementById('mainBody').classList.contains('cards-active')) {
+                document.body.classList.remove('header-hidden');
+            }
+        }
     }
 
     function toggleZipList(e) { 
         e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; 
-        if (!isOpen) { document.body.classList.add('zip-open', 'header-hidden'); document.getElementById('zipScrollBox').scrollTop = 0; } 
+        if (!isOpen) { document.body.classList.add('zip-open'); document.getElementById('zipScrollBox').scrollTop = 0; } 
     }
     
     function checkAllZips(m) { 
@@ -978,6 +1007,15 @@
         const isMain = document.getElementById('mainMaster').checked;
         const isEast = document.getElementById('eastMaster').checked;
         
+        // PERSISTENCE ENGINE: COMMIT DATA MAP PACKETS INTO STORAGE HOOK
+        const chksValues = Array.from(chks).map(c => c.value);
+        localStorage.setItem('usps_remembered_zips', JSON.stringify({
+            chks: chksValues,
+            allChecked: isAll,
+            mainChecked: isMain,
+            eastChecked: isEast
+        }));
+        
         let displayStr = 'Select Zip(s)...'; 
         if (isAll) { displayStr = 'ALL ZIPs'; } 
         else if (isMain && !isEast && chks.length === MAIN_ZIPS.length) { displayStr = 'All Vanc MOU'; }
@@ -991,21 +1029,29 @@
         }
         document.getElementById('zipList').style.display='none'; document.body.classList.remove('zip-open'); 
         if(chks.length > 0 || isAll) { 
-            sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.getElementById('blocker').style.display = 'none'; document.body.classList.add('header-hidden'); 
+            sIn.disabled = false; sIn.placeholder = "Enter street name..."; document.getElementById('blocker').style.display = 'none'; 
             if (document.getElementById('mainBody').classList.contains('cards-active')) { reopenSuggestions(); } else { handleSearch(); }
-            setTimeout(() => sIn.focus(), 300); 
+            if (e) setTimeout(() => sIn.focus(), 300); 
         } else { sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; }
     }
     
     function reopenSuggestions() {
         document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none";
         document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block";
+        document.body.classList.add('sug-active');
         const input = document.getElementById('streetInput'); input.value = lastSearchTerm; input.focus();
         const len = input.value.length; input.setSelectionRange(len, len); handleSearch(); 
     }
 
-    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    function resetAll() { lastSearchTerm = ""; document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster, #eastMaster, #mainMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; }
+    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active', 'header-hidden'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
+    
+    function resetAll() { 
+        lastSearchTerm = ""; 
+        localStorage.removeItem('usps_remembered_zips'); 
+        document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); 
+        const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster, #eastMaster, #mainMaster').forEach(c => c.checked = false); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; 
+    }
+    
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
     function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('logScrollFrame').scrollTop = 0; }
