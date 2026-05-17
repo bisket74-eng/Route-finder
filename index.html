@@ -23,25 +23,26 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        /* HEADER FRAME SECURED WITH ROOMY RIGHT SIDE FOR WIDER TOGGLE BAR */
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 55px 20px 15px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-sizing: border-box; }
+        /* HEADER FRAME WRAPPED SECURELY TO HANDLE CONFINED INTERACTIVE CONTAINERS */
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 20px 15px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
         
-        /* EXPANDED 40PX WIDE TAP TARGET TOGGLE BUTTON */
-        .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 40px; background: rgba(0, 0, 0, 0.35); border: none; border-left: 1.5px solid rgba(255, 255, 255, 0.2); color: var(--yl); font-size: 0.75rem; font-weight: 900; letter-spacing: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1100; transition: background 0.2s ease; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
-        .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.5); }
+        /* EXPANDED, EXTRA WIDE, SEMI-TRANSPARENT RIGHT ALIGNED CITY TRIGGER BAR */
+        .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-left: 2px solid rgba(255, 255, 255, 0.25); color: var(--yl); font-size: 0.8rem; font-weight: 900; letter-spacing: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1100; transition: background 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
         .city-sidebar-btn span { display: block; transform: translateX(2px); }
 
-        /* ULTRA SMOOTH TRANSLATION DRAWER SLIDER IN CRISP WHITE BACKGROUND */
+        /* RE-ENGINEERED 75% SPANNING DRAWER IN LIGHT BLUE, COMPLETELY PARKED SAFELY OFFSCREEN BY 110% OVERLAY */
         .city-drawer-container { 
             position: absolute; 
             top: 0; 
             bottom: 0; 
-            right: 40px; 
-            width: 240px; 
-            background: #ffffff;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.15);
+            right: 48px; 
+            width: 75vw; 
+            max-width: 330px;
+            background: #dceaf5;
+            box-shadow: none;
             border-left: 2px solid var(--bl);
-            transform: translateX(250px);
+            transform: translateX(110%);
             transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
             z-index: 1050; 
             display: flex; 
@@ -50,17 +51,18 @@
         }
         body.drawer-active .city-drawer-container { 
             transform: translateX(0);
+            box-shadow: -8px 0 20px rgba(0,0,0,0.35);
         }
         
         .drawer-content-scroll { 
             flex: 1; 
             overflow-y: auto; 
             overflow-x: hidden;
-            padding: 10px; 
+            padding: 12px 10px; 
             -webkit-overflow-scrolling: touch; 
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             max-height: 100%;
             box-sizing: border-box;
         }
@@ -69,14 +71,14 @@
         .drawer-content-scroll::-webkit-scrollbar-track { background: transparent; }
         .drawer-content-scroll::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 2px; }
         
-        /* BLACK TYPOGRAPHY FOR HIGH CONTRAST DRAWER OPTIONS */
+        /* CRISP WHITE SELECTION BOX HOUSINGS WITH BLACK TYPOGRAPHY */
         .city-opt-btn { 
             width: 100%; 
-            padding: 11px 12px; 
+            padding: 12px 14px; 
             background: #ffffff; 
-            border: 2px solid #ddd; 
+            border: 2px solid #b3cddf; 
             border-radius: 6px; 
-            font-size: 0.85rem; 
+            font-size: 0.9rem; 
             font-weight: 800; 
             color: #000000; 
             cursor: pointer; 
@@ -88,9 +90,10 @@
             text-overflow: ellipsis;
             box-sizing: border-box;
             flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
         }
-        .city-opt-btn:hover { border-color: var(--bl); background: rgba(0, 75, 135, 0.05); }
-        .city-opt-btn.active-city { background: var(--bl); color: #ffffff; border-color: var(--bl); font-weight: 900; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+        .city-opt-btn:hover { border-color: var(--bl); background: rgba(255, 255, 255, 0.8); }
+        .city-opt-btn.active-city { background: var(--bl); color: #ffffff; border-color: var(--bl); font-weight: 900; box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
 
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
@@ -102,7 +105,6 @@
         .sticky-top { position: sticky; top: 0; z-index: 200; background: transparent; flex-shrink: 0; }
         .ctrls { padding: 15px; background: rgba(238, 244, 249, 0.92); backdrop-filter: blur(4px); position: relative; z-index: 210; box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
         
-        /* ALIGNED CONTROL ROW MATRIX LAYOUT PACKS */
         .row { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-end; position: relative; z-index: 220; }
         .input-wrapper { flex: 1; position: relative; min-width: 0; }
         
@@ -130,7 +132,6 @@
         @keyframes bounceWave { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1.0); } }
         input:disabled { background-color: #f5f5f5; border-color: #ddd; }
 
-        /* PERFECT SYMMETRICAL 52PX CIRCULAR ACTIONS CONTROLLERS */
         .btn-circle { height: 52px; width: 52px; border-radius: 50%; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.65rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; line-height: 1; box-sizing: border-box; }
         .btn-red { background-color: var(--dr-rd); color: white; }
         .btn-yel { background-color: var(--yl); color: #000; }
@@ -140,7 +141,7 @@
         .btn-round-tk { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); width: 95px; height: 95px; background: var(--gr); color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.7rem; z-index: 50; transition: transform 0.4s ease; border-bottom: 4px solid #007037; }
         .btn-round-tk span { font-size: 1.6rem; margin-bottom: 2px; }
 
-        /* ADJUSTED DROPDOWN BOX POSITIONING RULESETS TO ALIGN TO RIGHT EDGE OF ROW BLOCK */
+        /* ZIP BOX DROPDOWN STABILIZED FOR HORIZONTAL ALIGNMENT */
         #zipList { position: absolute; top: 96px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 340px; height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
         
@@ -150,7 +151,6 @@
         .apply-wrap { padding: 12px 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; box-sizing: border-box; }
         .btn-apply { width: 100%; height: 46px; border-radius: 23px; border:none; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; background: var(--bl); color: white; box-sizing: border-box; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
 
-        /* FIXED STABLE MIC TARGET OVERWRITING INHERITANCE MAPS */
         .mic-btn { height: 52px; width: 52px; background: var(--bl); border: none; border-radius: 50%; font-size: 22px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; z-index: 5; transition: background 0.2s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0; line-height: 1; box-sizing: border-box; }
         .mic-btn.listening { background: var(--rd); animation: pulseBtn 1.5s infinite; }
         @keyframes pulseBtn { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
@@ -166,7 +166,7 @@
 
         #keypadPicker { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999999; display: none; align-items: center; justify-content: center; }
         #timeModal .time-box, #adjustModal .time-box { background: var(--lt-bl); height: 95vh; max-height: 800px; padding: 25px 12px 15px 12px; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 20005; } 
-        .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); box-sizing: border-box; }
+        .time-box { width: 92%; max-width: 400px; border-radius: 12px; border: 4px solid var(--bl); position: relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); box-sizing: border-box; }
         
         .time-fixed-top { flex-shrink: 0; }
         .time-log-scroll-wrapper { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; margin-top: 5px; padding-right: 4px; scrollbar-gutter: stable; }
@@ -235,36 +235,7 @@
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
-        /* EXPANDED RETURN PILL BUTTON FOR HIGHER LEGIBlLITY WITHOUT SCALE MODULATORS */
-        #backToListBtn { 
-            display: none; 
-            background-color: var(--bl); 
-            color: white; 
-            width: 240px; 
-            padding: 0 12px; 
-            height: 38px; 
-            border-radius: 19px; 
-            font-weight: 900; 
-            font-size: 0.8rem; 
-            border: none; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            position: absolute; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            bottom: -46px; 
-            z-index: 99; 
-            white-space: nowrap; 
-            line-height: 38px; 
-            text-align: center; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.25); 
-            margin: 0; 
-            box-sizing: border-box; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            letter-spacing: 0.5px; 
-        }
-        
+        #backToListBtn { display: none; background-color: var(--bl); color: white; width: 240px; padding: 0 12px; height: 38px; border-radius: 19px; font-weight: 900; font-size: 0.8rem; border: none; cursor: pointer; text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); bottom: -46px; z-index: 99; white-space: nowrap; line-height: 38px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.25); margin: 0; box-sizing: border-box; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; }
         .input-blocker { position: absolute; top: 25px; left: 0; right: 0; bottom: 0; z-index: 4; cursor: pointer; }
     </style>
 </head>
@@ -449,7 +420,6 @@
     window.onload = async () => {
         document.body.classList.remove('modal-open-tk', 'modal-open-view', 'drawer-active');
         
-        // PERSISTENCE RETRIEVAL LAYER: RESTORE ACTIVE SESSION POINTERS ON LOAD
         const savedCitySessionKey = localStorage.getItem('usps_active_city_key');
         if (savedCitySessionKey && CITY_CONFIG[savedCitySessionKey]) {
             currentCityKey = savedCitySessionKey;
@@ -491,10 +461,7 @@
         if (key === currentCityKey && isDataLive) { closeCityPortal(); return; }
         closeCityPortal();
         currentCityKey = key;
-        
-        // COMMIT CHOSEN CONTEXT POINTER TO LOCAL DEVICE PERSISTENCE DATA SLOTS
         localStorage.setItem('usps_active_city_key', key);
-        
         buildCityPortalMenu();
         clearStreetOnly();
         await loadCityDataset(key, false);
@@ -716,7 +683,7 @@
                 if (currentToken === "AVENUE") { mappedTokens.push("AVE"); continue; }
                 if (currentToken === "COURT") { mappedTokens.push("CT"); continue; }
                 if (currentToken === "LOOP") { mappedTokens.push("LOOP"); continue; }
-                if (currentToken === "SOUTHEAST") { mappedTokens.push("SE"); continue; }
+                if (currentToken === "SOUTHEAST") { mappedTokens.push("SE").toUpperCase(); continue; }
                 if (currentToken === "NORTHEAST") { mappedTokens.push("NE"); continue; }
                 if (currentToken === "NORTHWEST") { mappedTokens.push("NW"); continue; }
                 if (currentToken === "SOUTHWEST") { mappedTokens.push("SW"); continue; }
