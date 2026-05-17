@@ -40,7 +40,8 @@
             border-left: 2px solid var(--bl);
             transform: translateX(800px); 
             visibility: hidden;
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s ease; 
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease; /* OPTIMIZED SPEED FOR HARDWARE ACCELERATION */
+            will-change: transform; /* ELIMINATES MOBILE DRAWER STUTTER */
             z-index: 1050; 
             display: flex; 
             flex-direction: column; 
@@ -441,7 +442,7 @@
             </div>
             <div id="kp-display" class="entry-display kp-unpopulated">--:--</div>
             <div class="keypad-container">
-                <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3).">3</div>
+                <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
                 <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
                 <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
@@ -621,7 +622,6 @@
         
         buildDynamicZipListUI();
 
-        // RUN AUTO-ZIP CHECK: IF CITY HAS EXACTLY 1 ZIP TOTAL, LOCK IT IN & BYPASS DRAWER SELECTIONS
         const totalZipsAvailable = Object.keys(database);
         if (totalZipsAvailable.length === 1) {
             const singleZipCode = totalZipsAvailable[0];
@@ -1012,6 +1012,7 @@
             return; 
         }
         
+        // REFINED PARSING LOGIC: ISOLATE THE ROOT ROAD NAME FROM LEADING DIRECTIONAL NOISE
         let searchTokens = rawVal.split(/\s+/); const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"]; let explicitDirFilter = null;
         if (searchTokens.length > 0 && directionalList.includes(searchTokens[0])) { explicitDirFilter = searchTokens.shift(); }
         if (searchTokens.length > 0 && directionalList.includes(searchTokens[searchTokens.length - 1])) { explicitDirFilter = searchTokens.pop(); }
@@ -1023,11 +1024,13 @@
             if(database[z]) {
                 database[z].forEach(m => { 
                     const targetName = m.searchName; const targetDisplay = m.displayName.toUpperCase(); let baseMatch = false;
-                    if (coreQueryName.length === 0 && explicitDirFilter) { baseMatch = true; } else { baseMatch = targetName.startsWith(coreQueryName); }
+                    
+                    // PREVENTS N/S IN BAR FROM TRIGGERING ALL SYSTEM DIRECTIONAL ALIASES PREMATURELY
+                    if (coreQueryName.length === 0 && explicitDirFilter) { baseMatch = targetName.startsWith(explicitDirFilter); } else { baseMatch = targetName.startsWith(coreQueryName); }
                     if (baseMatch) {
                         let validCheck = true;
                         if (suffixToken) { let suffixRegex = new RegExp('\\b' + suffixToken + '\\b'); if (!suffixRegex.test(targetDisplay)) { validCheck = false; } }
-                        if (validCheck && explicitDirFilter) { let displayTokens = targetDisplay.split(/\s+/); if (displayTokens[0] !== explicitDirFilter) { validCheck = false; } }
+                        if (validCheck && explicitDirFilter && coreQueryName.length > 0) { let displayTokens = targetDisplay.split(/\s+/); if (displayTokens[0] !== explicitDirFilter) { validCheck = false; } }
                         if (validCheck) { matches.push({...m, zip: z}); }
                     }
                 }); 
