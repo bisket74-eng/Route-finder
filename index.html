@@ -214,8 +214,6 @@
         .list-card:first-child { margin-top: 14px; } 
         
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
-        
-        /* ALIGNED STREET FOOTPRINT DIRECTLY CENTERED BELOW RANGE HEADERS */
         .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.925rem; display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 18px; }
         
         .range-cradle-grid { 
@@ -227,7 +225,6 @@
             vertical-align: middle;
         }
 
-        /* 5 POINT EXTENDED FOOTPRINT RETAINING DEEP RICH TEXT HIGHLIGHTS */
         .range-txt { 
             font-size: 3.05rem; 
             font-weight: 700; 
@@ -253,12 +250,70 @@
             text-align: center;
         }
         
-        .red-oe-stamp { font-size: 1.15rem; font-weight: 900; color: var(--rd); text-transform: uppercase; display: inline-block; line-height: 1; font-family: 'Segoe UI', Arial, sans-serif; margin-left: 6px; vertical-align: middle; }
+        /* PINNED WRAPPER BLOCK HOOKING INDICATORS DIRECTLY TO THE LEFT FLANK OF THE BLUE BADGES */
+        .rt-block-anchor {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            align-self: stretch;
+            flex-shrink: 0;
+            gap: 12px;
+        }
 
-        /* RE-CLUSTERED STACKED TEXT ALIGNMENTS CLOSER INTERIOR HOVER MARGINS */
-        .rt-block { background: #004b87 !important; color: white; padding: 12px 4px; border-radius: 8px; text-align: center; min-width: 180px; width: 180px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; flex-shrink: 0; gap: 0px; }
-        .rt-block .rt-route-num { font-size: 3.52rem; display: block; font-weight: 900; line-height: 0.95; margin-top: 4px; letter-spacing: 0.5px; }
-        .rt-block .rt-zip-num { font-size: 1.28rem; display: block; font-weight: 800; line-height: 0.95; margin-bottom: 4px; letter-spacing: 0.5px; opacity: 0.95; text-transform: uppercase; }
+        /* HARD-PINNED RED STAMP FEATURING AN INTENTIONAL +4 POINT BOOM SCALE */
+        .red-oe-stamp { 
+            font-size: 1.4rem; /* ENHANCED BY FOUR FULL POINTS FOR VISIBILITY STRIKES */
+            font-weight: 900; 
+            color: var(--rd); 
+            text-transform: uppercase; 
+            line-height: 1; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0;
+            display: inline-block;
+            text-align: right;
+            width: 22px;
+        }
+
+        /* NARROWED APP FOOTPRINT FEATURING DELIBERATE AIR PROFILE SLOTS FOR VERTICAL DENSITY */
+        .rt-block { 
+            background: #004b87 !important; 
+            color: white; 
+            padding: 8px 4px; 
+            border-radius: 8px; 
+            text-align: center; 
+            min-width: 140px; /* SLID DOWN TO 140PX NARROW GRID SPAN */
+            width: 140px; 
+            align-self: stretch; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-sizing: border-box; 
+            flex-shrink: 0; 
+        }
+        
+        /* TUNED ROUTE BLOCK DOWN BY 2 FULL POINTS WITH A TUCKED EXTENSION FOR BOTTOM SPLITTING */
+        .rt-block .rt-route-num { 
+            font-size: 3.32rem; /* REDUCED BY 2 POINTS FROM 3.52REM */
+            display: block; 
+            font-weight: 900; 
+            line-height: 0.95; 
+            margin-top: 2px; 
+            letter-spacing: 0.5px; 
+        }
+        
+        /* DROP PIN ALIGNED FLUIDLY BETWEEN CARRIER ROUTE BOTTOM BOUND AND BOX EDGE */
+        .rt-block .rt-zip-num { 
+            font-size: 1.28rem; 
+            display: block; 
+            font-weight: 800; 
+            line-height: 1.0; 
+            margin-top: auto; /* DRIVES TRACK CLEARANCE ALL THE WAY TO SUB-SPLIT BOTTOM REAL ESTATE */
+            margin-bottom: 2px; 
+            letter-spacing: 0.5px; 
+            opacity: 0.95; 
+            text-transform: uppercase; 
+        }
         
         .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 250px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 1.25rem; font-weight: 800; color: #004b87 !important; cursor: pointer; overflow: hidden; gap: 10px; }
@@ -719,7 +774,6 @@
         
         recognition.onstart = () => { micBtn.classList.add('listening'); if(sInputNode) sInputNode.classList.add('listening-active'); if(audioWaveNode) audioWaveNode.classList.add('active'); };
         
-        /* SHUTS DOWN ANIMATION HUD ARTIFACTS AND OVERLAY THE MOMENT THE SYSTEM RELEASES THE CAPTURE CHANNEL */
         const killAnimationHud = () => { micBtn.classList.remove('listening'); if(sInputNode) sInputNode.classList.remove('listening-active'); if(audioWaveNode) audioWaveNode.classList.remove('active'); };
         recognition.onend = killAnimationHud;
         recognition.onerror = killAnimationHud;
@@ -972,11 +1026,14 @@
                         card.innerHTML = `
                             <div class="info-left">
                                 <div style="text-align: left; display: block; width: 100%; padding-left: 14px;">${polishedRange}</div>
-                                <span class="street-txt">${item.displayName}${oeHtml}</span>
+                                <span class="street-txt">${item.displayName}</span>
                             </div>
-                            <div class="rt-block">
-                                <span class="rt-route-num">${res.route}</span>
-                                <span class="rt-zip-num">ZIP ${item.zip}</span>
+                            <div class="rt-block-anchor">
+                                ${oeHtml}
+                                <div class="rt-block">
+                                    <span class="rt-route-num">${res.route}</span>
+                                    <span class="rt-zip-num">ZIP ${item.zip}</span>
+                                </div>
                             </div>
                         `;
                         cc.appendChild(card);
