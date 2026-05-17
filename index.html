@@ -441,7 +441,7 @@
             </div>
             <div id="kp-display" class="entry-display kp-unpopulated">--:--</div>
             <div class="keypad-container">
-                <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
+                <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3).">3</div>
                 <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
                 <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
@@ -519,6 +519,30 @@
             stationDCU: ["98662", "98682", "98664", "98683", "98684"],
             mouName: "All Vancouver MOU zips",
             dcuName: "All East Vancouver DCU zips"
+        },
+        "ariel": {
+            name: "Ariel, Washington",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/ariel.xlsx",
+            stationMOU: ["98603"],
+            stationDCU: [],
+            mouName: "Ariel 98603",
+            dcuName: ""
+        },
+        "cougar": {
+            name: "Cougar, Washington",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/cougar.xlsx",
+            stationMOU: ["98616"],
+            stationDCU: [],
+            mouName: "Cougar 98616",
+            dcuName: ""
+        },
+        "woodland": {
+            name: "Woodland, Washington",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/woodland.xlsx",
+            stationMOU: ["98674"],
+            stationDCU: [],
+            mouName: "Woodland 98674",
+            dcuName: ""
         }
     };
     
@@ -597,7 +621,24 @@
         
         buildDynamicZipListUI();
 
-        if (isInitialLoad) {
+        // RUN AUTO-ZIP CHECK: IF CITY HAS EXACTLY 1 ZIP TOTAL, LOCK IT IN & BYPASS DRAWER SELECTIONS
+        const totalZipsAvailable = Object.keys(database);
+        if (totalZipsAvailable.length === 1) {
+            const singleZipCode = totalZipsAvailable[0];
+            const checkboxEl = document.querySelector(`.z-chk[value="${singleZipCode}"]`);
+            if (checkboxEl) checkboxEl.checked = true;
+            
+            const trig = document.getElementById('zipTrig');
+            trig.innerText = singleZipCode;
+            trig.style.fontSize = '22px';
+            
+            const sIn = document.getElementById('streetInput');
+            sIn.disabled = false;
+            sIn.placeholder = "Enter street name...";
+            document.getElementById('blocker').style.display = 'none';
+            
+            setTimeout(() => sIn.focus(), 350);
+        } else if (isInitialLoad) {
             const savedZips = localStorage.getItem('usps_remembered_zips_' + currentCityKey);
             if (savedZips) {
                 const data = JSON.parse(savedZips);
