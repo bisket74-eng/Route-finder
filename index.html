@@ -29,20 +29,20 @@
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
         .city-sidebar-btn span { display: block; transform: translateX(2px); }
 
-        /* RE-ENGINEERED 80% SCREEN SPAN CONTAINER IN BEAUTIFUL MID-TONE LIGHT BLUE WITH PACED SMOOTH SLIDE TRANSITIONS */
+        /* UPGRADED 90% EXPANSION FOOTPRINT WITH LUXURIOUS 0.8S DELIBERATE GLIDE TRANSITIONS */
         .city-drawer-container { 
             position: absolute; 
             top: 0; 
             bottom: 0; 
             right: 48px; 
-            width: 80vw; /* DELIBERATE 5% EXTRA SLIDE EXPANSION WIDTH PROFILE */
-            max-width: 350px;
-            background: #b3cddf; /* LIGHTER BLUE THAN MAIN USPS HEADER BANNER */
+            width: 90vw; /* SPANS 10% FURTHER FOR 90% SCREEN COVERAGE SPACE */
+            max-width: 400px;
+            background: #b3cddf; 
             border-left: 2px solid var(--bl);
-            transform: translateX(550px); /* DEEP RECESSED PARK GAP DETACHED FROM ALL SCREEN BLEED OVERRUNS */
+            transform: translateX(800px); /* DEEPER ABSOLUTE STAGING GAP ELIMINATES MARGIN FLICKER */
             visibility: hidden;
-            /* LUXURIOUS SLOW MOTION DURATION METRICS COMMITTED TO HARDWARE MATRIX TRACERS */
-            transition: transform 0.65s cubic-bezier(0.25, 1, 0.3, 1), visibility 0.65s ease; 
+            /* LUXURIOUS SLOW TRANSITION PACE BALANCED WITH PREMIUM SMOOTH DECELERATION CURVES */
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s ease; 
             z-index: 1050; 
             display: flex; 
             flex-direction: column; 
@@ -51,7 +51,7 @@
         body.drawer-active .city-drawer-container { 
             transform: translateX(0);
             visibility: visible;
-            box-shadow: -8px 0 25px rgba(0,0,0,0.4);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.45);
         }
         
         .drawer-content-scroll { 
@@ -71,16 +71,15 @@
         .drawer-content-scroll::-webkit-scrollbar-track { background: transparent; }
         .drawer-content-scroll::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 2px; }
         
-        /* SHARP UNIFORM WHITE CARD CELL BLOCKS FEATURING HIGH LEGIBILITY BLACK FONTS */
         .city-opt-btn { 
             width: 100%; 
             padding: 12px 14px; 
-            background: #ffffff; /* PURE WHITE BACKGROUND */
+            background: #ffffff; 
             border: 2px solid var(--bl); 
             border-radius: 6px; 
             font-size: 0.9rem; 
             font-weight: 800; 
-            color: #000000; /* BOLD BLACK FONT COLOR */
+            color: #000000; 
             cursor: pointer; 
             transition: all 0.15s ease; 
             text-transform: uppercase; 
@@ -93,7 +92,6 @@
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
         .city-opt-btn:hover { background: #f0f6fa; }
-        /* NO YELLOW HIGHLIGHTS - LOCKS UNIFORMLY TO HIGH CONTRAST MATTE BLUE RETAINING CRISP INTERIOR GRAPHICS */
         .city-opt-btn.active-city { background: var(--bl); color: #ffffff; border-color: var(--bl); font-weight: 900; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
@@ -121,7 +119,7 @@
         input[type="text"].listening-active { border-color: var(--rd); box-shadow: 0 0 8px rgba(218, 41, 28, 0.3); }
 
         input::placeholder { color: #ccc; font-size: 18px; }
-        input:disabled::placeholder { color: #ccc; font-size: 18px; }
+        input:open::placeholder { color: #ccc; font-size: 18px; }
 
         .street-audio-wave { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); display: none; align-items: center; gap: 3px; height: 20px; pointer-events: none; z-index: 10; }
         .street-audio-wave.active { display: flex; }
