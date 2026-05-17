@@ -213,14 +213,15 @@
         .list-card { background: white; padding: 6px 12px; margin: 0 auto 5px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
         .list-card:first-child { margin-top: 14px; } 
         
-        /* PULLED REMAINING MOUSE GAP STACKS OUT TO FLUSH ALIGN ON LEFT BOX FLANK */
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 0px; padding-right: 8px; overflow: hidden; }
-        .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.86rem; display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 0px; }
+        
+        /* INJECTED 10PX LEFT CUSHION BEFORE ADDRESS STRING */
+        .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.86rem; display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 10px; }
         
         .range-cradle-grid { 
             display: inline-flex; 
             flex-direction: column; 
-            align-items: flex-start; /* SHIFTS DIGIT CAROUSEL BOX ALL THE WAY TO SUB-MARGIN LEFT */
+            align-items: flex-start; 
             justify-content: center; 
             text-align: left;
             vertical-align: middle;
@@ -236,19 +237,21 @@
             display: block;
         }
         
+        /* ALIGNED VERTICALLY AND HORIZONTALLY IN CENTER SPLIT HOLES */
         .range-dash-break { 
             font-size: 1.5rem; 
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* SNAPS CROSSHAIR TO MATCH RANGE LINE EDGE */
+            justify-content: center; /* FULL MATRIX DEAD-CENTER LOCKDOWN */
             line-height: 1; 
             margin: 2px 0; 
             color: #003366 !important; 
             font-weight: 900; 
             width: 100%; 
-            height: 16px; 
+            height: 22px; 
             letter-spacing: 0;
-            padding-left: 4px;
+            padding-left: 0;
+            text-align: center;
         }
         
         .rt-block-anchor {
@@ -260,9 +263,8 @@
             gap: 12px;
         }
 
-        /* 4 POINT ADDED BOOM SCALE INCREASE FOR EVEN SHARPER STAMP HITS */
         .red-oe-stamp { 
-            font-size: 1.65rem; /* BOOSTED BY 4 MORE POINTS UP FROM 1.4REM */
+            font-size: 1.65rem; 
             font-weight: 900; 
             color: var(--rd); 
             text-transform: uppercase; 
@@ -274,10 +276,11 @@
             width: 26px;
         }
 
+        /* INJECTED 6PX OF TOP PADDING TO DROPDOWN CARRIER ROUTE NUMBERS CLEANLY */
         .rt-block { 
             background: #004b87 !important; 
             color: white; 
-            padding: 8px 4px; 
+            padding: 14px 4px 8px 4px; /* INCREASED TOP FROM 8PX TO 14PX FOR SHARP CEILING TRACKING */
             border-radius: 8px; 
             text-align: center; 
             min-width: 140px; 
