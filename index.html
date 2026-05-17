@@ -23,13 +23,77 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        /* HEADER LAYOUT ADJUSTED FOR RIGHT INTEGRATED SELECTION PANEL CONTROL BAR */
+        /* HEADER FRAME SECURED FOR INTERNAL POSITION OVERLAYS */
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 42px 20px 15px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-sizing: border-box; }
         
-        /* VERTICAL ELEGANT SLIM PROFILE SELECTION PANEL CONTROLLER PLACED ON RIGHT SIDE */
-        .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 28px; background: rgba(0, 0, 0, 0.25); border: none; border-left: 1.5px solid rgba(255, 255, 255, 0.2); color: var(--yl); font-size: 0.65rem; font-weight: 900; letter-spacing: 3px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1000; transition: background 0.2s ease; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
-        .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.4); }
+        /* CRITICAL REPAIR: ABSOLUTE SECLUSION OF INTERACTIVE SIDEBAR TRIGGER BUTTON CONTEXTS */
+        .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 28px; background: rgba(0, 0, 0, 0.35); border: none; border-left: 1.5px solid rgba(255, 255, 255, 0.2); color: var(--yl); font-size: 0.65rem; font-weight: 900; letter-spacing: 3px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1100; transition: background 0.2s ease; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+        .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.5); }
         .city-sidebar-btn span { display: block; transform: translateX(1px); }
+
+        /* RE-ENGINEERED COMPACT LIST SLIDE PANEL CONFINED DIRECTLY INSIDE THE VERTICAL GEOMETRY OF THE HEADER */
+        .city-drawer-container { 
+            position: absolute; 
+            top: 0; 
+            bottom: 0; 
+            right: 28px; 
+            width: 0px; 
+            background: linear-gradient(to left, #002c52, #003a6a);
+            box-shadow: none;
+            transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            z-index: 1050; 
+            display: flex; 
+            flex-direction: column; 
+            box-sizing: border-box; 
+            overflow: hidden;
+            border-left: none;
+        }
+        body.drawer-active .city-drawer-container { 
+            width: 240px; 
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+        }
+        
+        /* DYNAMIC SCROLLER PROFILE DESIGNED TO ENFORCE PERFECT CAPTURE WITHIN BANNER EDGES */
+        .drawer-content-scroll { 
+            flex: 1; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+            padding: 8px; 
+            -webkit-overflow-scrolling: touch; 
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* CRERATING ULTRA SLEEK SCROLLBAR TRACKS FOR CONFINED LIST DRAWER HEADERS */
+        .drawer-content-scroll::-webkit-scrollbar { width: 4px; }
+        .drawer-content-scroll::-webkit-scrollbar-track { background: transparent; }
+        .drawer-content-scroll::-webkit-scrollbar-thumb { background: var(--yl); border-radius: 2px; }
+        
+        .city-opt-btn { 
+            width: 100%; 
+            padding: 10px 12px; 
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 4px; 
+            font-size: 0.8rem; 
+            font-weight: 800; 
+            color: #fff; 
+            cursor: pointer; 
+            transition: all 0.15s ease; 
+            text-transform: uppercase; 
+            text-align: left; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+        .city-opt-btn:hover { border-color: var(--yl); background: rgba(255,255,255,0.2); }
+        .city-opt-btn.active-city { background: var(--yl); color: #002c52; border-color: #fff; font-weight: 900; }
 
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
@@ -85,23 +149,10 @@
         .apply-wrap { padding: 12px 15px; display: flex; justify-content: center; border-top: 2px solid var(--bl); background: #fff; box-sizing: border-box; }
         .btn-apply { width: 100%; height: 46px; border-radius: 23px; border:none; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; background: var(--bl); color: white; box-sizing: border-box; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
 
-        .mic-btn { height: 52px; width: 52px; background: var(--bl); border: none; border-radius: 50%; font-size: 22px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; z-index: 5; transition: background 0.2s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0; line-height: 1; box-sizing: border-box; }
-        .mic-btn.listening { background: var(--rd); animation: pulseBtn 1.5s infinite; }
-        @keyframes pulseBtn { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
-
-        /* HIGH-LEVEL SLIDING DRAWIER FOR DYNAMIC REGIONAL DATA PROFILES BACK DROP */
-        #cityDrawerOverlay { position: absolute; top: 0; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.4); z-index: 15000; display: none; }
-        
-        /* UNCONFINED SECURE SLIDING RIGHT DRAWER INTERFACE BODY */
-        .city-drawer-container { position: absolute; top: 0; bottom: 0; right: -320px; width: 292px; background: var(--lt-bl); border-left: 4px solid var(--bl); box-shadow: -8px 0 25px rgba(0,0,0,0.3); transition: right 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 16000; display: flex; flex-direction: column; box-sizing: border-box; }
-        body.drawer-active .city-drawer-container { right: 0; }
-        
-        .drawer-header { padding: 20px 15px; background: var(--bl); color: white; font-weight: 900; font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; border-bottom: 2px solid var(--dr-rd); }
-        .drawer-content-scroll { flex: 1; overflow-y: auto; padding: 15px 10px; -webkit-overflow-scrolling: touch; }
-        
-        .city-opt-btn { width: 100%; padding: 12px 14px; margin-bottom: 8px; background: white; border: 2px solid #ccc; border-radius: 6px; font-size: 1rem; font-weight: 800; color: #333; cursor: pointer; transition: all 0.15s ease; text-transform: uppercase; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .city-opt-btn:hover { border-color: var(--bl); background: rgba(0,75,135,0.04); }
-        .city-opt-btn.active-city { background: var(--bl); color: white; border-color: var(--yl); box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
+        /* CRITICAL LOAD CONSTRAINTS: HARD STRUCTURAL LAYERING DEFENSE TO BLOCK STARTUP OVERLAYS */
+        #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none !important; align-items: center; justify-content: center; }
+        body.modal-open-tk #timeModal { display: flex !important; }
+        body.modal-open-view #viewer { display: flex !important; }
 
         #confirmModal, #rowOptModal, #adjustModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 30000; display: none; align-items: center; justify-content: center; }
         .del-box { width: 80%; max-width: 320px; padding: 25px; border: 1px solid #000; background: #e0e0e0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
@@ -160,7 +211,7 @@
         body.cards-active #list-res { display: block; pointer-events: auto; background: rgba(238, 244, 249, 0.85); backdrop-filter: blur(2px); }
         
         .list-card { background: white; padding: 4px 12px; margin: 0 auto 5px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
-        .list-card:first-child { margin-top: 14px; } /* ROOMY SPACING ADJUSTMENT FOR RESULTS CONTAINER TOPPERS */
+        .list-card:first-child { margin-top: 14px; } 
         
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
         .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.925rem; display: block; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -179,50 +230,43 @@
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
-        /* EXPANDED LEGIBLE AND TALLER RETURN NAVIGATION ELEMENT INTERFACE WITH BALANCED TRACKING BOUNDS */
-        #backToListBtn { 
-            display: none; 
-            background-color: var(--bl); 
-            color: white; 
-            width: 200px; 
-            padding: 0 8px; 
-            height: 32px; 
-            border-radius: 16px; 
-            font-weight: 900; 
-            font-size: 0.8rem; 
-            border: none; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            position: absolute; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            bottom: -40px; 
-            z-index: 99; 
-            white-space: nowrap; 
-            line-height: 32px; 
-            text-align: center; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.25); 
-            margin: 0; 
-            box-sizing: border-box; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            letter-spacing: 0.5px;
-        }
-        
+        #backToListBtn { display: none; background-color: var(--bl); color: white; width: 200px; padding: 0 8px; height: 32px; border-radius: 16px; font-weight: 900; font-size: 0.8rem; border: none; cursor: pointer; text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); bottom: -40px; z-index: 99; white-space: nowrap; line-height: 32px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.25); margin: 0; box-sizing: border-box; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; }
         .input-blocker { position: absolute; top: 25px; left: 0; right: 0; bottom: 0; z-index: 4; cursor: pointer; }
     </style>
 </head>
 <body id="mainBody">
     <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" class="bg-flag-surface" fetchpriority="high" loading="eager" onload="document.body.classList.add('app-ready')">
 
-    <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
-
-    <div id="cityDrawerOverlay" onclick="closeCityPortal()">
-        <div class="city-drawer-container" onclick="event.stopPropagation()">
-            <div class="drawer-header">Select City Delivery</div>
-            <div class="drawer-content-scroll" id="city-btn-list"></div>
+    <div id="timeModal">
+        <div class="time-box" id="timeScrollContainer">
+            <div class="time-fixed-top">
+                <button class="btn-clear-log" onclick="triggerClearLog()">Clear<br>Log</button>
+                <button class="modal-x" onclick="closeTime()">×</button>
+                <h2 style="color:var(--bl); margin:0 0 20px; font-size: 2.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">Timekeeper</h2>
+                <div id="t-day-display" class="static-day-label">DAY</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
+                    <div class="tk-trigger-node" onclick="openKeypad('t-in', 'Begin Tour')"><span class="tk-corner-tag">BT</span><div class="time-display-btn unpopulated" id="bt-btn">--:--</div></div>
+                    <div class="tk-trigger-node" onclick="openKeypad('l-out', 'Out to Lunch')"><span class="tk-corner-tag">OL</span><div class="time-display-btn unpopulated" id="ol-btn">--:--</div></div>
+                    <div class="tk-trigger-node" onclick="openKeypad('l-in', 'Into Lunch')"><span class="tk-corner-tag">IL</span><div class="time-display-btn unpopulated" id="il-btn">--:--</div></div>
+                    <div class="tk-trigger-node" onclick="openKeypad('t-actual', 'End Tour')"><span class="tk-corner-tag">ET</span><div class="time-display-btn unpopulated" id="et-btn">--:--</div></div>
+                </div>
+                <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
+                    <span style="font-weight:900; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">8 Hour Day ET Goal:</span>
+                    <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd);">--:--</span>
+                </div>
+                <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
+                <div class="log-hdr"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
+            </div>
+            <div class="time-log-scroll-wrapper" id="logScrollFrame">
+                <div id="log-table" style="overflow-y:visible; margin-bottom: 5px;">
+                    <div id="log-container"></div>
+                </div>
+            </div>
+            <input type="hidden" id="t-in" value="00.00"><input type="hidden" id="l-out" value="00.00"><input type="hidden" id="l-in" value="00.00"><input type="hidden" id="t-actual" value="00.00">
         </div>
     </div>
+
+    <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
     <div id="confirmModal">
         <div class="del-box">
@@ -291,41 +335,17 @@
         </div>
     </div>
 
-    <div id="timeModal">
-        <div class="time-box" id="timeScrollContainer">
-            <div class="time-fixed-top">
-                <button class="btn-clear-log" onclick="triggerClearLog()">Clear<br>Log</button>
-                <button class="modal-x" onclick="closeTime()">×</button>
-                <h2 style="color:var(--bl); margin:0 0 20px; font-size: 2.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">Timekeeper</h2>
-                <div id="t-day-display" class="static-day-label">DAY</div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
-                    <div class="tk-trigger-node" onclick="openKeypad('t-in', 'Begin Tour')"><span class="tk-corner-tag">BT</span><div class="time-display-btn unpopulated" id="bt-btn">--:--</div></div>
-                    <div class="tk-trigger-node" onclick="openKeypad('l-out', 'Out to Lunch')"><span class="tk-corner-tag">OL</span><div class="time-display-btn unpopulated" id="ol-btn">--:--</div></div>
-                    <div class="tk-trigger-node" onclick="openKeypad('l-in', 'Into Lunch')"><span class="tk-corner-tag">IL</span><div class="time-display-btn unpopulated" id="il-btn">--:--</div></div>
-                    <div class="tk-trigger-node" onclick="openKeypad('t-actual', 'End Tour')"><span class="tk-corner-tag">ET</span><div class="time-display-btn unpopulated" id="et-btn">--:--</div></div>
-                </div>
-                <div style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border-top:1px solid rgba(0,0,0,0.1); padding-top:15px;">
-                    <span style="font-weight:900; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">8 Hour Day ET Goal:</span>
-                    <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd);">--:--</span>
-                </div>
-                <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
-                <div class="log-hdr"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
-            </div>
-            <div class="time-log-scroll-wrapper" id="logScrollFrame">
-                <div id="log-table" style="overflow-y:visible; margin-bottom: 5px;">
-                    <div id="log-container"></div>
-                </div>
-            </div>
-            <input type="hidden" id="t-in" value="00.00"><input type="hidden" id="l-out" value="00.00"><input type="hidden" id="l-in" value="00.00"><input type="hidden" id="t-actual" value="00.00">
-        </div>
-    </div>
-
     <div class="app-container">
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
                 <button class="city-sidebar-btn" onclick="toggleCityPortalDrawer(event)">
                     <span>C</span><span>I</span><span>T</span><span>Y</span>
                 </button>
+                
+                <div class="city-drawer-container" onclick="event.stopPropagation()">
+                    <div class="drawer-content-scroll" id="city-btn-list"></div>
+                </div>
+
                 <span class="line-1">USPS</span>
                 <span id="cityHeaderLabel" class="line-2">Vancouver, Washington</span>
                 <span class="line-3">Route Finder</span>
@@ -393,6 +413,9 @@
     let explicitKeypadOverride = false; let editingRowId = null;
 
     window.onload = async () => {
+        // SECURE SYSTEM STATE ON COLD STARTUP RUNS
+        document.body.classList.remove('modal-open-tk', 'modal-open-view', 'drawer-active');
+        
         renderLog(); syncLocalDay(); loadTempEntries();
         buildCityPortalMenu();
         await loadCityDataset(currentCityKey, true);
@@ -406,28 +429,23 @@
             const btn = document.createElement('button');
             btn.className = "city-opt-btn" + (key === currentCityKey ? " active-city" : "");
             btn.innerText = CITY_CONFIG[key].name;
-            btn.onclick = () => switchCityTarget(key);
+            btn.onclick = (e) => { e.stopPropagation(); switchCityTarget(key); };
             targetContainer.appendChild(btn);
         });
     }
 
-    /* DETACHED DRAWER SIDEBAR ACTION INTERCEPT MATRIX DEFINITIONS */
     function toggleCityPortalDrawer(e) {
         if(e) e.stopPropagation();
         const bodyNode = document.getElementById('mainBody');
-        const overlayNode = document.getElementById('cityDrawerOverlay');
         if (bodyNode.classList.contains('drawer-active')) {
             closeCityPortal();
         } else {
-            document.body.classList.remove('header-hidden');
-            overlayNode.style.display = 'block';
-            setTimeout(() => { bodyNode.classList.add('drawer-active'); }, 10);
+            bodyNode.classList.add('drawer-active');
         }
     }
 
     function closeCityPortal() {
         document.getElementById('mainBody').classList.remove('drawer-active');
-        setTimeout(() => { document.getElementById('cityDrawerOverlay').style.display = 'none'; }, 350);
     }
 
     async function switchCityTarget(key) {
@@ -675,7 +693,8 @@
         document.getElementById('cc').innerHTML = ""; 
         document.getElementById('backToListBtn').style.display = "none";
         document.getElementById('mainBody').classList.remove('cards-active');
-        document.getElementById('list-res').style.display = "none"; // Hard collapse backdrop framing sheet instantly
+        document.getElementById('list-res').style.display = "none"; 
+        closeCityPortal(); // Close slider if user shifts interaction focus
         handleSearch(); 
     }
 
@@ -861,7 +880,7 @@
                     document.getElementById('streetInput').value = item.displayName; sugBox.style.display="none"; document.body.classList.remove('sug-active');
                     document.getElementById('backToListBtn').style.display = 'block'; document.getElementById('mainBody').classList.add('cards-active');
                     document.body.classList.add('header-hidden');
-                    document.getElementById('list-res').style.display = "block"; // Make background box visible along with navigation buttons
+                    document.getElementById('list-res').style.display = "block"; 
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     item.results.forEach(res => {
                         const card = document.createElement('div'); card.className="list-card"; 
@@ -907,8 +926,6 @@
         else if (chks.length > 0) { displayStr = Array.from(chks).map(c=>c.value).join(', '); evalLen = displayStr.length; }
         
         trig.innerText = displayStr;
-        
-        /* DYNAMIC FONT SCALING ENGINE TARGETED FOR PRECISE BOX ALIGNMENTS */
         if (displayStr === cfg.mouName || displayStr === cfg.dcuName) {
             trig.style.fontSize = '16px';
         } else {
@@ -930,17 +947,20 @@
         document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none";
         document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block";
         document.body.classList.add('sug-active');
-        document.getElementById('list-res').style.display = "none"; // Hard collapse backdrop framing sheet instantly
+        document.getElementById('list-res').style.display = "none"; 
         const input = document.getElementById('streetInput'); input.value = lastSearchTerm; input.focus();
         const len = input.value.length; input.setSelectionRange(len, len); handleSearch(); 
     }
 
     function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active', 'header-hidden'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('list-res').style.display = "none"; document.getElementById('streetInput').focus(); }
     function resetAll() { lastSearchTerm = ""; localStorage.removeItem('usps_remembered_zips_' + currentCityKey); document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster, #eastMaster, #mainMaster').forEach(c => { if(c) c.checked = false; }); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('list-res').style.display = "none"; }
-    function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
-    function closeViewer() { document.getElementById('viewer').style.display='none'; }
-    function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('logScrollFrame').scrollTop = 0; }
-    function closeTime() { document.getElementById('timeModal').style.display='none'; }
+    
+    // CONTROL TRIGGER ROUTING SYSTEMS DETACHED FROM LAYOUT CRASHES
+    function openViewer(url) { document.getElementById('viewer-img').src = url; document.body.classList.add('modal-open-view'); }
+    function closeViewer() { document.body.classList.remove('modal-open-view'); }
+    function openTime() { document.body.classList.add('modal-open-tk'); document.getElementById('logScrollFrame').scrollTop = 0; }
+    function closeTime() { document.body.classList.remove('modal-open-tk'); }
+    
     function saveTempEntries() { const data = { bt: document.getElementById('t-in').value, ol: document.getElementById('l-out').value, il: document.getElementById('l-in').value, et: document.getElementById('t-actual').value, date: new Date().toDateString() }; localStorage.setItem('usps_temp_entries', JSON.stringify(data)); }
     function loadTempEntries() { 
         const saved = localStorage.getItem('usps_temp_entries'); if (!saved) { calcGoal(); return; } 
