@@ -213,17 +213,16 @@
         .list-card { background: white; padding: 6px 12px; margin: 0 auto 5px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
         .list-card:first-child { margin-top: 14px; } 
         
-        .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
-        
-        /* ALIGNED STREET FOOTPRINT DIRECTLY FLUSH ON THE LEFT EDGE (NO GAP) */
-        .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.86rem; /* REDUCED BY 1 POINT DOWN FROM 0.925REM */ display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 0px; /* PINNED TO THE INNER BOUNDARY FLANK */ }
+        /* PULLED REMAINING MOUSE GAP STACKS OUT TO FLUSH ALIGN ON LEFT BOX FLANK */
+        .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 0px; padding-right: 8px; overflow: hidden; }
+        .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.86rem; display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 0px; }
         
         .range-cradle-grid { 
             display: inline-flex; 
             flex-direction: column; 
-            align-items: center; 
+            align-items: flex-start; /* SHIFTS DIGIT CAROUSEL BOX ALL THE WAY TO SUB-MARGIN LEFT */
             justify-content: center; 
-            text-align: center;
+            text-align: left;
             vertical-align: middle;
         }
 
@@ -241,7 +240,7 @@
             font-size: 1.5rem; 
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* SNAPS CROSSHAIR TO MATCH RANGE LINE EDGE */
             line-height: 1; 
             margin: 2px 0; 
             color: #003366 !important; 
@@ -249,10 +248,9 @@
             width: 100%; 
             height: 16px; 
             letter-spacing: 0;
-            text-align: center;
+            padding-left: 4px;
         }
         
-        /* PINNED WRAPPER BLOCK HOOKING INDICATORS DIRECTLY TO THE LEFT FLANK OF THE BLUE BADGES */
         .rt-block-anchor {
             display: flex;
             align-items: center;
@@ -262,9 +260,9 @@
             gap: 12px;
         }
 
-        /* HARD-PINNED RED STAMP FEATURING AN INTENTIONAL +4 POINT BOOM SCALE */
+        /* 4 POINT ADDED BOOM SCALE INCREASE FOR EVEN SHARPER STAMP HITS */
         .red-oe-stamp { 
-            font-size: 1.4rem; /* ENHANCED BY FOUR FULL POINTS FOR VISIBILITY STRIKES */
+            font-size: 1.65rem; /* BOOSTED BY 4 MORE POINTS UP FROM 1.4REM */
             font-weight: 900; 
             color: var(--rd); 
             text-transform: uppercase; 
@@ -273,17 +271,16 @@
             margin: 0;
             display: inline-block;
             text-align: right;
-            width: 22px;
+            width: 26px;
         }
 
-        /* NARROWED APP FOOTPRINT FEATURING DELIBERATE AIR PROFILE SLOTS FOR VERTICAL DENSITY */
         .rt-block { 
             background: #004b87 !important; 
             color: white; 
             padding: 8px 4px; 
             border-radius: 8px; 
             text-align: center; 
-            min-width: 140px; /* SLID DOWN TO 140PX NARROW GRID SPAN */
+            min-width: 140px; 
             width: 140px; 
             align-self: stretch; 
             display: flex; 
@@ -294,9 +291,8 @@
             flex-shrink: 0; 
         }
         
-        /* TUNED ROUTE BLOCK DOWN BY 2 FULL POINTS WITH A TUCKED EXTENSION FOR BOTTOM SPLITTING */
         .rt-block .rt-route-num { 
-            font-size: 3.32rem; /* REDUCED BY 2 POINTS FROM 3.52REM */
+            font-size: 3.32rem; 
             display: block; 
             font-weight: 900; 
             line-height: 0.95; 
@@ -304,13 +300,12 @@
             letter-spacing: 0.5px; 
         }
         
-        /* DROP PIN ALIGNED FLUIDLY BETWEEN CARRIER ROUTE BOTTOM BOUND AND BOX EDGE */
         .rt-block .rt-zip-num { 
             font-size: 1.28rem; 
             display: block; 
             font-weight: 800; 
             line-height: 1.0; 
-            margin-top: auto; /* DRIVES TRACK CLEARANCE ALL THE WAY TO SUB-SPLIT BOTTOM REAL ESTATE */
+            margin-top: auto; 
             margin-bottom: 2px; 
             letter-spacing: 0.5px; 
             opacity: 0.95; 
@@ -1027,7 +1022,7 @@
                         let polishedRange = formatRangeStrings(res.range);
                         card.innerHTML = `
                             <div class="info-left">
-                                <div style="text-align: left; display: block; width: 100%; padding-left: 14px;">${polishedRange}</div>
+                                <div style="text-align: left; display: block; width: 100%; padding-left: 0px;">${polishedRange}</div>
                                 <span class="street-txt">${item.displayName}</span>
                             </div>
                             <div class="rt-block-anchor">
