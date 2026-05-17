@@ -23,11 +23,11 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        /* BANNER HOUSING STRUCTURING LEFT CONTAINER TO ACCOMMODATE INTEGRATED PANEL BAR */
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 15px 20px 42px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-sizing: border-box; }
+        /* HEADER LAYOUT ADJUSTED FOR RIGHT INTEGRATED SELECTION PANEL CONTROL BAR */
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 42px 20px 15px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-sizing: border-box; }
         
-        /* VERTICAL SLIM PROFILE SELECTION PANEL CONTROLLER */
-        .city-sidebar-btn { position: absolute; left: 0; top: 0; bottom: 0; width: 28px; background: rgba(0, 0, 0, 0.25); border: none; border-right: 1.5px solid rgba(255, 255, 255, 0.2); color: var(--yl); font-size: 0.65rem; font-weight: 900; letter-spacing: 3px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 10; transition: background 0.2s ease; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+        /* VERTICAL ELEGANT SLIM PROFILE SELECTION PANEL CONTROLLER PLACED ON RIGHT SIDE */
+        .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 28px; background: rgba(0, 0, 0, 0.25); border: none; border-left: 1.5px solid rgba(255, 255, 255, 0.2); color: var(--yl); font-size: 0.65rem; font-weight: 900; letter-spacing: 3px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1000; transition: background 0.2s ease; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.4); }
         .city-sidebar-btn span { display: block; transform: translateX(1px); }
 
@@ -89,14 +89,19 @@
         .mic-btn.listening { background: var(--rd); animation: pulseBtn 1.5s infinite; }
         @keyframes pulseBtn { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        /* MULTI CITY OVERLAY LAYOUT DIALOG SURFACE */
-        #cityPortalModal, #viewer, #timeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: none; align-items: center; justify-content: center; }
+        /* HIGH-LEVEL SLIDING DRAWIER FOR DYNAMIC REGIONAL DATA PROFILES BACK DROP */
+        #cityDrawerOverlay { position: absolute; top: 0; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.4); z-index: 15000; display: none; }
         
-        .city-picker-box { width: 85%; max-width: 340px; background: var(--lt-bl); border: 4px solid var(--bl); border-radius: 12px; padding: 25px 20px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.5); box-sizing: border-box; }
-        .city-picker-box h3 { margin: 0 0 20px; color: var(--bl); font-size: 1.4rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-        .city-opt-btn { width: 100%; padding: 14px; margin-bottom: 10px; background: white; border: 2px solid var(--bl); border-radius: 8px; font-size: 1.2rem; font-weight: 800; color: var(--bl); cursor: pointer; transition: all 0.15s ease; text-transform: uppercase; }
-        .city-opt-btn:hover { background: var(--bl); color: white; }
-        .city-opt-btn.active-city { background: var(--bl); color: white; border-color: var(--yl); }
+        /* UNCONFINED SECURE SLIDING RIGHT DRAWER INTERFACE BODY */
+        .city-drawer-container { position: absolute; top: 0; bottom: 0; right: -320px; width: 292px; background: var(--lt-bl); border-left: 4px solid var(--bl); box-shadow: -8px 0 25px rgba(0,0,0,0.3); transition: right 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 16000; display: flex; flex-direction: column; box-sizing: border-box; }
+        body.drawer-active .city-drawer-container { right: 0; }
+        
+        .drawer-header { padding: 20px 15px; background: var(--bl); color: white; font-weight: 900; font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; border-bottom: 2px solid var(--dr-rd); }
+        .drawer-content-scroll { flex: 1; overflow-y: auto; padding: 15px 10px; -webkit-overflow-scrolling: touch; }
+        
+        .city-opt-btn { width: 100%; padding: 12px 14px; margin-bottom: 8px; background: white; border: 2px solid #ccc; border-radius: 6px; font-size: 1rem; font-weight: 800; color: #333; cursor: pointer; transition: all 0.15s ease; text-transform: uppercase; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .city-opt-btn:hover { border-color: var(--bl); background: rgba(0,75,135,0.04); }
+        .city-opt-btn.active-city { background: var(--bl); color: white; border-color: var(--yl); box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
 
         #confirmModal, #rowOptModal, #adjustModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 30000; display: none; align-items: center; justify-content: center; }
         .del-box { width: 80%; max-width: 320px; padding: 25px; border: 1px solid #000; background: #e0e0e0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
@@ -155,7 +160,7 @@
         body.cards-active #list-res { display: block; pointer-events: auto; background: rgba(238, 244, 249, 0.85); backdrop-filter: blur(2px); }
         
         .list-card { background: white; padding: 4px 12px; margin: 0 auto 5px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
-        .list-card:first-child { margin-top: 10px; }
+        .list-card:first-child { margin-top: 14px; } /* ROOMY SPACING ADJUSTMENT FOR RESULTS CONTAINER TOPPERS */
         
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
         .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.925rem; display: block; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -174,7 +179,36 @@
 
         body.zip-open .btn-round-tk, body.sug-active .btn-round-tk, body.cards-active .btn-round-tk { transform: translateY(200px); }
         
-        #backToListBtn { display: none; background-color: var(--bl); color: white; width: 140px; padding: 0 4px; height: 24px; border-radius: 12px; font-weight: 900; font-size: 0.65rem; border: none; cursor: pointer; text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); bottom: -34px; z-index: 99; white-space: nowrap; line-height: 24px; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); margin: 0; box-sizing: border-box; overflow: hidden; text-overflow: ellipsis; }
+        /* EXPANDED LEGIBLE AND TALLER RETURN NAVIGATION ELEMENT INTERFACE WITH BALANCED TRACKING BOUNDS */
+        #backToListBtn { 
+            display: none; 
+            background-color: var(--bl); 
+            color: white; 
+            width: 200px; 
+            padding: 0 8px; 
+            height: 32px; 
+            border-radius: 16px; 
+            font-weight: 900; 
+            font-size: 0.8rem; 
+            border: none; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            position: absolute; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            bottom: -40px; 
+            z-index: 99; 
+            white-space: nowrap; 
+            line-height: 32px; 
+            text-align: center; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25); 
+            margin: 0; 
+            box-sizing: border-box; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            letter-spacing: 0.5px;
+        }
+        
         .input-blocker { position: absolute; top: 25px; left: 0; right: 0; bottom: 0; z-index: 4; cursor: pointer; }
     </style>
 </head>
@@ -183,11 +217,10 @@
 
     <div id="viewer" onclick="closeViewer()"><button class="modal-x">×</button><img id="viewer-img" style="max-width: 90%; max-height: 85vh; border: 4px solid white; border-radius: 8px;" src=""></div>
 
-    <div id="cityPortalModal" onclick="closeCityPortal()">
-        <div class="city-picker-box" onclick="event.stopPropagation()">
-            <h3>Select City Delivery</h3>
-            <div id="city-btn-list"></div>
-            <button style="margin-top:10px; width:100%; background:#777; color:white; border:none; padding:12px; border-radius:8px; font-weight:900; text-transform:uppercase; cursor:pointer;" onclick="closeCityPortal()">Close</button>
+    <div id="cityDrawerOverlay" onclick="closeCityPortal()">
+        <div class="city-drawer-container" onclick="event.stopPropagation()">
+            <div class="drawer-header">Select City Delivery</div>
+            <div class="drawer-content-scroll" id="city-btn-list"></div>
         </div>
     </div>
 
@@ -290,7 +323,7 @@
     <div class="app-container">
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
-                <button class="city-sidebar-btn" onclick="openCityPortal(event)">
+                <button class="city-sidebar-btn" onclick="toggleCityPortalDrawer(event)">
                     <span>C</span><span>I</span><span>T</span><span>Y</span>
                 </button>
                 <span class="line-1">USPS</span>
@@ -311,8 +344,7 @@
                 </div>
                 
                 <div id="zipList">
-                    <div class="zip-scroll-area" id="zipScrollBox">
-                        </div>
+                    <div class="zip-scroll-area" id="zipScrollBox"></div>
                     <div class="apply-wrap"><button class="btn-apply" onclick="finalApply(event)">Apply</button></div>
                 </div>
 
@@ -336,7 +368,7 @@
                     </div>
                     <button class="btn-circle btn-yel" onclick="clearStreetOnly()">Clear</button>
                 </div>
-                <button id="backToListBtn" onclick="reopenSuggestions()">Return to Street Search</button>
+                <button id="backToListBtn" onclick="reopenSuggestions()">Return to Street Results</button>
             </div>
         </div>
         <div id="list-res"><div id="cc"></div></div>
@@ -344,7 +376,6 @@
     </div>
 
 <script>
-    /* MASTER REGISTRY RESOURCE DIRECTORY FOR DISTRIBUTED DATA LOGISTICS */
     const CITY_CONFIG = {
         "vancouver": {
             name: "Vancouver, Washington",
@@ -364,8 +395,6 @@
     window.onload = async () => {
         renderLog(); syncLocalDay(); loadTempEntries();
         buildCityPortalMenu();
-        
-        // Auto load initial active choice profile
         await loadCityDataset(currentCityKey, true);
         setTimeout(() => { document.body.classList.add('app-ready'); }, 280);
     };
@@ -382,8 +411,24 @@
         });
     }
 
-    function openCityPortal(e) { if(e) e.stopPropagation(); document.getElementById('cityPortalModal').style.display = 'flex'; }
-    function closeCityPortal() { document.getElementById('cityPortalModal').style.display = 'none'; }
+    /* DETACHED DRAWER SIDEBAR ACTION INTERCEPT MATRIX DEFINITIONS */
+    function toggleCityPortalDrawer(e) {
+        if(e) e.stopPropagation();
+        const bodyNode = document.getElementById('mainBody');
+        const overlayNode = document.getElementById('cityDrawerOverlay');
+        if (bodyNode.classList.contains('drawer-active')) {
+            closeCityPortal();
+        } else {
+            document.body.classList.remove('header-hidden');
+            overlayNode.style.display = 'block';
+            setTimeout(() => { bodyNode.classList.add('drawer-active'); }, 10);
+        }
+    }
+
+    function closeCityPortal() {
+        document.getElementById('mainBody').classList.remove('drawer-active');
+        setTimeout(() => { document.getElementById('cityDrawerOverlay').style.display = 'none'; }, 350);
+    }
 
     async function switchCityTarget(key) {
         if (key === currentCityKey && isDataLive) { closeCityPortal(); return; }
@@ -442,16 +487,13 @@
         validateZipCheck();
     }
 
-    /* AUTOMATED ZIP DETECTOR: SCRAPES ACTIVE ROWS TO DERIVE DISTINCT STATIONS EXTRIBUTIONS */
     function buildDynamicZipListUI() {
         const box = document.getElementById('zipScrollBox');
         box.innerHTML = "";
-        
         const availableZips = Object.keys(database).sort();
         if(availableZips.length === 0) return;
         
         const cfg = CITY_CONFIG[currentCityKey];
-        
         const hAll = document.createElement('label'); hAll.className = "zip-item";
         hAll.innerHTML = `<input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs`;
         box.appendChild(hAll);
@@ -471,8 +513,7 @@
         }
         
         availableZips.forEach(zip => {
-            const lbl = document.createElement('label');
-            lbl.className = "zip-item";
+            const lbl = document.createElement('label'); lbl.className = "zip-item";
             lbl.innerHTML = `<input type="checkbox" class="z-chk" value="${zip}" onchange="validateZipCheck()"> ${zip}`;
             box.appendChild(lbl);
         });
@@ -480,9 +521,7 @@
 
     function getUSPSWeek(ms) {
         const anchor = new Date(2026, 4, 16).getTime(); 
-        const d = new Date(ms);
-        const day = d.getDay();
-        const diff = (day === 6) ? 0 : (day + 1);
+        const d = new Date(ms); const day = d.getDay(); const diff = (day === 6) ? 0 : (day + 1);
         const sat = new Date(d.getFullYear(), d.getMonth(), d.getDate() - diff).getTime();
         const weeks = Math.round((sat - anchor) / (7 * 24 * 60 * 60 * 1000));
         return (Math.abs(weeks) % 2 === 0) ? 1 : 2;
@@ -491,46 +530,25 @@
     function toggleStationGroup(station, masterEl) {
         const cfg = CITY_CONFIG[currentCityKey];
         const targetList = (station === 'EAST') ? cfg.stationDCU : cfg.stationMOU;
-        document.querySelectorAll('.z-chk').forEach(c => {
-            if (targetList.includes(c.value)) { c.checked = masterEl.checked; }
-        });
-        if (!masterEl.checked) { 
-            const allM = document.getElementById('allZipMaster');
-            if(allM) allM.checked = false; 
-        }
+        document.querySelectorAll('.z-chk').forEach(c => { if (targetList.includes(c.value)) { c.checked = masterEl.checked; } });
+        if (!masterEl.checked) { const allM = document.getElementById('allZipMaster'); if(allM) allM.checked = false; }
         validateZipCheck();
     }
 
     function validateZipCheck() {
         const anyChecked = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster')?.checked;
-        const sIn = document.getElementById('streetInput');
-        const blk = document.getElementById('blocker');
-        if (!anyChecked) { 
-            sIn.disabled = true; sIn.value = ""; sIn.placeholder = "Select Zip(s) first...";
-            blk.style.display = 'block';
-        } else {
-            sIn.disabled = false;
-            blk.style.display = 'none';
-        }
+        const sIn = document.getElementById('streetInput'); const blk = document.getElementById('blocker');
+        if (!anyChecked) { sIn.disabled = true; sIn.value = ""; sIn.placeholder = "Select Zip(s) first..."; blk.style.display = 'block'; } 
+        else { sIn.disabled = false; blk.style.display = 'none'; }
         
         const cfg = CITY_CONFIG[currentCityKey];
-        
-        let allEastChecked = true; 
-        let dcuCheckboxes = document.querySelectorAll('.z-chk').length > 0;
-        cfg.stationDCU.forEach(z => { 
-            const el = document.querySelector(`.z-chk[value="${z}"]`);
-            if(el && !el.checked) allEastChecked = false; 
-        });
-        const eM = document.getElementById('eastMaster');
-        if(eM) eM.checked = allEastChecked && dcuCheckboxes;
+        let allEastChecked = true; let dcuCheckboxes = document.querySelectorAll('.z-chk').length > 0;
+        cfg.stationDCU.forEach(z => { const el = document.querySelector(`.z-chk[value="${z}"]`); if(el && !el.checked) allEastChecked = false; });
+        const eM = document.getElementById('eastMaster'); if(eM) eM.checked = allEastChecked && dcuCheckboxes;
         
         let allMainChecked = true;
-        cfg.stationMOU.forEach(z => { 
-            const el = document.querySelector(`.z-chk[value="${z}"]`);
-            if(el && !el.checked) allMainChecked = false; 
-        });
-        const mM = document.getElementById('mainMaster');
-        if(mM) mM.checked = allMainChecked && dcuCheckboxes;
+        cfg.stationMOU.forEach(z => { const el = document.querySelector(`.z-chk[value="${z}"]`); if(el && !el.checked) allMainChecked = false; });
+        const mM = document.getElementById('mainMaster'); if(mM) mM.checked = allMainChecked && dcuCheckboxes;
     }
 
     function checkZipBeforeType() {
@@ -544,59 +562,37 @@
     }
 
     function openStyledAlert(msg) {
-        document.getElementById('confirmMsg').innerText = msg;
-        document.getElementById('confirmBtns').style.display = 'none';
-        document.getElementById('alertBtns').style.display = 'flex';
-        document.getElementById('confirmModal').style.display = 'flex';
+        document.getElementById('confirmMsg').innerText = msg; document.getElementById('confirmBtns').style.display = 'none';
+        document.getElementById('alertBtns').style.display = 'flex'; document.getElementById('confirmModal').style.display = 'flex';
     }
 
     function triggerClearLog() {
-        document.getElementById('confirmMsg').innerText = "CLEAR ENTIRE LOG?";
-        document.getElementById('confirmBtns').style.display = 'flex';
-        document.getElementById('alertBtns').style.display = 'none';
-        currentAction = "clearLog";
-        document.getElementById('confirmModal').style.display = 'flex';
+        document.getElementById('confirmMsg').innerText = "CLEAR ENTIRE LOG?"; document.getElementById('confirmBtns').style.display = 'flex';
+        document.getElementById('alertBtns').style.display = 'none'; currentAction = "clearLog"; document.getElementById('confirmModal').style.display = 'flex';
     }
 
-    function openRowOptions(id) {
-        editingRowId = id;
-        document.getElementById('rowOptModal').style.display = 'flex';
-    }
+    function openRowOptions(id) { editingRowId = id; document.getElementById('rowOptModal').style.display = 'flex'; }
     function closeRowOpt() { document.getElementById('rowOptModal').style.display = 'none'; }
 
     function quickDeleteRow() {
-        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
-        log = log.filter(e => e.id !== editingRowId);
-        localStorage.setItem('usps_weekly_log', JSON.stringify(log)); 
-        renderLog(); closeRowOpt(); editingRowId = null;
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); log = log.filter(e => e.id !== editingRowId);
+        localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog(); closeRowOpt(); editingRowId = null;
     }
 
     function openAdjustModal() {
         document.getElementById('rowOptModal').style.display = 'none';
-        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
-        let row = log.find(e => e.id === editingRowId);
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); let row = log.find(e => e.id === editingRowId);
         if(row) {
-            document.getElementById('adj-t-day').value = row.day;
-            document.getElementById('adj-t-in').value = row.bt;
-            document.getElementById('adj-ol-btn').classList.remove('none-active', 'unpopulated');
-            document.getElementById('adj-il-btn').classList.remove('none-active', 'unpopulated');
-            document.getElementById('adj-l-out').value = row.ol;
-            document.getElementById('adj-l-in').value = row.il;
-            document.getElementById('adj-t-actual').value = row.et;
+            document.getElementById('adj-t-day').value = row.day; document.getElementById('adj-t-in').value = row.bt;
+            document.getElementById('adj-ol-btn').classList.remove('none-active', 'unpopulated'); document.getElementById('adj-il-btn').classList.remove('none-active', 'unpopulated');
+            document.getElementById('adj-l-out').value = row.ol; document.getElementById('adj-l-in').value = row.il; document.getElementById('adj-t-actual').value = row.et;
             
             const map = {'adj-bt-btn':row.bt, 'adj-ol-btn':row.ol, 'adj-il-btn':row.il, 'adj-t-actual':row.et};
             for(let key in map) {
-                const element = document.getElementById(key);
-                element.classList.remove('none-active', 'unpopulated');
-                if(map[key] === "00.00") {
-                    element.innerText = "--:--";
-                    element.classList.add('unpopulated');
-                } else if(map[key] === "NONE") {
-                    element.innerText = "NONE";
-                    element.classList.add('none-active');
-                } else {
-                    element.innerText = map[key];
-                }
+                const element = document.getElementById(key); element.classList.remove('none-active', 'unpopulated');
+                if(map[key] === "00.00") { element.innerText = "--:--"; element.classList.add('unpopulated'); } 
+                else if(map[key] === "NONE") { element.innerText = "NONE"; element.classList.add('none-active'); } 
+                else { element.innerText = map[key]; }
             }
         }
         document.getElementById('adjustModal').style.display = 'flex';
@@ -604,38 +600,22 @@
     function closeAdjust() { document.getElementById('adjustModal').style.display = 'none'; editingRowId = null; }
 
     function saveAdjust() {
-        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
-        let idx = log.findIndex(e => e.id === editingRowId);
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); let idx = log.findIndex(e => e.id === editingRowId);
         if(idx > -1) {
             let newDay = document.getElementById('adj-t-day').value;
-            let bt = document.getElementById('adj-t-in').value || "00.00";
-            let ol = document.getElementById('adj-l-out').value || "00.00";
-            let il = document.getElementById('adj-l-in').value || "00.00";
-            let et = document.getElementById('adj-t-actual').value || "00.00";
+            let bt = document.getElementById('adj-t-in').value || "00.00"; let ol = document.getElementById('adj-l-out').value || "00.00";
+            let il = document.getElementById('adj-l-in').value || "00.00"; let et = document.getElementById('adj-t-actual').value || "00.00";
             
-            let total = 0;
-            let btV = parseFloat(bt), etV = parseFloat(et);
-            if (ol === "NONE" || il === "NONE") {
-                total = etV - btV; if(total < 0) total += 24;
-            } else {
-                let olV = parseFloat(ol), ilV = parseFloat(il);
-                let s1 = olV - btV; if(s1 < 0) s1 += 24;
-                let s2 = etV - ilV; if(s2 < 0) s2 += 24;
-                total = s1 + s2;
-            }
-            
-            log[idx].day = newDay;
-            log[idx].bt = bt; log[idx].ol = ol; log[idx].il = il; log[idx].et = et; log[idx].total = total.toFixed(2);
-            localStorage.setItem('usps_weekly_log', JSON.stringify(log));
-            renderLog();
+            let total = 0; let btV = parseFloat(bt), etV = parseFloat(et);
+            if (ol === "NONE" || il === "NONE") { total = etV - btV; if(total < 0) total += 24; } 
+            else { let olV = parseFloat(ol), ilV = parseFloat(il); let s1 = olV - btV; if(s1 < 0) s1 += 24; let s2 = etV - ilV; if(s2 < 0) s2 += 24; total = s1 + s2; }
+            log[idx].day = newDay; log[idx].bt = bt; log[idx].ol = ol; log[idx].il = il; log[idx].et = et; log[idx].total = total.toFixed(2);
+            localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog();
         }
         closeAdjust();
     }
 
-    function executeDelete() {
-        if (currentAction === "clearLog") { localStorage.removeItem('usps_weekly_log'); renderLog(); }
-        closeConfirm();
-    }
+    function executeDelete() { if (currentAction === "clearLog") { localStorage.removeItem('usps_weekly_log'); renderLog(); } closeConfirm(); }
     function closeConfirm() { document.getElementById('confirmModal').style.display = 'none'; currentAction = ""; }
 
     function startVoiceSearch() {
@@ -643,29 +623,18 @@
         const anyZip = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster')?.checked;
         if (!anyZip) { openStyledAlert("PLEASE SELECT A ZIP CODE FIRST"); return; }
         
-        const sInputNode = document.getElementById('streetInput');
-        const audioWaveNode = document.getElementById('audioWaveHud');
+        const sInputNode = document.getElementById('streetInput'); const audioWaveNode = document.getElementById('audioWaveHud');
         if(sInputNode) { setTimeout(() => sInputNode.focus(), 50); }
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) { openStyledAlert("VOICE RECOGNITION NOT SUPPORTED ON THIS DEVICE."); return; }
-        const recognition = new SpeechRecognition();
-        const micBtn = document.getElementById('micBtn');
+        const recognition = new SpeechRecognition(); const micBtn = document.getElementById('micBtn');
         
-        recognition.onstart = () => {
-            micBtn.classList.add('listening');
-            if(sInputNode) sInputNode.classList.add('listening-active');
-            if(audioWaveNode) audioWaveNode.classList.add('active');
-        };
-        recognition.onend = () => {
-            micBtn.classList.remove('listening');
-            if(sInputNode) sInputNode.classList.remove('listening-active');
-            if(audioWaveNode) audioWaveNode.classList.remove('active');
-        };
+        recognition.onstart = () => { micBtn.classList.add('listening'); if(sInputNode) sInputNode.classList.add('listening-active'); if(audioWaveNode) audioWaveNode.classList.add('active'); };
+        recognition.onend = () => { micBtn.classList.remove('listening'); if(sInputNode) sInputNode.classList.remove('listening-active'); if(audioWaveNode) audioWaveNode.classList.remove('active'); };
         
         recognition.onresult = (event) => {
-            let transcript = event.results[0][0].transcript;
-            transcript = transcript.replace(/[^\w\s]/g, "").trim();
+            let transcript = event.results[0][0].transcript; transcript = transcript.replace(/[^\w\s]/g, "").trim();
             let tokens = transcript.split(/\s+/); let mappedTokens = [];
             for (let i = 0; i < tokens.length; i++) {
                 let currentToken = tokens[i].toUpperCase(); let nextToken = (i + 1 < tokens.length) ? tokens[i+1].toUpperCase() : "";
@@ -696,11 +665,8 @@
                 if (currentToken === "WEST") { mappedTokens.push("W"); continue; }
                 mappedTokens.push(tokens[i]);
             }
-            transcript = mappedTokens.join(" ");
-            transcript = transcript.replace(/\bMILL\s+(PLANE|PLAYNE|PLAN)\b/gi, "MILL PLAIN");
-            transcript = transcript.replace(/\bFOURTH\s+(PLANE|PLAYNE|PLAN)\b/gi, "FOURTH PLAIN");
-            const input = document.getElementById('streetInput'); input.value = transcript;
-            lastSearchTerm = transcript; handleSearch();
+            transcript = mappedTokens.join(" "); transcript = transcript.replace(/\bMILL\s+(PLANE|PLAYNE|PLAN)\b/gi, "MILL PLAIN"); transcript = transcript.replace(/\bFOURTH\s+(PLANE|PLAYNE|PLAN)\b/gi, "FOURTH PLAIN");
+            const input = document.getElementById('streetInput'); input.value = transcript; lastSearchTerm = transcript; handleSearch();
         };
         recognition.start();
     }
@@ -709,226 +675,100 @@
         document.getElementById('cc').innerHTML = ""; 
         document.getElementById('backToListBtn').style.display = "none";
         document.getElementById('mainBody').classList.remove('cards-active');
+        document.getElementById('list-res').style.display = "none"; // Hard collapse backdrop framing sheet instantly
         handleSearch(); 
     }
 
     function clearTimeInputs() {
         ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
-        ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => {
-            const btn = document.getElementById(id);
-            btn.innerText = "--:--"; btn.className = "time-display-btn unpopulated";
-        });
-        document.getElementById('t-target').innerText = "--:--"; localStorage.removeItem('usps_temp_entries');
-        explicitKeypadOverride = false;
+        ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => { const btn = document.getElementById(id); btn.innerText = "--:--"; btn.className = "time-display-btn unpopulated"; });
+        document.getElementById('t-target').innerText = "--:--"; localStorage.removeItem('usps_temp_entries'); explicitKeypadOverride = false;
     }
 
     function openKeypad(t, title) { 
-        activeId = t; let existing = document.getElementById(t).value || "00.00";
-        if (existing === "NONE") existing = "00.00";
+        activeId = t; let existing = document.getElementById(t).value || "00.00"; if (existing === "NONE") existing = "00.00";
+        const btnMap = { 't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn', 'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn' };
+        const activeBtn = document.getElementById(btnMap[activeId]); const kpDisp = document.getElementById('kp-display');
         
-        const btnMap = {
-            't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn',
-            'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn'
-        };
-        const activeBtn = document.getElementById(btnMap[activeId]);
-        const kpDisp = document.getElementById('kp-display');
+        if (activeBtn && activeBtn.classList.contains('unpopulated')) { kpBuffer = ""; kpDisp.innerText = "--:--"; kpDisp.classList.add('kp-unpopulated'); } 
+        else { kpBuffer = existing.replace(".", ""); kpDisp.innerText = existing; kpDisp.classList.remove('kp-unpopulated'); }
         
-        if (activeBtn && activeBtn.classList.contains('unpopulated')) {
-            kpBuffer = ""; 
-            kpDisp.innerText = "--:--";
-            kpDisp.classList.add('kp-unpopulated');
-        } else {
-            kpBuffer = existing.replace(".", ""); 
-            kpDisp.innerText = existing; 
-            kpDisp.classList.remove('kp-unpopulated');
-        }
-        
-        document.getElementById('keypad-title').innerText = title; 
-        document.getElementById('keypadPicker').style.display='flex'; 
-        explicitKeypadOverride = false;
-        
-        const noneBtn = document.getElementById('kp-none-btn');
-        if (t === 'l-out' || t === 'adj-l-out') { noneBtn.style.display = 'block'; }
-        else { noneBtn.style.display = 'none'; }
+        document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; explicitKeypadOverride = false;
+        const noneBtn = document.getElementById('kp-none-btn'); if (t === 'l-out' || t === 'adj-l-out') { noneBtn.style.display = 'block'; } else { noneBtn.style.display = 'none'; }
     }
     function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
     
     function kpIn(num) { 
-        let tempBuffer = (kpBuffer.length >= 4) ? num.toString() : kpBuffer + num.toString();
-        let checkVal = tempBuffer.padStart(4, "0"); 
-        let hrPart = parseInt(checkVal.substring(0, 2), 10);
-        if (hrPart > 23) { 
-            kpBuffer = ""; 
-            const kpDisp = document.getElementById('kp-display');
-            kpDisp.innerText = "--:--";
-            kpDisp.classList.add('kp-unpopulated');
-            return;
-        }
-        kpBuffer = tempBuffer;
-        explicitKeypadOverride = true; 
-        formatKp(); 
+        let tempBuffer = (kpBuffer.length >= 4) ? num.toString() : kpBuffer + num.toString(); let checkVal = tempBuffer.padStart(4, "0"); let hrPart = parseInt(checkVal.substring(0, 2), 10);
+        if (hrPart > 23) { kpBuffer = ""; const kpDisp = document.getElementById('kp-display'); kpDisp.innerText = "--:--"; kpDisp.classList.add('kp-unpopulated'); return; }
+        kpBuffer = tempBuffer; explicitKeypadOverride = true; formatKp(); 
     }
     
-    function kpClr() { 
-        kpBuffer = ""; 
-        const kpDisp = document.getElementById('kp-display');
-        kpDisp.innerText = "--:--"; 
-        kpDisp.classList.add('kp-unpopulated');
-        explicitKeypadOverride = true; 
-    }
-    
-    function formatKp() { 
-        const kpDisp = document.getElementById('kp-display');
-        if (kpBuffer === "") {
-            kpDisp.innerText = "--:--";
-            kpDisp.classList.add('kp-unpopulated');
-            return;
-        }
-        let val = kpBuffer.padStart(4, "0"); 
-        kpDisp.innerText = val.substring(0,2) + "." + val.substring(2,4); 
-        kpDisp.classList.remove('kp-unpopulated');
-    }
+    function kpClr() { kpBuffer = ""; const kpDisp = document.getElementById('kp-display'); kpDisp.innerText = "--:--"; kpDisp.classList.add('kp-unpopulated'); explicitKeypadOverride = true; }
+    function formatKp() { const kpDisp = document.getElementById('kp-display'); if (kpBuffer === "") { kpDisp.innerText = "--:--"; kpDisp.classList.add('kp-unpopulated'); return; } let val = kpBuffer.padStart(4, "0"); kpDisp.innerText = val.substring(0,2) + "." + val.substring(2,4); kpDisp.classList.remove('kp-unpopulated'); }
     
     function kpSet() { 
         let val = document.getElementById('kp-display').innerText; 
-        if (val !== "--:--" && val !== "--.--") {
-            let hrCheck = parseInt(val.substring(0, 2), 10);
-            if (hrCheck > 23) { val = "--:--"; kpBuffer = ""; document.getElementById('kp-display').innerText = "--:--"; }
-        }
+        if (val !== "--:--" && val !== "--.--") { let hrCheck = parseInt(val.substring(0, 2), 10); if (hrCheck > 23) { val = "--:--"; kpBuffer = ""; document.getElementById('kp-display').innerText = "--:--"; } }
+        const btnMap = { 't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn', 'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn' };
+        const activeBtn = document.getElementById(btnMap[activeId]); activeBtn.classList.remove('none-active');
+        if (kpBuffer === "") { document.getElementById(activeId).value = "00.00"; activeBtn.innerText = "--:--"; activeBtn.classList.add('unpopulated'); } 
+        else { document.getElementById(activeId).value = val; activeBtn.innerText = val; activeBtn.classList.remove('unpopulated'); }
         
-        const btnMap = {
-            't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn',
-            'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn'
-        };
-        const activeBtn = document.getElementById(btnMap[activeId]);
-        
-        activeBtn.classList.remove('none-active');
-        if (kpBuffer === "") {
-            document.getElementById(activeId).value = "00.00";
-            activeBtn.innerText = "--:--";
-            activeBtn.classList.add('unpopulated');
-        } else {
-            document.getElementById(activeId).value = val;
-            activeBtn.innerText = val; 
-            activeBtn.classList.remove('unpopulated'); 
-        }
-        
-        if (activeId === 'l-out') {
-            document.getElementById('l-in').value = "00.00";
-            const ilBtn = document.getElementById('il-btn');
-            ilBtn.innerText = "--:--"; ilBtn.className = "time-display-btn unpopulated";
-        }
-        if (activeId === 'adj-l-out') {
-            document.getElementById('adj-l-in').value = "00.00";
-            const adjIlBtn = document.getElementById('adj-il-btn');
-            adjIlBtn.innerText = "--:--"; adjIlBtn.className = "time-display-btn unpopulated";
-        }
-        
+        if (activeId === 'l-out') { document.getElementById('l-in').value = "00.00"; const ilBtn = document.getElementById('il-btn'); ilBtn.innerText = "--:--"; ilBtn.className = "time-display-btn unpopulated"; }
+        if (activeId === 'adj-l-out') { document.getElementById('adj-l-in').value = "00.00"; const adjIlBtn = document.getElementById('adj-il-btn'); adjIlBtn.innerText = "--:--"; adjIlBtn.className = "time-display-btn unpopulated"; }
         closeKeypad(); if(!activeId.startsWith('adj-')) { calcGoal(); saveTempEntries(); }
     }
 
     function kpSetNone() {
-        if (activeId === 'l-out') {
-            document.getElementById('l-out').value = "NONE";
-            document.getElementById('l-in').value = "NONE";
-            const ol = document.getElementById('ol-btn'); ol.innerText = "NONE"; ol.className = "time-display-btn none-active";
-            const il = document.getElementById('il-btn'); il.innerText = "NONE"; il.className = "time-display-btn none-active";
-        } else if (activeId === 'adj-l-out') {
-            document.getElementById('adj-l-out').value = "NONE";
-            document.getElementById('adj-l-in').value = "NONE";
-            const adjOl = document.getElementById('adj-ol-btn'); adjOl.innerText = "NONE"; adjOl.className = "time-display-btn none-active";
-            const adjIl = document.getElementById('adj-il-btn'); adjIl.innerText = "NONE"; adjIl.className = "time-display-btn none-active";
-        }
+        if (activeId === 'l-out') { document.getElementById('l-out').value = "NONE"; document.getElementById('l-in').value = "NONE"; const ol = document.getElementById('ol-btn'); ol.innerText = "NONE"; ol.className = "time-display-btn none-active"; const il = document.getElementById('il-btn'); il.innerText = "NONE"; il.className = "time-display-btn none-active"; } 
+        else if (activeId === 'adj-l-out') { document.getElementById('adj-l-out').value = "NONE"; document.getElementById('adj-l-in').value = "NONE"; const adjOl = document.getElementById('adj-ol-btn'); adjOl.innerText = "NONE"; adjOl.className = "time-display-btn none-active"; const adjIl = document.getElementById('adj-il-btn'); adjIl.innerText = "NONE"; adjIl.className = "time-display-btn none-active"; }
         closeKeypad(); if(!activeId.startsWith('adj-')) { calcGoal(); saveTempEntries(); }
     }
     
     function calcGoal() {
-        const btStr = document.getElementById('t-in').value || "00.00";
-        const olStr = document.getElementById('l-out').value || "00.00";
-        const ilStr = document.getElementById('l-in').value || "00.00";
-        const targetEl = document.getElementById('t-target');
+        const btStr = document.getElementById('t-in').value || "00.00"; const olStr = document.getElementById('l-out').value || "00.00"; const ilStr = document.getElementById('l-in').value || "00.00"; const targetEl = document.getElementById('t-target');
+        const btBtn = document.getElementById('bt-btn'); const olBtn = document.getElementById('ol-btn'); const ilBtn = document.getElementById('il-btn');
+        if (btBtn.classList.contains('unpopulated') || olBtn.classList.contains('unpopulated') || ilBtn.classList.contains('unpopulated')) { targetEl.innerText = "--:--"; return; }
         
-        const btBtn = document.getElementById('bt-btn');
-        const olBtn = document.getElementById('ol-btn');
-        const ilBtn = document.getElementById('il-btn');
-        
-        if (btBtn.classList.contains('unpopulated') || olBtn.classList.contains('unpopulated') || ilBtn.classList.contains('unpopulated')) {
-            targetEl.innerText = "--:--";
-            return;
-        }
-        
-        let bt = parseFloat(btStr);
-        let result = 0;
-        if (olStr === "NONE" && ilStr === "NONE") {
-            result = bt + 8.00;
-        } else {
-            let ol = parseFloat(olStr);
-            let il = parseFloat(ilStr);
-            result = bt + 8.00 + (il - ol);
-        }
-        
-        while (result >= 24) result -= 24; 
-        while (result < 0) result += 24;
-        targetEl.innerText = result.toFixed(2).padStart(5, '0');
+        let bt = parseFloat(btStr); let result = 0;
+        if (olStr === "NONE" && ilStr === "NONE") { result = bt + 8.00; } 
+        else { let ol = parseFloat(olStr); let il = parseFloat(ilStr); result = bt + 8.00 + (il - ol); }
+        while (result >= 24) result -= 24; while (result < 0) result += 24; targetEl.innerText = result.toFixed(2).padStart(5, '0');
     }
 
     function addToLog() {
-        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]");
-        if (log.length >= 14) { openStyledAlert("LOG IS FULL (14 DAYS MAX)"); return; }
-        
-        const daysMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        const shortDay = daysMap[new Date().getDay()];
-        const currentEntryWeek = getUSPSWeek(Date.now());
-        
-        const count = log.filter(e => e.day === shortDay && getUSPSWeek(e.id) === currentEntryWeek).length;
-        if (count >= 1) { openStyledAlert("AN ENTRY ALREADY EXISTS FOR THIS DAY THIS WEEK"); return; }
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); if (log.length >= 14) { openStyledAlert("LOG IS FULL (14 DAYS MAX)"); return; }
+        const daysMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; const shortDay = daysMap[new Date().getDay()]; const currentEntryWeek = getUSPSWeek(Date.now());
+        const count = log.filter(e => e.day === shortDay && getUSPSWeek(e.id) === currentEntryWeek).length; if (count >= 1) { openStyledAlert("AN ENTRY ALREADY EXISTS FOR THIS DAY THIS WEEK"); return; }
         
         const bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
-        
-        let total = 0;
-        let btV = parseFloat(bt), etV = parseFloat(et);
-        if (ol === "NONE" || il === "NONE") {
-            total = etV - btV; if(total < 0) total += 24;
-        } else {
-            let olV = parseFloat(ol), ilV = parseFloat(il);
-            let s1 = olV - btV; if(s1 < 0) s1 += 24;
-            let s2 = etV - ilV; if(s2 < 0) s2 += 24;
-            total = s1 + s2;
-        }
+        let total = 0; let btV = parseFloat(bt), etV = parseFloat(et);
+        if (ol === "NONE" || il === "NONE") { total = etV - btV; if(total < 0) total += 24; } 
+        else { let olV = parseFloat(ol), ilV = parseFloat(il); let s1 = olV - btV; if(s1 < 0) s1 += 24; let s2 = etV - ilV; if(s2 < 0) s2 += 24; total = s1 + s2; }
         
         log.push({ day: shortDay, bt, ol, il, et, total: total.toFixed(2), id: Date.now() });
         localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog(); syncLocalDay(); localStorage.removeItem('usps_temp_entries');
-        clearTimeInputs();
-        setTimeout(() => { const frame = document.getElementById('logScrollFrame'); if(frame) frame.scrollTop = 0; }, 50);
+        clearTimeInputs(); setTimeout(() => { const frame = document.getElementById('logScrollFrame'); if(frame) frame.scrollTop = 0; }, 50);
     }
 
     function renderLog() { 
-        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
-        log.sort((a,b) => a.id - b.id); 
-        
-        let w1 = [], w2 = [];
-        log.forEach(e => { if (getUSPSWeek(e.id) === 1) { w1.push(e); } else { w2.push(e); } });
-        
-        w1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
-        w2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
-        
-        const currentWeekNum = getUSPSWeek(Date.now());
-        const container = document.getElementById('log-container');
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"]; log.sort((a,b) => a.id - b.id); 
+        let w1 = [], w2 = []; log.forEach(e => { if (getUSPSWeek(e.id) === 1) { w1.push(e); } else { w2.push(e); } });
+        w1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)); w2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
+        const currentWeekNum = getUSPSWeek(Date.now()); const container = document.getElementById('log-container');
         
         let htmlW1 = w1.map(e => {
-            let olStr = e.ol === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.ol}</span>`;
-            let ilStr = e.il === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.il}</span>`;
+            let olStr = e.ol === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.ol}</span>`; let ilStr = e.il === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.il}</span>`;
             return `<div class="log-row" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span>${olStr}${ilStr}<span>${e.et}</span><span class="total-col">${e.total}</span></div>`;
         }).join('');
         if(w1.length > 0) { const sum1 = w1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); htmlW1 += `<div class="total-row"><b>TOTAL WEEK 1</b><span>${sum1}</span></div>`; }
         
         let htmlW2 = w2.map(e => {
-            let olStr = e.ol === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.ol}</span>`;
-            let ilStr = e.il === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.il}</span>`;
+            let olStr = e.ol === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.ol}</span>`; let ilStr = e.il === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.il}</span>`;
             return `<div class="log-row duplicate" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span>${olStr}${ilStr}<span>${e.et}</span><span class="total-col">${e.total}</span></div>`;
         }).join('');
         if(w2.length > 0) { const sum2 = w2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); htmlW2 += `<div class="total-row blue-week"><b>TOTAL WEEK 2</b><span>${sum2}</span></div>`; }
-        
         if (currentWeekNum === 1) { container.innerHTML = htmlW1 + htmlW2; } else { container.innerHTML = htmlW2 + htmlW1; }
     }
 
@@ -951,31 +791,20 @@
         let parts = str.split('-');
         function formatSingleSegment(p) {
             if(!p) return "";
-            let txt = p.trim();
-            let numMatch = txt.match(/^(\d+)/);
-            if(!numMatch) return txt;
-            let num = numMatch[1];
-            let fracMatch = txt.match(/(\d+\/\d+)/);
-            let frac = fracMatch ? fracMatch[1] : "";
-            let letterMatch = txt.match(/([A-Z]+)/);
-            let letter = letterMatch ? letterMatch[1] : "";
+            let txt = p.trim(); let numMatch = txt.match(/^(\d+)/); if(!numMatch) return txt; let num = numMatch[1];
+            let fracMatch = txt.match(/(\d+\/\d+)/); let frac = fracMatch ? fracMatch[1] : "";
+            let letterMatch = txt.match(/([A-Z]+)/); let letter = letterMatch ? letterMatch[1] : "";
             if(!frac && !letter) return num;
             return `${num}<span style="display: inline-flex; flex-direction: column; vertical-align: middle; line-height: 1.0; margin-left: 3px; height: 1em; justify-content: center; text-align: left;"><span style="font-size: 0.35em; font-weight: 800; color: var(--bl); line-height: 1; display: block; min-height: 0.35em;">${frac || '&nbsp;'}</span><span style="font-size: 0.5em; font-weight: 800; color: var(--bl); line-height: 1; display: block; min-height: 0.5em; margin-top: 1px;">${letter || '&nbsp;'}</span></span>`;
         }
         let startFormatted = formatSingleSegment(parts[0]);
-        if (parts.length > 1 && parts[1].trim() !== "") {
-            let endFormatted = formatSingleSegment(parts[1]);
-            return `${startFormatted}<br><span style="font-size: 0.7em; display: block; line-height: 0.1; margin: 1px 0; color: var(--bl); font-weight: 800; text-align: center; width: 100%;">-</span>${endFormatted}`;
-        }
+        if (parts.length > 1 && parts[1].trim() !== "") { let endFormatted = formatSingleSegment(parts[1]); return `${startFormatted}<br><span style="font-size: 0.7em; display: block; line-height: 0.1; margin: 1px 0; color: var(--bl); font-weight: 800; text-align: center; width: 100%;">-</span>${endFormatted}`; }
         return startFormatted;
     }
 
     function handleSearch() {
         const isAll = document.getElementById('allZipMaster')?.checked;
-        let activeZips = [];
-        if (isAll) { activeZips = Object.keys(database); }
-        else { activeZips = Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value); }
-        
+        let activeZips = []; if (isAll) { activeZips = Object.keys(database); } else { activeZips = Array.from(document.querySelectorAll('.z-chk:checked')).map(c => c.value); }
         const input = document.getElementById('streetInput'); let rawVal = input.value.toUpperCase().trim();
         rawVal = rawVal.replace("AVENUE", "AVE").replace("STREET", "ST").replace("COURT", "CT").replace("ROAD", "RD").replace("DRIVE", "DR").replace("BOULEVARD", "BLVD").replace("LANE", "LN");
         rawVal = rawVal.replace("SOUTHEAST", "SE").replace("NORTHEAST", "NE").replace("NORTHWEST", "NW").replace("SOUTHWEST", "SW").replace("NORTH", "N").replace("SOUTH", "S").replace("EAST", "E").replace("WEST", "W");
@@ -985,14 +814,12 @@
         const sugBox = document.getElementById('suggestionBox'); sugBox.innerHTML = "";
         
         if(rawVal.length < 1 || activeZips.length === 0) { 
-            sugBox.style.display="none"; 
-            document.body.classList.remove('sug-active'); 
+            sugBox.style.display="none"; document.body.classList.remove('sug-active'); 
             if (!document.getElementById('mainBody').classList.contains('cards-active')) { document.body.classList.remove('header-hidden'); }
             return; 
         }
         
-        let searchTokens = rawVal.split(/\s+/); const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"];
-        let explicitDirFilter = null;
+        let searchTokens = rawVal.split(/\s+/); const directionalList = ["NE", "SE", "NW", "SW", "N", "S", "E", "W"]; let explicitDirFilter = null;
         if (searchTokens.length > 0 && directionalList.includes(searchTokens[0])) { explicitDirFilter = searchTokens.shift(); }
         if (searchTokens.length > 0 && directionalList.includes(searchTokens[searchTokens.length - 1])) { explicitDirFilter = searchTokens.pop(); }
         let coreQueryName = searchTokens.join(" "); let suffixToken = null; const knownSuffixes = ["ST", "AVE", "CIR", "CT", "RD", "DR", "BLVD", "LN", "LOOP"];
@@ -1002,8 +829,7 @@
         activeZips.forEach(z => { 
             if(database[z]) {
                 database[z].forEach(m => { 
-                    const targetName = m.searchName; const targetDisplay = m.displayName.toUpperCase(); 
-                    let baseMatch = false;
+                    const targetName = m.searchName; const targetDisplay = m.displayName.toUpperCase(); let baseMatch = false;
                     if (coreQueryName.length === 0 && explicitDirFilter) { baseMatch = true; } else { baseMatch = targetName.startsWith(coreQueryName); }
                     if (baseMatch) {
                         let validCheck = true;
@@ -1016,13 +842,10 @@
         });
         
         if(matches.length > 0) {
-            sugBox.style.display="block"; 
-            document.body.classList.add('sug-active', 'header-hidden');
+            sugBox.style.display="block"; document.body.classList.add('sug-active', 'header-hidden');
             matches.sort((a, b) => {
-                let nameA = a.searchName; let nameB = b.searchName;
-                let cleanA = nameA.replace(/(ST|ND|RD|TH)$/g, ""); let cleanB = nameB.replace(/(ST|ND|RD|TH)$/g, "");
-                let isNumA = !isNaN(cleanA) && cleanA !== ""; let isNumB = !isNaN(cleanB) && cleanB !== "";
-                let coreComp = 0;
+                let nameA = a.searchName; let nameB = b.searchName; let cleanA = nameA.replace(/(ST|ND|RD|TH)$/g, ""); let cleanB = nameB.replace(/(ST|ND|RD|TH)$/g, "");
+                let isNumA = !isNaN(cleanA) && cleanA !== ""; let isNumB = !isNaN(cleanB) && cleanB !== ""; let coreComp = 0;
                 if (isNumA && isNumB) { coreComp = parseInt(cleanA, 10) - parseInt(cleanB, 10); } 
                 else if (isNumA && !isNumB) { return -1; } else if (!isNumA && isNumB) { return 1; } 
                 else { coreComp = nameA.localeCompare(nameB, undefined, {numeric: true}); }
@@ -1038,6 +861,7 @@
                     document.getElementById('streetInput').value = item.displayName; sugBox.style.display="none"; document.body.classList.remove('sug-active');
                     document.getElementById('backToListBtn').style.display = 'block'; document.getElementById('mainBody').classList.add('cards-active');
                     document.body.classList.add('header-hidden');
+                    document.getElementById('list-res').style.display = "block"; // Make background box visible along with navigation buttons
                     const cc = document.getElementById('cc'); cc.innerHTML = "";
                     item.results.forEach(res => {
                         const card = document.createElement('div'); card.className="list-card"; 
@@ -1058,64 +882,41 @@
                     document.getElementById('list-res').scrollTop = 0;
                 }; sugBox.appendChild(d);
             }); sugBox.scrollTop = 0;
-        } else { 
-            sugBox.style.display="none"; 
-            document.body.classList.remove('sug-active'); 
-            if (!document.getElementById('mainBody').classList.contains('cards-active')) { document.body.classList.remove('header-hidden'); }
-        }
+        } else { sugBox.style.display="none"; document.body.classList.remove('sug-active'); if (!document.getElementById('mainBody').classList.contains('cards-active')) { document.body.classList.remove('header-hidden'); } }
     }
 
-    function toggleZipList(e) { 
-        e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; 
-        if (!isOpen) { document.body.classList.add('zip-open'); document.getElementById('zipScrollBox').scrollTop = 0; } 
-    }
-    
-    function checkAllZips(m) { 
-        document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); 
-        const eM = document.getElementById('eastMaster'); if(eM) eM.checked = m.checked;
-        const mM = document.getElementById('mainMaster'); if(mM) mM.checked = m.checked;
-        validateZipCheck(); 
-    }
+    function toggleZipList(e) { e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; if (!isOpen) { document.body.classList.add('zip-open'); document.getElementById('zipScrollBox').scrollTop = 0; } }
+    function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); const eM = document.getElementById('eastMaster'); if(eM) eM.checked = m.checked; const mM = document.getElementById('mainMaster'); if(mM) mM.checked = m.checked; validateZipCheck(); }
     
     function finalApply(e) { 
         if(e) e.stopPropagation(); 
-        let isMain = document.getElementById('mainMaster')?.checked || false;
-        let isEast = document.getElementById('eastMaster')?.checked || false;
-        if(isMain && isEast) {
-            const allM = document.getElementById('allZipMaster');
-            if(allM) { allM.checked = true; checkAllZips(allM); }
-        }
+        let isMain = document.getElementById('mainMaster')?.checked || false; let isEast = document.getElementById('eastMaster')?.checked || false;
+        if(isMain && isEast) { const allM = document.getElementById('allZipMaster'); if(allM) { allM.checked = true; checkAllZips(allM); } }
 
         const chks = document.querySelectorAll('.z-chk:checked'), trig = document.getElementById('zipTrig'), sIn = document.getElementById('streetInput');
-        const isAll = document.getElementById('allZipMaster')?.checked || false; 
-        isMain = document.getElementById('mainMaster')?.checked || false;
-        isEast = document.getElementById('eastMaster')?.checked || false;
+        const isAll = document.getElementById('allZipMaster')?.checked || false; isMain = document.getElementById('mainMaster')?.checked || false; isEast = document.getElementById('eastMaster')?.checked || false;
         
         const chksValues = Array.from(chks).map(c => c.value);
-        localStorage.setItem('usps_remembered_zips_' + currentCityKey, JSON.stringify({
-            chks: chksValues,
-            allChecked: isAll,
-            mainChecked: isMain,
-            eastChecked: isEast
-        }));
+        localStorage.setItem('usps_remembered_zips_' + currentCityKey, JSON.stringify({ chks: chksValues, allChecked: isAll, mainChecked: isMain, eastChecked: isEast }));
         
-        let displayStr = 'Select Zip(s)...'; let evalLen = displayStr.length;
-        const cfg = CITY_CONFIG[currentCityKey];
+        let displayStr = 'Select Zip(s)...'; let evalLen = displayStr.length; const cfg = CITY_CONFIG[currentCityKey];
         
         if (isAll) { displayStr = 'ALL ZIPs'; evalLen = displayStr.length; } 
-        else if (isMain && Array.from(document.querySelectorAll('.z-chk')).filter(c => cfg.stationMOU.includes(c.value)).every(c => c.checked)) { 
-            displayStr = cfg.mouName; evalLen = displayStr.length; 
-        }
-        else if (isEast && Array.from(document.querySelectorAll('.z-chk')).filter(c => cfg.stationDCU.includes(c.value)).every(c => c.checked)) { 
-            displayStr = cfg.dcuName; evalLen = displayStr.length; 
-        }
+        else if (isMain && Array.from(document.querySelectorAll('.z-chk')).filter(c => cfg.stationMOU.includes(c.value)).every(c => c.checked)) { displayStr = cfg.mouName; evalLen = 4; }
+        else if (isEast && Array.from(document.querySelectorAll('.z-chk')).filter(c => cfg.stationDCU.includes(c.value)).every(c => c.checked)) { displayStr = cfg.dcuName; evalLen = 4; }
         else if (chks.length > 0) { displayStr = Array.from(chks).map(c=>c.value).join(', '); evalLen = displayStr.length; }
         
         trig.innerText = displayStr;
-        if (evalLen <= 13) trig.style.fontSize = '22px';
-        else if (evalLen <= 20) trig.style.fontSize = '18px';
-        else if (evalLen <= 25) trig.style.fontSize = '15px';
-        else trig.style.fontSize = '13px';
+        
+        /* DYNAMIC FONT SCALING ENGINE TARGETED FOR PRECISE BOX ALIGNMENTS */
+        if (displayStr === cfg.mouName || displayStr === cfg.dcuName) {
+            trig.style.fontSize = '16px';
+        } else {
+            if (evalLen <= 13) trig.style.fontSize = '22px';
+            else if (evalLen <= 20) trig.style.fontSize = '18px';
+            else if (evalLen <= 25) trig.style.fontSize = '15px';
+            else trig.style.fontSize = '13px';
+        }
 
         document.getElementById('zipList').style.display='none'; document.body.classList.remove('zip-open'); 
         if(chks.length > 0 || isAll) { 
@@ -1129,18 +930,13 @@
         document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none";
         document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('suggestionBox').style.display = "block";
         document.body.classList.add('sug-active');
+        document.getElementById('list-res').style.display = "none"; // Hard collapse backdrop framing sheet instantly
         const input = document.getElementById('streetInput'); input.value = lastSearchTerm; input.focus();
         const len = input.value.length; input.setSelectionRange(len, len); handleSearch(); 
     }
 
-    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active', 'header-hidden'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('streetInput').focus(); }
-    
-    function resetAll() { 
-        lastSearchTerm = ""; localStorage.removeItem('usps_remembered_zips_' + currentCityKey); 
-        document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); 
-        const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster, #eastMaster, #mainMaster').forEach(c => { if(c) c.checked = false; }); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; 
-    }
-    
+    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active', 'header-hidden'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('list-res').style.display = "none"; document.getElementById('streetInput').focus(); }
+    function resetAll() { lastSearchTerm = ""; localStorage.removeItem('usps_remembered_zips_' + currentCityKey); document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster, #eastMaster, #mainMaster').forEach(c => { if(c) c.checked = false; }); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('list-res').style.display = "none"; }
     function openViewer(url) { document.body.classList.remove('header-hidden'); document.getElementById('viewer-img').src = url; document.getElementById('viewer').style.display='flex'; }
     function closeViewer() { document.getElementById('viewer').style.display='none'; }
     function openTime() { document.body.classList.remove('header-hidden'); document.getElementById('timeModal').style.display='flex'; document.getElementById('logScrollFrame').scrollTop = 0; }
@@ -1153,8 +949,7 @@
             document.getElementById('t-in').value = data.bt; document.getElementById('l-out').value = data.ol; document.getElementById('l-in').value = data.il; document.getElementById('t-actual').value = data.et; 
             const mapping = {'bt-btn':data.bt, 'ol-btn':data.ol, 'il-btn':data.il, 'et-btn':data.et};
             for (let id in mapping) {
-                const element = document.getElementById(id); const val = mapping[id] || "00.00";
-                element.classList.remove('none-active', 'unpopulated');
+                const element = document.getElementById(id); const val = mapping[id] || "00.00"; element.classList.remove('none-active', 'unpopulated');
                 if (val === "00.00") { element.innerText = "--:--"; element.classList.add('unpopulated'); } 
                 else if (val === "NONE") { element.innerText = "NONE"; element.classList.add('none-active'); } 
                 else { element.innerText = val; }
@@ -1167,10 +962,8 @@
         if(!window.k) window.k=0; window.k++; 
         if(window.k===5) {
             const liveStateHTML = `<div id="status-dot" class="${isDataLive ? 'live' : ''}"></div>`;
-            const popup = document.createElement('div');
-            popup.style = "position:fixed; bottom:140px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); color:white; padding:12px 20px; border-radius:30px; font-weight:900; font-size:0.85rem; z-index:999999; display:flex; align-items:center; gap:10px; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(0,0,0,0.4);";
-            popup.innerHTML = `<span>Database Connected</span>${liveStateHTML}`; document.body.appendChild(popup);
-            setTimeout(() => popup.remove(), 3500);
+            const popup = document.createElement('div'); popup.style = "position:fixed; bottom:140px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); color:white; padding:12px 20px; border-radius:30px; font-weight:900; font-size:0.85rem; z-index:999999; display:flex; align-items:center; gap:10px; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(0,0,0,0.4);";
+            popup.innerHTML = `<span>Database Connected</span>${liveStateHTML}`; document.body.appendChild(popup); setTimeout(() => popup.remove(), 3500);
         } 
         setTimeout(()=>window.k=0,2000); 
     }
