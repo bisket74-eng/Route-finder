@@ -208,14 +208,13 @@
         .narrow-select { appearance: none; background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b87' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center; background-size: 18px; padding: 8px 30px 8px 15px; width: 140px; margin: 0 auto 18px; font-weight: 900; border: 3px solid var(--bl); border-radius: 8px; display: block; text-align: center; font-size: 1rem; box-sizing: border-box; color: var(--bl); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
 
         #list-res { position: absolute; top: 250px; left: 0; right: 0; bottom: 0; overflow-y: scroll; padding: 10px 8px 120px 8px; z-index: 100; pointer-events: none; display: none; }
-        body.cards-active #list-res { display: block; pointer-events: auto; background: rgba(238, 244, 249, 0.85); backdrop-filter: blur(2px); }
+        /* MADE THE CARRIER RESPONSE BACKGROUND SHEET COMPLETELY SEE-THROUGH TO REVEAL THE FLAG PATTERN VIA TRANSPARENCY SHEDS */
+        body.cards-active #list-res { display: block; pointer-events: auto; background: transparent; backdrop-filter: none; }
         
         .list-card { background: white; padding: 6px 12px; margin: 0 auto 5px; border-radius: 10px; border: 2px solid var(--bl); display: flex; justify-content: space-between; align-items: center; width: 98%; max-width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); pointer-events: auto; box-sizing: border-box; position: relative; z-index: 5; }
         .list-card:first-child { margin-top: 14px; } 
         
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 0px; padding-right: 8px; overflow: hidden; }
-        
-        /* INJECTED 10PX LEFT CUSHION BEFORE ADDRESS STRING */
         .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.86rem; display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 10px; }
         
         .range-cradle-grid { 
@@ -237,12 +236,11 @@
             display: block;
         }
         
-        /* ALIGNED VERTICALLY AND HORIZONTALLY IN CENTER SPLIT HOLES */
         .range-dash-break { 
             font-size: 1.5rem; 
             display: flex;
             align-items: center;
-            justify-content: center; /* FULL MATRIX DEAD-CENTER LOCKDOWN */
+            justify-content: center; 
             line-height: 1; 
             margin: 2px 0; 
             color: #003366 !important; 
@@ -276,11 +274,10 @@
             width: 26px;
         }
 
-        /* INJECTED 6PX OF TOP PADDING TO DROPDOWN CARRIER ROUTE NUMBERS CLEANLY */
         .rt-block { 
             background: #004b87 !important; 
             color: white; 
-            padding: 14px 4px 8px 4px; /* INCREASED TOP FROM 8PX TO 14PX FOR SHARP CEILING TRACKING */
+            padding: 14px 4px 8px 4px; 
             border-radius: 8px; 
             text-align: center; 
             min-width: 140px; 
@@ -774,7 +771,7 @@
         
         recognition.onstart = () => { micBtn.classList.add('listening'); if(sInputNode) sInputNode.classList.add('listening-active'); if(audioWaveNode) audioWaveNode.classList.add('active'); };
         
-        const killAnimationHud = () => { micBtn.classList.remove('listening'); if(sInputNode) sInputNode.classList.remove('listening-active'); if(audioWaveNode) audioWaveNode.classList.remove('active'); };
+        const killAnimationHud = () => { micBtn.classList.remove('listening'); if(sInputNode) sInputNode.classList.remove('listening-active'); if(audioWaveNode) audioWaveNode.classList.add('active'); };
         recognition.onend = killAnimationHud;
         recognition.onerror = killAnimationHud;
         
