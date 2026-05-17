@@ -23,27 +23,26 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
         
-        /* HEADER FRAME WRAPPED SECURELY TO CONTAIN INTERACTIVE PLACEMENTS */
         .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 20px 15px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
         
-        /* SOLID EXTRA WIDE RIGHT ALIGNED TRIGGER BAR */
         .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-left: 2px solid rgba(255, 255, 255, 0.25); color: var(--yl); font-size: 0.8rem; font-weight: 900; letter-spacing: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1100; transition: background 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
         .city-sidebar-btn span { display: block; transform: translateX(2px); }
 
-        /* RE-ENGINEERED MID-TONE DARK BLUE DRAWER COMPONENT WITH IRONCLAD GHOST BLOCKED OVERLAY PROPERTIES */
+        /* RE-ENGINEERED 80% SCREEN SPAN CONTAINER IN BEAUTIFUL MID-TONE LIGHT BLUE WITH PACED SMOOTH SLIDE TRANSITIONS */
         .city-drawer-container { 
             position: absolute; 
             top: 0; 
             bottom: 0; 
             right: 48px; 
-            width: 75vw; 
-            max-width: 330px;
-            background: #002c52; /* PERFECT BALANCED MID-TONE DARK BLUE BACKGROUND */
-            border-left: 2px solid #004b87;
-            transform: translateX(500px); /* ABSOLUTE LOGICAL CLEARANCE MARGIN */
-            visibility: hidden; /* ABSOLUTE LAYOUT GHOST BLOCK WHEN SHUT */
-            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0.3s ease; 
+            width: 80vw; /* DELIBERATE 5% EXTRA SLIDE EXPANSION WIDTH PROFILE */
+            max-width: 350px;
+            background: #b3cddf; /* LIGHTER BLUE THAN MAIN USPS HEADER BANNER */
+            border-left: 2px solid var(--bl);
+            transform: translateX(550px); /* DEEP RECESSED PARK GAP DETACHED FROM ALL SCREEN BLEED OVERRUNS */
+            visibility: hidden;
+            /* LUXURIOUS SLOW MOTION DURATION METRICS COMMITTED TO HARDWARE MATRIX TRACERS */
+            transition: transform 0.65s cubic-bezier(0.25, 1, 0.3, 1), visibility 0.65s ease; 
             z-index: 1050; 
             display: flex; 
             flex-direction: column; 
@@ -52,7 +51,7 @@
         body.drawer-active .city-drawer-container { 
             transform: translateX(0);
             visibility: visible;
-            box-shadow: -8px 0 25px rgba(0,0,0,0.5);
+            box-shadow: -8px 0 25px rgba(0,0,0,0.4);
         }
         
         .drawer-content-scroll { 
@@ -70,18 +69,18 @@
         
         .drawer-content-scroll::-webkit-scrollbar { width: 4px; }
         .drawer-content-scroll::-webkit-scrollbar-track { background: transparent; }
-        .drawer-content-scroll::-webkit-scrollbar-thumb { background: var(--yl); border-radius: 2px; }
+        .drawer-content-scroll::-webkit-scrollbar-thumb { background: var(--bl); border-radius: 2px; }
         
-        /* SHARP BRIGHT WHITE HOUSINGS CONTRASTED WITH CRISP BLACK FONTS */
+        /* SHARP UNIFORM WHITE CARD CELL BLOCKS FEATURING HIGH LEGIBILITY BLACK FONTS */
         .city-opt-btn { 
             width: 100%; 
             padding: 12px 14px; 
-            background: #ffffff; /* PURE WHITE BUTTON BODIES */
-            border: 2px solid #001f3b; 
+            background: #ffffff; /* PURE WHITE BACKGROUND */
+            border: 2px solid var(--bl); 
             border-radius: 6px; 
             font-size: 0.9rem; 
             font-weight: 800; 
-            color: #000000; /* SHARP BLACK TYPOGRAPHY */
+            color: #000000; /* BOLD BLACK FONT COLOR */
             cursor: pointer; 
             transition: all 0.15s ease; 
             text-transform: uppercase; 
@@ -91,10 +90,11 @@
             text-overflow: ellipsis;
             box-sizing: border-box;
             flex-shrink: 0;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
-        .city-opt-btn:hover { border-color: var(--yl); background: #f0f6fa; }
-        .city-opt-btn.active-city { background: var(--yl); color: #000000; border-color: #ffffff; font-weight: 900; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .city-opt-btn:hover { background: #f0f6fa; }
+        /* NO YELLOW HIGHLIGHTS - LOCKS UNIFORMLY TO HIGH CONTRAST MATTE BLUE RETAINING CRISP INTERIOR GRAPHICS */
+        .city-opt-btn.active-city { background: var(--bl); color: #ffffff; border-color: var(--bl); font-weight: 900; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
