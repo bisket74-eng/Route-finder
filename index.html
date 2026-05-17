@@ -214,7 +214,9 @@
         .list-card:first-child { margin-top: 14px; } 
         
         .info-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 8px; overflow: hidden; }
-        .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.925rem; display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 18px; }
+        
+        /* ALIGNED STREET FOOTPRINT DIRECTLY FLUSH ON THE LEFT EDGE (NO GAP) */
+        .info-left .street-txt { font-weight: 700; color: #444; font-size: 0.86rem; /* REDUCED BY 1 POINT DOWN FROM 0.925REM */ display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 0px; /* PINNED TO THE INNER BOUNDARY FLANK */ }
         
         .range-cradle-grid { 
             display: inline-flex; 
