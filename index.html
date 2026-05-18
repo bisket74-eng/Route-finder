@@ -512,7 +512,7 @@
     </div>
 
 <script>
-    const CITY_CONFIG = {
+        const CITY_CONFIG = {
         "vancouver": {
             name: "Vancouver, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx",
@@ -544,8 +544,17 @@
             stationDCU: [],
             mouName: "Woodland 98674",
             dcuName: ""
+        },
+        "odessa": {
+            name: "Odessa, Texas",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/odessa.xlsx",
+            stationMOU: ["79761", "79762", "79763", "79764", "79765"],
+            stationDCU: [],
+            mouName: "All Odessa Zips",
+            dcuName: ""
         }
     };
+
     
     let currentCityKey = "vancouver";
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
