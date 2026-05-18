@@ -29,38 +29,40 @@
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
         .city-sidebar-btn span { display: block; transform: translateX(2px); }
 
+        /* MOVED COMPONENT STRUCTURE TO ABSOLUTE TOP SCREEN LAYER */
         .city-drawer-container { 
             position: absolute; 
-            top: 0; /* PINNED TO THE EXTREME TOP TO OVERLAP HEADER SECTIONS CLEANLY */
-            right: 48px; 
-            width: 90vw; 
-            max-width: 400px;
-            height: auto; /* DYNAMIC WRAPPING PROFILE */
-            max-height: 80vh; /* PROTECTIVE THRESHOLD LINE BEFORE SCROLL ENGAGES */
+            top: 0; 
+            left: 50%;
+            width: 100%;
+            max-width: 452px; /* ACCOUNT FOR FLOATING CITY TRIGGER HANDLE TAB WIDTH EXCLUSION */
+            height: auto; 
+            max-height: 80vh; 
             background: #b3cddf; 
-            border-left: 2px solid var(--bl);
-            border-bottom: 3px solid var(--bl);
-            border-radius: 0 0 0 10px;
-            transform: translateX(800px); 
+            border-bottom: 4px solid var(--bl);
+            border-left: 3px solid var(--bl);
+            border-right: 3px solid var(--bl);
+            border-radius: 0 0 14px 14px;
+            transform: translateY(-100vh); /* CLEAN SLIDE-DOWN FROM CEILING BOUNDARY */
             visibility: hidden;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease; 
             will-change: transform; 
-            z-index: 50000; /* FORCE OVERLAYS ALL ACCORDION TRACKS AND RESULT CONTENT */
+            z-index: 99999999; /* ABSOLUTE PRIORITY SEPARATION OVER POPUP SLOTS */
             display: flex; 
             flex-direction: column; 
             box-sizing: border-box; 
         }
         body.drawer-active .city-drawer-container { 
-            transform: translateX(0);
+            transform: translate(-50%, 0);
             visibility: visible;
-            box-shadow: -10px 10px 30px rgba(0,0,0,0.45);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
         
         .drawer-content-scroll { 
             flex: 1; 
             overflow-y: auto; 
             overflow-x: hidden;
-            padding: 12px 10px; 
+            padding: 16px 14px; 
             -webkit-overflow-scrolling: touch; 
             display: flex;
             flex-direction: column;
@@ -448,7 +450,7 @@
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
                 <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
-                <div class="key" onclick="kpClr覆" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
+                <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
                 <div id="kp-none-btn" class="key" style="grid-column: span 3; background: var(--bl); color: white; border-color: var(--bl); display: none; text-align: center; width: 55%; margin: 0 auto; padding: 10px 0; font-size: 0.95rem; font-weight: 900;" onclick="kpSetNone()">NONE</div>
             </div>
         </div>
@@ -460,11 +462,6 @@
                 <button class="city-sidebar-btn" onclick="toggleCityPortalDrawer(event)">
                     <span>C</span><span>I</span><span>T</span><span>Y</span>
                 </button>
-                
-                <div class="city-drawer-container" onclick="event.stopPropagation()">
-                    <div class="drawer-content-scroll" id="city-btn-list"></div>
-                </div>
-
                 <span class="line-1">USPS</span>
                 <span id="cityHeaderLabel" class="line-2">Vancouver, Washington</span>
                 <span class="line-3">Route Finder</span>
@@ -512,6 +509,10 @@
         </div>
         <div id="list-res"><div id="cc"></div></div>
         <button class="btn-round-tk" onclick="openTime()"><span>🕒</span>TIME<br>KEEPER</button>
+
+        <div class="city-drawer-container" onclick="event.stopPropagation()">
+            <div class="drawer-content-scroll" id="city-btn-list"></div>
+        </div>
     </div>
 
 <script>
