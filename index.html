@@ -97,14 +97,7 @@
         .city-opt-btn:hover { background: #f0f6fa; }
         .city-opt-btn.active-city { background: var(--bl); color: #ffffff; border-color: var(--bl); font-weight: 900; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
-        /* SPECIAL NAVIGATION BUTTON STYLE TO GO BACK A LAYER */
-        .drawer-back-btn {
-            background: #4a6b82;
-            color: white;
-            border-color: #344e61;
-            font-weight: 900;
-            text-align: center;
-        }
+        .drawer-back-btn { background: #4a6b82; color: white; border-color: #344e61; font-weight: 900; text-align: center; }
         .drawer-back-btn:hover { background: #3b5669; }
 
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
@@ -326,7 +319,8 @@
             text-transform: uppercase; 
         }
         
-        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 250px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        /* ADJUSTED BOX TIGHTNESS TO PRECISION LINES TO EXPOSE TOP EDGE PROFILE OF HIDDEN 5TH CARD ROW */
+        .sug { background: #fff; border: 2px solid var(--bl); border-radius: 0 0 10px 10px; max-height: 254px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .s-item { padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 1.25rem; font-weight: 800; color: #004b87 !important; cursor: pointer; overflow: hidden; gap: 10px; }
         .s-item span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; display: block; }
         .s-item .zip-badge-blue { background: #004b87 !important; color: white; padding: 4px 10px; border-radius: 4px; font-size: 1rem; font-weight: 800; font-family: 'Times New Roman', serif; font-style: italic; letter-spacing: 0.5px; flex-shrink: 0; }
@@ -457,7 +451,7 @@
             <div id="kp-display" class="entry-display kp-unpopulated">--:--</div>
             <div class="keypad-container">
                 <div class="key" onclick="kpIn(1)">1</div><div class="key" onclick="kpIn(2)">2</div><div class="key" onclick="kpIn(3)">3</div>
-                <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6), window.location.href.includes('bisket74-eng') && personal_context.retrieve_personal_data({query: 'Tell me about the user\'s children or grandchildren or pets'})">6</div>
+                <div class="key" onclick="kpIn(4)">4</div><div class="key" onclick="kpIn(5)">5</div><div class="key" onclick="kpIn(6)">6</div>
                 <div class="key" onclick="kpIn(7)">7</div><div class="key" onclick="kpIn(8)">8</div><div class="key" onclick="kpIn(9)">9</div>
                 <div class="key" onclick="kpClr()" style="color:var(--dr-rd);">CLR</div><div class="key" onclick="kpIn(0)">0</div><div class="key" onclick="kpSet()" style="background:var(--gr); color:white; border-color:var(--gr);">SET</div>
                 <div id="kp-none-btn" class="key" style="grid-column: span 3; background: var(--bl); color: white; border-color: var(--bl); display: none; text-align: center; width: 55%; margin: 0 auto; padding: 10px 0; font-size: 0.95rem; font-weight: 900;" onclick="kpSetNone()">NONE</div>
@@ -590,6 +584,14 @@
             mouName: "Collinsville 74021",
             dcuName: ""
         },
+        "greenwood": {
+            name: "Greenwood, South Carolina",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/greenwood.xlsx",
+            stationMOU: ["29646", "29648", "29649"],
+            stationDCU: [],
+            mouName: "Greenwood Carrier Zips",
+            dcuName: ""
+        },
         "hardin": {
             name: "Hardin, Montana",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/hardin.xlsx",
@@ -604,6 +606,14 @@
             stationMOU: ["37763"],
             stationDCU: [],
             mouName: "Kingston 37763",
+            dcuName: ""
+        },
+        "oakland": {
+            name: "Oakland, Maryland",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/oakland.xlsx",
+            stationMOU: ["21550"],
+            stationDCU: [],
+            mouName: "Oakland 21550",
             dcuName: ""
         },
         "odessa": {
@@ -622,6 +632,22 @@
             mouName: "Pelzer 29669",
             dcuName: ""
         },
+        "springfield_tn": {
+            name: "Springfield, Tennessee",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/springfield_tn.xlsx",
+            stationMOU: ["37172"],
+            stationDCU: [],
+            mouName: "Springfield 37172",
+            dcuName: ""
+        },
+        "waco": {
+            name: "Waco, Texas",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/waco.xlsx",
+            stationMOU: ["76701", "76705", "76706", "76707", "76708", "76710", "76711", "76712"],
+            stationDCU: [],
+            mouName: "Waco City Carrier Zips",
+            dcuName: ""
+        },
         "woodland": {
             name: "Woodland, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/woodland.xlsx",
@@ -636,7 +662,7 @@
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
     let lastSearchTerm = ""; let currentAction = ""; let isDataLive = false;
     let explicitKeypadOverride = false; let editingRowId = null;
-    let selectedStateFilter = null; // HOLDS ACTIVE SELECTION LAYER
+    let selectedStateFilter = null; 
 
     window.onload = async () => {
         document.body.classList.remove('modal-open-tk', 'modal-open-view', 'drawer-active');
@@ -652,12 +678,10 @@
         setTimeout(() => { document.body.classList.add('app-ready'); }, 280);
     };
 
-    // DYNAMIC STATE PICKER AND ALPHABETICAL CITY SUB-MENU HOOKS
     function buildCityPortalMenu() {
         const targetContainer = document.getElementById('city-btn-list');
         targetContainer.innerHTML = "";
         
-        // IF NO STATE LAYER HAS BEEN CLICKED YET, COLLECT ALL DISTINCT STATES FROM CONFIG STRINGS
         if (!selectedStateFilter) {
             const stateSet = new Set();
             Object.keys(CITY_CONFIG).forEach(key => {
@@ -675,12 +699,11 @@
                 btn.onclick = (e) => {
                     e.stopPropagation();
                     selectedStateFilter = state;
-                    buildCityPortalMenu(); // RE-RENDER VIEW WITH FILTERED TOWNS
+                    buildCityPortalMenu(); 
                 };
                 targetContainer.appendChild(btn);
             });
         } else {
-            // RENDER A NAVIGATION ACTION ROW TO GET BACK TO THE STATE MENU LIST
             const backBtn = document.createElement('button');
             backBtn.className = "city-opt-btn drawer-back-btn";
             backBtn.innerText = "⬅ Back to States";
@@ -691,7 +714,6 @@
             };
             targetContainer.appendChild(backBtn);
 
-            // FILTER DOWN AND SORT CITIES LIVING EXCLUSIVELY INSIDE THE CLICKED STATE
             const matchingKeys = Object.keys(CITY_CONFIG).filter(key => {
                 const parts = CITY_CONFIG[key].name.split(',');
                 return parts.length > 1 && parts[1].trim() === selectedStateFilter;
@@ -704,7 +726,6 @@
             matchingKeys.forEach(key => {
                 const btn = document.createElement('button');
                 btn.className = "city-opt-btn" + (key === currentCityKey ? " active-city" : "");
-                // DISCARD STATE NAME EXTENSION FROM RENDER LABEL SINCE HEADER IS ALREADY EXPLICIT
                 btn.innerText = CITY_CONFIG[key].name.split(',')[0].trim();
                 btn.onclick = (e) => { 
                     e.stopPropagation(); 
@@ -721,7 +742,7 @@
         if (bodyNode.classList.contains('drawer-active')) {
             closeCityPortal();
         } else {
-            selectedStateFilter = null; // RESET ROUTE BACK TO ENTRY STATE LAYER ON OPEN COMMANDS
+            selectedStateFilter = null; 
             buildCityPortalMenu();
             bodyNode.classList.add('drawer-active');
         }
@@ -805,6 +826,7 @@
         validateZipCheck();
     }
 
+    /* REMOVED RIGID "MAIN" & "EAST" PLACEMENTS — INHERITS STATION DESIGNATIONS DYNAMICALLY */
     function buildDynamicZipListUI() {
         const box = document.getElementById('zipScrollBox');
         box.innerHTML = "";
@@ -819,14 +841,14 @@
         let hasMOU = availableZips.some(z => cfg.stationMOU.includes(z));
         if (hasMOU && cfg.stationDCU.length > 0) {
             const hMOU = document.createElement('label'); hMOU.className = "zip-item";
-            hMOU.innerHTML = `<input type="checkbox" id="mainMaster" onchange="toggleStationGroup('MAIN', this)"> MAIN`;
+            hMOU.innerHTML = `<input type="checkbox" id="mainMaster" onchange="toggleStationGroup('MAIN', this)"> ${cfg.mouName.toUpperCase()}`;
             box.appendChild(hMOU);
         }
         
         let hasDCU = availableZips.some(z => cfg.stationDCU.includes(z));
         if (hasDCU && cfg.stationDCU.length > 0) {
             const hDCU = document.createElement('label'); hDCU.className = "zip-item";
-            hDCU.innerHTML = `<input type="checkbox" id="eastMaster" onchange="toggleStationGroup('EAST', this)"> EAST`;
+            hDCU.innerHTML = `<input type="checkbox" id="eastMaster" onchange="toggleStationGroup('EAST', this)"> ${cfg.dcuName.toUpperCase()}`;
             box.appendChild(hDCU);
         }
         
