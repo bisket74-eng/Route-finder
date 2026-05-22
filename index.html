@@ -519,142 +519,14 @@
     </div>
 
 <script>
-      const CITY_CONFIG = {
-        "lafayette": {
-            name: "Lafayette, Alabama",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lafayette.xlsx",
-            stationMOU: ["36862"],
-            stationDCU: [],
-            mouName: "Lafayette 36862",
-            dcuName: ""
-        },
-        "gilbert": {
-            name: "Gilbert, Iowa",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/gilbert.xlsx",
-            stationMOU: ["50105"],
-            stationDCU: [],
-            mouName: "Gilbert 50105",
-            dcuName: ""
-        },
-        "baltimore_central": {
-            name: "Baltimore Central & South, Maryland",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/baltimore_central.xlsx",
-            stationMOU: ["21201", "21202", "21224", "21230", "21231"],
-            stationDCU: [],
-            mouName: "Central City Carrier Zips",
-            dcuName: ""
-        },
-        "baltimore_north": {
-            name: "Baltimore North & East, Maryland",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/baltimore_north.xlsx",
-            stationMOU: ["21204", "21206", "21210", "21212", "21213", "21214", "21218"],
-            stationDCU: ["21220", "21221", "21222", "21234", "21236", "21237", "21239"],
-            mouName: "North / East Stations",
-            dcuName: "County Extension DCUs"
-        },
-        "baltimore_west": {
-            name: "Baltimore West & County, Maryland",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/baltimore_west.xlsx",
-            stationMOU: ["21205", "21207", "21209", "21211", "21215", "21216", "21217", "21223", "21229"],
-            stationDCU: ["21208", "21225", "21226", "21227", "21228"],
-            mouName: "West City Stations",
-            dcuName: "West County DCUs"
-        },
-        "oakland": {
-            name: "Oakland, Maryland",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/oakland.xlsx",
-            stationMOU: ["21550"],
-            stationDCU: [],
-            mouName: "Oakland 21550",
-            dcuName: ""
-        },
-        "belgrade": {
-            name: "Belgrade, Montana",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/belgrade.xlsx",
-            stationMOU: ["59714"],
-            stationDCU: [],
-            mouName: "Belgrade 59714",
-            dcuName: ""
-        },
-        "bozeman": {
-            name: "Bozeman, Montana",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bozeman.xlsx",
-            stationMOU: ["59715", "59718"],
-            stationDCU: [],
-            mouName: "All Bozeman Zips",
-            dcuName: ""
-        },
-        "hardin": {
-            name: "Hardin, Montana",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/hardin.xlsx",
-            stationMOU: ["59034"],
-            stationDCU: [],
-            mouName: "Hardin 59034",
-            dcuName: ""
-        },
-        "collinsville": {
-            name: "Collinsville, Oklahoma",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/collinsville.xlsx",
-            stationMOU: ["74021"],
-            stationDCU: [],
-            mouName: "Collinsville 74021",
-            dcuName: ""
-        },
-        "belton": {
-            name: "Belton, South Carolina",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/belton.xlsx",
-            stationMOU: ["29027"],
-            stationDCU: [],
-            mouName: "Belton 29027",
-            dcuName: ""
-        },
-        "greenwood": {
-            name: "Greenwood, South Carolina",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/greenwood.xlsx",
-            stationMOU: ["29646", "29648", "29649"],
-            stationDCU: [],
-            mouName: "Greenwood Carrier Zips",
-            dcuName: ""
-        },
-        "pelzer": {
-            name: "Pelzer, South Carolina",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/pelzer.xlsx",
-            stationMOU: ["29669"],
-            stationDCU: [],
-            mouName: "Pelzer 29669",
-            dcuName: ""
-        },
-        "kingston": {
-            name: "Kingston, Tennessee",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kingston.xlsx",
-            stationMOU: ["37763"],
-            stationDCU: [],
-            mouName: "Kingston 37763",
-            dcuName: ""
-        },
-        "loudon": {
-            name: "Loudon, Tennessee",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/loudon.xlsx",
-            stationMOU: ["37774"],
-            stationDCU: [],
-            mouName: "Loudon 37774",
-            dcuName: ""
-        },
-        "rockwood": {
-            name: "Rockwood, Tennessee",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/rockwood.xlsx",
-            stationMOU: ["37854"],
-            stationDCU: [],
-            mouName: "Rockwood 37854",
-            dcuName: ""
-        },
-   const CITY_CONFIG = {
+      
+            const CITY_CONFIG = {
         "appling": {
             name: "Appling, Georgia",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/appling.xlsx",
-            stationMOU: ["30907"],
+            stationMOU: ["30802"],
             stationDCU: [],
-            mouName: "Appling 30907",
+            mouName: "Appling 30802",
             dcuName: ""
         },
         "lafayette": {
@@ -826,7 +698,7 @@
             dcuName: ""
         }
     };
-
+  
     
     let currentCityKey = "vancouver";
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
