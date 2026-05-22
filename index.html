@@ -519,7 +519,15 @@
     </div>
 
 <script>
-   const CITY_CONFIG = {
+      const CITY_CONFIG = {
+        "lafayette": {
+            name: "Lafayette, Alabama",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lafayette.xlsx",
+            stationMOU: ["36862"],
+            stationDCU: [],
+            mouName: "Lafayette 36862",
+            dcuName: ""
+        },
         "gilbert": {
             name: "Gilbert, Iowa",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/gilbert.xlsx",
@@ -681,6 +689,7 @@
             dcuName: ""
         }
     };
+
     
     let currentCityKey = "vancouver";
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
