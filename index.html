@@ -810,7 +810,7 @@
         document.getElementById('cityHeaderLabel').innerText = cfg.name;
         
         try {
-            const resp = await fetch(cfg.url);
+            const resp = await fetch(cfg.url + '?v=' + Date.now());
             const ab = await resp.arrayBuffer();
             const wb = XLSX.read(ab, { type: 'array' });
             processExcelData(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 })); 
