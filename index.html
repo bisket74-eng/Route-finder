@@ -520,7 +520,7 @@
 
 <script>
       
-            const CITY_CONFIG = {
+               const CITY_CONFIG = {
         "appling": {
             name: "Appling, Georgia",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/appling.xlsx",
@@ -529,20 +529,12 @@
             mouName: "Appling 30802",
             dcuName: ""
         },
-        "lafayette": {
-            name: "Lafayette, Alabama",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lafayette.xlsx",
-            stationMOU: ["36862"],
+        "ariel": {
+            name: "Ariel, Washington",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/ariel.xlsx",
+            stationMOU: ["98603"],
             stationDCU: [],
-            mouName: "Lafayette 36862",
-            dcuName: ""
-        },
-        "gilbert": {
-            name: "Gilbert, Iowa",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/gilbert.xlsx",
-            stationMOU: ["50105"],
-            stationDCU: [],
-            mouName: "Gilbert 50105",
+            mouName: "Ariel 98603",
             dcuName: ""
         },
         "baltimore_central": {
@@ -569,44 +561,12 @@
             mouName: "West City Stations",
             dcuName: "West County DCUs"
         },
-        "oakland": {
-            name: "Oakland, Maryland",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/oakland.xlsx",
-            stationMOU: ["21550"],
-            stationDCU: [],
-            mouName: "Oakland 21550",
-            dcuName: ""
-        },
         "belgrade": {
             name: "Belgrade, Montana",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/belgrade.xlsx",
             stationMOU: ["59714"],
             stationDCU: [],
             mouName: "Belgrade 59714",
-            dcuName: ""
-        },
-        "bozeman": {
-            name: "Bozeman, Montana",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bozeman.xlsx",
-            stationMOU: ["59715", "59718"],
-            stationDCU: [],
-            mouName: "All Bozeman Zips",
-            dcuName: ""
-        },
-        "hardin": {
-            name: "Hardin, Montana",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/hardin.xlsx",
-            stationMOU: ["59034"],
-            stationDCU: [],
-            mouName: "Hardin 59034",
-            dcuName: ""
-        },
-        "collinsville": {
-            name: "Collinsville, Oklahoma",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/collinsville.xlsx",
-            stationMOU: ["74021"],
-            stationDCU: [],
-            mouName: "Collinsville 74021",
             dcuName: ""
         },
         "belton": {
@@ -617,6 +577,38 @@
             mouName: "Belton 29027",
             dcuName: ""
         },
+        "bozeman": {
+            name: "Bozeman, Montana",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bozeman.xlsx",
+            stationMOU: ["59715", "59718"],
+            stationDCU: [],
+            mouName: "All Bozeman Zips",
+            dcuName: ""
+        },
+        "collinsville": {
+            name: "Collinsville, Oklahoma",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/collinsville.xlsx",
+            stationMOU: ["74021"],
+            stationDCU: [],
+            mouName: "Collinsville 74021",
+            dcuName: ""
+        },
+        "cougar": {
+            name: "Cougar, Washington",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/cougar.xlsx",
+            stationMOU: ["98616"],
+            stationDCU: [],
+            mouName: "Cougar 98616",
+            dcuName: ""
+        },
+        "gilbert": {
+            name: "Gilbert, Iowa",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/gilbert.xlsx",
+            stationMOU: ["50105"],
+            stationDCU: [],
+            mouName: "Gilbert 50105",
+            dcuName: ""
+        },
         "greenwood": {
             name: "Greenwood, South Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/greenwood.xlsx",
@@ -625,12 +617,12 @@
             mouName: "Greenwood Carrier Zips",
             dcuName: ""
         },
-        "pelzer": {
-            name: "Pelzer, South Carolina",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/pelzer.xlsx",
-            stationMOU: ["29669"],
+        "hardin": {
+            name: "Hardin, Montana",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/hardin.xlsx",
+            stationMOU: ["59034"],
             stationDCU: [],
-            mouName: "Pelzer 29669",
+            mouName: "Hardin 59034",
             dcuName: ""
         },
         "kingston": {
@@ -641,6 +633,14 @@
             mouName: "Kingston 37763",
             dcuName: ""
         },
+        "lafayette": {
+            name: "Lafayette, Alabama",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lafayette.xlsx",
+            stationMOU: ["36862"],
+            stationDCU: [],
+            mouName: "Lafayette 36862",
+            dcuName: ""
+        },
         "loudon": {
             name: "Loudon, Tennessee",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/loudon.xlsx",
@@ -648,6 +648,54 @@
             stationDCU: [],
             mouName: "Loudon 37774",
             dcuName: ""
+        },
+        "oakland": {
+            name: "Oakland, Maryland",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/oakland.xlsx",
+            stationMOU: ["21550"],
+            stationDCU: [],
+            mouName: "Oakland 21550",
+            dcuName: ""
+        },
+        "odessa": {
+            name: "Odessa, Texas",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/odessa.xlsx",
+            stationMOU: ["79761", "79762", "79763", "79764", "79765"],
+            stationDCU: [],
+            mouName: "All Odessa Zips",
+            dcuName: ""
+        },
+        "pelzer": {
+            name: "Pelzer, South Carolina",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/pelzer.xlsx",
+            stationMOU: ["29669"],
+            stationDCU: [],
+            mouName: "Pelzer 29669",
+            dcuName: ""
+        },
+        "portland_central": {
+            name: "Portland Central, Oregon",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/portland_central.xlsx",
+            stationMOU: ["97201", "97204", "97205"],
+            stationDCU: ["97209", "97210", "97239"],
+            mouName: "Core City Zips",
+            dcuName: "NW / Waterfront Zips"
+        },
+        "portland_east": {
+            name: "Portland East Stations, Oregon",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/portland_east.xlsx",
+            stationMOU: ["97211", "97212", "97213"],
+            stationDCU: ["97214", "97215", "97232"],
+            mouName: "Northeast Delivery",
+            dcuName: "Southeast Delivery"
+        },
+        "portland_outer_east": {
+            name: "Portland Outer East, Oregon",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/portland_outer_east.xlsx",
+            stationMOU: ["97216", "97220", "97230"],
+            stationDCU: ["97233", "97236", "97266"],
+            mouName: "Annex Stations",
+            dcuName: "Outer East / Lents"
         },
         "rockwood": {
             name: "Rockwood, Tennessee",
@@ -665,13 +713,13 @@
             mouName: "Springfield 37172",
             dcuName: ""
         },
-        "odessa": {
-            name: "Odessa, Texas",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/odessa.xlsx",
-            stationMOU: ["79761", "79762", "79763", "79764", "79765"],
-            stationDCU: [],
-            mouName: "All Odessa Zips",
-            dcuName: ""
+        "vancouver": {
+            name: "Vancouver, Washington",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx",
+            stationMOU: ["98660", "98661", "98663", "98665", "98685", "98686", "98666"],
+            stationDCU: ["98662", "98682", "98664", "98683", "98684"],
+            mouName: "Vancouver MOU zips",
+            dcuName: "East Vancouver DCU zips"
         },
         "waco": {
             name: "Waco, Texas",
@@ -680,14 +728,6 @@
             stationDCU: [],
             mouName: "All Waco Zips",
             dcuName: ""
-        },
-        "vancouver": {
-            name: "Vancouver, Washington",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx",
-            stationMOU: ["98660", "98661", "98663", "98665", "98685", "98686", "98666"],
-            stationDCU: ["98662", "98682", "98664", "98683", "98684"],
-            mouName: "Vancouver MOU zips",
-            dcuName: "East Vancouver DCU zips"
         },
         "woodland": {
             name: "Woodland, Washington",
@@ -698,6 +738,7 @@
             dcuName: ""
         }
     };
+
   
     
     let currentCityKey = "vancouver";
