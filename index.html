@@ -29,9 +29,13 @@
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
         .city-sidebar-btn span { display: block; transform: translateX(2px); }
 
-        .update-report-btn { position: absolute; left: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-right: 2px solid rgba(255, 255, 255, 0.25); color: #fff; font-size: 0.6rem; font-weight: 900; letter-spacing: 3px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.4; padding: 0; z-index: 1100; transition: all 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        /* Multi-column Side-By-Side Vertical Off-set Button Layout */
+        .update-report-btn { position: absolute; left: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-right: 2px solid rgba(255, 255, 255, 0.25); color: #fff; cursor: pointer; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 4px; padding: 0; z-index: 1100; transition: all 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); box-sizing: border-box; }
         .update-report-btn:hover { background: rgba(0, 0, 0, 0.6); }
-        .update-report-btn span { display: block; transform: translateX(1px); }
+        .update-report-btn .word-col { display: flex; flex-direction: column; align-items: center; font-size: 0.58rem; font-weight: 900; letter-spacing: 1px; line-height: 1.2; text-transform: uppercase; }
+        .update-report-btn .word-col.update-word { margin-bottom: 30px; color: #fff; }
+        .update-report-btn .word-col.scheme-word { margin-top: 30px; color: var(--yl); }
+        .update-report-btn span { display: block; }
         .update-report-btn:disabled { pointer-events: none; }
 
         .city-drawer-container { 
@@ -467,7 +471,12 @@
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
                 <button id="reportSchemeBtn" class="update-report-btn" onclick="sendUpdateRequest(event)">
-                    <span>U</span><span>P</span><span>D</span><span>A</span><span>T</span><span>E</span>
+                    <div class="word-col update-word">
+                        <span>U</span><span>P</span><span>D</span><span>A</span><span>T</span><span>E</span>
+                    </div>
+                    <div class="word-col scheme-word">
+                        <span>S</span><span>C</span><span>H</span><span>E</span><span>M</span><span>E</span>
+                    </div>
                 </button>
                 <button class="city-sidebar-btn" onclick="toggleCityPortalDrawer(event)">
                     <span>C</span><span>I</span><span>T</span><span>Y</span>
@@ -939,8 +948,7 @@
         const btn = document.getElementById('reportSchemeBtn');
         
         btn.disabled = true;
-        btn.innerHTML = "<span>R</span><span>E</span><span>Q</span><span>U</span><span>E</span><span>S</span><span>T</span><span>&nbsp;</span><span>S</span><span>E</span><span>N</span><span>D</span><span>I</span><span>N</span><span>G</span>";
-        btn.style.background = "rgba(0,0,0,0.6)";
+        btn.style.background = "var(--gr)"; // Flash green to indicate action taken
 
         try {
             const response = await fetch("https://formspree.io/f/xredreev", {
@@ -953,28 +961,22 @@
                     cityKey: currentCityKey,
                     cityName: currentCityData.name,
                     timestamp: new Date().toLocaleString(),
-                    message: "Carrier triggered a vertical alignment schema layout update query link transmission."
+                    message: "Carrier requested an update to data schemes via the double-column layout component button."
                 })
             });
 
             if (response.ok) {
-                btn.innerHTML = "<span>R</span><span>E</span><span>Q</span><span>U</span><span>E</span><span>S</span><span>T</span><span>&nbsp;</span><span>S</span><span>E</span><span>N</span><span>T</span>";
-                btn.style.background = "var(--gr)";
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = "<span>U</span><span>P</span><span>D</span><span>A</span><span>T</span><span>E</span>";
-                    btn.style.background = "";
-                }, 4000);
+                openStyledAlert("REQUEST SENT");
             } else {
-                throw new Error("Formspree link transmission dropped");
+                throw new Error("Link delivery failed");
             }
         } catch (err) {
-            btn.innerHTML = "<span>E</span><span>R</span><span>R</span><span>O</span><span>R</span>";
+            openStyledAlert("TRANSMISSION ERROR");
             btn.style.background = "var(--rd)";
+        } finally {
             setTimeout(() => {
                 btn.disabled = false;
-                btn.innerHTML = "<span>U</span><span>P</span><span>D</span><span>A</span><span>T</span><span>E</span>";
-                btn.style.background = "";
+                btn.style.background = ""; // Returns right back to low profile theme cleanly
             }, 4000);
         }
     }
@@ -1061,7 +1063,6 @@
         
         const reportBtn = document.getElementById('reportSchemeBtn');
         if(reportBtn) {
-            reportBtn.innerHTML = "<span>U</span><span>P</span><span>D</span><span>A</span><span>T</span><span>E</span>";
             reportBtn.style.background = "";
             reportBtn.disabled = false;
         }
