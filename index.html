@@ -23,15 +23,16 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -185px; }
         
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 25px 60px 15px 60px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 15px 60px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
         
         .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-left: 2px solid rgba(255, 255, 255, 0.25); color: var(--yl); font-size: 0.8rem; font-weight: 900; letter-spacing: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1100; transition: background 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
         .city-sidebar-btn span { display: block; transform: translateX(2px); }
 
-        .update-report-btn { position: absolute; left: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.35); border: none; border-right: 2px solid rgba(255, 255, 255, 0.25); color: #fff; font-size: 0.55rem; font-weight: 800; letter-spacing: 1px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.4; padding: 4px; z-index: 1100; transition: all 0.2s ease; text-align: center; box-sizing: border-box; }
-        .update-report-btn:hover { background: var(--rd); }
-        .update-report-btn:disabled { pointer-events: none; opacity: 0.6; }
+        .update-report-btn { position: absolute; left: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-right: 2px solid rgba(255, 255, 255, 0.25); color: #fff; font-size: 0.6rem; font-weight: 900; letter-spacing: 3px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.4; padding: 0; z-index: 1100; transition: all 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        .update-report-btn:hover { background: rgba(0, 0, 0, 0.6); }
+        .update-report-btn span { display: block; transform: translateX(1px); }
+        .update-report-btn:disabled { pointer-events: none; }
 
         .city-drawer-container { 
             position: absolute; 
@@ -465,7 +466,9 @@
     <div class="app-container">
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
-                <button id="reportSchemeBtn" class="update-report-btn" onclick="sendUpdateRequest(event)">Update<br>Scheme</button>
+                <button id="reportSchemeBtn" class="update-report-btn" onclick="sendUpdateRequest(event)">
+                    <span>U</span><span>P</span><span>D</span><span>A</span><span>T</span><span>E</span>
+                </button>
                 <button class="city-sidebar-btn" onclick="toggleCityPortalDrawer(event)">
                     <span>C</span><span>I</span><span>T</span><span>Y</span>
                 </button>
@@ -936,8 +939,8 @@
         const btn = document.getElementById('reportSchemeBtn');
         
         btn.disabled = true;
-        btn.innerHTML = "Send...";
-        btn.style.backgroundColor = "rgba(0,0,0,0.6)";
+        btn.innerHTML = "<span>R</span><span>E</span><span>Q</span><span>U</span><span>E</span><span>S</span><span>T</span><span>&nbsp;</span><span>S</span><span>E</span><span>N</span><span>D</span><span>I</span><span>N</span><span>G</span>";
+        btn.style.background = "rgba(0,0,0,0.6)";
 
         try {
             const response = await fetch("https://formspree.io/f/xredreev", {
@@ -950,29 +953,29 @@
                     cityKey: currentCityKey,
                     cityName: currentCityData.name,
                     timestamp: new Date().toLocaleString(),
-                    message: "Carrier requested a scheme update via Route Finder app."
+                    message: "Carrier triggered a vertical alignment schema layout update query link transmission."
                 })
             });
 
             if (response.ok) {
-                btn.innerHTML = "✓<br>Sent";
-                btn.style.backgroundColor = "var(--gr)";
+                btn.innerHTML = "<span>R</span><span>E</span><span>Q</span><span>U</span><span>E</span><span>S</span><span>T</span><span>&nbsp;</span><span>S</span><span>E</span><span>N</span><span>T</span>";
+                btn.style.background = "var(--gr)";
                 setTimeout(() => {
                     btn.disabled = false;
-                    btn.innerHTML = "Update<br>Scheme";
-                    btn.style.backgroundColor = "";
-                }, 5000);
+                    btn.innerHTML = "<span>U</span><span>P</span><span>D</span><span>A</span><span>T</span><span>E</span>";
+                    btn.style.background = "";
+                }, 4000);
             } else {
-                throw new Error("Formspree server error");
+                throw new Error("Formspree link transmission dropped");
             }
         } catch (err) {
-            btn.innerHTML = "Err<br>Retry";
-            btn.style.backgroundColor = "var(--rd)";
+            btn.innerHTML = "<span>E</span><span>R</span><span>R</span><span>O</span><span>R</span>";
+            btn.style.background = "var(--rd)";
             setTimeout(() => {
                 btn.disabled = false;
-                btn.innerHTML = "Update<br>Scheme";
-                btn.style.backgroundColor = "";
-            }, 3000);
+                btn.innerHTML = "<span>U</span><span>P</span><span>D</span><span>A</span><span>T</span><span>E</span>";
+                btn.style.background = "";
+            }, 4000);
         }
     }
 
@@ -1058,8 +1061,8 @@
         
         const reportBtn = document.getElementById('reportSchemeBtn');
         if(reportBtn) {
-            reportBtn.innerHTML = "Update<br>Scheme";
-            reportBtn.style.backgroundColor = "";
+            reportBtn.innerHTML = "<span>U</span><span>P</span><span>D</span><span>A</span><span>T</span><span>E</span>";
+            reportBtn.style.background = "";
             reportBtn.disabled = false;
         }
 
@@ -1216,7 +1219,7 @@
         document.getElementById('alertBtns').style.display = 'none'; currentAction = "clearLog"; document.getElementById('confirmModal').style.display = 'flex';
     }
 
-    UX=true; function openRowOptions(id) { editingRowId = id; document.getElementById('rowOptModal').style.display = 'flex'; }
+    function openRowOptions(id) { editingRowId = id; document.getElementById('rowOptModal').style.display = 'flex'; }
     function closeRowOpt() { document.getElementById('rowOptModal').style.display = 'none'; }
 
     function quickDeleteRow() {
@@ -1329,7 +1332,13 @@
         handleSearch(); 
     }
 
-    function kbClean() { return true; }
+    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active', 'header-hidden'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('list-res').style.display = "none"; document.getElementById('streetInput').focus(); }
+
+    function clearTimeInputs() {
+        ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
+        ['bt-btn','ol-btn','il-btn','et-btn'].forEach(id => { const btn = document.getElementById(id); btn.innerText = "--:--"; btn.className = "time-display-btn unpopulated"; });
+        document.getElementById('t-target').innerText = "--:--"; localStorage.removeItem('usps_temp_entries'); explicitKeypadOverride = false;
+    }
 
     function openKeypad(t, title) { 
         activeId = t; let existing = document.getElementById(t).value || "00.00"; if (existing === "NONE") existing = "00.00";
@@ -1372,6 +1381,52 @@
         closeKeypad(); if(!activeId.startsWith('adj-')) { calcGoal(); saveTempEntries(); }
     }
     
+    function calcGoal() {
+        const btStr = document.getElementById('t-in').value || "00.00"; const olStr = document.getElementById('l-out').value || "00.00"; const ilStr = document.getElementById('l-in').value || "00.00"; const targetEl = document.getElementById('t-target');
+        const btBtn = document.getElementById('bt-btn'); const olBtn = document.getElementById('ol-btn'); const ilBtn = document.getElementById('il-btn');
+        if (btBtn.classList.contains('unpopulated') || olBtn.classList.contains('unpopulated') || ilBtn.classList.contains('unpopulated')) { targetEl.innerText = "--:--"; return; }
+        
+        let bt = parseFloat(btStr); let result = 0;
+        if (olStr === "NONE" && ilStr === "NONE") { result = bt + 8.00; } 
+        else { let ol = parseFloat(olStr); let il = parseFloat(ilStr); result = bt + 8.00 + (il - ol); }
+        while (result >= 24) result -= 24; while (result < 0) result += 24; targetEl.innerText = result.toFixed(2).padStart(5, '0');
+    }
+
+    function addToLog() {
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); if (log.length >= 14) { openStyledAlert("LOG IS FULL (14 DAYS MAX)"); return; }
+        const daysMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; const shortDay = daysMap[new Date().getDay()]; const currentEntryWeek = getUSPSWeek(Date.now());
+        const count = log.filter(e => e.day === shortDay && getUSPSWeek(e.id) === currentEntryWeek).length; if (count >= 1) { openStyledAlert("AN ENTRY ALREADY EXISTS FOR THIS DAY THIS WEEK"); return; }
+        
+        const bt = document.getElementById('t-in').value||"00.00", ol = document.getElementById('l-out').value||"00.00", il = document.getElementById('l-in').value||"00.00", et = document.getElementById('t-actual').value||"00.00";
+        let total = 0; let btV = parseFloat(bt), etV = parseFloat(et);
+        if (ol === "NONE" || il === "NONE") { total = etV - btV; if(total < 0) total += 24; } 
+        else { let olV = parseFloat(ol), ilV = parseFloat(il); let s1 = olV - btV; if(s1 < 0) s1 += 24; let s2 = etV - ilV; if(s2 < 0) s2 += 24; total = s1 + s2; }
+        
+        log.push({ day: shortDay, bt, ol, il, et, total: total.toFixed(2), id: Date.now() });
+        localStorage.setItem('usps_weekly_log', JSON.stringify(log)); renderLog(); syncLocalDay(); localStorage.removeItem('usps_temp_entries');
+        clearTimeInputs(); setTimeout(() => { const frame = document.getElementById('logScrollFrame'); if(frame) frame.scrollTop = 0; }, 50);
+    }
+
+    function renderLog() { 
+        let log = JSON.parse(localStorage.getItem('usps_weekly_log')||"[]"); const daysOrder = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"]; log.sort((a,b) => a.id - b.id); 
+        let w1 = [], w2 = []; log.forEach(e => { if (getUSPSWeek(e.id) === 1) { w1.push(e); } else { w2.push(e); } });
+        w1.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)); w2.sort((a,b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day));
+        const currentWeekNum = getUSPSWeek(Date.now()); const container = document.getElementById('log-container');
+        
+        let htmlW1 = w1.map(e => {
+            let olStr = e.ol === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.ol}</span>`; let ilStr = e.il === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.il}</span>`;
+            return `<div class="log-row" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span>${olStr}${ilStr}<span>${e.et}</span><span class="total-col">${e.total}</span></div>`;
+        }).join('');
+        if(w1.length > 0) { const sum1 = w1.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); htmlW1 += `<div class="total-row"><b>TOTAL WEEK 1</b><span>${sum1}</span></div>`; }
+        
+        let htmlW2 = w2.map(e => {
+            let olStr = e.ol === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.ol}</span>`; let ilStr = e.il === "NONE" ? `<span class="none-log-text">NONE</span>` : `<span>${e.il}</span>`;
+            return `<div class="log-row duplicate" onclick="openRowOptions(${e.id})"><b>${e.day}</b><span>${e.bt}</span>${olStr}${ilStr}<span>${e.et}</span><span class="total-col">${e.total}</span></div>`;
+        }).join('');
+        if(w2.length > 0) { const sum2 = w2.reduce((s, e) => s + parseFloat(e.total), 0).toFixed(2); htmlW2 += `<div class="total-row blue-week"><b>TOTAL WEEK 2</b><span>${sum2}</span></div>`; }
+        if (currentWeekNum === 1) { container.innerHTML = htmlW1 + htmlW2; } else { container.innerHTML = htmlW2 + htmlW1; }
+    }
+
     function processExcelData(rows) {
         const nDB = {};
         rows.forEach(c => {
