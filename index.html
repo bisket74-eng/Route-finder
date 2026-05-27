@@ -21,9 +21,9 @@
         .bg-flag-surface { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.12; pointer-events: none; z-index: 1; }
 
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
-        body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -160px; }
+        body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -185px; }
         
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 20px 15px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 15px 15px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
         
         .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-left: 2px solid rgba(255, 255, 255, 0.25); color: var(--yl); font-size: 0.8rem; font-weight: 900; letter-spacing: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1100; transition: background 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
@@ -102,8 +102,12 @@
 
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
-        .hdr .line-3 { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); display: block; margin-top: 6px; }
+        .hdr .line-3 { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); display: block; margin-top: 6px; margin-bottom: 4px; }
         
+        .update-report-link { display: inline-block; background: rgba(0,0,0,0.25); color: #fff; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s ease; margin-top: 4px; text-decoration: none; user-select: none; }
+        .update-report-link:hover { background: var(--rd); border-color: var(--rd); color: white; }
+        .update-report-link:disabled { pointer-events: none; opacity: 0.6; }
+
         #status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; border: 2px solid white; display: inline-block; vertical-align: middle; margin-left: 8px; }
         #status-dot.live { background: var(--gr); }
 
@@ -467,6 +471,7 @@
                 <span class="line-1">USPS</span>
                 <span id="cityHeaderLabel" class="line-2">Vancouver, Washington</span>
                 <span class="line-3">Route Finder</span>
+                <button id="reportSchemeBtn" class="update-report-link" onclick="sendUpdateRequest(event)">Report Stale Scheme</button>
             </div>
         </div>
         <div class="sticky-top">
@@ -821,6 +826,56 @@
         setTimeout(() => { document.body.classList.add('app-ready'); }, 280);
     };
 
+    async function sendUpdateRequest(e) {
+        if(e) e.stopPropagation();
+        const currentCityData = CITY_CONFIG[currentCityKey];
+        const btn = document.getElementById('reportSchemeBtn');
+        
+        btn.disabled = true;
+        btn.innerText = "Sending...";
+        btn.style.backgroundColor = "rgba(0,0,0,0.5)";
+
+        try {
+            const response = await fetch("https://formspree.io/f/xredreev", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    cityKey: currentCityKey,
+                    cityName: currentCityData.name,
+                    timestamp: new Date().toLocaleString(),
+                    message: "Carrier requested a scheme update via Route Finder app."
+                })
+            });
+
+            if (response.ok) {
+                btn.innerText = "✓ Alert Sent!";
+                btn.style.backgroundColor = "var(--gr)";
+                btn.style.borderColor = "var(--gr)";
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerText = "Report Stale Scheme";
+                    btn.style.backgroundColor = "";
+                    btn.style.borderColor = "";
+                }, 5000);
+            } else {
+                throw new Error("Formspree server error");
+            }
+        } catch (err) {
+            btn.innerText = "Error. Retry?";
+            btn.style.backgroundColor = "var(--rd)";
+            btn.style.borderColor = "var(--rd)";
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerText = "Report Stale Scheme";
+                btn.style.backgroundColor = "";
+                btn.style.borderColor = "";
+            }, 3000);
+        }
+    }
+
     function buildCityPortalMenu() {
         const targetContainer = document.getElementById('city-btn-list');
         targetContainer.innerHTML = "";
@@ -900,6 +955,15 @@
         closeCityPortal();
         currentCityKey = key;
         localStorage.setItem('usps_active_city_key', key);
+        
+        const reportBtn = document.getElementById('reportSchemeBtn');
+        if(reportBtn) {
+            reportBtn.innerText = "Report Stale Scheme";
+            reportBtn.style.backgroundColor = "";
+            reportBtn.style.borderColor = "";
+            reportBtn.disabled = false;
+        }
+
         buildCityPortalMenu();
         clearStreetOnly();
         await loadCityDataset(key, false);
@@ -1165,6 +1229,8 @@
         closeCityPortal(); 
         handleSearch(); 
     }
+
+    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active', 'header-hidden'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('list-res').style.display = "none"; document.getElementById('streetInput').focus(); }
 
     function clearTimeInputs() {
         ['t-in','l-out','l-in','t-actual'].forEach(id => document.getElementById(id).value = "00.00");
@@ -1433,7 +1499,6 @@
         const len = input.value.length; input.setSelectionRange(len, len); handleSearch(); 
     }
 
-    function clearStreetOnly() { lastSearchTerm = ""; document.getElementById('streetInput').value = ""; document.getElementById('suggestionBox').style.display = "none"; document.body.classList.remove('sug-active', 'header-hidden'); document.getElementById('cc').innerHTML = ""; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('mainBody').classList.remove('cards-active'); document.getElementById('list-res').style.display = "none"; document.getElementById('streetInput').focus(); }
     function resetAll() { lastSearchTerm = ""; localStorage.removeItem('usps_remembered_zips_' + currentCityKey); document.body.classList.remove('header-hidden', 'zip-open', 'sug-active', 'cards-active'); const sIn = document.getElementById('streetInput'); sIn.value = ""; sIn.disabled = true; sIn.placeholder = "Select Zip(s) first..."; document.getElementById('blocker').style.display = 'block'; document.getElementById('zipTrig').innerText = "Select Zip(s)..."; document.getElementById('zipTrig').style.fontSize = '22px'; document.querySelectorAll('.z-chk, #allZipMaster, #eastMaster, #mainMaster').forEach(c => { if(c) c.checked = false; }); document.getElementById('cc').innerHTML = ""; document.getElementById('suggestionBox').style.display = "none"; document.getElementById('backToListBtn').style.display = "none"; document.getElementById('list-res').style.display = "none"; }
     
     function openViewer(url) { document.getElementById('viewer-img').src = url; document.body.classList.add('modal-open-view'); }
