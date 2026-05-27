@@ -535,7 +535,7 @@
     </div>
 
 <script>
-       const CITY_CONFIG = {
+        const CITY_CONFIG = {
         "appling": {
             name: "Appling, Georgia",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/appling.xlsx",
@@ -680,6 +680,14 @@
             mouName: "Dixon 61021",
             dcuName: ""
         },
+        "eudora": {
+            name: "Eudora, Arkansas",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/eudora.xlsx",
+            stationMOU: ["71640"],
+            stationDCU: [],
+            mouName: "Eudora 71640",
+            dcuName: ""
+        },
         "gilbert": {
             name: "Gilbert, Iowa",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/gilbert.xlsx",
@@ -710,6 +718,14 @@
             stationMOU: ["22801", "22802"],
             stationDCU: [],
             mouName: "Harrisonburg Zips",
+            dcuName: ""
+        },
+        "hudson": {
+            name: "Hudson, New Hampshire",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/hudson.xlsx",
+            stationMOU: ["03051"],
+            stationDCU: [],
+            mouName: "Hudson 03051",
             dcuName: ""
         },
         "kingston": {
@@ -752,6 +768,14 @@
             mouName: "Loudon 37774",
             dcuName: ""
         },
+        "mansfield": {
+            name: "Mansfield, Ohio",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/mansfield.xlsx",
+            stationMOU: ["44901", "44902", "44903", "44904", "44905", "44906", "44907"],
+            stationDCU: [],
+            mouName: "All Mansfield Zips",
+            dcuName: ""
+        },
         "minden_city": {
             name: "Minden City, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/minden_city.xlsx",
@@ -792,6 +816,14 @@
             mouName: "Pelzer 29669",
             dcuName: ""
         },
+        "port_charlotte": {
+            name: "Port Charlotte, Florida",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/port_charlotte.xlsx",
+            stationMOU: ["33948", "33952", "33953", "33954", "33981"],
+            stationDCU: [],
+            mouName: "All Port Charlotte Zips",
+            dcuName: ""
+        },
         "portland_central": {
             name: "Portland Central, Oregon",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/portland_central.xlsx",
@@ -815,6 +847,14 @@
             stationDCU: ["97233", "97236", "97266"],
             mouName: "Annex Stations",
             dcuName: "Outer East / Lents"
+        },
+        "punta_gorda": {
+            name: "Punta Gorda, Florida",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/punta_gorda.xlsx",
+            stationMOU: ["33950", "33955", "33980", "33982", "33983"],
+            stationDCU: [],
+            mouName: "All Punta Gorda Zips",
+            dcuName: ""
         },
         "rockwood": {
             name: "Rockwood, Tennessee",
@@ -929,6 +969,7 @@
             dcuName: ""
         }
     };
+    
 
     let currentCityKey = "vancouver";
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
