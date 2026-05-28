@@ -535,7 +535,7 @@
     </div>
 
 <script>
-      const CITY_CONFIG = {
+     const CITY_CONFIG = {
         "appling": {
             name: "Appling, Georgia",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/appling.xlsx",
@@ -808,6 +808,14 @@
             mouName: "Nederland 77627",
             dcuName: ""
         },
+        "newport_news": {
+            name: "Newport News, Virginia",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/newport_news.xlsx",
+            stationMOU: ["23601", "23602", "23603", "23604", "23605", "23606", "23607", "23608", "23609"],
+            stationDCU: [],
+            mouName: "All Newport News Zips",
+            dcuName: ""
+        },
         "oakland": {
             name: "Oakland, Maryland",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/oakland.xlsx",
@@ -993,7 +1001,7 @@
             dcuName: ""
         }
     };
-    
+
     let currentCityKey = "vancouver";
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
     let lastSearchTerm = ""; let currentAction = ""; let isDataLive = false;
