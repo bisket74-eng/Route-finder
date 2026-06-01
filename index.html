@@ -23,13 +23,12 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -185px; }
         
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 15px 60px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 15px 60px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
         
         .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-left: 2px solid rgba(255, 255, 255, 0.25); color: var(--yl); font-size: 0.8rem; font-weight: 900; letter-spacing: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1100; transition: background 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
         .city-sidebar-btn span { display: block; transform: translateX(2px); }
 
-        /* Multi-column Side-By-Side Vertical Off-set Button Layout */
         .update-report-btn { position: absolute; left: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-right: 2px solid rgba(255, 255, 255, 0.25); color: #fff; cursor: pointer; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 4px; padding: 0; z-index: 1100; transition: background 0.2s ease, transform 0.1s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); box-sizing: border-box; }
         .update-report-btn:hover { background: rgba(0, 0, 0, 0.6); }
         .update-report-btn .word-col { display: flex; flex-direction: column; align-items: center; font-size: 0.58rem; font-weight: 900; letter-spacing: 1px; line-height: 1.2; text-transform: uppercase; }
@@ -508,7 +507,7 @@
                 <div class="row" style="position:relative">
                     <div class="input-wrapper">
                         <div class="label-row">
-                            <label>Street Name Only</label>
+                            <label>Street Name</label>
                             <span class="label-sub">(No house numbers)</span>
                         </div>
                         <div id="blocker" class="input-blocker" onclick="checkZipBeforeType()"></div>
@@ -537,7 +536,7 @@
     </div>
 
 <script>
-       const CITY_CONFIG = {
+   const CITY_CONFIG = {
         "alliance": {
             name: "Alliance, Nebraska",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/alliance.xlsx",
@@ -1107,7 +1106,6 @@
             dcuName: ""
         }
     };
-
     
     let currentCityKey = "vancouver";
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
@@ -1129,13 +1127,36 @@
         setTimeout(() => { document.body.classList.add('app-ready'); }, 280);
     };
 
-    async function sendUpdateRequest(e) {
+    function sendUpdateRequest(e) {
         if(e) e.stopPropagation();
+        
+        document.getElementById('confirmMsg').innerText = "WOULD YOU LIKE TO REQUEST AN UPDATED SCHEME FOR THIS CITY?";
+        document.getElementById('alertBtns').style.display = 'none';
+        document.getElementById('confirmBtns').style.display = 'flex';
+        
+        const executeBtn = document.getElementById('executeBtn');
+        executeBtn.innerText = "YES";
+        executeBtn.className = "btn-del-action btn-grn"; 
+        executeBtn.onclick = executeSchemeUpdatePayload; 
+        
+        const cancelBtn = document.getElementById('confirmBtns').querySelector('.btn-red, .btn-grn');
+        if(cancelBtn) {
+            cancelBtn.innerText = "CANCEL";
+            cancelBtn.className = "btn-del-action btn-red"; 
+            cancelBtn.onclick = closeSchemeModalReset; 
+        }
+
+        document.getElementById('confirmModal').style.display = 'flex';
+    }
+
+    async function executeSchemeUpdatePayload() {
+        closeSchemeModalReset();
+        
         const currentCityData = CITY_CONFIG[currentCityKey];
         const btn = document.getElementById('reportSchemeBtn');
         
         btn.disabled = true;
-        btn.style.background = "var(--gr)"; // Flash green while processing payload
+        btn.style.background = "var(--gr)"; 
 
         try {
             const response = await fetch("https://formspree.io/f/xredreev", {
@@ -1148,12 +1169,12 @@
                     cityKey: currentCityKey,
                     cityName: currentCityData.name,
                     timestamp: new Date().toLocaleString(),
-                    message: "Carrier requested an update to data schemes via the double-column layout component button."
+                    message: "Carrier confirmed and requested a scheme layout update map."
                 })
             });
 
             if (response.ok) {
-                openStyledAlert("REQUEST SENT");
+                openStyledAlert("REQUEST SENT SUCCESSFULLY");
             } else {
                 throw new Error("Link delivery failed");
             }
@@ -1167,14 +1188,25 @@
         }
     }
 
-    // Specific operational reset cleanup rule when alert confirms dismiss activity loops
-    function closeConfirmResetButton() {
-        closeConfirm();
+    function closeSchemeModalReset() {
+        document.getElementById('confirmModal').style.display = 'none';
+        
+        const execBtn = document.getElementById('executeBtn');
+        if(execBtn) {
+            execBtn.innerText = "DELETE";
+            execBtn.className = "btn-del-action btn-red";
+            execBtn.onclick = executeDelete;
+        }
+        
         const btn = document.getElementById('reportSchemeBtn');
         if(btn) {
             btn.disabled = false;
-            btn.style.background = ""; // Instantly snaps right back to dark blue
+            btn.style.background = ""; 
         }
+    }
+
+    function closeConfirmResetButton() {
+        closeSchemeModalReset();
     }
 
     function buildCityPortalMenu() {
@@ -1537,20 +1569,6 @@
         document.getElementById('t-target').innerText = "--:--"; localStorage.removeItem('usps_temp_entries'); explicitKeypadOverride = false;
     }
 
-    // Keypad Logic
-    function openKeypad(t, title) { 
-        activeId = t; let existing = document.getElementById(t).value || "00.00"; if (existing === "NONE") existing = "00.00";
-        const btnMap = { 't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn', 'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn' };
-        const activeBtn = document.getElementById(btnMap[activeId]); const kpDisp = document.getElementById('kp-display');
-        
-        if (activeBtn && activeBtn.classList.contains('unpopulated')) { kpBuffer = ""; kpDisp.innerText = "--:--"; kpDisp.classList.add('kp-unpopulated'); } 
-        else { kpBuffer = existing.replace(".", ""); kpDisp.innerText = existing; kpDisp.classList.remove('kp-unpopulated'); }
-        
-        document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; explicitKeypadOverride = false;
-        const noneBtn = document.getElementById('kp-none-btn'); if (t === 'l-out' || t === 'adj-l-out') { noneBtn.style.display = 'block'; } else { noneBtn.style.display = 'none'; }
-    }
-    function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
-    
     function kpIn(num) { 
         let tempBuffer = (kpBuffer.length >= 4) ? num.toString() : kpBuffer + num.toString(); let checkVal = tempBuffer.padStart(4, "0"); let hrPart = parseInt(checkVal.substring(0, 2), 10);
         if (hrPart > 23) { kpBuffer = ""; const kpDisp = document.getElementById('kp-display'); kpDisp.innerText = "--:--"; kpDisp.classList.add('kp-unpopulated'); return; }
@@ -1750,6 +1768,19 @@
             }); sugBox.scrollTop = 0;
         } else { sugBox.style.display="none"; document.body.classList.remove('sug-active'); if (!document.getElementById('mainBody').classList.contains('cards-active')) { document.body.classList.remove('header-hidden'); } }
     }
+
+    function openKeypad(t, title) { 
+        activeId = t; let existing = document.getElementById(t).value || "00.00"; if (existing === "NONE") existing = "00.00";
+        const btnMap = { 't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn', 'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn' };
+        const activeBtn = document.getElementById(btnMap[activeId]); const kpDisp = document.getElementById('kp-display');
+        
+        if (activeBtn && activeBtn.classList.contains('unpopulated')) { kpBuffer = ""; kpDisp.innerText = "--:--"; kpDisp.classList.add('kp-unpopulated'); } 
+        else { kpBuffer = existing.replace(".", ""); kpDisp.innerText = existing; kpDisp.classList.remove('kp-unpopulated'); }
+        
+        document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; explicitKeypadOverride = false;
+        const noneBtn = document.getElementById('kp-none-btn'); if (t === 'l-out' || t === 'adj-l-out') { noneBtn.style.display = 'block'; } else { noneBtn.style.display = 'none'; }
+    }
+    function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
 
     function toggleZipList(e) { e.stopPropagation(); const l = document.getElementById('zipList'); const isOpen = (l.style.display==='flex'); l.style.display = isOpen ? 'none' : 'flex'; if (!isOpen) { document.body.classList.add('zip-open'); document.getElementById('zipScrollBox').scrollTop = 0; } }
     function checkAllZips(m) { document.querySelectorAll('.z-chk').forEach(c => c.checked = m.checked); const eM = document.getElementById('eastMaster'); if(eM) eM.checked = m.checked; const mM = document.getElementById('mainMaster'); if(mM) mM.checked = m.checked; validateZipCheck(); }
