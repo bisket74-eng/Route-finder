@@ -537,7 +537,7 @@
     </div>
 
 <script>
-   const CITY_CONFIG = {
+       const CITY_CONFIG = {
         "alliance": {
             name: "Alliance, Nebraska",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/alliance.xlsx",
@@ -546,15 +546,6 @@
             mouName: "Alliance 69301",
             dcuName: ""
         },
-         "ashkum": {
-            name: "Ashkum, Illinois",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/ashkum.xlsx",
-            stationMOU: ["60911"],
-            stationDCU: [],
-            mouName: "Ashkum 60911",
-            dcuName: ""
-        },
-
         "appling": {
             name: "Appling, Georgia",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/appling.xlsx",
@@ -569,6 +560,14 @@
             stationMOU: ["98603"],
             stationDCU: [],
             mouName: "Ariel 98603",
+            dcuName: ""
+        },
+        "ashkum": {
+            name: "Ashkum, Illinois",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/ashkum.xlsx",
+            stationMOU: ["60911"],
+            stationDCU: [],
+            mouName: "Ashkum 60911",
             dcuName: ""
         },
         "baltimore_central": {
@@ -667,6 +666,14 @@
             mouName: "Chalfont 18914",
             dcuName: ""
         },
+        "colfax": {
+            name: "Colfax, Iowa",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/colfax.xlsx",
+            stationMOU: ["50054"],
+            stationDCU: [],
+            mouName: "Colfax 50054",
+            dcuName: ""
+        },
         "collinsville": {
             name: "Collinsville, Oklahoma",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/collinsville.xlsx",
@@ -715,7 +722,7 @@
             mouName: "Eudora 71640",
             dcuName: ""
         },
-           "farmington": {
+        "farmington": {
             name: "Farmington, Minnesota",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/farmington.xlsx",
             stationMOU: ["55024"],
@@ -723,7 +730,6 @@
             mouName: "Farmington 55024",
             dcuName: ""
         },
-
         "gilbert": {
             name: "Gilbert, Iowa",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/gilbert.xlsx",
@@ -788,6 +794,14 @@
             mouName: "Lafayette 36862",
             dcuName: ""
         },
+        "lakeville": {
+            name: "Lakeville, Minnesota",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lakeville.xlsx",
+            stationMOU: ["55044"],
+            stationDCU: [],
+            mouName: "Lakeville 55044",
+            dcuName: ""
+        },
         "lakewood": {
             name: "Lakewood, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lakewood.xlsx",
@@ -836,6 +850,22 @@
             mouName: "Minden City Zips",
             dcuName: ""
         },
+        "mingo_ira": {
+            name: "Mingo & Ira, Iowa",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/mingo_ira.xlsx",
+            stationMOU: ["50127", "50168"],
+            stationDCU: [],
+            mouName: "Mingo & Ira Zips",
+            dcuName: ""
+        },
+        "mitchellville": {
+            name: "Mitchellville, Iowa",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/mitchellville.xlsx",
+            stationMOU: ["50169"],
+            stationDCU: [],
+            mouName: "Mitchellville 50169",
+            dcuName: ""
+        },
         "nederland": {
             name: "Nederland, Texas",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/nederland.xlsx",
@@ -850,6 +880,14 @@
             stationMOU: ["23601", "23602", "23603", "23604", "23605", "23606", "23607", "23608", "23609"],
             stationDCU: [],
             mouName: "All Newport News Zips",
+            dcuName: ""
+        },
+        "northfield": {
+            name: "Northfield, Minnesota",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/northfield.xlsx",
+            stationMOU: ["55057"],
+            stationDCU: [],
+            mouName: "Northfield 55057",
             dcuName: ""
         },
         "oakland": {
@@ -908,6 +946,14 @@
             mouName: "Annex Stations",
             dcuName: "Outer East / Lents"
         },
+        "prairie_city": {
+            name: "Prairie City, Iowa",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/prairie_city.xlsx",
+            stationMOU: ["50228"],
+            stationDCU: [],
+            mouName: "Prairie City 50228",
+            dcuName: ""
+        },
         "punta_gorda": {
             name: "Punta Gorda, Florida",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/punta_gorda.xlsx",
@@ -922,6 +968,14 @@
             stationMOU: ["37854"],
             stationDCU: [],
             mouName: "Rockwood 37854",
+            dcuName: ""
+        },
+        "rosemont": {
+            name: "Rosemont, Minnesota",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/rosemont.xlsx",
+            stationMOU: ["55068"],
+            stationDCU: [],
+            mouName: "Rosemont 55068",
             dcuName: ""
         },
         "ruth": {
@@ -988,7 +1042,6 @@
             mouName: "Stephens City 22655",
             dcuName: ""
         },
-
         "stillwater": {
             name: "Stillwater, New York",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/stillwater.xlsx",
@@ -1054,6 +1107,7 @@
             dcuName: ""
         }
     };
+
     
     let currentCityKey = "vancouver";
     let database = {}; let activeId = ''; let kpBuffer = ""; let deleteTargetId = null;
