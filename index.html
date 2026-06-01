@@ -143,8 +143,8 @@
         .btn-grn { background-color: var(--gr); color: white; }
 
         /* Synchronized Bottom Floating Action Buttons */
-        .btn-round-tk, .btn-round-upd { position: absolute; bottom: 100px; width: 84px; height: 84px; color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 5px 14px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.62rem; z-index: 50; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); text-shadow: 0 1px 2px rgba(0,0,0,0.3); text-transform: uppercase; box-sizing: border-box; }
-        .btn-round-tk span, .btn-round-upd span { font-size: 1.4rem; margin-bottom: 2px; }
+        .btn-round-tk, .btn-round-upd { position: absolute; bottom: 100px; width: 84px; height: 84px; color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 5px 14px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; font-size: 0.58rem; z-index: 50; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); text-shadow: 0 1px 2px rgba(0,0,0,0.3); text-transform: uppercase; box-sizing: border-box; letter-spacing: 0.5px; }
+        .btn-round-tk span, .btn-round-upd span { font-size: 1.3rem; margin-bottom: 2px; display: block; }
         
         /* Red Update Scheme - Bottom Left */
         .btn-round-upd { left: 24px; background: var(--rd); border-bottom: 4px solid #a3140b; }
@@ -332,7 +332,7 @@
         .s-item span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; display: block; }
         .s-item .zip-badge-blue { background: #004b87 !important; color: white; padding: 4px 10px; border-radius: 4px; font-size: 1rem; font-weight: 800; font-family: 'Times New Roman', serif; font-style: italic; letter-spacing: 0.5px; flex-shrink: 0; }
 
-        /* Hide both action buttons when system shifts */
+        /* Hide both action buttons when system elements shift down below */
         body.zip-open .btn-round-tk, body.zip-open .btn-round-upd,
         body.sug-active .btn-round-tk, body.sug-active .btn-round-upd,
         body.cards-active .btn-round-tk, body.cards-active .btn-round-upd { transform: translateY(200px); }
@@ -472,7 +472,7 @@
     <div class="app-container">
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
-                <!-- CITY SIDEBAR BUTTON (Cleanly positioned on the right) -->
+                <!-- CITY SIDEBAR BUTTON (Centered text on the line parameters) -->
                 <button class="city-sidebar-btn" onclick="toggleCityPortalDrawer(event)">
                     <span>C</span><span>I</span><span>T</span><span>Y</span>
                 </button>
@@ -523,7 +523,7 @@
         </div>
         <div id="list-res"><div id="cc"></div></div>
         
-        <!-- ROUND UPDATE SCHEME BUTTON (Lower Left Corner) -->
+        <!-- ROUND UPDATE SCHEME BUTTON (Lower Left Corner - Fully Spelled Out Wording) -->
         <button id="reportSchemeBtn" class="btn-round-upd" onclick="sendUpdateRequest(event)"><span>🔄</span>UPDATE<br>SCHEME</button>
         
         <!-- ROUND TIMEKEEPER BUTTON (Lower Right Corner) -->
@@ -1581,9 +1581,9 @@
         let val = document.getElementById('kp-display').innerText; 
         if (val !== "--:--" && val !== "--.--") { let hrCheck = parseInt(val.substring(0, 2), 10); if (hrCheck > 23) { val = "--:--"; kpBuffer = ""; document.getElementById('kp-display').innerText = "--:--"; } }
         const btnMap = { 't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn', 'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn' };
-        const activeBtn = document.getElementById(btnMap[activeId]); activeBtn.classList.remove('none-active');
-        if (kpBuffer === "") { document.getElementById(activeId).value = "00.00"; activeBtn.innerText = "--:--"; activeBtn.classList.add('unpopulated'); } 
-        else { document.getElementById(activeId).value = val; activeBtn.innerText = val; activeBtn.classList.remove('unpopulated'); }
+        const activeBtn = document.getElementById(btnMap[activeId]); if(activeBtn) activeBtn.classList.remove('none-active');
+        if (kpBuffer === "") { document.getElementById(activeId).value = "00.00"; if(activeBtn) { activeBtn.innerText = "--:--"; activeBtn.classList.add('unpopulated'); } } 
+        else { document.getElementById(activeId).value = val; if(activeBtn) { activeBtn.innerText = val; activeBtn.classList.remove('unpopulated'); } }
         
         if (activeId === 'l-out') { document.getElementById('l-in').value = "00.00"; const ilBtn = document.getElementById('il-btn'); ilBtn.innerText = "--:--"; ilBtn.className = "time-display-btn unpopulated"; }
         if (activeId === 'adj-l-out') { document.getElementById('adj-l-in').value = "00.00"; const adjIlBtn = document.getElementById('adj-il-btn'); adjIlBtn.innerText = "--:--"; adjIlBtn.className = "time-display-btn unpopulated"; }
@@ -1829,15 +1829,28 @@
             document.getElementById('t-in').value = data.bt; document.getElementById('l-out').value = data.ol; document.getElementById('l-in').value = data.il; document.getElementById('t-actual').value = data.et; 
             const mapping = {'bt-btn':data.bt, 'ol-btn':data.ol, 'il-btn':data.il, 'et-btn':data.et};
             for (let id in mapping) {
-                const element = document.getElementById(id); const val = mapping[id] || "00.00"; element.classList.remove('none-active', 'unpopulated');
-                if (val === "00.00") { element.innerText = "--:--"; element.classList.add('unpopulated'); } 
-                else if (val === "NONE") { element.innerText = "NONE"; element.classList.add('none-active'); } 
-                else { element.innerText = val; }
+                const element = document.getElementById(id); const val = mapping[id] || "00.00"; if(element) element.classList.remove('none-active', 'unpopulated');
+                if (val === "00.00") { if(element) { element.innerText = "--:--"; element.classList.add('unpopulated'); } } 
+                else if (val === "NONE") { if(element) { element.innerText = "NONE"; element.classList.add('none-active'); } } 
+                else { if(element) element.innerText = val; }
             }
             calcGoal(); 
         } else { calcGoal(); }
     }
     
+    function openKeypad(t, title) { 
+        activeId = t; let existing = document.getElementById(t).value || "00.00"; if (existing === "NONE") existing = "00.00";
+        const btnMap = { 't-in':'bt-btn','l-out':'ol-btn','l-in':'il-btn','t-actual':'et-btn', 'adj-t-in':'adj-bt-btn','adj-l-out':'adj-ol-btn','adj-l-in':'adj-il-btn','adj-t-actual':'adj-et-btn' };
+        const activeBtn = document.getElementById(btnMap[activeId]); const kpDisp = document.getElementById('kp-display');
+        
+        if (activeBtn && activeBtn.classList.contains('unpopulated')) { kpBuffer = ""; if(kpDisp) { kpDisp.innerText = "--:--"; kpDisp.classList.add('kp-unpopulated'); } } 
+        else { kpBuffer = existing.replace(".", ""); if(kpDisp) { kpDisp.innerText = existing; kpDisp.classList.remove('kp-unpopulated'); } }
+        
+        document.getElementById('keypad-title').innerText = title; document.getElementById('keypadPicker').style.display='flex'; explicitKeypadOverride = false;
+        const noneBtn = document.getElementById('kp-none-btn'); if (t === 'l-out' || t === 'adj-l-out') { noneBtn.style.display = 'block'; } else { noneBtn.style.display = 'none'; }
+    }
+    function closeKeypad() { document.getElementById('keypadPicker').style.display='none'; }
+
     function secretKnock() { 
         if(!window.k) window.k=0; window.k++; 
         if(window.k===5) {
