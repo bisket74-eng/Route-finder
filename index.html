@@ -6,6 +6,8 @@
     <title>USPS Route Finder</title>
     <link rel="preload" href="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" as="image" fetchpriority="high">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+    
     <style>
         :root { --bl: #004b87; --lt-bl: #eef4f9; --rd: #da291c; --yl: #ffde00; --gr: #00a651; --dr-rd: #da291c; --soft-bl: #4a90e2; }
         
@@ -23,7 +25,7 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -185px; }
         
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 15px 60px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 15px 60px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
         
         .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-left: 2px solid rgba(255, 255, 255, 0.25); color: var(--yl); font-size: 0.8rem; font-weight: 900; letter-spacing: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1100; transition: background 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
@@ -142,13 +144,11 @@
         .btn-blu { background-color: var(--bl); color: white; }
         .btn-grn { background-color: var(--gr); color: white; }
 
-        /* Synchronized Bottom Floating Action Buttons - Optimized Sizing */
+        /* Synchronized Bottom Floating Action Buttons */
         .btn-round-tk, .btn-round-upd { position: absolute; bottom: 100px; width: 72px; height: 72px; color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 5px 14px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; font-size: 0.52rem; z-index: 50; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); text-shadow: 0 1px 2px rgba(0,0,0,0.3); text-transform: uppercase; box-sizing: border-box; letter-spacing: 0.3px; }
         .btn-round-tk span, .btn-round-upd span { font-size: 1.15rem; margin-bottom: 1px; display: block; }
         
-        /* Red Update Scheme - Bottom Left */
         .btn-round-upd { left: 24px; background: var(--rd); border-bottom: 3.5px solid #a3140b; padding: 2px; }
-        /* Green Timekeeper - Bottom Right */
         .btn-round-tk { right: 24px; background: var(--gr); border-bottom: 3.5px solid #007037; padding: 2px; }
         
         .btn-round-upd:disabled { pointer-events: none; opacity: 0.8; }
@@ -332,7 +332,6 @@
         .s-item span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; display: block; }
         .s-item .zip-badge-blue { background: #004b87 !important; color: white; padding: 4px 10px; border-radius: 4px; font-size: 1rem; font-weight: 800; font-family: 'Times New Roman', serif; font-style: italic; letter-spacing: 0.5px; flex-shrink: 0; }
 
-        /* Hide both action buttons when system elements shift down below */
         body.zip-open .btn-round-tk, body.zip-open .btn-round-upd,
         body.sug-active .btn-round-tk, body.sug-active .btn-round-upd,
         body.cards-active .btn-round-tk, body.cards-active .btn-round-upd { transform: translateY(200px); }
@@ -505,7 +504,7 @@
                         </div>
                         <div id="blocker" class="input-blocker" onclick="checkZipBeforeType()"></div>
                         <div class="street-input-container">
-                            <input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleInputFocus()">
+                            <input type="text" id="streetInput" disabled placeholder="Select Zip(s) first..." oninput="handleSearch()" onfocus="handleInputFocus()" enterkeyhint="search" autocorrect="off">
                             <div id="audioWaveHud" class="street-audio-wave">
                                 <div class="wave-bar"></div>
                                 <div class="wave-bar"></div>
@@ -522,10 +521,7 @@
         </div>
         <div id="list-res"><div id="cc"></div></div>
         
-        <!-- ROUND UPDATE SCHEME BUTTON (Lower Left Corner - Scaled Down Size) -->
         <button id="reportSchemeBtn" class="btn-round-upd" onclick="sendUpdateRequest(event)"><span>🔄</span>UPDATE<br>SCHEME</button>
-        
-        <!-- ROUND TIMEKEEPER BUTTON (Lower Right Corner - Scaled Down Size) -->
         <button class="btn-round-tk" onclick="openTime()"><span>🕒</span>TIME<br>KEEPER</button>
 
         <div class="city-drawer-container" onclick="event.stopPropagation()">
@@ -565,6 +561,14 @@
             stationMOU: ["60911"],
             stationDCU: [],
             mouName: "Ashkum 60911",
+            dcuName: ""
+        },
+        "brenham": {
+            name: "Brenham, Texas",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/brenham.xlsx",
+            stationMOU: ["77833"],
+            stationDCU: [],
+            mouName: "Brenham 77833",
             dcuName: ""
         },
         "baltimore_central": {
@@ -621,14 +625,6 @@
             stationMOU: ["72016"],
             stationDCU: [],
             mouName: "Bigelow 72016",
-            dcuName: ""
-        },
-        "brenham": {
-            name: "Brenham, Texas",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/brenham.xlsx",
-            stationMOU: ["77833"],
-            stationDCU: [],
-            mouName: "Brenham 77833",
             dcuName: ""
         },
         "bozeman": {
@@ -1119,9 +1115,8 @@
     let explicitKeypadOverride = false; let editingRowId = null;
     let selectedStateFilter = null; 
 
-    window.onload = async () => {
-        document.body.classList.remove('modal-open-tk', 'modal-open-view', 'drawer-active');
-        
+    // Streamline: Data starts downloading immediately as soon as the text elements are ready
+    document.addEventListener("DOMContentLoaded", async () => {
         const savedCitySessionKey = localStorage.getItem('usps_active_city_key');
         if (savedCitySessionKey && CITY_CONFIG[savedCitySessionKey]) {
             currentCityKey = savedCitySessionKey;
@@ -1130,7 +1125,12 @@
         renderLog(); syncLocalDay(); loadTempEntries();
         buildCityPortalMenu();
         await loadCityDataset(currentCityKey, true);
-        setTimeout(() => { document.body.classList.add('app-ready'); }, 280);
+    });
+
+    // Streamline: Background transitions reveal smoothly once full graphical context loads
+    window.onload = () => {
+        document.body.classList.remove('modal-open-tk', 'modal-open-view', 'drawer-active');
+        setTimeout(() => { document.body.classList.add('app-ready'); }, 50);
     };
 
     function sendUpdateRequest(e) {
@@ -1217,6 +1217,7 @@
 
     function buildCityPortalMenu() {
         const targetContainer = document.getElementById('city-btn-list');
+        if (!targetContainer) return;
         targetContainer.innerHTML = "";
         
         if (!selectedStateFilter) {
@@ -1333,15 +1334,13 @@
             if (checkboxEl) checkboxEl.checked = true;
             
             const trig = document.getElementById('zipTrig');
-            trig.innerText = singleZipCode;
-            trig.style.fontSize = '22px';
+            if(trig) { trig.innerText = singleZipCode; trig.style.fontSize = '22px'; }
             
             const sIn = document.getElementById('streetInput');
-            sIn.disabled = false;
-            sIn.placeholder = "Enter street name...";
+            if(sIn) { sIn.disabled = false; sIn.placeholder = "Enter street name..."; }
             document.getElementById('blocker').style.display = 'none';
             
-            setTimeout(() => sIn.focus(), 350);
+            if(sIn) setTimeout(() => sIn.focus(), 350);
         } else if (isInitialLoad) {
             const savedZips = localStorage.getItem('usps_remembered_zips_' + currentCityKey);
             if (savedZips) {
@@ -1365,13 +1364,13 @@
     function resetZipTriggerState() {
         document.querySelectorAll('.z-chk, #allZipMaster, #mainMaster, #eastMaster').forEach(c => { if(c) c.checked = false; });
         const trig = document.getElementById('zipTrig');
-        trig.innerText = "Select Zip(s)...";
-        trig.style.fontSize = '22px';
+        if(trig) { trig.innerText = "Select Zip(s)..."; trig.style.fontSize = '22px'; }
         validateZipCheck();
     }
 
     function buildDynamicZipListUI() {
         const box = document.getElementById('zipScrollBox');
+        if(!box) return;
         box.innerHTML = "";
         const availableZips = Object.keys(database).sort();
         if(availableZips.length === 0) return;
@@ -1421,8 +1420,8 @@
     function validateZipCheck() {
         const anyChecked = document.querySelectorAll('.z-chk:checked').length > 0 || document.getElementById('allZipMaster')?.checked;
         const sIn = document.getElementById('streetInput'); const blk = document.getElementById('blocker');
-        if (!anyChecked) { sIn.disabled = true; sIn.value = ""; sIn.placeholder = "Select Zip(s) first..."; blk.style.display = 'block'; } 
-        else { sIn.disabled = false; blk.style.display = 'none'; }
+        if (!anyChecked) { if(sIn) { sIn.disabled = true; sIn.value = ""; sIn.placeholder = "Select Zip(s) first..."; } if(blk) blk.style.display = 'block'; } 
+        else { if(sIn) sIn.disabled = false; if(blk) blk.style.display = 'none'; }
         
         const cfg = CITY_CONFIG[currentCityKey];
         let allEastChecked = true; let dcuCheckboxes = document.querySelectorAll('.z-chk').length > 0;
@@ -1553,7 +1552,7 @@
                 mappedTokens.push(tokens[i]);
             }
             transcript = mappedTokens.join(" "); transcript = transcript.replace(/\bMILL\s+(PLANE|PLAYNE|PLAN)\b/gi, "MILL PLAIN"); transcript = transcript.replace(/\bFOURTH\s+(PLANE|PLAYNE|PLAN)\b/gi, "FOURTH PLAIN");
-            const input = document.getElementById('streetInput'); input.value = transcript; lastSearchTerm = transcript; handleSearch();
+            const input = document.getElementById('streetInput'); if(input) { input.value = transcript; lastSearchTerm = transcript; } handleSearch();
         };
         recognition.start();
     }
@@ -1831,6 +1830,7 @@
     function openTime() { document.body.classList.add('modal-open-tk'); document.getElementById('logScrollFrame').scrollTop = 0; }
     function closeTime() { document.body.classList.remove('modal-open-tk'); }
     
+    // Security ledger fallback controls
     function saveTempEntries() { const data = { bt: document.getElementById('t-in').value, ol: document.getElementById('l-out').value, il: document.getElementById('l-in').value, et: document.getElementById('t-actual').value, date: new Date().toDateString() }; localStorage.setItem('usps_temp_entries', JSON.stringify(data)); }
     function loadTempEntries() { 
         const saved = localStorage.getItem('usps_temp_entries'); if (!saved) { calcGoal(); return; } 
@@ -1872,6 +1872,5 @@
     }
     window.onclick = function(e) { if (document.getElementById('zipList') && !document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); validateZipCheck(); } }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 </body>
 </html>
