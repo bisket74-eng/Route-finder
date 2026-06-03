@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-
     <title>USPS Route Finder</title>
     <link rel="preload" href="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" as="image" fetchpriority="high">
     
+    <!-- Heavy processing library now downloads in parallel with the page assets -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
     
     <style>
@@ -26,7 +26,7 @@
         #banner-wrap { transition: transform 0.4s ease, margin-top 0.4s ease; flex-shrink: 0; z-index: 100; position: relative; background: var(--lt-bl); }
         body.header-hidden #banner-wrap { transform: translateY(-100%); margin-top: -185px; }
         
-        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 15px 60px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
+        .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); padding: 20px 60px 15px 60px; text-align: center; color: white; border-top: 2.0px solid var(--dr-rd); border-bottom: 3px solid var(--dr-rd); border-left: none; border-right: none; position: relative; z-index: 5; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); box-sizing: border-box; }
         
         .city-sidebar-btn { position: absolute; right: 0; top: 0; bottom: 0; width: 48px; background: rgba(0, 0, 0, 0.45); border: none; border-left: 2px solid rgba(255, 255, 255, 0.25); color: var(--yl); font-size: 0.8rem; font-weight: 900; letter-spacing: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-transform: uppercase; line-height: 1.8; padding: 0; z-index: 1100; transition: background 0.2s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
         .city-sidebar-btn:hover { background: rgba(0, 0, 0, 0.6); }
@@ -532,56 +532,6 @@
 
 <script>
    const CITY_CONFIG = {
-               "albuquerque_central": {
-            name: "Albuquerque - Central & Uptown, New Mexico",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
-            stationMOU: ["87101", "87102", "87103"], // 3 ZIPs -> Grouped
-            stationDCU: ["87105", "87106", "87110"], // 3 ZIPs -> Grouped
-            mouName: "Main Post Office",
-            dcuName: "Uptown Station",
-            zipLabels: {
-                "87101": "87101",
-                "87102": "87102",
-                "87103": "87103",
-                "87105": "87105",
-                "87106": "87106",
-                "87110": "87110"
-            }
-        },
-        "albuquerque_north": {
-            name: "Albuquerque - North & East, New Mexico",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
-            stationMOU: ["87104", "87107", "87113"], // 3 ZIPs -> Grouped
-            stationDCU: ["87109", "87111", "87112"], // <3 ZIPs -> Standalone Labeled
-            mouName: "North Valley Station",
-            dcuName: "Standalone Stations",
-            zipLabels: {
-                "87104": "87104",
-                "87107": "87107",
-                "87113": "87113",
-                "87109": "87109 (Academy Station)",
-                "87111": "87111 (Steve Schiff Station)",
-                "87112": "87112 (Manzano Station)"
-            }
-        },
-        "albuquerque_west_foothills": {
-            name: "Albuquerque - West Mesa & Foothills, New Mexico",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
-            stationMOU: ["87114", "87120", "87121"], // 3 ZIPs -> Grouped
-            stationDCU: ["87122", "87123", "87124", "87144"], // <3 ZIPs -> Standalone Labeled
-            mouName: "Richard J. Pino Station",
-            dcuName: "Standalone Stations",
-            zipLabels: {
-                "87114": "87114",
-                "87120": "87120",
-                "87121": "87121",
-                "87122": "87122 (Foothills Station)",
-                "87123": "87123 (Foothills Station)",
-                "87124": "87124 (Rio Rancho Branch)",
-                "87144": "87144 (Rio Rancho Branch)"
-            }
-        },
-
         "alliance": {
             name: "Alliance, Nebraska",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/alliance.xlsx",
@@ -662,13 +612,6 @@
             mouName: "Battle Ground 98604",
             dcuName: ""
         },
-       "bay_city": {
-            name: "Bay City, Michigan",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bay_city.xlsx",
-            stationMOU: ["48706", "48708"],
-            stationDCU: []
-        },
-
         "belgrade": {
             name: "Belgrade, Montana",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/belgrade.xlsx",
@@ -699,14 +642,6 @@
             stationMOU: ["59715", "59718"],
             stationDCU: [],
             mouName: "All Bozeman Zips",
-            dcuName: ""
-        },
-         "butte": {
-            name: "Butte, Montana",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/butte.xlsx",
-            stationMOU: ["59701"],
-            stationDCU: [],
-            mouName: "Butte 59701",
             dcuName: ""
         },
         "camas": {
@@ -805,15 +740,6 @@
             mouName: "Due West 29639",
             dcuName: ""
         },
-        "essexville": {
-            name: "Essexville, Michigan",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/essexville.xlsx",
-            stationMOU: ["48732"],
-            stationDCU: [],
-            mouName: "Essexville 48732",
-            dcuName: ""
-        },
-
         "eudora": {
             name: "Eudora, Arkansas",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/eudora.xlsx",
@@ -886,13 +812,6 @@
             mouName: "Ipswich 57451",
             dcuName: ""
         },
-        "jenkintown": {
-            name: "Jenkintown, Pennsylvania",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/jenkintown.xlsx",
-            stationMOU: ["19046"],
-            stationDCU: []
-        },
-
         "kingston": {
             name: "Kingston, Tennessee",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kingston.xlsx",
@@ -1033,15 +952,6 @@
             mouName: "Pelzer 29669",
             dcuName: ""
         },
-        "pierre_part": {
-            name: "Pierre Part, Louisiana",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/pierre_part.xlsx",
-            stationMOU: ["70339"],
-            stationDCU: [],
-            mouName: "Pierre Part 70339",
-            dcuName: ""
-        },
-
         "port_angeles": {
             name: "Port Angeles, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/port_angeles.xlsx",
@@ -1262,14 +1172,7 @@
             stationDCU: [],
             mouName: "Woodland 98674",
             dcuName: ""
-        },
-               "yuma": {
-            name: "Yuma, Arizona",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/yuma.xlsx",
-            stationMOU: ["85364", "85365", "85367"],
-            stationDCU: []
         }
-
     };
     
     let currentCityKey = "vancouver";
@@ -1553,16 +1456,12 @@
         
         const cfg = CITY_CONFIG[currentCityKey];
         let allEastChecked = true; let dcuCheckboxes = document.querySelectorAll('.z-chk').length > 0;
-        if(cfg.stationDCU && cfg.stationDCU.length > 0) {
-            cfg.stationDCU.forEach(z => { const el = document.querySelector(`.z-chk[value="${z}"]`); if(el && !el.checked) allEastChecked = false; });
-            const eM = document.getElementById('eastMaster'); if(eM) eM.checked = allEastChecked && dcuCheckboxes;
-        }
+        cfg.stationDCU.forEach(z => { const el = document.querySelector(`.z-chk[value="${z}"]`); if(el && !el.checked) allEastChecked = false; });
+        const eM = document.getElementById('eastMaster'); if(eM) eM.checked = allEastChecked && dcuCheckboxes;
         
         let allMainChecked = true;
-        if(cfg.stationMOU && cfg.stationMOU.length > 0) {
-            cfg.stationMOU.forEach(z => { const el = document.querySelector(`.z-chk[value="${z}"]`); if(el && !el.checked) allMainChecked = false; });
-            const mM = document.getElementById('mainMaster'); if(mM) mM.checked = allMainChecked && dcuCheckboxes;
-        }
+        cfg.stationMOU.forEach(z => { const el = document.querySelector(`.z-chk[value="${z}"]`); if(el && !el.checked) allMainChecked = false; });
+        const mM = document.getElementById('mainMaster'); if(mM) mM.checked = allMainChecked && dcuCheckboxes;
     }
 
     function checkZipBeforeType() {
@@ -1646,7 +1545,7 @@
         
         const killAnimationHud = () => { micBtn.classList.remove('listening'); if(sInputNode) sInputNode.classList.remove('listening-active'); if(audioWaveNode) audioWaveNode.classList.remove('active'); };
         
-        recognition.onstart = () => { micBtn.classList.add('listening'); if(sInputNode) sInputNode.classList.add('listening-active'); if(audioWaveNode) audioWaveNode.classList.remove('active'); if(audioWaveNode) audioWaveNode.classList.add('active'); };
+        recognition.onstart = () => { micBtn.classList.add('listening'); if(sInputNode) sInputNode.classList.add('listening-active'); if(audioWaveNode) audioWaveNode.classList.add('active'); };
         recognition.onend = killAnimationHud;
         recognition.onerror = killAnimationHud;
         
@@ -1825,7 +1724,7 @@
         const input = document.getElementById('streetInput'); let rawVal = input.value.toUpperCase().trim();
         rawVal = rawVal.replace("AVENUE", "AVE").replace("STREET", "ST").replace("COURT", "CT").replace("ROAD", "RD").replace("DRIVE", "DR").replace("BOULEVARD", "BLVD").replace("LANE", "LN");
         rawVal = rawVal.replace("SOUTHEAST", "SE").replace("NORTHEAST", "NE").replace("NORTHWEST", "NW").replace("SOUTHWEST", "SW").replace("NORTH", "N").replace("SOUTH", "S").replace("EAST", "E").replace("WEST", "W");
-        rawVal = rawVal.replace(/\bMILL\s+(PLANE|PLAYNE|PLAN)\b/g, "MILL PLAIN").replace(/\bFOURTH\s+(PLANE|PLAYNE|PLAN)\g, "FOURTH PLAIN");
+        rawVal = rawVal.replace(/\bMILL\s+(PLANE|PLAYNE|PLAN)\b/g, "MILL PLAIN").replace(/\bFOURTH\s+(PLANE|PLAYNE|PLAN)\b/g, "FOURTH PLAIN");
 
         if (!document.getElementById('mainBody').classList.contains('cards-active')) { lastSearchTerm = input.value; }
         const sugBox = document.getElementById('suggestionBox'); if(sugBox) sugBox.innerHTML = "";
@@ -1925,8 +1824,8 @@
         let displayStr = 'Select Zip(s)...'; let evalLen = displayStr.length; const cfg = CITY_CONFIG[currentCityKey];
         
         if (isAll) { displayStr = 'ALL ZIPs'; evalLen = displayStr.length; } 
-        else if (isMain && cfg.stationMOU && Array.from(document.querySelectorAll('.z-chk')).filter(c => cfg.stationMOU.includes(c.value)).every(c => c.checked)) { displayStr = cfg.mouName; evalLen = 4; }
-        else if (isEast && cfg.stationDCU && Array.from(document.querySelectorAll('.z-chk')).filter(c => cfg.stationDCU.includes(c.value)).every(c => c.checked)) { displayStr = cfg.dcuName; evalLen = 4; }
+        else if (isMain && Array.from(document.querySelectorAll('.z-chk')).filter(c => cfg.stationMOU.includes(c.value)).every(c => c.checked)) { displayStr = cfg.mouName; evalLen = 4; }
+        else if (isEast && Array.from(document.querySelectorAll('.z-chk')).filter(c => cfg.stationDCU.includes(c.value)).every(c => c.checked)) { displayStr = cfg.dcuName; evalLen = 4; }
         else if (chks.length > 0) { displayStr = Array.from(chks).map(c=>c.value).join(', '); evalLen = displayStr.length; }
         
         if(trig) {
@@ -1991,15 +1890,15 @@
         hAll.innerHTML = `<input type="checkbox" id="allZipMaster" onchange="checkAllZips(this)"> ALL ZIPs`;
         box.appendChild(hAll);
         
-        let hasMOU = cfg.stationMOU && availableZips.some(z => cfg.stationMOU.includes(z));
-        if (hasMOU && cfg.stationDCU && cfg.stationDCU.length > 0 && cfg.mouName) {
+        let hasMOU = availableZips.some(z => cfg.stationMOU.includes(z));
+        if (hasMOU && cfg.stationDCU.length > 0) {
             const hMOU = document.createElement('label'); hMOU.className = "zip-item";
             hMOU.innerHTML = `<input type="checkbox" id="mainMaster" onchange="toggleStationGroup('MAIN', this)"> ${cfg.mouName.toUpperCase()}`;
             box.appendChild(hMOU);
         }
         
-        let hasDCU = cfg.stationDCU && availableZips.some(z => cfg.stationDCU.includes(z));
-        if (hasDCU && cfg.stationDCU && cfg.stationDCU.length > 0 && cfg.dcuName) {
+        let hasDCU = availableZips.some(z => cfg.stationDCU.includes(z));
+        if (hasDCU && cfg.stationDCU.length > 0) {
             const hDCU = document.createElement('label'); hDCU.className = "zip-item";
             hDCU.innerHTML = `<input type="checkbox" id="eastMaster" onchange="toggleStationGroup('EAST', this)"> ${cfg.dcuName.toUpperCase()}`;
             box.appendChild(hDCU);
