@@ -532,6 +532,56 @@
 
 <script>
    const CITY_CONFIG = {
+               "albuquerque_central": {
+            name: "Albuquerque - Central & Uptown, NM",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
+            stationMOU: ["87101", "87102", "87103"], // 3 ZIPs -> Grouped
+            stationDCU: ["87105", "87106", "87110"], // 3 ZIPs -> Grouped
+            mouName: "Main Post Office",
+            dcuName: "Uptown Station",
+            zipLabels: {
+                "87101": "87101",
+                "87102": "87102",
+                "87103": "87103",
+                "87105": "87105",
+                "87106": "87106",
+                "87110": "87110"
+            }
+        },
+        "albuquerque_north": {
+            name: "Albuquerque - North & East, NM",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
+            stationMOU: ["87104", "87107", "87113"], // 3 ZIPs -> Grouped
+            stationDCU: ["87109", "87111", "87112"], // <3 ZIPs -> Standalone Labeled
+            mouName: "North Valley Station",
+            dcuName: "Standalone Stations",
+            zipLabels: {
+                "87104": "87104",
+                "87107": "87107",
+                "87113": "87113",
+                "87109": "87109 (Academy Station)",
+                "87111": "87111 (Steve Schiff Station)",
+                "87112": "87112 (Manzano Station)"
+            }
+        },
+        "albuquerque_west_foothills": {
+            name: "Albuquerque - West Mesa & Foothills, NM",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
+            stationMOU: ["87114", "87120", "87121"], // 3 ZIPs -> Grouped
+            stationDCU: ["87122", "87123", "87124", "87144"], // <3 ZIPs -> Standalone Labeled
+            mouName: "Richard J. Pino Station",
+            dcuName: "Standalone Stations",
+            zipLabels: {
+                "87114": "87114",
+                "87120": "87120",
+                "87121": "87121",
+                "87122": "87122 (Foothills Station)",
+                "87123": "87123 (Foothills Station)",
+                "87124": "87124 (Rio Rancho Branch)",
+                "87144": "87144 (Rio Rancho Branch)"
+            }
+        },
+
         "alliance": {
             name: "Alliance, Nebraska",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/alliance.xlsx",
