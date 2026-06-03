@@ -532,6 +532,56 @@
 
 <script>
    const CITY_CONFIG = {
+        "albuquerque_central": {
+            name: "Albuquerque - Central & Uptown, NM",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
+            stationMOU: ["87101", "87102", "87103"], // 3 ZIPs -> Grouped
+            stationDCU: ["87105", "87106", "87110"], // 3 ZIPs -> Grouped
+            mouName: "Main Post Office",
+            dcuName: "Uptown Station",
+            zipLabels: {
+                "87101": "87101",
+                "87102": "87102",
+                "87103": "87103",
+                "87105": "87105",
+                "87106": "87106",
+                "87110": "87110"
+            }
+        },
+        "albuquerque_north": {
+            name: "Albuquerque - North & East, NM",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
+            stationMOU: ["87104", "87107", "87113"], // 3 ZIPs -> Grouped
+            stationDCU: ["87109", "87111", "87112"], // <3 ZIPs -> Standalone Labeled
+            mouName: "North Valley Station",
+            dcuName: "Standalone Stations",
+            zipLabels: {
+                "87104": "87104",
+                "87107": "87107",
+                "87113": "87113",
+                "87109": "87109 (Academy Station)",
+                "87111": "87111 (Steve Schiff Station)",
+                "87112": "87112 (Manzano Station)"
+            }
+        },
+        "albuquerque_west_foothills": {
+            name: "Albuquerque - West Mesa & Foothills, NM",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
+            stationMOU: ["87114", "87120", "87121"], // 3 ZIPs -> Grouped
+            stationDCU: ["87122", "87123", "87124", "87144"], // <3 ZIPs -> Standalone Labeled
+            mouName: "Richard J. Pino Station",
+            dcuName: "Standalone Stations",
+            zipLabels: {
+                "87114": "87114",
+                "87120": "87120",
+                "87121": "87121",
+                "87122": "87122 (Foothills Station)",
+                "87123": "87123 (Foothills Station)",
+                "87124": "87124 (Rio Rancho Branch)",
+                "87144": "87144 (Rio Rancho Branch)"
+            }
+        },
+
         "alliance": {
             name: "Alliance, Nebraska",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/alliance.xlsx",
@@ -612,6 +662,12 @@
             mouName: "Battle Ground 98604",
             dcuName: ""
         },
+       "bay_city": {
+            name: "Bay City, Michigan",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bay_city.xlsx",
+            stationMOU: ["48706", "48708"],
+            stationDCU: []
+        },
         "belgrade": {
             name: "Belgrade, Montana",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/belgrade.xlsx",
@@ -644,6 +700,15 @@
             mouName: "All Bozeman Zips",
             dcuName: ""
         },
+        "butte": {
+            name: "Butte, Montana",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/butte.xlsx",
+            stationMOU: ["59701"],
+            stationDCU: [],
+            mouName: "Butte 59701",
+            dcuName: ""
+        },
+
         "camas": {
             name: "Camas, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/camas.xlsx",
@@ -740,6 +805,15 @@
             mouName: "Due West 29639",
             dcuName: ""
         },
+        "essexville": {
+            name: "Essexville, Michigan",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/essexville.xlsx",
+            stationMOU: ["48732"],
+            stationDCU: [],
+            mouName: "Essexville 48732",
+            dcuName: ""
+        },
+
         "eudora": {
             name: "Eudora, Arkansas",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/eudora.xlsx",
@@ -812,6 +886,13 @@
             mouName: "Ipswich 57451",
             dcuName: ""
         },
+        "jenkintown": {
+            name: "Jenkintown, Pennsylvania",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/jenkintown.xlsx",
+            stationMOU: ["19046"],
+            stationDCU: []
+        },
+
         "kingston": {
             name: "Kingston, Tennessee",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kingston.xlsx",
@@ -952,6 +1033,15 @@
             mouName: "Pelzer 29669",
             dcuName: ""
         },
+        "pierre_part": {
+            name: "Pierre Part, Louisiana",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/pierre_part.xlsx",
+            stationMOU: ["70339"],
+            stationDCU: [],
+            mouName: "Pierre Part 70339",
+            dcuName: ""
+        },
+
         "port_angeles": {
             name: "Port Angeles, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/port_angeles.xlsx",
@@ -1164,8 +1254,14 @@
             stationDCU: [],
             mouName: "Williamsburg 49690",
             dcuName: ""
+        },   
+         "yuma": {
+            name: "Yuma, Arizona",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/yuma.xlsx",
+            stationMOU: ["85364", "85365", "85367"],
+            stationDCU: []
         },
-        "woodland": {
+       "woodland": {
             name: "Woodland, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/woodland.xlsx",
             stationMOU: ["98674"],
@@ -1173,6 +1269,7 @@
             mouName: "Woodland 98674",
             dcuName: ""
         }
+
     };
     
     let currentCityKey = "vancouver";
