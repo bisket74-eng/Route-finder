@@ -1,18 +1,6 @@
 {
   "short_name": "RouteFinder",
   "name": "Postal Route Finder",
-  "icons": [
-    {
-      "src": "https://img.icons8.com/fluent/192/map-marker.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "https://img.icons8.com/fluent/512/map-marker.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
   "start_url": "/Route-finder/index.html",
   "background_color": "#ffffff",
   "theme_color": "#000000",
