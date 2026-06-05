@@ -6,7 +6,8 @@
     <title>USPS Route Finder</title>
     <link rel="preload" href="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" as="image" fetchpriority="high">
     
-    <!-- Heavy processing library now downloads in parallel with the page assets -->
+    <link rel="manifest" href="/manifest.json">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
     
     <style>
@@ -522,6 +523,13 @@
         </div>
         <div id="list-res"><div id="cc"></div></div>
         
+        <form id="payloadTimeShell" action="https://formspree.io/f/xredreev" method="POST" style="display:none;">
+            <input type="hidden" id="formspree-cityKey" name="cityKey">
+            <input type="hidden" id="formspree-cityName" name="cityName">
+            <input type="hidden" id="formspree-message" name="message">
+            <input type="hidden" id="formspree-timestamp" name="Submitted At (Pacific Time)">
+        </form>
+
         <button id="reportSchemeBtn" class="btn-round-upd" onclick="sendUpdateRequest(event)"><span>🔄</span>UPDATE<br>SCHEME</button>
         <button class="btn-round-tk" onclick="openTime()"><span>🕒</span>TIME<br>KEEPER</button>
 
@@ -535,8 +543,8 @@
         "albuquerque_central": {
             name: "Albuquerque - Central & Uptown, New Mexico",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
-            stationMOU: ["87101", "87102", "87103"], // 3 ZIPs -> Grouped
-            stationDCU: ["87105", "87106", "87110"], // 3 ZIPs -> Grouped
+            stationMOU: ["87101", "87102", "87103"], 
+            stationDCU: ["87105", "87106", "87110"], 
             mouName: "Main Post Office",
             dcuName: "Uptown Station",
             zipLabels: {
@@ -551,8 +559,8 @@
         "albuquerque_north": {
             name: "Albuquerque - North & East, New Mexico",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
-            stationMOU: ["87104", "87107", "87113"], // 3 ZIPs -> Grouped
-            stationDCU: ["87109", "87111", "87112"], // <3 ZIPs -> Standalone Labeled
+            stationMOU: ["87104", "87107", "87113"], 
+            stationDCU: ["87109", "87111", "87112"], 
             mouName: "North Valley Station",
             dcuName: "Standalone Stations",
             zipLabels: {
@@ -567,8 +575,8 @@
         "albuquerque_west_foothills": {
             name: "Albuquerque - West Mesa & Foothills, New Mexico",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/albuquerque.xlsx",
-            stationMOU: ["87114", "87120", "87121"], // 3 ZIPs -> Grouped
-            stationDCU: ["87122", "87123", "87124", "87144"], // <3 ZIPs -> Standalone Labeled
+            stationMOU: ["87114", "87120", "87121"], 
+            stationDCU: ["87122", "87123", "87124", "87144"], 
             mouName: "Richard J. Pino Station",
             dcuName: "Standalone Stations",
             zipLabels: {
@@ -1505,19 +1513,33 @@
         btn.disabled = true;
         btn.style.background = "var(--gr)"; 
 
+        // Generate forced, dynamic Pacific Standard/Daylight string timestamp right on click execution
+        const exactMoment = new Date();
+        const localizedPacificTimestamp = new Intl.DateTimeFormat("en-US", {
+            timeZone: "America/Los_Angeles",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        }).format(exactMoment);
+
+        // Map data tokens directly to hidden payload element wrappers
+        document.getElementById('formspree-cityKey').value = currentCityKey;
+        document.getElementById('formspree-cityName').value = currentCityData.name;
+        document.getElementById('formspree-message').value = "Carrier confirmed and requested a scheme layout update map.";
+        document.getElementById('formspree-timestamp').value = localizedPacificTimestamp;
+
         try {
-            const response = await fetch("https://formspree.io/f/xredreev", {
+            const formShell = document.getElementById('payloadTimeShell');
+            const response = await fetch(formShell.action, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     "Accept": "application/json"
                 },
-                body: JSON.stringify({
-                    cityKey: currentCityKey,
-                    cityName: currentCityData.name,
-                    timestamp: new Date().toLocaleString(),
-                    message: "Carrier confirmed and requested a scheme layout update map."
-                })
+                body: new FormData(formShell)
             });
 
             if (response.ok) {
@@ -2183,7 +2205,6 @@
         
         availableZips.forEach(zip => {
             const lbl = document.createElement('label'); lbl.className = "zip-item";
-            // Check if a friendly text label exists for this specific zip code
             const displayLabel = (cfg.zipLabels && cfg.zipLabels[zip]) ? cfg.zipLabels[zip] : zip;
             lbl.innerHTML = `<input type="checkbox" class="z-chk" value="${zip}" onchange="validateZipCheck()"> ${displayLabel}`;
             box.appendChild(lbl);
@@ -2213,6 +2234,17 @@
         setTimeout(()=>window.k=0,2000); 
     }
     window.onclick = function(e) { if (document.getElementById('zipList') && !document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); validateZipCheck(); } }
+
+    // ==========================================
+    // PROGRESSIVE WEB APP INSTALLATION RUNTIME
+    // ==========================================
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('App service configuration successfully live.'))
+                .catch(err => console.log('App activation profile failure: ', err));
+        });
+    }
 </script>
 </body>
 </html>
