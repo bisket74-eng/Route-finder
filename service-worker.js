@@ -1,8 +1,8 @@
 const CACHE_NAME = 'route-finder-v1';
 // Files required to make the core app open offline
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html'
+  './',
+  'index.html'
 ];
 
 // Install the application assets
