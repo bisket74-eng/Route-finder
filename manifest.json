@@ -3,6 +3,7 @@
   "short_name": "RouteFinder",
   "description": "Quickly lookup sorting schemes and route maps.",
   "start_url": "/",
+  "scope": ".",
   "display": "standalone",
   "background_color": "#f4f6f9",
   "theme_color": "#007bc1",
