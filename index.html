@@ -2317,8 +2317,9 @@
                 .catch(err => console.log('App activation profile failure: ', err));
         });
     }
-    // ==========================================================================
-// SAFE PATCH: RETAINS NATIVE BUTTONS & ADDS CLEAN STACKED DATE
+
+// ==========================================================================
+// SAFE PATCH: RETAINS NATIVE BUTTONS & ADDS CLEAN STACKED DATE (NO UGLY ALERTS)
 // ==========================================================================
 
 async function getLatestExcelTimestampPatch() {
@@ -2421,18 +2422,20 @@ window.sendUpdateRequest = async function(event) {
                     headers: { 'Accept': 'application/json' }
                 });
                 
+                // === CHANGED TO USE YOUR APP'S BEAUTIFUL CUSTOM ALERTS ===
                 if (response.ok) {
-                    alert("Your update request has been submitted successfully!");
+                    openStyledAlert("UPDATE REQUEST SUBMITTED SUCCESSFULLY");
                 } else {
-                    alert("Failed to send request. Please try again.");
+                    openStyledAlert("FAILED TO SEND REQUEST. PLEASE TRY AGAIN.");
                 }
             } catch (err) {
                 console.error("Formspree fetch error:", err);
-                alert("An error occurred while sending the request.");
+                openStyledAlert("TRANSMISSION ERROR. PLEASE TRY AGAIN.");
             }
         };
     }
 };
+
 
 </script>
 </body>
