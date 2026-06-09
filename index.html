@@ -1431,6 +1431,14 @@
             mouName: "Ubly 48475",
             dcuName: ""
         },
+       "URBANA_IL_61801": {
+    cityName: "Urbana",
+    stateCode: "IL",
+    zipCode: "61801",
+    mou: "URBANA", // Standardizing mou
+    dataUrl: "YOUR_GITHUB_RAW_URL_FOR_URBANA_HERE" // *** IMPORTANT: YOU MUST REPLACE THIS PLACEHOLDER ***
+}
+
         "vancouver": {
             name: "Vancouver, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx",
@@ -2363,18 +2371,19 @@ window.sendUpdateRequest = async function(event) {
         cityName = currentCityData.name;
     }
 
-    // Fetch the clean user-facing date from GitHub (e.g., "Jun 4, 2026")
-    const fileLastUpdatedDate = await getLatestExcelTimestampPatch();
     
-    // Generate your full Pacific Time stamp with date AND time for YOUR personal records/Formspree
+        // Fetch the clean user-facing date from GitHub (e.g., "Jun 4, 2026")
+    const fileLastUpdatedDate = await getLatestExcelTimestampPatch();
+
+    // Generate your full Pacific Time stamp with date AND time for your records/Formspree
     const pacificTimestampFull = new Date().toLocaleString("en-US", {
         timeZone: "America/Los_Angeles",
         dateStyle: "medium",
         timeStyle: "short"
     });
-    
-    // Format your customized notification string (No "carrier" phrasing!)
-    const cleanMessageText = `Someone requested a scheme update in ${cityName} at ${pacificTimestampFull}`;
+
+    // Format your customized notification string
+    const cleanMessageText = `Someone requested a scheme update in ${cityName} (${activeKey}) @ ${pacificTimestampFull}`;
 
     // Map data to your existing hidden Formspree input IDs
     const inputKey = document.getElementById('formspree-cityKey');
@@ -2385,33 +2394,8 @@ window.sendUpdateRequest = async function(event) {
     if (inputKey) inputKey.value = activeKey;
     if (inputName) inputName.value = cityName;
     if (inputMsg) inputMsg.value = cleanMessageText;
-    if (inputTime) inputTime.value = pacificTimestampFull; // Keeps full time in your email!
-
-    // --- HOOK INTO YOUR BEAUTIFUL CUSTOM MODAL ---
-    const customModal = document.getElementById("confirmModal");
-    
-    if (customModal) {
-        // 1. Update the Main Top Header title bar cleanly
-        const modalMainTitle = customModal.querySelector("h3");
-        if (modalMainTitle) {
-            modalMainTitle.textContent = "SCHEME UPDATE REQUEST";
-            modalMainTitle.style.color = "#004b87";
-        }
-        
-        // 2. Safely find or create the inner body container wrapper inside the box
-        let innerContainer = customModal.querySelector(".patch-body-container");
-        if (!innerContainer) {
-            // Find the inside wrapper box (.del-box)
-            const delBox = customModal.querySelector(".del-box");
-            if (delBox) {
-                // Look for existing content text elements to replace or inject right below the title
-                let oldTextNode = delBox.querySelector("p") || delBox.querySelector("div");
-                if (oldTextNode) {
-                    oldTextNode.className = "patch-body-container";
-                    innerContainer = oldTextNode;
-                }
-            }
-        }
+    if (inputTime) inputTime.value = pacificTimestampFull;
+}
 
         // 3. Inject the balanced layout text safely without altering the operational structural divs
         if (innerContainer) {
