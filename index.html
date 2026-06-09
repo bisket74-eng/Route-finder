@@ -2310,24 +2310,22 @@
     }
 
 
-    
 // ==========================================================================
-// FINAL PATCH: BEAUTIFUL CUSTOM MODAL OVERRIDE & TRUE TIMESTAMPS
+// FINAL PERFECTED PATCH: THEMED BUTTON ASSIGNMENTS & LIVE TIMESTAMPS
 // ==========================================================================
 
-// 1. HELPER: Fetches the file's last commit date from GitHub and shows it in the user's local time
+// 1. HELPER: Uses your exact app variables to fetch the file's last commit date from GitHub
 async function getLatestExcelTimestampPatch() {
     try {
         let fileUrl = "";
         
-        // Dig directly into your active city data to grab the file URL
-        if (typeof currentCity !== 'undefined' && currentCity) {
-            fileUrl = typeof currentCity === 'object' ? currentCity.url : currentCity;
-        }
-        
-        // Fallback: If it's a string key, look it up in CITY_CONFIG
-        if (!fileUrl && typeof currentCity === 'string' && typeof CITY_CONFIG !== 'undefined') {
-            fileUrl = CITY_CONFIG[currentCity] ? CITY_CONFIG[currentCity].url : "";
+        // Target your exact application variables seen in image 1000035838.png
+        if (typeof currentCityData !== 'undefined' && currentCityData && currentCityData.url) {
+            fileUrl = currentCityData.url;
+        } else if (typeof currentCityKey !== 'undefined' && currentCityKey && typeof CITY_CONFIG !== 'undefined') {
+            if (CITY_CONFIG[currentCityKey]) {
+                fileUrl = CITY_CONFIG[currentCityKey].url;
+            }
         }
 
         if (!fileUrl) return "Update Available";
@@ -2341,7 +2339,7 @@ async function getLatestExcelTimestampPatch() {
         if (commits && commits.length > 0) {
             const utcDateStr = commits[0].commit.committer.date;
             
-            // Displays cleanly in the user's local device time zone
+            // Displays dynamically in the user's local device time zone
             return new Date(utcDateStr).toLocaleString("en-US", {
                 dateStyle: "medium",
                 timeStyle: "short"
@@ -2353,64 +2351,78 @@ async function getLatestExcelTimestampPatch() {
     return "Update Available";
 }
 
-// 2. INTERCEPTOR: Overrides the function your red button calls, using your custom app styles
+// 2. INTERCEPTOR: Overrides the function your red button calls and hooks into your custom modal
 window.sendUpdateRequest = async function(event) {
     if (event) event.preventDefault();
     
+    // Safely capture your active city info from image 1000035838.png
+    const activeKey = typeof currentCityKey !== 'undefined' ? currentCityKey : 'unknown';
     let cityName = "Selected City";
-    let cityKey = "unknown";
-
-    // Grab the proper active city name running on screen
-    if (typeof currentCity !== 'undefined' && currentCity) {
-        cityName = typeof currentCity === 'object' ? currentCity.name : currentCity;
+    if (typeof currentCityData !== 'undefined' && currentCityData && currentCityData.name) {
+        cityName = currentCityData.name;
     }
-    
-    const activeOpt = document.querySelector(".city-opt-btn.active-city");
-    if (activeOpt) cityName = activeOpt.textContent.trim();
 
-    // Fetch the real timestamp from GitHub
+    // Fetch the real live file timestamp from GitHub
     const fileLastUpdated = await getLatestExcelTimestampPatch();
     
-    // Create the clean text layout for your records
+    // Generate your clean Pacific Time stamp for your Formspree notifications
     const pacificTimestamp = new Date().toLocaleString("en-US", {
         timeZone: "America/Los_Angeles",
         dateStyle: "medium",
         timeStyle: "short"
     });
+    
+    // Format your customized notification string (No "carrier" phrasing!)
     const cleanMessageText = `Someone requested a scheme update in ${cityName} at ${pacificTimestamp}`;
 
-    // Map data to your hidden Formspree input IDs from image 1000035837.png
+    // Map data to your existing hidden Formspree input IDs from image 1000035837.png
     const inputKey = document.getElementById('formspree-cityKey');
     const inputName = document.getElementById('formspree-cityName');
     const inputMsg = document.getElementById('formspree-message');
     const inputTime = document.getElementById('formspree-timestamp');
 
-    if (inputKey) inputKey.value = cityKey;
+    if (inputKey) inputKey.value = activeKey;
     if (inputName) inputName.value = cityName;
     if (inputMsg) inputMsg.value = cleanMessageText;
     if (inputTime) inputTime.value = pacificTimestamp;
 
-    // --- CUSTOM MODAL SYSTEM ---
-    // This finds your app's existing beautiful container box on the screen
-    const customModal = document.getElementById("confirmModal") || document.getElementById("rowOptModal");
+    // --- HOOK INTO YOUR BEAUTIFUL CUSTOM MODAL ---
+    const customModal = document.getElementById("confirmModal");
     
     if (customModal) {
-        // Find the title/text element inside your app's pretty popup box
-        const modalHeading = customModal.querySelector("h3");
-        if (modalHeading) {
-            modalHeading.innerHTML = `Do you want to request an updated scheme?<br><br><span style="font-size:0.8rem; color:#777; font-weight:700;">Current Scheme Last Updated:<br>${fileLastUpdated}</span>`;
+        // Target the descriptive text container inside your modal
+        const modalBodyText = customModal.querySelector("div:not(.del-box)") || customModal.querySelector("h3") || customModal.querySelector(".del-box");
+        
+        // Dynamically inject the question and the real live file date
+        if (modalBodyText) {
+            modalBodyText.innerHTML = `<span style="font-size:1.05rem; font-weight:900; color:#004b87; display:block; margin-bottom:12px; text-transform:uppercase;">Do you want to request an updated scheme?</span>` +
+                                      `<span style="font-size:0.85rem; color:#666; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:block; line-height:1.4;">Current Scheme Last Updated:<br><b style="color:#222; font-size:0.9rem;">${fileLastUpdated}</b></span>`;
         }
         
-        // Display your app's pretty built-in popup box!
+        // Match the exact button layouts seen on your screen:
+        // Left button is green (.btn-grn), Right button is red (.btn-red)
+        const greenBtn = customModal.querySelector(".btn-grn") || customModal.querySelector(".btn-del-action:nth-child(1)");
+        const redBtn = customModal.querySelector(".btn-red") || customModal.querySelector(".btn-del-action:nth-child(2)");
+        
+        // Set the text values exactly as requested
+        if (greenBtn) greenBtn.textContent = "RETURN";
+        if (redBtn) redBtn.textContent = "UPDATE";
+        
+        // Open your beautiful modal display on screen
         customModal.style.display = "flex";
         
-        // Look for the confirmation button inside your beautiful box
-        const confirmBtn = customModal.querySelector(".btn-del-action") || customModal.querySelector("button:not(.modal-x)");
-        if (confirmBtn) {
-            confirmBtn.onclick = async function() {
-                customModal.style.display = "none"; // Close box
+        // GREEN BUTTON ACTION (Left): Cancels and goes back safely
+        if (greenBtn) {
+            greenBtn.onclick = function() {
+                customModal.style.display = "none";
+            };
+        }
+        
+        // RED BUTTON ACTION (Right): Submits the update request to Formspree
+        if (redBtn) {
+            redBtn.onclick = async function() {
+                customModal.style.display = "none"; // Hide modal smoothly
                 
-                // Fire off the email payload to Formspree silently
                 try {
                     const formShell = document.getElementById('payloadTimeShell');
                     const actionUrl = formShell ? formShell.action : "https://formspree.io/f/xredreev";
@@ -2423,19 +2435,23 @@ window.sendUpdateRequest = async function(event) {
                     
                     if (response.ok) {
                         alert("Your update request has been submitted successfully!");
+                    } else {
+                        alert("Failed to send request. Please try again.");
                     }
                 } catch (err) {
-                    console.error("Formspree error:", err);
+                    console.error("Formspree fetch error:", err);
+                    alert("An error occurred while sending the request.");
                 }
             };
         }
     } else {
-        // Safe Emergency Fallback: If your custom layout block can't be reached, it uses the standard prompt so it never breaks
-        if (confirm(`Do you want to request an updated scheme?\n\nLast Updated: ${fileLastUpdated}`)) {
+        // Safe Emergency Fallback: If the modal setup is missing, execute a native prompt so the app never fails
+        if (confirm(`Do you want to request an updated scheme?\n\nCurrent Scheme Last Updated:\n${fileLastUpdated}`)) {
             document.getElementById('payloadTimeShell').submit();
         }
     }
 };
+
 
 </script>
 </body>
