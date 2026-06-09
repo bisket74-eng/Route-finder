@@ -2317,6 +2317,123 @@
                 .catch(err => console.log('App activation profile failure: ', err));
         });
     }
+    // ==========================================================================
+// SAFE PATCH: RETAINS NATIVE BUTTONS & ADDS CLEAN STACKED DATE
+// ==========================================================================
+
+async function getLatestExcelTimestampPatch() {
+    try {
+        let fileUrl = "";
+        if (typeof currentCityKey !== 'undefined' && currentCityKey && typeof CITY_CONFIG !== 'undefined') {
+            if (CITY_CONFIG[currentCityKey]) fileUrl = CITY_CONFIG[currentCityKey].url;
+        }
+        if (!fileUrl) return "Update Available";
+        
+        const filename = fileUrl.split('/').pop();
+        const response = await fetch(`https://api.github.com/repos/bisket74-eng/Route-finder/commits?path=${filename}&per_page=1`);
+        
+        if (!response.ok) return "Update Available";
+        
+        const commits = await response.json();
+        if (commits && commits.length > 0) {
+            const utcDateStr = commits[0].commit.committer.date;
+            // Clean date format (e.g., "Jun 4, 2026")
+            return new Date(utcDateStr).toLocaleDateString("en-US", {
+                month: "short", day: "numeric", year: "numeric"
+            });
+        }
+    } catch (error) {
+        console.error("Error fetching GitHub timestamp:", error);
+    }
+    return "Update Available";
+}
+
+window.sendUpdateRequest = async function(event) {
+    if (event) event.preventDefault();
+    
+    const activeKey = typeof currentCityKey !== 'undefined' ? currentCityKey : 'unknown';
+    let cityName = "Selected City";
+    if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
+        cityName = CITY_CONFIG[activeKey].name.split(',')[0].trim();
+    }
+
+    // Opens the native modal immediately with a loading state so it feels instant
+    const msgBox = document.getElementById('confirmMsg');
+    if (msgBox) {
+        msgBox.innerHTML = "SCHEME UPDATE REQUEST<br><br><span style='font-size:0.85rem; color:#666;'>Loading date...</span>";
+    }
+    document.getElementById('alertBtns').style.display = 'none';
+    document.getElementById('confirmBtns').style.display = 'flex';
+    document.getElementById('confirmModal').style.display = 'flex';
+
+    // Fetch the public date from GitHub quietly in the background
+    const fileLastUpdatedDate = await getLatestExcelTimestampPatch();
+    
+    // Generate the full Pacific Time stamp for your private Formspree logs
+    const pacificTimestampFull = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles", dateStyle: "medium", timeStyle: "short" });
+    const cleanMessageText = `Someone requested a scheme update in ${cityName} at ${pacificTimestampFull}`;
+
+    const inputKey = document.getElementById('formspree-cityKey');
+    const inputName = document.getElementById('formspree-cityName');
+    const inputMsg = document.getElementById('formspree-message');
+    const inputTime = document.getElementById('formspree-timestamp');
+
+    if (inputKey) inputKey.value = activeKey;
+    if (inputName) inputName.value = cityName;
+    if (inputMsg) inputMsg.value = cleanMessageText;
+    if (inputTime) inputTime.value = pacificTimestampFull;
+
+    // Inject the perfectly formatted text directly into your native title element
+    if (msgBox) {
+        msgBox.innerHTML = 
+            `SCHEME UPDATE REQUEST` +
+            `<div style="margin-top: 15px; font-size: 0.95rem; font-weight: 900; color: #004b87; text-transform: uppercase;">` +
+                `DO YOU WANT TO REQUEST AN UPDATED SCHEME?` +
+            `</div>` +
+            `<div style="margin-top: 8px; font-size: 0.8rem; color: #666; font-weight: 700; text-transform: uppercase;">` +
+                `(LAST UPDATED: ${fileLastUpdatedDate})` +
+            `</div>`;
+    }
+
+    // Hook up your original layout buttons securely
+    const greenBtn = document.querySelector("#confirmBtns .btn-grn");
+    const redBtn = document.getElementById("executeBtn");
+
+    if (greenBtn) {
+        greenBtn.textContent = "CANCEL";
+        greenBtn.onclick = function() {
+            document.getElementById('confirmModal').style.display = "none";
+        };
+    }
+
+    if (redBtn) {
+        redBtn.textContent = "UPDATE";
+        redBtn.onclick = async function() {
+            document.getElementById('confirmModal').style.display = "none";
+            
+            try {
+                const formShell = document.getElementById('payloadTimeShell');
+                const actionUrl = formShell ? formShell.action : "https://formspree.io/f/xredreev";
+                
+                const response = await fetch(actionUrl, {
+                    method: "POST",
+                    body: new FormData(formShell),
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                if (response.ok) {
+                    alert("Your update request has been submitted successfully!");
+                } else {
+                    alert("Failed to send request. Please try again.");
+                }
+            } catch (err) {
+                console.error("Formspree fetch error:", err);
+                alert("An error occurred while sending the request.");
+            }
+        };
+    }
+};
+
 </script>
 </body>
 </html>
