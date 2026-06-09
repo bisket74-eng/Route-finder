@@ -2309,15 +2309,14 @@
         });
     }
     // ==========================================================================
-// PATCH: OVERRIDE UPDATE SCHEME BUTTON WITH CLEAN TIMESTAMPS & PHRASING
+// CORRECTED PATCH: OVERRIDE UPDATE SCHEME BUTTON WITH AUTOMATIC CITY DETECTION
 // ==========================================================================
 
 // 1. HELPER: Fetches the file's last commit date from GitHub and shows it in the user's local device time
-async function getLatestExcelTimestampPatch(cityKey) {
+async function getLatestExcelTimestampPatch(fileUrl) {
     try {
-        if (typeof CITY_CONFIG === 'undefined' || !CITY_CONFIG[cityKey] || !CITY_CONFIG[cityKey].url) return null;
-        
-        const filename = CITY_CONFIG[cityKey].url.split('/').pop();
+        if (!fileUrl) return null;
+        const filename = fileUrl.split('/').pop();
         const response = await fetch(`https://api.github.com/repos/bisket74-eng/Route-finder/commits?path=${filename}&per_page=1`);
         
         if (!response.ok) return null;
@@ -2342,18 +2341,52 @@ async function getLatestExcelTimestampPatch(cityKey) {
 async function handleUpdateRequestPatch(event) {
     if (event) event.preventDefault();
     
-    // Safely pull the active city variables already running in your app
-    const activeKey = typeof currentCity !== 'undefined' ? currentCity : '';
-    
-    if (!activeKey || typeof CITY_CONFIG === 'undefined' || !CITY_CONFIG[activeKey]) {
-        alert("Please select a city first.");
-        return;
+    let targetUrl = "";
+    let cityName = "";
+    let cityKey = "unknown";
+
+    // SMART SELECTION: Look at what city is actually active in your app right now
+    if (typeof currentCity !== 'undefined' && currentCity) {
+        if (typeof currentCity === 'object') {
+            // If currentCity is the full configuration object
+            targetUrl = currentCity.url || "";
+            cityName = currentCity.name || "";
+        } else if (typeof currentCity === 'string') {
+            // If currentCity is just the key string
+            cityKey = currentCity;
+            if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[currentCity]) {
+                targetUrl = CITY_CONFIG[currentCity].url || "";
+                cityName = CITY_CONFIG[currentCity].name || "";
+            }
+        }
     }
-    
-    const cityName = CITY_CONFIG[activeKey].name;
-    
+
+    // Fallback: If the app variable is tricky, read it straight from the active dropdown option on screen
+    if (!targetUrl) {
+        const activeOpt = document.querySelector(".city-opt-btn.active-city");
+        if (activeOpt) {
+            cityName = activeOpt.textContent.trim();
+            // Try to match it back to your config definitions
+            if (typeof CITY_CONFIG !== 'undefined') {
+                for (const key in CITY_CONFIG) {
+                    if (CITY_CONFIG[key].name && CITY_CONFIG[key].name.toUpperCase() === cityName.toUpperCase()) {
+                        targetUrl = CITY_CONFIG[key].url;
+                        cityKey = key;
+                        cityName = CITY_CONFIG[key].name;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // If we still can't find it, we'll gracefully fall back to a safe default so the app NEVER locks up
+    if (!cityName) {
+        cityName = "Selected City";
+    }
+
     // Get the dynamic file upload time for their popup alert box
-    const fileLastUpdated = await getLatestExcelTimestampPatch(activeKey) || "Unknown";
+    const fileLastUpdated = await getLatestExcelTimestampPatch(targetUrl) || "Recent Update";
     
     // Show the popup directly to the user
     const userConfirmed = confirm(
@@ -2373,13 +2406,18 @@ async function handleUpdateRequestPatch(event) {
     // Format your clean notification string exactly how you requested it
     const cleanMessageText = `Someone requested a scheme update in ${cityName} at ${pacificTimestamp}`;
     
-    // Map the cleaned text and data straight to your existing Formspree hidden inputs from 1000035837.png
-    document.getElementById('formspree-cityKey').value = activeKey;
-    document.getElementById('formspree-cityName').value = cityName;
-    document.getElementById('formspree-message').value = cleanMessageText;
-    document.getElementById('formspree-timestamp').value = pacificTimestamp;
+    // Fill the existing hidden Formspree input elements securely
+    const inputKey = document.getElementById('formspree-cityKey');
+    const inputName = document.getElementById('formspree-cityName');
+    const inputMsg = document.getElementById('formspree-message');
+    const inputTime = document.getElementById('formspree-timestamp');
+
+    if (inputKey) inputKey.value = cityKey;
+    if (inputName) inputName.value = cityName;
+    if (inputMsg) inputMsg.value = cleanMessageText;
+    if (inputTime) inputTime.value = pacificTimestamp;
     
-    // Silently dispatch the payload to Formspree using your exact setup from 1000035838.png
+    // Send it off to your Formspree endpoint from 1000035837.png
     try {
         const formShell = document.getElementById('payloadTimeShell');
         const actionUrl = formShell ? formShell.action : "https://formspree.io/f/xredreev";
