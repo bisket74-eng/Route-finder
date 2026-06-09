@@ -2317,9 +2317,8 @@
         });
     }
 
-
 // ==========================================================================
-// FINAL PERFECTED PATCH: SECURE TEXT TARGETING & CLEAN DATE DISPLAY
+// FINAL PERFECTED PATCH: VERTICALLY STACKED CLEAN LAYOUT & TIME TRACKING
 // ==========================================================================
 
 // 1. HELPER: Fetches the file's last commit date from GitHub and formats it to a clean DATE ONLY for the user
@@ -2327,10 +2326,8 @@ async function getLatestExcelTimestampPatch() {
     try {
         let fileUrl = "";
         
-        // Target your exact application variables seen in your GitHub screenshots
-        if (typeof currentCityData !== 'undefined' && currentCityData && currentCityData.url) {
-            fileUrl = currentCityData.url;
-        } else if (typeof currentCityKey !== 'undefined' && currentCityKey && typeof CITY_CONFIG !== 'undefined') {
+        // Target your exact active city configuration object or key
+        if (typeof currentCityKey !== 'undefined' && currentCityKey && typeof CITY_CONFIG !== 'undefined') {
             if (CITY_CONFIG[currentCityKey]) {
                 fileUrl = CITY_CONFIG[currentCityKey].url;
             }
@@ -2360,30 +2357,29 @@ async function getLatestExcelTimestampPatch() {
     return "Update Available";
 }
 
-// 2. INTERCEPTOR: Overrides the function your red button calls and styles your custom modal beautifully
+// 2. INTERCEPTOR: Overrides the function your red button calls and handles everything beautifully
 window.sendUpdateRequest = async function(event) {
     if (event) event.preventDefault();
     
     // Safely capture your active city info
     const activeKey = typeof currentCityKey !== 'undefined' ? currentCityKey : 'unknown';
     let cityName = "Selected City";
-    if (typeof currentCityData !== 'undefined' && currentCityData && currentCityData.name) {
-        cityName = currentCityData.name;
+    if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
+        cityName = CITY_CONFIG[activeKey].name.split(',')[0].trim();
     }
 
-    
-        // Fetch the clean user-facing date from GitHub (e.g., "Jun 4, 2026")
+    // Fetch the clean user-facing date from GitHub (e.g., "Jun 4, 2026")
     const fileLastUpdatedDate = await getLatestExcelTimestampPatch();
-
-    // Generate your full Pacific Time stamp with date AND time for your records/Formspree
+    
+    // Generate your full Pacific Time stamp with date AND time for YOUR personal records/Formspree
     const pacificTimestampFull = new Date().toLocaleString("en-US", {
         timeZone: "America/Los_Angeles",
         dateStyle: "medium",
         timeStyle: "short"
     });
-
-    // Format your customized notification string
-    const cleanMessageText = `Someone requested a scheme update in ${cityName} (${activeKey}) @ ${pacificTimestampFull}`;
+    
+    // Format your customized notification string (No "carrier" phrasing!)
+    const cleanMessageText = `Someone requested a scheme update in ${cityName} at ${pacificTimestampFull}`;
 
     // Map data to your existing hidden Formspree input IDs
     const inputKey = document.getElementById('formspree-cityKey');
@@ -2394,19 +2390,43 @@ window.sendUpdateRequest = async function(event) {
     if (inputKey) inputKey.value = activeKey;
     if (inputName) inputName.value = cityName;
     if (inputMsg) inputMsg.value = cleanMessageText;
-    if (inputTime) inputTime.value = pacificTimestampFull;
-}
+    if (inputTime) inputTime.value = pacificTimestampFull; // Keeps full time in your email!
 
-        // 3. Inject the balanced layout text safely without altering the operational structural divs
+    // --- HOOK INTO YOUR BEAUTIFUL CUSTOM MODAL ---
+    const customModal = document.getElementById("confirmModal");
+    
+    if (customModal) {
+        // 1. Update the Main Top Header title bar cleanly
+        const modalMainTitle = customModal.querySelector("h3");
+        if (modalMainTitle) {
+            modalMainTitle.textContent = "SCHEME UPDATE REQUEST";
+            modalMainTitle.style.color = "#004b87";
+            modalMainTitle.style.marginBottom = "5px";
+        }
+        
+        // 2. Safely locate the message wrapper container inside your existing modal box
+        let innerContainer = customModal.querySelector(".patch-body-container");
+        if (!innerContainer) {
+            const delBox = customModal.querySelector(".del-box");
+            if (delBox) {
+                // Find your old placeholder element or descriptive container text node inside the box
+                let oldTextNode = delBox.querySelector("p") || delBox.querySelector("div:not(#confirmBtns):not(#alertBtns)");
+                if (oldTextNode) {
+                    oldTextNode.className = "patch-body-container";
+                    innerContainer = oldTextNode;
+                }
+            }
+        }
+
+        // 3. Inject a beautifully stacked layout so it never clips or breaks your button elements
         if (innerContainer) {
             innerContainer.innerHTML = 
-                `<div style="display: flex; gap: 12px; align-items: center; justify-content: center; width: 100%; margin: 15px 0; font-family: sans-serif;">` +
-                    `<div style="flex: 1.1; font-size: 0.95rem; font-weight: 900; color: #004b87; text-align: center; line-height: 1.3; text-transform: uppercase;">` +
+                `<div style="text-align: center; width: 100%; margin: 12px 0; font-family: sans-serif;">` +
+                    `<div style="font-size: 1.05rem; font-weight: 900; color: #004b87; line-height: 1.3; text-transform: uppercase; margin-bottom: 8px;">` +
                         `DO YOU WANT TO REQUEST AN UPDATED SCHEME?` +
                     `</div>` +
-                    `<div style="flex: 0.9; font-size: 0.75rem; color: #555; font-weight: 700; text-align: center; border-left: 2px solid #ccc; padding-left: 10px; line-height: 1.4; text-transform: uppercase;">` +
-                        `CURRENT SCHEME<br>LAST UPDATED:<br>` +
-                        `<b style="color: #222; font-size: 0.9rem; display: block; margin-top: 3px;">${fileLastUpdatedDate}</b>` +
+                    `<div style="font-size: 0.8rem; color: #666; font-weight: 700; line-height: 1.2; text-transform: uppercase;">` +
+                        `CURRENT SCHEME LAST UPDATED: <b style="color: #222; font-size: 0.95rem; margin-left: 3px;">${fileLastUpdatedDate}</b>` +
                     `</div>` +
                 `</div>`;
         }
