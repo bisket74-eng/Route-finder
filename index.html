@@ -2311,7 +2311,7 @@
 
 
 // ==========================================================================
-// FINAL PERFECTED PATCH: FIXED BUTTONS, CLEAN LAYOUT & TIMELESS STYLING
+// FINAL PERFECTED PATCH: SECURE TEXT TARGETING & CLEAN DATE DISPLAY
 // ==========================================================================
 
 // 1. HELPER: Fetches the file's last commit date from GitHub and formats it to a clean DATE ONLY for the user
@@ -2319,7 +2319,7 @@ async function getLatestExcelTimestampPatch() {
     try {
         let fileUrl = "";
         
-        // Target your exact application variables
+        // Target your exact application variables seen in your GitHub screenshots
         if (typeof currentCityData !== 'undefined' && currentCityData && currentCityData.url) {
             fileUrl = currentCityData.url;
         } else if (typeof currentCityKey !== 'undefined' && currentCityKey && typeof CITY_CONFIG !== 'undefined') {
@@ -2352,7 +2352,7 @@ async function getLatestExcelTimestampPatch() {
     return "Update Available";
 }
 
-// 2. INTERCEPTOR: Overrides the function your red button calls and handles everything beautifully
+// 2. INTERCEPTOR: Overrides the function your red button calls and styles your custom modal beautifully
 window.sendUpdateRequest = async function(event) {
     if (event) event.preventDefault();
     
@@ -2366,7 +2366,7 @@ window.sendUpdateRequest = async function(event) {
     // Fetch the clean user-facing date from GitHub (e.g., "Jun 4, 2026")
     const fileLastUpdatedDate = await getLatestExcelTimestampPatch();
     
-    // Generate your full Pacific Time stamp with date and time for YOUR personal records/Formspree
+    // Generate your full Pacific Time stamp with date AND time for YOUR personal records/Formspree
     const pacificTimestampFull = new Date().toLocaleString("en-US", {
         timeZone: "America/Los_Angeles",
         dateStyle: "medium",
@@ -2398,22 +2398,36 @@ window.sendUpdateRequest = async function(event) {
             modalMainTitle.style.color = "#004b87";
         }
         
-        // 2. Update ONLY the central question area, preserving the layout buttons below it
-        const questionText = customModal.querySelector(".del-box p") || customModal.querySelector("p");
-        if (questionText) {
-            questionText.innerHTML = 
-                `<div style="display: flex; gap: 15px; align-items: center; justify-content: center; width: 100%; margin-top: 10px;">` +
-                    `<div style="flex: 1.2; font-size: 1rem; font-weight: 900; color: #004b87; text-align: left; line-height: 1.3;">` +
+        // 2. Safely find or create the inner body container wrapper inside the box
+        let innerContainer = customModal.querySelector(".patch-body-container");
+        if (!innerContainer) {
+            // Find the inside wrapper box (.del-box)
+            const delBox = customModal.querySelector(".del-box");
+            if (delBox) {
+                // Look for existing content text elements to replace or inject right below the title
+                let oldTextNode = delBox.querySelector("p") || delBox.querySelector("div");
+                if (oldTextNode) {
+                    oldTextNode.className = "patch-body-container";
+                    innerContainer = oldTextNode;
+                }
+            }
+        }
+
+        // 3. Inject the balanced layout text safely without altering the operational structural divs
+        if (innerContainer) {
+            innerContainer.innerHTML = 
+                `<div style="display: flex; gap: 12px; align-items: center; justify-content: center; width: 100%; margin: 15px 0; font-family: sans-serif;">` +
+                    `<div style="flex: 1.1; font-size: 0.95rem; font-weight: 900; color: #004b87; text-align: center; line-height: 1.3; text-transform: uppercase;">` +
                         `DO YOU WANT TO REQUEST AN UPDATED SCHEME?` +
                     `</div>` +
-                    `<div style="flex: 1; font-size: 0.8rem; color: #555; font-weight: 700; text-align: left; border-left: 2px solid #ccc; padding-left: 12px; line-height: 1.4;">` +
+                    `<div style="flex: 0.9; font-size: 0.75rem; color: #555; font-weight: 700; text-align: center; border-left: 2px solid #ccc; padding-left: 10px; line-height: 1.4; text-transform: uppercase;">` +
                         `CURRENT SCHEME<br>LAST UPDATED:<br>` +
-                        `<b style="color: #222; font-size: 0.95rem; display: block; margin-top: 2px;">${fileLastUpdatedDate}</b>` +
+                        `<b style="color: #222; font-size: 0.9rem; display: block; margin-top: 3px;">${fileLastUpdatedDate}</b>` +
                     `</div>` +
                 `</div>`;
         }
         
-        // 3. Grab your green (left) and red (right) action buttons safely
+        // 4. Grab your green (left) and red (right) action buttons safely
         const greenBtn = customModal.querySelector(".btn-grn") || customModal.querySelector(".btn-del-action:nth-child(1)");
         const redBtn = customModal.querySelector(".btn-red") || customModal.querySelector(".btn-del-action:nth-child(2)");
         
@@ -2464,7 +2478,6 @@ window.sendUpdateRequest = async function(event) {
         }
     }
 };
-
 
 
 </script>
