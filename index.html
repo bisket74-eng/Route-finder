@@ -2308,24 +2308,40 @@
                 .catch(err => console.log('App activation profile failure: ', err));
         });
     }
-    // ==========================================================================
-// CORRECTED PATCH: OVERRIDE UPDATE SCHEME BUTTON WITH AUTOMATIC CITY DETECTION
+
+
+    
+// ==========================================================================
+// FINAL PATCH: BEAUTIFUL CUSTOM MODAL OVERRIDE & TRUE TIMESTAMPS
 // ==========================================================================
 
-// 1. HELPER: Fetches the file's last commit date from GitHub and shows it in the user's local device time
-async function getLatestExcelTimestampPatch(fileUrl) {
+// 1. HELPER: Fetches the file's last commit date from GitHub and shows it in the user's local time
+async function getLatestExcelTimestampPatch() {
     try {
-        if (!fileUrl) return null;
+        let fileUrl = "";
+        
+        // Dig directly into your active city data to grab the file URL
+        if (typeof currentCity !== 'undefined' && currentCity) {
+            fileUrl = typeof currentCity === 'object' ? currentCity.url : currentCity;
+        }
+        
+        // Fallback: If it's a string key, look it up in CITY_CONFIG
+        if (!fileUrl && typeof currentCity === 'string' && typeof CITY_CONFIG !== 'undefined') {
+            fileUrl = CITY_CONFIG[currentCity] ? CITY_CONFIG[currentCity].url : "";
+        }
+
+        if (!fileUrl) return "Update Available";
+        
         const filename = fileUrl.split('/').pop();
         const response = await fetch(`https://api.github.com/repos/bisket74-eng/Route-finder/commits?path=${filename}&per_page=1`);
         
-        if (!response.ok) return null;
+        if (!response.ok) return "Update Available";
         
         const commits = await response.json();
         if (commits && commits.length > 0) {
             const utcDateStr = commits[0].commit.committer.date;
             
-            // Displays in whatever local time zone the user's phone/computer is set to
+            // Displays cleanly in the user's local device time zone
             return new Date(utcDateStr).toLocaleString("en-US", {
                 dateStyle: "medium",
                 timeStyle: "short"
@@ -2334,79 +2350,36 @@ async function getLatestExcelTimestampPatch(fileUrl) {
     } catch (error) {
         console.error("Error fetching GitHub timestamp:", error);
     }
-    return null;
+    return "Update Available";
 }
 
-// 2. MAIN EXECUTION: The clean patch logic for handling the button press
-async function handleUpdateRequestPatch(event) {
+// 2. INTERCEPTOR: Overrides the function your red button calls, using your custom app styles
+window.sendUpdateRequest = async function(event) {
     if (event) event.preventDefault();
     
-    let targetUrl = "";
-    let cityName = "";
+    let cityName = "Selected City";
     let cityKey = "unknown";
 
-    // SMART SELECTION: Look at what city is actually active in your app right now
+    // Grab the proper active city name running on screen
     if (typeof currentCity !== 'undefined' && currentCity) {
-        if (typeof currentCity === 'object') {
-            // If currentCity is the full configuration object
-            targetUrl = currentCity.url || "";
-            cityName = currentCity.name || "";
-        } else if (typeof currentCity === 'string') {
-            // If currentCity is just the key string
-            cityKey = currentCity;
-            if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[currentCity]) {
-                targetUrl = CITY_CONFIG[currentCity].url || "";
-                cityName = CITY_CONFIG[currentCity].name || "";
-            }
-        }
+        cityName = typeof currentCity === 'object' ? currentCity.name : currentCity;
     }
-
-    // Fallback: If the app variable is tricky, read it straight from the active dropdown option on screen
-    if (!targetUrl) {
-        const activeOpt = document.querySelector(".city-opt-btn.active-city");
-        if (activeOpt) {
-            cityName = activeOpt.textContent.trim();
-            // Try to match it back to your config definitions
-            if (typeof CITY_CONFIG !== 'undefined') {
-                for (const key in CITY_CONFIG) {
-                    if (CITY_CONFIG[key].name && CITY_CONFIG[key].name.toUpperCase() === cityName.toUpperCase()) {
-                        targetUrl = CITY_CONFIG[key].url;
-                        cityKey = key;
-                        cityName = CITY_CONFIG[key].name;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    // If we still can't find it, we'll gracefully fall back to a safe default so the app NEVER locks up
-    if (!cityName) {
-        cityName = "Selected City";
-    }
-
-    // Get the dynamic file upload time for their popup alert box
-    const fileLastUpdated = await getLatestExcelTimestampPatch(targetUrl) || "Recent Update";
     
-    // Show the popup directly to the user
-    const userConfirmed = confirm(
-        `Do you want to request an updated scheme?\n\n` +
-        `Current Scheme Last Updated:\n${fileLastUpdated}`
-    );
+    const activeOpt = document.querySelector(".city-opt-btn.active-city");
+    if (activeOpt) cityName = activeOpt.textContent.trim();
+
+    // Fetch the real timestamp from GitHub
+    const fileLastUpdated = await getLatestExcelTimestampPatch();
     
-    if (!userConfirmed) return; // User tapped cancel
-    
-    // Generate your requested clean Pacific Time stamp for when they hit the button
+    // Create the clean text layout for your records
     const pacificTimestamp = new Date().toLocaleString("en-US", {
         timeZone: "America/Los_Angeles",
         dateStyle: "medium",
         timeStyle: "short"
     });
-    
-    // Format your clean notification string exactly how you requested it
     const cleanMessageText = `Someone requested a scheme update in ${cityName} at ${pacificTimestamp}`;
-    
-    // Fill the existing hidden Formspree input elements securely
+
+    // Map data to your hidden Formspree input IDs from image 1000035837.png
     const inputKey = document.getElementById('formspree-cityKey');
     const inputName = document.getElementById('formspree-cityName');
     const inputMsg = document.getElementById('formspree-message');
@@ -2416,51 +2389,53 @@ async function handleUpdateRequestPatch(event) {
     if (inputName) inputName.value = cityName;
     if (inputMsg) inputMsg.value = cleanMessageText;
     if (inputTime) inputTime.value = pacificTimestamp;
+
+    // --- CUSTOM MODAL SYSTEM ---
+    // This finds your app's existing beautiful container box on the screen
+    const customModal = document.getElementById("confirmModal") || document.getElementById("rowOptModal");
     
-    // Send it off to your Formspree endpoint from 1000035837.png
-    try {
-        const formShell = document.getElementById('payloadTimeShell');
-        const actionUrl = formShell ? formShell.action : "https://formspree.io/f/xredreev";
-        
-        const response = await fetch(actionUrl, {
-            method: "POST",
-            body: new FormData(formShell || document.getElementById('payloadTimeShell')),
-            headers: { 'Accept': 'application/json' }
-        });
-        
-        if (response.ok) {
-            alert("Your update request has been submitted successfully!");
-        } else {
-            alert("Failed to send request. Please try again.");
+    if (customModal) {
+        // Find the title/text element inside your app's pretty popup box
+        const modalHeading = customModal.querySelector("h3");
+        if (modalHeading) {
+            modalHeading.innerHTML = `Do you want to request an updated scheme?<br><br><span style="font-size:0.8rem; color:#777; font-weight:700;">Current Scheme Last Updated:<br>${fileLastUpdated}</span>`;
         }
-    } catch (error) {
-        console.error("Formspree submission error:", error);
-        alert("An error occurred while sending the request.");
-    }
-}
-
-// 3. ATTACHMENT: Safely takes control of your button without altering your original code layout
-function applyUpdatePatch() {
-    const updateBtn = document.getElementById("reportSchemeBtn");
-    if (updateBtn) {
-        // Strip off the old onclick inline function seen in 1000035837.png
-        updateBtn.removeAttribute("onclick");
         
-        // Wipe old event listeners by cloning, ensuring nothing conflicts
-        const patchedBtn = updateBtn.cloneNode(true);
-        updateBtn.parentNode.replaceChild(patchedBtn, updateBtn);
+        // Display your app's pretty built-in popup box!
+        customModal.style.display = "flex";
         
-        // Bind our clean, patched function to it
-        patchedBtn.addEventListener("click", handleUpdateRequestPatch);
+        // Look for the confirmation button inside your beautiful box
+        const confirmBtn = customModal.querySelector(".btn-del-action") || customModal.querySelector("button:not(.modal-x)");
+        if (confirmBtn) {
+            confirmBtn.onclick = async function() {
+                customModal.style.display = "none"; // Close box
+                
+                // Fire off the email payload to Formspree silently
+                try {
+                    const formShell = document.getElementById('payloadTimeShell');
+                    const actionUrl = formShell ? formShell.action : "https://formspree.io/f/xredreev";
+                    
+                    const response = await fetch(actionUrl, {
+                        method: "POST",
+                        body: new FormData(formShell),
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    
+                    if (response.ok) {
+                        alert("Your update request has been submitted successfully!");
+                    }
+                } catch (err) {
+                    console.error("Formspree error:", err);
+                }
+            };
+        }
+    } else {
+        // Safe Emergency Fallback: If your custom layout block can't be reached, it uses the standard prompt so it never breaks
+        if (confirm(`Do you want to request an updated scheme?\n\nLast Updated: ${fileLastUpdated}`)) {
+            document.getElementById('payloadTimeShell').submit();
+        }
     }
-}
-
-// Automatically execute the patch as soon as the page is ready
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", applyUpdatePatch);
-} else {
-    applyUpdatePatch();
-}
+};
 
 </script>
 </body>
