@@ -2406,11 +2406,20 @@ async function getLatestExcelTimestampPatch() {
 window.sendUpdateRequest = async function(event) {
     if (event) event.preventDefault();
     
-    const activeKey = typeof currentCityKey !== 'undefined' ? currentCityKey : 'unknown';
-    let cityName = "Selected City";
-    if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
-        cityName = CITY_CONFIG[activeKey].name.split(',')[0].trim();
-    }
+const activeKey = typeof currentCityKey !== 'undefined' ? currentCityKey : 'unknown';
+let cityName = "Selected City";
+let cityFullName = "Selected City";
+let cityZips = "";
+if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
+    cityFullName = CITY_CONFIG[activeKey].name;
+    cityName = CITY_CONFIG[activeKey].name.split(',')[0].trim();
+    
+    const allZips = [
+        ...(CITY_CONFIG[activeKey].stationMOU || []),
+        ...(CITY_CONFIG[activeKey].stationDCU || [])
+    ];
+    cityZips = allZips.join(', ');
+}
 
     // Opens the native modal immediately with a loading state so it feels instant
     const msgBox = document.getElementById('confirmMsg');
@@ -2426,8 +2435,7 @@ window.sendUpdateRequest = async function(event) {
     
     // Generate the full Pacific Time stamp for your private Formspree logs
     const pacificTimestampFull = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles", dateStyle: "medium", timeStyle: "short" });
-    const cleanMessageText = `Someone requested a scheme update in ${cityName} at ${pacificTimestampFull}`;
-
+   const cleanMessageText = `Someone requested a scheme update in ${cityFullName} (ZIPs: ${cityZips}) at ${pacificTimestampFull}`;
     const inputKey = document.getElementById('formspree-cityKey');
     const inputName = document.getElementById('formspree-cityName');
     const inputMsg = document.getElementById('formspree-message');
