@@ -2452,7 +2452,7 @@ if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
     const inputTime = document.getElementById('formspree-timestamp');
 
     if (inputKey) inputKey.value = activeKey;
-    if (inputName) inputName.value = cityName;
+    if (inputName) inputName.value = cityFullName + ' (ZIPS: ' + cityZips + ')';
     if (inputMsg) inputMsg.value = cleanMessageText;
     if (inputTime) inputTime.value = pacificTimestampFull;
 
