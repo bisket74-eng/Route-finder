@@ -1,62 +1,132 @@
-const CACHE_NAME = 'route-finder-v1';
-// Files required to make the core app open offline
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'route-finder-v2-2026-08-04';
+const CACHE_PREFIX = 'route-finder-';
+
+// Change CACHE_NAME every time you want installed copies to refresh.
+const CORE_ASSETS = [
   './',
-  'index.html'
+  './index.html'
 ];
 
-// Install the application assets
+async function cacheSuccessfulResponse(request, response) {
+  if (!response || !(response.ok || response.type === 'opaque')) {
+    return;
+  }
+
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.put(request, response.clone());
+  } catch (error) {
+    console.warn('Route Finder could not cache a response.', error);
+  }
+}
+
+async function networkFirst(request, fallbackUrl = '') {
+  try {
+    // Always ask GitHub/the network for the newest copy first.
+    const response = await fetch(request, { cache: 'no-store' });
+    await cacheSuccessfulResponse(request, response);
+    return response;
+  } catch (error) {
+    // If the phone is offline, use the most recently saved copy.
+    const cachedResponse = await caches.match(request);
+
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    if (fallbackUrl) {
+      const fallbackResponse = await caches.match(fallbackUrl);
+
+      if (fallbackResponse) {
+        return fallbackResponse;
+      }
+    }
+
+    throw error;
+  }
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
+      // "reload" prevents the install step from re-saving an old HTTP-cached page.
+      await cache.addAll(
+        CORE_ASSETS.map(
+          (url) => new Request(url, { cache: 'reload' })
+        )
+      );
+
+      // Activate this version without waiting for every old app window to close.
+      await self.skipWaiting();
+    })()
   );
-  self.skipWaiting();
 });
 
-// Clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
+    (async () => {
+      const cacheNames = await caches.keys();
+
+      // Only remove old Route Finder caches. Do not erase caches belonging
+      // to Barcode Buddy, Rate It Up, or other apps on the same GitHub domain.
+      const oldRouteFinderCaches = cacheNames.filter(
+        (name) => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME
       );
-    })
+
+      await Promise.all(
+        oldRouteFinderCaches.map((name) => caches.delete(name))
+      );
+
+      await self.clients.claim();
+
+      // Existing installed users may initially open the old cached page.
+      // Once this new worker activates, reload Route Finder one time so the
+      // newly published GitHub version appears without user instructions.
+      if (oldRouteFinderCaches.length > 0) {
+        const windowClients = await self.clients.matchAll({
+          type: 'window',
+          includeUncontrolled: true
+        });
+
+        await Promise.all(
+          windowClients.map(async (client) => {
+            try {
+              const clientUrl = new URL(client.url);
+
+              if (clientUrl.origin === self.location.origin) {
+                await client.navigate(client.url);
+              }
+            } catch (error) {
+              console.warn('Route Finder could not refresh an open window.', error);
+            }
+          })
+        );
+      }
+    })()
   );
-  self.clients.claim();
 });
 
-// Handle data requests intelligently (The Bulletproof Rule)
 self.addEventListener('fetch', (event) => {
-  const requestUrl = new URL(event.request.url);
+  const request = event.request;
 
-  // If the app is asking for an Excel file, force it to bypass the local cache
-  if (requestUrl.pathname.endsWith('.xlsx')) {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          // Keep a backup copy in the cache just in case they lose cell service entirely
-          return caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, response.clone());
-            return response;
-          });
-        })
-        .catch(() => {
-          // If they are completely offline, pull the last saved backup copy
-          return caches.match(event.request);
-        })
-    );
-  } else {
-    // For standard web files (HTML/CSS), look in the cache first for instant loading
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        return cachedResponse || fetch(event.request);
-      })
-    );
+  if (request.method !== 'GET') {
+    return;
   }
+
+  const requestUrl = new URL(request.url);
+
+  if (!['http:', 'https:'].includes(requestUrl.protocol)) {
+    return;
+  }
+
+  // Pages, scripts, styles, images, and Excel files all check the network
+  // first. The saved copy is used only when the phone cannot reach the network.
+  event.respondWith(
+    networkFirst(
+      request,
+      request.mode === 'navigate' ? './index.html' : ''
+    )
+  );
 });
