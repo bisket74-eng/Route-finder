@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Route Finder tools menu build: 2026-08-04a -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -157,25 +158,26 @@
         
         .btn-round-upd:disabled { pointer-events: none; opacity: 0.8; }
 
-        /* Rate It Up stays isolated inside its own full-screen iframe. */
-        #rateItUpModal { position: fixed; inset: 0; display: none; align-items: stretch; justify-content: center; background: rgba(0,0,0,0.82); z-index: 1000000000; }
-        body.rate-it-up-open #rateItUpModal { display: flex; }
-        .rate-it-up-shell { position: relative; width: 100%; max-width: 500px; height: 100vh; height: 100dvh; overflow: hidden; background: #ffffff; box-shadow: 0 0 40px rgba(0,0,0,0.55); }
-        #rateItUpFrame { display: block; width: 100%; height: 100%; border: 0; background: #ffffff; }
-        .rate-it-up-close { position: absolute; top: max(10px, env(safe-area-inset-top)); right: 10px; width: 46px; height: 46px; padding: 0; border: 3px solid #ffffff; border-radius: 50%; background: var(--dr-rd); color: #ffffff; font-size: 29px; font-weight: 900; line-height: 1; cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.38); }
+        /* Linked postal apps stay isolated inside full-screen iframes. */
+        #rateItUpModal, #barcodeBuddyModal { position: fixed; inset: 0; display: none; align-items: stretch; justify-content: center; background: rgba(0,0,0,0.82); z-index: 1000000000; }
+        body.rate-it-up-open #rateItUpModal, body.barcode-buddy-open #barcodeBuddyModal { display: flex; }
+        .linked-app-shell { position: relative; width: 100%; max-width: 500px; height: 100vh; height: 100dvh; overflow: hidden; background: #ffffff; box-shadow: 0 0 40px rgba(0,0,0,0.55); }
+        .linked-app-frame { display: block; width: 100%; height: 100%; border: 0; background: #ffffff; }
+        .linked-app-close { position: absolute; top: max(10px, env(safe-area-inset-top)); right: 10px; width: 46px; height: 46px; padding: 0; border: 3px solid #ffffff; border-radius: 50%; background: var(--dr-rd); color: #ffffff; font-size: 29px; font-weight: 900; line-height: 1; cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.38); }
 
 
         /* Small Route Finder-styled launcher for postal tools. */
         #appsModal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 18px; box-sizing: border-box; background: rgba(0,0,0,0.58); z-index: 40000; }
         body.apps-menu-open #appsModal { display: flex; }
-        .apps-box { position: relative; width: 84%; max-width: 320px; padding: 24px 18px 18px; box-sizing: border-box; border: 4px solid var(--bl); border-radius: 12px; background: var(--lt-bl); box-shadow: 0 14px 38px rgba(0,0,0,0.48); text-align: center; }
+        .apps-box { position: relative; width: 86%; max-width: 330px; padding: 24px 18px 20px; box-sizing: border-box; border: 4px solid var(--bl); border-radius: 12px; background: var(--lt-bl); box-shadow: 0 14px 38px rgba(0,0,0,0.48); text-align: center; }
         .apps-box h2 { margin: 0 50px 5px; color: var(--bl); font-size: 1.55rem; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; }
-        .apps-box p { margin: 0 0 16px; color: #4d6475; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.35px; text-transform: uppercase; }
-        .apps-launch-list { display: grid; gap: 10px; }
-        .apps-launch-btn { width: 100%; min-height: 56px; padding: 8px 14px; border: 2px solid var(--bl); border-radius: 8px; background: #ffffff; color: var(--bl); box-shadow: 0 3px 7px rgba(0,0,0,0.12); cursor: pointer; display: flex; align-items: center; justify-content: flex-start; gap: 12px; box-sizing: border-box; font-family: inherit; font-size: 1rem; font-weight: 900; letter-spacing: 0.35px; text-transform: uppercase; text-align: left; }
-        .apps-launch-btn:active { transform: translateY(1px); box-shadow: 0 1px 4px rgba(0,0,0,0.16); }
-        .apps-launch-icon { width: 36px; height: 36px; flex: 0 0 36px; border-radius: 50%; background: var(--bl); color: #ffffff; display: flex; align-items: center; justify-content: center; font-family: Arial, Helvetica, sans-serif; font-size: 1.25rem; font-weight: 900; line-height: 1; }
-        .apps-launch-note { display: block; margin-top: 2px; color: #667a89; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.2px; text-transform: none; }
+        .apps-box p { margin: 0 0 17px; color: #405a6e; font-size: 0.8rem; font-weight: 900; letter-spacing: 0.45px; text-transform: uppercase; }
+        .apps-launch-list { display: grid; gap: 15px; }
+        .apps-launch-btn { width: 100%; min-height: 68px; padding: 10px 14px; border: 3px solid var(--bl); border-radius: 10px; background: #ffffff; color: var(--bl); box-shadow: 0 4px 9px rgba(0,0,0,0.18); cursor: pointer; display: flex; align-items: center; justify-content: flex-start; gap: 14px; box-sizing: border-box; font-family: inherit; font-size: 1.08rem; font-weight: 900; letter-spacing: 0.4px; text-transform: uppercase; text-align: left; }
+        .apps-launch-btn:active { transform: translateY(1px); background: #f5f9fc; box-shadow: 0 2px 5px rgba(0,0,0,0.18); }
+        .apps-launch-icon { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 50%; background: var(--bl); color: #ffffff; display: flex; align-items: center; justify-content: center; font-family: Arial, Helvetica, sans-serif; font-size: 1.55rem; font-weight: 900; line-height: 1; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2); }
+        .apps-launch-copy { display: block; min-width: 0; line-height: 1.05; }
+        .apps-launch-note { display: block; margin-top: 5px; color: #536c7e; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.2px; line-height: 1.15; text-transform: none; }
 
         #zipList { position: absolute; top: 96px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 340px; height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
@@ -394,32 +396,39 @@
 <body id="mainBody">
     <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" class="bg-flag-surface" fetchpriority="high" loading="eager" onload="document.body.classList.add('app-ready')">
 
-    <div id="appsModal" role="dialog" aria-modal="true" aria-label="Postal apps" onclick="closeAppsMenuFromBackdrop(event)">
+    <div id="appsModal" role="dialog" aria-modal="true" aria-label="Postal tools" onclick="closeAppsMenuFromBackdrop(event)">
         <div class="apps-box" onclick="event.stopPropagation()">
-            <button class="modal-x" type="button" aria-label="Close Apps" onclick="closeAppsMenuFromButton()">×</button>
-            <h2>Apps</h2>
-            <p>Postal tools</p>
+            <button class="modal-x" type="button" aria-label="Close Tools" onclick="closeAppsMenuFromButton()">×</button>
+            <h2>Tools</h2>
+            <p>Select a postal tool</p>
             <div class="apps-launch-list">
                 <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('rate')">
                     <span class="apps-launch-icon" aria-hidden="true">$</span>
-                    <span>Rate It Up<span class="apps-launch-note">Postage due calculator</span></span>
-                </button>
-                <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('time')">
-                    <span class="apps-launch-icon" aria-hidden="true">◷</span>
-                    <span>Timekeeper<span class="apps-launch-note">Open the built-in time log</span></span>
+                    <span class="apps-launch-copy">Rate It Up<span class="apps-launch-note">Postage due calculator</span></span>
                 </button>
                 <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('barcode')">
                     <span class="apps-launch-icon" aria-hidden="true">▥</span>
-                    <span>Barcode Buddy<span class="apps-launch-note">Open in a separate tab</span></span>
+                    <span class="apps-launch-copy">Barcode Buddy<span class="apps-launch-note">Barcode and label tools</span></span>
+                </button>
+                <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('time')">
+                    <span class="apps-launch-icon" aria-hidden="true">◷</span>
+                    <span class="apps-launch-copy">Timekeeper<span class="apps-launch-note">Open the built-in time log</span></span>
                 </button>
             </div>
         </div>
     </div>
 
     <div id="rateItUpModal" role="dialog" aria-modal="true" aria-label="Rate It Up postage calculator">
-        <div class="rate-it-up-shell">
-            <iframe id="rateItUpFrame" src="https://bisket74-eng.github.io/RateItUp/" title="Rate It Up postage calculator"></iframe>
-            <button class="rate-it-up-close" type="button" aria-label="Close Rate It Up" onclick="closeRateItUpFromButton()">×</button>
+        <div class="linked-app-shell">
+            <iframe id="rateItUpFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/RateItUp/" title="Rate It Up postage calculator"></iframe>
+            <button class="linked-app-close" type="button" aria-label="Close Rate It Up and return to Route Finder" onclick="closeRateItUpFromButton()">×</button>
+        </div>
+    </div>
+
+    <div id="barcodeBuddyModal" role="dialog" aria-modal="true" aria-label="Barcode Buddy">
+        <div class="linked-app-shell">
+            <iframe id="barcodeBuddyFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/BarcodeBuddy/" title="Barcode Buddy"></iframe>
+            <button class="linked-app-close" type="button" aria-label="Close Barcode Buddy and return to Route Finder" onclick="closeBarcodeBuddyFromButton()">×</button>
         </div>
     </div>
 
@@ -427,7 +436,7 @@
         <div class="time-box" id="timeScrollContainer">
             <div class="time-fixed-top">
                 <button class="btn-clear-log" onclick="triggerClearLog()">Clear<br>Log</button>
-                <button class="modal-x" onclick="closeTime()">×</button>
+                <button class="modal-x" type="button" aria-label="Close Timekeeper and return to Route Finder" onclick="closeTime()">×</button>
                 <h2 style="color:var(--bl); margin:0 0 20px; font-size: 2.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">Timekeeper</h2>
                 <div id="t-day-display" class="static-day-label">DAY</div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
@@ -582,7 +591,7 @@
         </form>
 
         <button id="reportSchemeBtn" class="btn-round-upd" onclick="sendUpdateRequest(event)"><span>🔄</span>UPDATE<br>SCHEME</button>
-        <button id="appsBtn" class="btn-round-apps" type="button" aria-label="Open postal apps" title="Apps" onclick="openAppsMenu(event)"><span aria-hidden="true">▦</span>APPS</button>
+        <button id="appsBtn" class="btn-round-apps" type="button" aria-label="Open postal tools" title="Tools" onclick="openAppsMenu(event)"><span aria-hidden="true">▦</span>TOOLS</button>
 
         <div class="city-drawer-container" onclick="event.stopPropagation()">
             <div class="drawer-content-scroll" id="city-btn-list"></div>
@@ -2354,7 +2363,7 @@
     function openViewer(url) { document.getElementById('viewer-img').src = url; document.body.classList.add('modal-open-view'); }
     function closeViewer() { document.body.classList.remove('modal-open-view'); }
     function openTime() { document.body.classList.add('modal-open-tk'); document.getElementById('logScrollFrame').scrollTop = 0; }
-    function closeTime() { document.body.classList.remove('modal-open-tk'); }
+    function closeTime() { document.body.classList.remove('modal-open-tk', 'apps-menu-open'); pendingAppsAction = null; }
     
     function saveTempEntries() { const data = { bt: document.getElementById('t-in').value, ol: document.getElementById('l-out').value, il: document.getElementById('l-in').value, et: document.getElementById('t-actual').value, date: new Date().toDateString() }; localStorage.setItem('usps_temp_entries', JSON.stringify(data)); }
     function loadTempEntries() { 
@@ -2645,9 +2654,50 @@ function runPendingAppsAction() {
     } else if (action === 'time') {
         openTime();
     } else if (action === 'barcode') {
-        const barcodeUrl = 'https://bisket74-eng.github.io/BarcodeBuddy/';
-        const opened = window.open(barcodeUrl, '_blank', 'noopener,noreferrer');
-        if (!opened) window.location.href = barcodeUrl;
+        openBarcodeBuddy();
+    }
+}
+
+// =====================================================================
+// BARCODE BUDDY POPUP — ISOLATED FROM ROUTE FINDER
+// The red X or phone/browser Back returns to Route Finder.
+// =====================================================================
+let barcodeBuddyHistoryEntryActive = false;
+
+function openBarcodeBuddy(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || bodyNode.classList.contains('barcode-buddy-open')) return;
+
+    closeCityPortal();
+    bodyNode.classList.add('barcode-buddy-open');
+    history.pushState({ barcodeBuddyOpen: true }, document.title, window.location.href);
+    barcodeBuddyHistoryEntryActive = true;
+}
+
+function hideBarcodeBuddy() {
+    const bodyNode = document.getElementById('mainBody');
+    if (bodyNode) bodyNode.classList.remove('barcode-buddy-open');
+}
+
+function closeBarcodeBuddyFromButton() {
+    hideAppsMenu();
+    pendingAppsAction = null;
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || !bodyNode.classList.contains('barcode-buddy-open')) return;
+
+    if (barcodeBuddyHistoryEntryActive) {
+        barcodeBuddyHistoryEntryActive = false;
+        history.back();
+        setTimeout(() => {
+            if (bodyNode.classList.contains('barcode-buddy-open')) hideBarcodeBuddy();
+        }, 350);
+    } else {
+        hideBarcodeBuddy();
     }
 }
 
@@ -2679,6 +2729,8 @@ function hideRateItUp() {
 }
 
 function closeRateItUpFromButton() {
+    hideAppsMenu();
+    pendingAppsAction = null;
     const bodyNode = document.getElementById('mainBody');
     if (!bodyNode || !bodyNode.classList.contains('rate-it-up-open')) return;
 
@@ -2710,6 +2762,12 @@ window.addEventListener('popstate', () => {
         return;
     }
 
+    if (bodyNode.classList.contains('barcode-buddy-open')) {
+        barcodeBuddyHistoryEntryActive = false;
+        hideBarcodeBuddy();
+        return;
+    }
+
     if (bodyNode.classList.contains('rate-it-up-open')) {
         rateItUpHistoryEntryActive = false;
         hideRateItUp();
@@ -2721,6 +2779,8 @@ window.addEventListener('keydown', (event) => {
 
     if (document.body.classList.contains('apps-menu-open')) {
         closeAppsMenuFromButton();
+    } else if (document.body.classList.contains('barcode-buddy-open')) {
+        closeBarcodeBuddyFromButton();
     } else if (document.body.classList.contains('rate-it-up-open')) {
         closeRateItUpFromButton();
     }
