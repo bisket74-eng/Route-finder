@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Route Finder tools menu build: 2026-08-04a -->
+<!-- Route Finder tools menu build: 2026-08-06 calendars -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -159,8 +159,8 @@
         .btn-round-upd:disabled { pointer-events: none; opacity: 0.8; }
 
         /* Linked postal apps stay isolated inside full-screen iframes. */
-        #rateItUpModal, #barcodeBuddyModal { position: fixed; inset: 0; display: none; align-items: stretch; justify-content: center; background: rgba(0,0,0,0.82); z-index: 1000000000; }
-        body.rate-it-up-open #rateItUpModal, body.barcode-buddy-open #barcodeBuddyModal { display: flex; }
+        #rateItUpModal, #barcodeBuddyModal, #calendarsModal { position: fixed; inset: 0; display: none; align-items: stretch; justify-content: center; background: rgba(0,0,0,0.82); z-index: 1000000000; }
+        body.rate-it-up-open #rateItUpModal, body.barcode-buddy-open #barcodeBuddyModal, body.calendars-open #calendarsModal { display: flex; }
         .linked-app-shell { position: relative; width: 100%; max-width: 500px; height: 100vh; height: 100dvh; overflow: hidden; background: #ffffff; box-shadow: 0 0 40px rgba(0,0,0,0.55); }
         .linked-app-frame { display: block; width: 100%; height: 100%; border: 0; background: #ffffff; }
         .linked-app-close { position: absolute; top: max(10px, env(safe-area-inset-top)); right: 10px; width: 46px; height: 46px; padding: 0; border: 3px solid #ffffff; border-radius: 50%; background: var(--dr-rd); color: #ffffff; font-size: 29px; font-weight: 900; line-height: 1; cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.38); }
@@ -406,6 +406,10 @@
                     <span class="apps-launch-icon" aria-hidden="true">$</span>
                     <span class="apps-launch-copy">Rate It Up<span class="apps-launch-note">Postage due calculator</span></span>
                 </button>
+                <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('calendars')">
+                    <span class="apps-launch-icon" aria-hidden="true">31</span>
+                    <span class="apps-launch-copy">Calendars<span class="apps-launch-note">Carrier and clerk rotations</span></span>
+                </button>
                 <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('barcode')">
                     <span class="apps-launch-icon" aria-hidden="true">▥</span>
                     <span class="apps-launch-copy">Barcode Buddy<span class="apps-launch-note">Barcode and label tools</span></span>
@@ -422,6 +426,13 @@
         <div class="linked-app-shell">
             <iframe id="rateItUpFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/RateItUp/" title="Rate It Up postage calculator"></iframe>
             <button class="linked-app-close" type="button" aria-label="Close Rate It Up and return to Route Finder" onclick="closeRateItUpFromButton()">×</button>
+        </div>
+    </div>
+
+    <div id="calendarsModal" role="dialog" aria-modal="true" aria-label="Perpetual rotation calendars">
+        <div class="linked-app-shell">
+            <iframe id="calendarsFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/calendars/" title="Perpetual rotation calendars"></iframe>
+            <button class="linked-app-close" type="button" aria-label="Close Calendars and return to Route Finder" onclick="closeCalendarsFromButton()">×</button>
         </div>
     </div>
 
@@ -2655,6 +2666,51 @@ function runPendingAppsAction() {
         openTime();
     } else if (action === 'barcode') {
         openBarcodeBuddy();
+    } else if (action === 'calendars') {
+        openCalendars();
+    }
+}
+
+// =====================================================================
+// CALENDARS POPUP — ISOLATED FROM ROUTE FINDER
+// The red X or phone/browser Back returns to Route Finder.
+// =====================================================================
+let calendarsHistoryEntryActive = false;
+
+function openCalendars(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || bodyNode.classList.contains('calendars-open')) return;
+
+    closeCityPortal();
+    bodyNode.classList.add('calendars-open');
+    history.pushState({ calendarsOpen: true }, document.title, window.location.href);
+    calendarsHistoryEntryActive = true;
+}
+
+function hideCalendars() {
+    const bodyNode = document.getElementById('mainBody');
+    if (bodyNode) bodyNode.classList.remove('calendars-open');
+}
+
+function closeCalendarsFromButton() {
+    hideAppsMenu();
+    pendingAppsAction = null;
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || !bodyNode.classList.contains('calendars-open')) return;
+
+    if (calendarsHistoryEntryActive) {
+        calendarsHistoryEntryActive = false;
+        history.back();
+        setTimeout(() => {
+            if (bodyNode.classList.contains('calendars-open')) hideCalendars();
+        }, 350);
+    } else {
+        hideCalendars();
     }
 }
 
@@ -2762,6 +2818,12 @@ window.addEventListener('popstate', () => {
         return;
     }
 
+    if (bodyNode.classList.contains('calendars-open')) {
+        calendarsHistoryEntryActive = false;
+        hideCalendars();
+        return;
+    }
+
     if (bodyNode.classList.contains('barcode-buddy-open')) {
         barcodeBuddyHistoryEntryActive = false;
         hideBarcodeBuddy();
@@ -2779,6 +2841,8 @@ window.addEventListener('keydown', (event) => {
 
     if (document.body.classList.contains('apps-menu-open')) {
         closeAppsMenuFromButton();
+    } else if (document.body.classList.contains('calendars-open')) {
+        closeCalendarsFromButton();
     } else if (document.body.classList.contains('barcode-buddy-open')) {
         closeBarcodeBuddyFromButton();
     } else if (document.body.classList.contains('rate-it-up-open')) {
