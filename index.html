@@ -143,7 +143,8 @@
 
         .btn-circle { height: 52px; width: 52px; border-radius: 50%; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.65rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; line-height: 1; box-sizing: border-box; }
         .btn-red { background-color: var(--dr-rd); color: white; }
-        .btn-yel { background-color: var(--yl); color: #000; }
+        .btn-yel { background-color: var(--yl); color: #000; border: 3px solid var(--bl); box-sizing: border-box; }
+        .btn-del-action.btn-yel { border: 3px solid var(--bl); }
         .btn-blu { background-color: var(--bl); color: white; }
         .btn-grn { background-color: var(--gr); color: white; }
 
@@ -151,7 +152,7 @@
         .btn-round-tk, .btn-round-upd, .btn-round-rate, .btn-round-apps { position: absolute; bottom: 100px; width: 72px; height: 72px; color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 5px 14px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; font-size: 0.52rem; z-index: 50; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); text-shadow: 0 1px 2px rgba(0,0,0,0.3); text-transform: uppercase; box-sizing: border-box; letter-spacing: 0.3px; }
         .btn-round-tk span, .btn-round-upd span, .btn-round-apps span { font-size: 1.15rem; margin-bottom: 1px; display: block; }
         
-        .btn-round-upd { left: 24px; background: var(--yl); color: #000; border-bottom: 3.5px solid #c9ad00; padding: 2px; text-shadow: none; }
+        .btn-round-upd { left: 24px; background: var(--yl); color: #000; border: 3px solid var(--bl); border-bottom: 4.5px solid var(--bl); padding: 2px; text-shadow: none; }
         .btn-round-rate { left: 50%; margin-left: -36px; background: var(--bl); border-bottom: 3.5px solid #002c52; padding: 0; font-family: Arial, Helvetica, sans-serif; font-size: 2.35rem; line-height: 1; }
         .btn-round-tk { right: 24px; background: var(--gr); border-bottom: 3.5px solid #007037; padding: 2px; }
         .btn-round-apps { right: 24px; background: var(--bl); border-bottom: 3.5px solid #002c52; padding: 2px; }
@@ -510,7 +511,7 @@
                     <span style="font-weight:900; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">8 Hour Day ET Goal:</span>
                     <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd);">--:--</span>
                 </div>
-                <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
+                <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
                 <div class="log-hdr"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
             </div>
             <div class="time-log-scroll-wrapper" id="logScrollFrame">
@@ -1486,16 +1487,7 @@
             mouName: "Monterey Main Post Office",
             dcuName: ""
         },
-       
-        "mountairy": {
-            name: "Mount Airy, North Carolina",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/mountairy.xlsx",
-            stationMOU: ["27030"],
-            stationDCU: [],
-            mouName: "Mount Airy Main Post Office",
-            dcuName: ""
-        },
-       
+
         "nebo": {
             name: "Nebo, North Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/nebo.xlsx",
@@ -1836,28 +1828,6 @@
             mouName: "Twentynine Palms 92277",
             dcuName: ""
         },
-               "toledo": {
-            name: "Toledo, Ohio",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/toledo.xlsx",
-            stationMOU: ["43604", "43608"],
-            stationDCU: [
-                {
-                    name: "Toledo South",
-                    zips: ["43609", "43614"]
-                },
-                {
-                    name: "Toledo Reynolds",
-                    zips: ["43607", "43615"]
-                },
-                {
-                    name: "Toledo West",
-                    zips: ["43605", "43606", "43610", "43611", "43612", "43613", "43620"]
-                }
-            ],
-            mouName: "Toledo Main Post Office",
-            dcuName: ""
-        },
-
 
         "ubly": {
             name: "Ubly, Michigan",
