@@ -41,7 +41,7 @@
 
     #printArea h1.sheet-title { font-size: 15pt; font-weight: 900; margin: 0 0 2px; text-transform: uppercase; }
     #printArea p.sheet-sub { font-size: 10pt; font-weight: 700; margin: 0 0 12px; color: #333; }
-    table.sheet-table { width: 100%; border-collapse: collapse; background: #fff; }
+    table.sheet-table { width: 100%; border-collapse: collapse; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact; }
     table.sheet-table th { font-size: 10pt; font-weight: 900; text-transform: uppercase; text-align: left; border-bottom: 2px solid #000; padding: 6px 7px; background: #eef4f9; }
     table.sheet-table td { padding: 5px 7px; }
     table.sheet-table td.c-plain { font-size: 10pt; font-weight: 400; }
@@ -53,6 +53,11 @@
         .hdr, .card, .sheet-toolbar, .no-print { display: none !important; }
         .wrap { max-width: none; padding: 0; margin: 0; }
         @page { margin: 0.5in; }
+        table.sheet-table, table.sheet-table th, table.sheet-table td {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+        }
     }
 </style>
 </head>
