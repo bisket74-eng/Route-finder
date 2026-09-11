@@ -398,6 +398,8 @@
            ============================================================ */
         .help-hdr-btn { position: absolute; left: 12px; top: 12px; width: 34px; height: 34px; padding: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.45); color: var(--yl); border: 2px solid var(--yl); font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; font-weight: 900; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1100; box-shadow: 0 3px 8px rgba(0,0,0,0.45); text-shadow: 0 1px 3px rgba(0,0,0,0.5); transition: background 0.2s ease; }
         .help-hdr-btn:active { transform: translateY(1px); background: rgba(0, 0, 0, 0.65); }
+        .export-hdr-btn { position: absolute; left: 12px; bottom: 12px; width: 34px; height: 34px; padding: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.45); color: var(--yl); border: 2px solid var(--yl); font-size: 1.05rem; font-weight: 900; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1100; box-shadow: 0 3px 8px rgba(0,0,0,0.45); text-shadow: 0 1px 3px rgba(0,0,0,0.5); transition: background 0.2s ease; }
+        .export-hdr-btn:active { transform: translateY(1px); background: rgba(0, 0, 0, 0.65); }
 
         #helpModal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 12px; box-sizing: border-box; background: rgba(0,0,0,0.62); z-index: 45000; }
         body.help-open #helpModal { display: flex; }
@@ -748,6 +750,7 @@
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
                 <button class="help-hdr-btn" type="button" aria-label="How to use this app" title="Help" onclick="openHelpModal(event)">?</button>
+                <button class="export-hdr-btn" type="button" aria-label="Export route sheet" title="Export" onclick="window.open('route-sheet-export.html?city=' + encodeURIComponent(currentCityKey), '_blank')">⬇</button>
                 <button class="city-sidebar-btn" onclick="toggleCityPortalDrawer(event)">
                     <span>C</span><span>I</span><span>T</span><span>Y</span>
                 </button>
