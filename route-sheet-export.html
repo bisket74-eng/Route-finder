@@ -1314,7 +1314,7 @@ function buildZipCheckboxes(key) {
     const zipsInData = new Set();
     currentRows.forEach(r => {
         const z = r[7] ? r[7].toString().trim() : '';
-        if (z && z.toUpperCase() !== 'ZIP') zipsInData.add(z);
+        if (/^\d{5}/.test(z)) zipsInData.add(z);
     });
     let zips = Array.from(zipsInData);
     if (zips.length === 0) {
@@ -1358,7 +1358,7 @@ function buildPrintRecords(rows, zipFilterSet) {
     rows.forEach(c => {
         const zip = c[7] !== undefined && c[7] !== null ? c[7].toString().trim() : '';
         const street = c[4] !== undefined && c[4] !== null ? c[4].toString().trim() : '';
-        if (!zip || !street || zip.toUpperCase() === 'ZIP') return;
+        if (!zip || !street || !/^\d{5}/.test(zip)) return;
         if (zipFilterSet && zipFilterSet.size > 0 && !zipFilterSet.has(zip)) return;
 
         const low = (c[0] !== undefined && c[0] !== null) ? c[0].toString().trim() : '';
