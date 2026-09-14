@@ -1402,8 +1402,18 @@ function compareRecords(a, b) {
 // Evenly-spread pastel colors for route color-coding (golden-angle hue steps
 // keep adjacent routes from landing on similar hues, even with many routes).
 function colorForRouteIndex(index) {
+    // Golden-angle hue steps spread hues around the wheel, but cycling
+    // lightness/saturation across a few bands too means routes that land
+    // near the same hue still end up visibly different from each other.
     const hue = (index * 137.508) % 360;
-    return `hsl(${hue.toFixed(0)}, 62%, 84%)`;
+    const bands = [
+        { s: 78, l: 76 },
+        { s: 68, l: 66 },
+        { s: 85, l: 86 },
+        { s: 72, l: 70 }
+    ];
+    const band = bands[index % bands.length];
+    return `hsl(${hue.toFixed(0)}, ${band.s}%, ${band.l}%)`;
 }
 
 function buildRouteColorMap(records) {
