@@ -160,8 +160,8 @@
         .btn-round-upd:disabled { pointer-events: none; opacity: 0.8; }
 
         /* Linked postal apps stay isolated inside full-screen iframes. */
-        #rateItUpModal, #barcodeBuddyModal, #calendarsModal { position: fixed; inset: 0; display: none; align-items: stretch; justify-content: center; background: rgba(0,0,0,0.82); z-index: 1000000000; }
-        body.rate-it-up-open #rateItUpModal, body.barcode-buddy-open #barcodeBuddyModal, body.calendars-open #calendarsModal { display: flex; }
+        #rateItUpModal, #barcodeBuddyModal, #calendarsModal, #uspsSearchModal { position: fixed; inset: 0; display: none; align-items: stretch; justify-content: center; background: rgba(0,0,0,0.82); z-index: 1000000000; }
+        body.rate-it-up-open #rateItUpModal, body.barcode-buddy-open #barcodeBuddyModal, body.calendars-open #calendarsModal, body.usps-search-open #uspsSearchModal { display: flex; }
         .linked-app-shell { position: relative; width: 100%; max-width: 500px; height: 100vh; height: 100dvh; overflow: hidden; background: #ffffff; box-shadow: 0 0 40px rgba(0,0,0,0.55); }
         .linked-app-frame { display: block; width: 100%; height: 100%; border: 0; background: #ffffff; }
         .linked-app-close { position: absolute; top: max(10px, env(safe-area-inset-top)); right: 10px; width: 46px; height: 46px; padding: 0; border: 3px solid #ffffff; border-radius: 50%; background: var(--dr-rd); color: #ffffff; font-size: 29px; font-weight: 900; line-height: 1; cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.38); }
@@ -471,6 +471,10 @@
                     <span class="apps-launch-icon" aria-hidden="true">◷</span>
                     <span class="apps-launch-copy">Timekeeper<span class="apps-launch-note">Open the built-in time log</span></span>
                 </button>
+                <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('uspssearch')">
+                    <span class="apps-launch-icon" aria-hidden="true">&#128269;</span>
+                    <span class="apps-launch-copy">USPS Search<span class="apps-launch-note">Manuals, tracking, and union sites</span></span>
+                </button>
             </div>
         </div>
     </div>
@@ -493,6 +497,13 @@
         <div class="linked-app-shell">
             <iframe id="barcodeBuddyFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/BarcodeBuddy/" title="Barcode Buddy"></iframe>
             <button class="linked-app-close" type="button" aria-label="Close Barcode Buddy and return to Route Finder" onclick="closeBarcodeBuddyFromButton()">×</button>
+        </div>
+    </div>
+
+    <div id="uspsSearchModal" role="dialog" aria-modal="true" aria-label="USPS Search">
+        <div class="linked-app-shell">
+            <iframe id="uspsSearchFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/uspssearch/" title="USPS Search"></iframe>
+            <button class="linked-app-close" type="button" aria-label="Close USPS Search and return to Route Finder" onclick="closeUspsSearchFromButton()">×</button>
         </div>
     </div>
 
@@ -693,6 +704,10 @@
                     <div class="help-tool-row">
                         <span class="help-tool-icon">&#9719;</span>
                         <span class="help-tool-txt"><b>Timekeeper</b>Your clock ring log.</span>
+                    </div>
+                    <div class="help-tool-row">
+                        <span class="help-tool-icon">&#128269;</span>
+                        <span class="help-tool-txt"><b>USPS Search</b>Manuals, tracking, and union sites in one search.</span>
                     </div>
                     <div class="help-note">The red &times; or your back button brings you right back here.</div>
                 </div>
@@ -3033,6 +3048,8 @@ function runPendingAppsAction() {
         openBarcodeBuddy();
     } else if (action === 'calendars') {
         openCalendars();
+    } else if (action === 'uspssearch') {
+        openUspsSearch();
     }
 }
 
@@ -3168,6 +3185,49 @@ function closeRateItUpFromButton() {
     }
 }
 
+// =====================================================================
+// USPS SEARCH POPUP — ISOLATED FROM ROUTE FINDER
+// The red X or phone/browser Back returns to Route Finder.
+// =====================================================================
+let uspsSearchHistoryEntryActive = false;
+
+function openUspsSearch(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || bodyNode.classList.contains('usps-search-open')) return;
+
+    closeCityPortal();
+    bodyNode.classList.add('usps-search-open');
+    history.pushState({ uspsSearchOpen: true }, document.title, window.location.href);
+    uspsSearchHistoryEntryActive = true;
+}
+
+function hideUspsSearch() {
+    const bodyNode = document.getElementById('mainBody');
+    if (bodyNode) bodyNode.classList.remove('usps-search-open');
+}
+
+function closeUspsSearchFromButton() {
+    hideAppsMenu();
+    pendingAppsAction = null;
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || !bodyNode.classList.contains('usps-search-open')) return;
+
+    if (uspsSearchHistoryEntryActive) {
+        uspsSearchHistoryEntryActive = false;
+        history.back();
+        setTimeout(() => {
+            if (bodyNode.classList.contains('usps-search-open')) hideUspsSearch();
+        }, 350);
+    } else {
+        hideUspsSearch();
+    }
+}
+
 window.addEventListener('popstate', () => {
     const bodyNode = document.getElementById('mainBody');
     if (!bodyNode) return;
@@ -3204,6 +3264,12 @@ window.addEventListener('popstate', () => {
     if (bodyNode.classList.contains('rate-it-up-open')) {
         rateItUpHistoryEntryActive = false;
         hideRateItUp();
+        return;
+    }
+
+    if (bodyNode.classList.contains('usps-search-open')) {
+        uspsSearchHistoryEntryActive = false;
+        hideUspsSearch();
     }
 });
 
@@ -3220,6 +3286,8 @@ window.addEventListener('keydown', (event) => {
         closeBarcodeBuddyFromButton();
     } else if (document.body.classList.contains('rate-it-up-open')) {
         closeRateItUpFromButton();
+    } else if (document.body.classList.contains('usps-search-open')) {
+        closeUspsSearchFromButton();
     }
 });
 
