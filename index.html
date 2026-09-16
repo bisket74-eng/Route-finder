@@ -3293,5 +3293,52 @@ window.addEventListener('keydown', (event) => {
 
 
 </script>
+
+<script>
+// Standalone "we moved" notice. Fully self-contained: does not touch any
+// existing app state, styles, or elements. Only appears for visitors still
+// arriving from the old github.io address, and only once per browser.
+(function () {
+    try {
+        var onOldHost = /\.github\.io$/i.test(window.location.hostname);
+        if (!onOldHost) return;
+        if (localStorage.getItem('rf-moved-dismissed') === '1') return;
+
+        var bar = document.createElement('div');
+        bar.setAttribute('role', 'status');
+        bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;' +
+            'background:#003a6a;color:#fff;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;' +
+            'font-size:0.85rem;padding:10px 14px;display:flex;align-items:center;justify-content:center;' +
+            'gap:10px;box-shadow:0 -2px 10px rgba(0,0,0,0.3);flex-wrap:wrap;text-align:center;';
+
+        var text = document.createElement('span');
+        text.textContent = "We've moved! Route Finder is now at routefinder.us";
+        bar.appendChild(text);
+
+        var link = document.createElement('a');
+        link.href = 'https://routefinder.us/';
+        link.textContent = 'Open new site';
+        link.style.cssText = 'background:#ffde00;color:#003a6a;font-weight:800;text-decoration:none;' +
+            'padding:6px 12px;border-radius:6px;white-space:nowrap;';
+        bar.appendChild(link);
+
+        var dismiss = document.createElement('button');
+        dismiss.type = 'button';
+        dismiss.textContent = '✕';
+        dismiss.setAttribute('aria-label', 'Dismiss');
+        dismiss.style.cssText = 'background:transparent;color:#fff;border:none;font-size:1.1rem;' +
+            'cursor:pointer;padding:0 4px;line-height:1;';
+        dismiss.onclick = function () {
+            try { localStorage.setItem('rf-moved-dismissed', '1'); } catch (e) {}
+            bar.remove();
+        };
+        bar.appendChild(dismiss);
+
+        document.body.appendChild(bar);
+    } catch (e) {
+        // Never let this notice break the app.
+    }
+})();
+</script>
 </body>
 </html>

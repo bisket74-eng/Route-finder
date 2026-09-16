@@ -1,4 +1,4 @@
-const CACHE_NAME = 'route-finder-v2-2026-08-04';
+const CACHE_NAME = 'route-finder-v3-2026-09-16';
 const CACHE_PREFIX = 'route-finder-';
 
 // Change CACHE_NAME every time you want installed copies to refresh.
