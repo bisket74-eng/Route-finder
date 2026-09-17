@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Route Sheet Export</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <style>
@@ -43,11 +43,13 @@
     #printArea p.sheet-sub { font-size: 10pt; font-weight: 700; margin: 0 0 12px; color: #333; }
     /* On-screen preview: compact so every column fits without side-swiping.
        Actual print/PDF sizing (10pt/12pt) is restored in @media print below. */
+    #printArea { margin-left: -16px; margin-right: -16px; }
+    #printArea h1.sheet-title, #printArea p.sheet-sub { padding: 0 8px; }
     table.sheet-table { width: 100%; table-layout: fixed; border-collapse: collapse; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact; }
-    table.sheet-table th { font-size: 7px; font-weight: 900; text-transform: uppercase; text-align: left; border-bottom: 2px solid #000; padding: 3px 2px; background: #eef4f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    table.sheet-table td { padding: 3px 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    table.sheet-table td.c-plain { font-size: 7px; font-weight: 400; }
-    table.sheet-table td.c-bold { font-size: 8px; font-weight: 900; }
+    table.sheet-table th { font-size: 8px; font-weight: 900; text-transform: uppercase; text-align: left; border-bottom: 2px solid #000; padding: 4px 3px; background: #eef4f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    table.sheet-table td { padding: 4px 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    table.sheet-table td.c-plain { font-size: 8px; font-weight: 400; }
+    table.sheet-table td.c-bold { font-size: 9.5px; font-weight: 900; }
     table.sheet-table tr.grp-end td { border-bottom: 1.5px solid #000; }
     table.sheet-table th:nth-child(1), table.sheet-table td:nth-child(1) { width: 9%; }
     table.sheet-table th:nth-child(2), table.sheet-table td:nth-child(2) { width: 20%; }
@@ -57,6 +59,8 @@
         body { background: #fff; }
         .hdr, .card, .sheet-toolbar, .no-print { display: none !important; }
         .wrap { max-width: none; padding: 0; margin: 0; }
+        #printArea { margin: 0; }
+        #printArea h1.sheet-title, #printArea p.sheet-sub { padding: 0; }
         @page { margin: 0.5in; }
         table.sheet-table { table-layout: auto; }
         table.sheet-table th, table.sheet-table td { width: auto !important; }
