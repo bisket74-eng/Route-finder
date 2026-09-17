@@ -35,12 +35,25 @@
 
     .status-msg { margin-top: 10px; font-size: 0.85rem; font-weight: 700; color: var(--rd); text-align: center; }
 
-    #savedTabsBox { display: flex; flex-wrap: wrap; gap: 8px; }
-    .saved-tab { position: relative; display: flex; align-items: center; gap: 8px; background: var(--lt-bl); border: 2px solid var(--bl); border-radius: 8px; padding: 8px 30px 8px 12px; cursor: pointer; }
-    .saved-tab .saved-tab-label { font-weight: 900; font-size: 0.8rem; color: var(--bl); line-height: 1.25; }
-    .saved-tab .saved-tab-sub { display: block; font-weight: 700; font-size: 0.68rem; color: #556; text-transform: none; letter-spacing: 0; }
-    .saved-tab .saved-tab-del { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; border: none; background: var(--rd); color: #fff; font-weight: 900; font-size: 0.75rem; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+    .sched-hdr-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .edit-toggle-btn { border: 2px solid var(--bl); background: #fff; color: var(--bl); font-weight: 900; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+    .edit-toggle-btn.active { background: var(--bl); color: #fff; }
+    #savedTabsBox { display: flex; flex-wrap: wrap; gap: 6px; }
+    .saved-tab { position: relative; display: inline-flex; align-items: center; background: var(--lt-bl); border: 1.5px solid var(--bl); border-radius: 6px; padding: 5px 8px; cursor: pointer; }
+    .saved-tab .saved-tab-label { font-weight: 900; font-size: 0.68rem; color: var(--bl); line-height: 1.2; white-space: nowrap; }
+    .saved-tab .saved-tab-sub { display: block; font-weight: 700; font-size: 0.58rem; color: #556; text-transform: none; letter-spacing: 0; }
+    .saved-tab .saved-tab-del { display: none; position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; border: none; background: var(--rd); color: #fff; font-weight: 900; font-size: 0.7rem; line-height: 1; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+    #savedTabsBox.edit-mode .saved-tab .saved-tab-del { display: flex; }
+    #savedTabsBox.edit-mode .saved-tab { padding-right: 8px; }
     .saved-empty-msg { font-size: 0.8rem; font-weight: 700; color: #778; }
+
+    .add-city-link { display: block; margin-top: 8px; background: none; border: none; color: var(--bl); font-weight: 800; font-size: 0.8rem; text-decoration: underline; cursor: pointer; padding: 4px 0; }
+
+    #addCityModal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 18px; box-sizing: border-box; background: rgba(0,0,0,0.58); z-index: 46000; }
+    body.add-city-open #addCityModal { display: flex; }
+    .add-city-box { position: relative; background: #fff; border-radius: 12px; padding: 20px; max-width: 420px; width: 100%; max-height: 85vh; overflow-y: auto; }
+    .add-city-close { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; border-radius: 50%; border: none; background: #eee; font-size: 1.1rem; font-weight: 900; cursor: pointer; }
+    .add-city-input { width: 100%; padding: 10px; font-size: 1rem; border: 1px solid #aaa; border-radius: 6px; margin-bottom: 14px; box-sizing: border-box; }
 
     #sheetView { display: none; }
     #sheetView .sheet-toolbar { display: flex; gap: 10px; margin-bottom: 14px; }
@@ -64,7 +77,7 @@
 
     @media print {
         body { background: #fff; }
-        .hdr, .card, .sheet-toolbar, .no-print { display: none !important; }
+        .hdr, .card, .sheet-toolbar, .no-print, #addCityModal { display: none !important; }
         .wrap { max-width: none; padding: 0; margin: 0; }
         #printArea { margin: 0; }
         #printArea h1.sheet-title, #printArea p.sheet-sub { padding: 0; }
@@ -92,10 +105,19 @@
 
 <div class="wrap">
 
+    <div class="card no-print" id="savedSheetsCard" style="display:none;">
+        <div class="sched-hdr-row">
+            <h2 style="margin:0;">My Scheme</h2>
+            <button class="edit-toggle-btn" type="button" id="editTabsBtn" onclick="toggleEditTabs()">Edit</button>
+        </div>
+        <div id="savedTabsBox"></div>
+    </div>
+
     <div class="card no-print" id="pickerView">
         <h2>1. City</h2>
         <label class="field-label" for="citySelect">Select city</label>
         <select id="citySelect" onchange="onCityChange()"></select>
+        <button class="add-city-link" type="button" onclick="openAddCityForm()">+ Request a new city</button>
 
         <h2 style="margin-top:18px;">2. ZIP Code(s)</h2>
         <div id="zipScrollBox"></div>
@@ -109,11 +131,6 @@
         <div class="status-msg" id="statusMsg"></div>
     </div>
 
-    <div class="card no-print" id="savedSheetsCard" style="display:none;">
-        <h2>My Scheme</h2>
-        <div id="savedTabsBox"></div>
-    </div>
-
     <div class="card no-print" id="sheetView">
         <div class="sheet-toolbar">
             <button class="btn-main" type="button" onclick="window.print()">Print / Save as PDF</button>
@@ -123,6 +140,26 @@
 
     <div id="printArea"></div>
 
+</div>
+
+<div id="addCityModal" role="dialog" aria-modal="true" aria-label="Request a new city" onclick="closeAddCityFromBackdrop(event)">
+    <div class="add-city-box" onclick="event.stopPropagation()">
+        <button class="add-city-close" type="button" aria-label="Close" onclick="closeAddCityForm()">&times;</button>
+        <h2 style="margin-top:0;">Request a New City</h2>
+        <p style="font-size:0.8rem; font-weight:700; color:#556; margin-top:-6px;">This sends a request &mdash; it doesn't add the city automatically.</p>
+
+        <label class="field-label" for="reqCity">City</label>
+        <input type="text" id="reqCity" class="add-city-input" placeholder="e.g. Bozeman">
+
+        <label class="field-label" for="reqState">State</label>
+        <input type="text" id="reqState" class="add-city-input" placeholder="e.g. Montana">
+
+        <label class="field-label" for="reqZips">ZIP Code(s)</label>
+        <input type="text" id="reqZips" class="add-city-input" placeholder="e.g. 59715, 59718">
+
+        <button class="btn-main" type="button" onclick="submitAddCityRequest()">Send Request</button>
+        <div class="status-msg" id="addCityStatusMsg"></div>
+    </div>
 </div>
 
 <script>
@@ -1564,6 +1601,8 @@ function saveSheetToHistory(cityName, zipLine, html) {
     renderSavedTabs();
 }
 
+let editTabsMode = false;
+
 function renderSavedTabs() {
     const card = document.getElementById('savedSheetsCard');
     const box = document.getElementById('savedTabsBox');
@@ -1572,18 +1611,33 @@ function renderSavedTabs() {
     if (history.length === 0) {
         card.style.display = 'none';
         box.innerHTML = '';
+        editTabsMode = false;
         return;
     }
 
     card.style.display = 'block';
+    box.className = editTabsMode ? 'edit-mode' : '';
     box.innerHTML = history.map(entry => {
         const d = new Date(entry.savedAt);
         const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        return `<div class="saved-tab" onclick="loadSavedSheet('${entry.id}')">
+        return `<div class="saved-tab" onclick="handleTabClick('${entry.id}')">
             <button class="saved-tab-del" type="button" aria-label="Delete" title="Delete" onclick="deleteSavedSheet(event, '${entry.id}')">&times;</button>
-            <span class="saved-tab-label">${escapeHtml(entry.cityName)}<span class="saved-tab-sub">${escapeHtml(entry.zipLine)} &bull; ${escapeHtml(dateStr)}</span></span>
+            <span class="saved-tab-label">${escapeHtml(entry.zipLine)}<span class="saved-tab-sub">${escapeHtml(dateStr)}</span></span>
         </div>`;
     }).join('');
+}
+
+function toggleEditTabs() {
+    editTabsMode = !editTabsMode;
+    const btn = document.getElementById('editTabsBtn');
+    btn.textContent = editTabsMode ? 'Done' : 'Edit';
+    btn.classList.toggle('active', editTabsMode);
+    renderSavedTabs();
+}
+
+function handleTabClick(id) {
+    if (editTabsMode) return;
+    loadSavedSheet(id);
 }
 
 function loadSavedSheet(id) {
@@ -1602,6 +1656,78 @@ function deleteSavedSheet(event, id) {
     history = history.filter(e => e.id !== id);
     try { localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history)); } catch (e) { /* ignore */ }
     renderSavedTabs();
+}
+
+// ==========================================================================
+// REQUEST A NEW CITY — sends a request email via the same Formspree endpoint
+// the main app uses for "Update Scheme", tagged so it's easy to tell apart.
+// This does NOT add the city automatically; Bev still adds it by hand.
+// ==========================================================================
+const ADD_CITY_FORM_ENDPOINT = 'https://formspree.io/f/xredreev';
+
+function openAddCityForm() {
+    document.getElementById('reqCity').value = '';
+    document.getElementById('reqState').value = '';
+    document.getElementById('reqZips').value = '';
+    document.getElementById('addCityStatusMsg').textContent = '';
+    document.body.classList.add('add-city-open');
+    document.getElementById('addCityModal').style.display = 'flex';
+}
+
+function closeAddCityForm() {
+    document.getElementById('addCityModal').style.display = 'none';
+    document.body.classList.remove('add-city-open');
+}
+
+function closeAddCityFromBackdrop(e) {
+    if (e.target && e.target.id === 'addCityModal') closeAddCityForm();
+}
+
+async function submitAddCityRequest() {
+    const city = document.getElementById('reqCity').value.trim();
+    const state = document.getElementById('reqState').value.trim();
+    const zips = document.getElementById('reqZips').value.trim();
+    const statusEl = document.getElementById('addCityStatusMsg');
+
+    if (!city || !state || !zips) {
+        statusEl.textContent = 'Please fill in city, state, and ZIP code(s).';
+        return;
+    }
+    statusEl.style.color = '';
+    statusEl.textContent = 'Sending...';
+
+    const exactMoment = new Date();
+    const localizedPacificTimestamp = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Los_Angeles',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+    }).format(exactMoment);
+
+    const fd = new FormData();
+    fd.append('requestType', 'New Scheme');
+    fd.append('city', city);
+    fd.append('state', state);
+    fd.append('zips', zips);
+    fd.append('message', 'Carrier requested a new city/ZIP be added to Route Finder.');
+    fd.append('Submitted At (Pacific Time)', localizedPacificTimestamp);
+
+    try {
+        const resp = await fetch(ADD_CITY_FORM_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: fd
+        });
+        if (resp.ok) {
+            statusEl.style.color = 'var(--gr)';
+            statusEl.textContent = 'Request sent successfully.';
+            setTimeout(closeAddCityForm, 1400);
+        } else {
+            throw new Error('send failed');
+        }
+    } catch (err) {
+        statusEl.style.color = '';
+        statusEl.textContent = 'Something went wrong sending that. Please try again.';
+    }
 }
 
 // ==========================================================================
