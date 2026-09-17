@@ -35,6 +35,13 @@
 
     .status-msg { margin-top: 10px; font-size: 0.85rem; font-weight: 700; color: var(--rd); text-align: center; }
 
+    #savedTabsBox { display: flex; flex-wrap: wrap; gap: 8px; }
+    .saved-tab { position: relative; display: flex; align-items: center; gap: 8px; background: var(--lt-bl); border: 2px solid var(--bl); border-radius: 8px; padding: 8px 30px 8px 12px; cursor: pointer; }
+    .saved-tab .saved-tab-label { font-weight: 900; font-size: 0.8rem; color: var(--bl); line-height: 1.25; }
+    .saved-tab .saved-tab-sub { display: block; font-weight: 700; font-size: 0.68rem; color: #556; text-transform: none; letter-spacing: 0; }
+    .saved-tab .saved-tab-del { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; border: none; background: var(--rd); color: #fff; font-weight: 900; font-size: 0.75rem; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+    .saved-empty-msg { font-size: 0.8rem; font-weight: 700; color: #778; }
+
     #sheetView { display: none; }
     #sheetView .sheet-toolbar { display: flex; gap: 10px; margin-bottom: 14px; }
     #sheetView .sheet-toolbar button { flex: 1; }
@@ -46,10 +53,10 @@
     #printArea { margin-left: -16px; margin-right: -16px; }
     #printArea h1.sheet-title, #printArea p.sheet-sub { padding: 0 8px; }
     table.sheet-table { width: 100%; table-layout: fixed; border-collapse: collapse; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact; }
-    table.sheet-table th { font-size: 8px; font-weight: 900; text-transform: uppercase; text-align: left; border-bottom: 2px solid #000; padding: 4px 3px; background: #eef4f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    table.sheet-table td { padding: 4px 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    table.sheet-table td.c-plain { font-size: 8px; font-weight: 400; }
-    table.sheet-table td.c-bold { font-size: 9.5px; font-weight: 900; }
+    table.sheet-table th { font-size: 9.5px; font-weight: 900; text-transform: uppercase; text-align: left; border-bottom: 2px solid #000; padding: 5px 3px; background: #eef4f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    table.sheet-table td { padding: 5px 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    table.sheet-table td.c-plain { font-size: 9.5px; font-weight: 400; }
+    table.sheet-table td.c-bold { font-size: 11.5px; font-weight: 900; }
     table.sheet-table tr.grp-end td { border-bottom: 1.5px solid #000; }
     table.sheet-table th:nth-child(1), table.sheet-table td:nth-child(1) { width: 9%; }
     table.sheet-table th:nth-child(2), table.sheet-table td:nth-child(2) { width: 20%; }
@@ -100,6 +107,11 @@
 
         <button class="btn-main" type="button" onclick="generateSheet()">Generate Print Sheet</button>
         <div class="status-msg" id="statusMsg"></div>
+    </div>
+
+    <div class="card no-print" id="savedSheetsCard" style="display:none;">
+        <h2>My Scheme</h2>
+        <div id="savedTabsBox"></div>
     </div>
 
     <div class="card no-print" id="sheetView">
@@ -1490,7 +1502,7 @@ function generateSheet() {
 
     const zipHeaderCell = showZipColumn ? `<th>ZIP</th>` : ``;
 
-    document.getElementById('printArea').innerHTML = `
+    const sheetHtml = `
         <h1 class="sheet-title">${escapeHtml(cityName)}</h1>
         <p class="sheet-sub">ZIP(s): ${escapeHtml(zipLine)} &bull; Generated ${todayStr}</p>
         <table class="sheet-table">
@@ -1498,6 +1510,9 @@ function generateSheet() {
             <tbody>${bodyRows}</tbody>
         </table>
     `;
+
+    document.getElementById('printArea').innerHTML = sheetHtml;
+    saveSheetToHistory(cityName, zipLine, sheetHtml);
 
     document.getElementById('pickerView').style.display = 'none';
     document.getElementById('sheetView').style.display = 'block';
@@ -1510,11 +1525,92 @@ function backToPicker() {
 }
 
 // ==========================================================================
+// SAVED SHEETS — a per-device history of generated sheets so they can be
+// reopened at a glance without digging through the phone's Downloads folder.
+// This is NOT access to actual saved PDF files (a web page can't read a
+// browser's Downloads folder); it re-renders the sheet from saved data so
+// it can be viewed again and re-printed/re-saved as a PDF at any time.
+// ==========================================================================
+const SAVED_SHEETS_KEY = 'routeSheetHistory';
+const MAX_SAVED_SHEETS = 15;
+
+function loadHistory() {
+    try {
+        const raw = localStorage.getItem(SAVED_SHEETS_KEY);
+        return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveSheetToHistory(cityName, zipLine, html) {
+    let history = loadHistory();
+    const entry = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        cityName,
+        zipLine,
+        savedAt: new Date().toISOString(),
+        html
+    };
+    history.unshift(entry);
+    if (history.length > MAX_SAVED_SHEETS) history = history.slice(0, MAX_SAVED_SHEETS);
+    try {
+        localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history));
+    } catch (e) {
+        // Storage full — drop the oldest half and try once more.
+        history = history.slice(0, Math.ceil(history.length / 2));
+        try { localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history)); } catch (e2) { /* give up quietly */ }
+    }
+    renderSavedTabs();
+}
+
+function renderSavedTabs() {
+    const card = document.getElementById('savedSheetsCard');
+    const box = document.getElementById('savedTabsBox');
+    const history = loadHistory();
+
+    if (history.length === 0) {
+        card.style.display = 'none';
+        box.innerHTML = '';
+        return;
+    }
+
+    card.style.display = 'block';
+    box.innerHTML = history.map(entry => {
+        const d = new Date(entry.savedAt);
+        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return `<div class="saved-tab" onclick="loadSavedSheet('${entry.id}')">
+            <button class="saved-tab-del" type="button" aria-label="Delete" title="Delete" onclick="deleteSavedSheet(event, '${entry.id}')">&times;</button>
+            <span class="saved-tab-label">${escapeHtml(entry.cityName)}<span class="saved-tab-sub">${escapeHtml(entry.zipLine)} &bull; ${escapeHtml(dateStr)}</span></span>
+        </div>`;
+    }).join('');
+}
+
+function loadSavedSheet(id) {
+    const history = loadHistory();
+    const entry = history.find(e => e.id === id);
+    if (!entry) return;
+    document.getElementById('printArea').innerHTML = entry.html;
+    document.getElementById('pickerView').style.display = 'none';
+    document.getElementById('sheetView').style.display = 'block';
+    window.scrollTo(0, 0);
+}
+
+function deleteSavedSheet(event, id) {
+    event.stopPropagation();
+    let history = loadHistory();
+    history = history.filter(e => e.id !== id);
+    try { localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history)); } catch (e) { /* ignore */ }
+    renderSavedTabs();
+}
+
+// ==========================================================================
 // BOOT
 // ==========================================================================
 window.addEventListener('DOMContentLoaded', () => {
     populateCityDropdown();
     onCityChange();
+    renderSavedTabs();
 });
 
 </script>
