@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0757a6">
+<title>Vancouver PO Parking</title>
+<style>
+:root{
+  --usps-blue:#0757a6;
+  --usps-blue-dark:#063f7a;
+  --usps-blue-light:#eaf3fc;
+  --red:#c62828;
+  --green:#168447;
+  --gold:#f5c542;
+  --ink:#17212b;
+  --muted:#64748b;
+  --line:#d6e0ea;
+  --bg:#eef3f8;
+  --white:#fff;
+  --shadow:0 3px 12px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg)}
+body{padding-bottom:28px}
+
+/* USPS-style header */
+.app-header{
+  background:linear-gradient(135deg,var(--usps-blue-dark),var(--usps-blue));
+  color:#fff;
+  padding:14px 14px 13px;
+  box-shadow:0 3px 10px rgba(0,0,0,.22);
+  position:sticky;top:0;z-index:20;
+}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:900px;margin:auto}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-mark{
+  width:40px;height:40px;border:2px solid rgba(255,255,255,.9);
+  border-radius:50%;display:grid;place-items:center;font-weight:900;
+  font-size:18px;flex:none;
+}
+.brand h1{font-size:21px;line-height:1.05;margin:0;font-weight:800}
+.brand p{font-size:11px;margin:4px 0 0;opacity:.9}
+.edit-btn{
+  border:0;background:var(--red);color:#fff;font-weight:800;
+  border-radius:22px;padding:10px 15px;font-size:14px;
+  box-shadow:0 2px 5px #0003;cursor:pointer;white-space:nowrap;
+}
+.edit-btn.active{background:#fff;color:var(--red)}
+
+.tools{
+  max-width:900px;margin:0 auto;padding:10px 12px 0;
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.tool-btn{
+  border:1px solid #c8d6e5;background:#fff;color:var(--usps-blue);
+  border-radius:10px;padding:10px 12px;font-size:13px;font-weight:800;
+  cursor:pointer;box-shadow:0 1px 3px #0000000b;
+}
+.tool-btn:hover{background:var(--usps-blue-light)}
+.tool-btn.green{color:var(--green)}
+.tool-btn.red{color:var(--red)}
+
+.search{
+  max-width:900px;margin:9px auto 0;padding:0 12px;
+}
+.search input{
+  width:100%;height:42px;border:1px solid #c8d6e5;border-radius:10px;
+  background:#fff;padding:0 13px;font-size:15px;outline:none;
+  box-shadow:0 1px 3px #0000000b;
+}
+.search input:focus{border-color:var(--usps-blue);box-shadow:0 0 0 3px #0757a61a}
+
+/* ZIP tabs */
+.tabs{
+  max-width:900px;margin:10px auto 0;padding:0 12px;
+  display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;border:1px solid #c7d7e8;border-bottom:0;
+  background:#dbe9f7;color:#24527c;border-radius:9px 9px 0 0;
+  padding:10px 14px;font-size:14px;font-weight:800;cursor:pointer;
+}
+.tab.active{background:#fff;color:var(--usps-blue);padding-top:11px}
+main{max-width:900px;margin:0 auto;padding:0 12px}
+.panel{
+  background:#fff;border:1px solid var(--line);border-radius:0 11px 11px 11px;
+  overflow:hidden;box-shadow:var(--shadow);
+}
+.panel-head{
+  padding:13px 14px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.panel-head h2{margin:0;color:var(--usps-blue-dark);font-size:20px}
+.count{font-size:12px;color:var(--muted);font-weight:700}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:440px}
+th,td{padding:11px 12px;border-bottom:1px solid #e5ebf2;text-align:left}
+th{
+  background:#f1f6fb;color:#34516c;font-size:12px;
+  text-transform:uppercase;letter-spacing:.04em;
+}
+td{font-size:15px}
+tr:last-child td{border-bottom:0}
+.route{font-weight:900;color:var(--usps-blue)}
+.route.rural{color:#8a5200}
+.type-city{color:var(--usps-blue)}
+.type-rural{color:#8a5200;font-weight:700}
+.editing .editable{
+  width:100%;border:1px solid #b9cce0;border-radius:7px;
+  padding:8px;background:#fbfdff;font-size:15px;font-weight:700;
+}
+.editing .editable:focus{outline:2px solid #0757a633;border-color:var(--usps-blue)}
+.delete-btn{
+  border:0;background:#fdecec;color:var(--red);font-weight:900;
+  width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px;
+}
+.add-row{
+  display:none;padding:12px;border-top:1px solid var(--line);background:#f8fbfe;
+}
+.editing .add-row{display:flex;gap:8px;flex-wrap:wrap}
+.add-row input{
+  flex:1;min-width:120px;padding:9px;border:1px solid #b9cce0;border-radius:7px;
+  font-size:14px;
+}
+.add-row button{
+  border:0;border-radius:8px;background:var(--green);color:#fff;
+  font-weight:800;padding:9px 13px;cursor:pointer;
+}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+
+.edit-bar{
+  display:none;max-width:900px;margin:10px auto 0;padding:0 12px;
+}
+.editing-on .edit-bar{display:flex;gap:8px}
+.save-btn,.cancel-btn{
+  flex:1;border:0;border-radius:10px;padding:11px;font-weight:900;cursor:pointer;
+}
+.save-btn{background:var(--green);color:#fff}
+.cancel-btn{background:#fff;color:var(--red);border:1px solid #efbaba}
+.status{
+  max-width:900px;margin:8px auto 0;padding:0 12px;
+  color:var(--green);font-size:12px;font-weight:700;min-height:16px;
+}
+.note{
+  max-width:900px;margin:12px auto 0;padding:0 12px;
+  color:var(--muted);font-size:11px;line-height:1.4;
+}
+
+@media(min-width:650px){
+  .tools{grid-template-columns:repeat(4,1fr)}
+}
+
+@media print{
+  body{background:#fff;padding:0}
+  .app-header{position:static;background:#fff;color:#000;box-shadow:none;border-bottom:2px solid #000}
+  .brand-mark{border-color:#000}
+  .brand p{color:#444}
+  .edit-btn,.tools,.search,.tabs,.edit-bar,.status,.note{display:none!important}
+  main{max-width:none;padding:0}
+  .panel{border:0;box-shadow:none;border-radius:0}
+  .panel-head{padding:8px 0}
+  .zip-panel{break-before:page}
+  .zip-panel:first-child{break-before:auto}
+  th{background:#eee!important}
+  .delete-col,.edit-only{display:none!important}
+  table{min-width:0}
+}
+
+/* Edit mode body marker */
+.editing-on .panel{border-color:#a9c4df}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-row">
+    <div class="brand">
+      <div class="brand-mark">PO</div>
+      <div>
+        <h1>Vancouver PO Parking</h1>
+        <p>Vancouver, WA S&amp;DC • Route Finder reference</p>
+      </div>
+    </div>
+    <button class="edit-btn" id="editToggle" onclick="toggleEdit()">✎ Edit</button>
+  </div>
+</header>
+
+<div class="tools">
+  <button class="tool-btn" onclick="window.print()">🖨 Print</button>
+  <a class="tool-btn" id="csvDownload" download="vancouver-po-parking.csv" style="text-align:center">⬇ Download CSV</a>
+  <button class="tool-btn green" onclick="downloadHTML()">⬇ Download HTML</button>
+  <button class="tool-btn red" onclick="resetData()">↺ Reset Saved Changes</button>
+</div>
+
+<div class="search">
+  <input id="search" type="search" placeholder="Search route or parking space…">
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="edit-bar">
+  <button class="save-btn" onclick="saveEdits()">✓ Save Changes</button>
+  <button class="cancel-btn" onclick="cancelEdits()">Cancel</button>
+</div>
+
+<div class="status" id="status"></div>
+
+<main id="content"></main>
+
+<div class="note">
+  C = city route. R = rural route. Parking spaces 1–59 are South; 60 and above are North. Changes made with Edit are saved on this device/browser.
+  Use Download CSV for a spreadsheet-friendly copy or Print for a paper reference.
+</div>
+
+<script>
+const originalData = {
+  "98660":[["C03",59],["C05",58],["C07",57],["C08",56],["C09",17],["C10",18],["C19",19],["C21",16],["C23",15],["C44",14],["C47",13]],
+  "98661":[["C27",44],["C41",41],["C45",40],["C46",39],["C48",38],["C52",37],["C60",32],["C64",33],["C71",34],["C72",36]],
+  "98663":[["C01",9],["C11",10],["C12",11],["C13",12],["C14",22],["C15",21],["C16",20],["C17",55],["C18",54],["C20",53]],
+  "98665":[["C24",45],["C79",46],["C83",47],["C85",48],["C88",31],["C89",30],["C91",29],["C92",28],["C93",1],["C94",2],["C97",3],["C98",4],["C99",5],["C100",6],["C101",7]],
+  "98685":[["R27",81],["R28",82],["R35",83],["R37",49],["R78",50],["R85",""]],
+  "98686":[["R06",60],["R07",61],["R16",62],["R19",63],["R26",64],["R29",73],["R36",24],["R45",84],["R80",23],["R82",27],["R87",26],["R90",25],["R96",51],["R86",52]]
+};
+
+const key="vancouverPOParkingData";
+let data=loadData();
+let active=Object.keys(data)[0];
+let editing=false;
+let draft=null;
+
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function loadData(){
+  try{
+    const saved=localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : clone(originalData);
+  }catch(e){return clone(originalData)}
+}
+function setStatus(msg){
+  document.getElementById("status").textContent=msg||"";
+  if(msg) setTimeout(()=>document.getElementById("status").textContent="",2200);
+}
+function renderTabs(){
+  document.getElementById("tabs").innerHTML=Object.keys(data).map(zip =>
+    `<button class="tab ${zip===active?'active':''}" onclick="setZip('${zip}')">${zip}</button>`
+  ).join("");
+}
+function setZip(zip){active=zip;renderTabs();render()}
+function toggleEdit(){
+  if(!editing){
+    draft=clone(data);editing=true;
+    document.body.classList.add("editing-on");
+    document.getElementById("editToggle").textContent="✕ Close Edit";
+    document.getElementById("editToggle").classList.add("active");
+    render();
+  }else{
+    cancelEdits();
+  }
+}
+function render(){
+  const q=document.getElementById("search").value.trim().toUpperCase();
+  const source=editing?draft:data;
+  const rows=(source[active]||[]).filter(([route,space]) =>
+    !q || route.includes(q) || String(space).includes(q)
+  );
+
+  document.getElementById("content").innerHTML=`
+    <section class="panel zip-panel">
+      <div class="panel-head">
+        <h2>ZIP ${active}</h2>
+        <span class="count">${rows.length} route${rows.length===1?'':'s'}</span>
+      </div>
+      ${rows.length ? `
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Route</th><th>Type</th><th>Parking Space</th><th>Lot</th>${editing?'<th class="edit-only"></th>':''}</tr></thead>
+        <tbody>
+        ${rows.map(([route,space],i)=>{
+          const rural=String(route).toUpperCase().startsWith("R");
+          const actualIndex=(source[active]||[]).indexOf((source[active]||[]).find(x=>x[0]===route && String(x[1])===String(space)));
+          return `<tr>
+            <td>${editing
+              ? `<input class="editable" value="${esc(route)}" onchange="editRoute(${actualIndex},this.value)">`
+              : `<span class="route ${rural?'rural':''}">${esc(route)}</span>`}</td>
+            <td class="${rural?'type-rural':'type-city'}">${rural?'Rural':'City'}</td>
+            <td>${editing
+              ? `<input class="editable" inputmode="numeric" value="${esc(space)}" placeholder="Parking #" onchange="editSpace(${actualIndex},this.value)">`
+              : (space===""?'—':esc(space))}</td>
+            <td>${space==="" ? '—' : (Number(space) <= 59 ? 'South' : 'North')}</td>
+            ${editing?`<td class="edit-only"><button class="delete-btn" title="Delete route" onclick="deleteRoute(${actualIndex})">×</button></td>`:''}
+          </tr>`;
+        }).join("")}
+        </tbody>
+      </table>
+      </div>` : `<div class="empty">No matching routes.</div>`}
+      <div class="add-row">
+        <input id="newRoute" placeholder="Route (C03 or R27)">
+        <input id="newSpace" inputmode="numeric" placeholder="Parking space">
+        <button onclick="addRoute()">+ Add Route</button>
+      </div>
+    </section>`;
+}
+function esc(v){
+  return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function editRoute(i,value){
+  if(i>=0) draft[active][i][0]=value.trim().toUpperCase();
+  renderTabs();render();
+}
+function editSpace(i,value){
+  if(i>=0) draft[active][i][1]=value.trim();
+  render();
+}
+function deleteRoute(i){
+  if(i<0)return;
+  const route=draft[active][i][0];
+  if(confirm("Delete route "+route+" from ZIP "+active+"?")){
+    draft[active].splice(i,1);render();
+  }
+}
+function addRoute(){
+  const r=document.getElementById("newRoute").value.trim().toUpperCase();
+  const s=document.getElementById("newSpace").value.trim();
+  if(!r){alert("Enter a route number.");return}
+  draft[active].push([r,s]);
+  draft[active].sort((a,b)=>a[0].localeCompare(b[0],undefined,{numeric:true}));
+  render();
+}
+function saveEdits(){
+  // Normalize route type from its prefix: C = city, R = rural.
+  for(const rows of Object.values(draft)){
+    rows.forEach(row=>{
+      row[0]=String(row[0]).trim().toUpperCase();
+      row[1]=String(row[1]??"").trim();
+    });
+  }
+  data=clone(draft);
+  localStorage.setItem(key,JSON.stringify(data));
+  editing=false;draft=null;
+  document.body.classList.remove("editing-on");
+  document.getElementById("editToggle").textContent="✎ Edit";
+  document.getElementById("editToggle").classList.remove("active");
+  renderTabs();render();updateCSV();
+  setStatus("Changes saved on this device.");
+}
+function cancelEdits(){
+  editing=false;draft=null;
+  document.body.classList.remove("editing-on");
+  document.getElementById("editToggle").textContent="✎ Edit";
+  document.getElementById("editToggle").classList.remove("active");
+  renderTabs();render();
+}
+function resetData(){
+  if(!confirm("Reset all saved changes and restore the original list from the supplied photos?"))return;
+  localStorage.removeItem(key);
+  data=clone(originalData);
+  editing=false;draft=null;
+  document.body.classList.remove("editing-on");
+  document.getElementById("editToggle").textContent="✎ Edit";
+  document.getElementById("editToggle").classList.remove("active");
+  renderTabs();render();updateCSV();
+  setStatus("Original list restored.");
+}
+function makeCSV(){
+  const out=[["ZIP Code","Route","Type","Parking Space","Lot"]];
+  for(const [zip,rows] of Object.entries(data))
+    for(const [route,space] of rows)
+      out.push([zip,route,String(route).startsWith("R")?"Rural":"City",space,space===""?"":(Number(space)<=59?"South":"North")]);
+  return out.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\\n");
+}
+function updateCSV(){
+  const blob=new Blob([makeCSV()],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.getElementById("csvDownload");
+  if(a.dataset.url)URL.revokeObjectURL(a.dataset.url);
+  a.href=url;a.dataset.url=url;
+}
+function downloadHTML(){
+  // Export a self-contained page containing the current saved list.
+  const currentData=JSON.stringify(data);
+  let source=document.documentElement.outerHTML;
+  source=source.replace(/const originalData = \{[\s\S]*?\n\};/,
+    "const originalData = "+currentData+";");
+  const blob=new Blob(["<!DOCTYPE html>\\n"+source],{type:"text/html;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="index.html";a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+document.getElementById("search").addEventListener("input",render);
+renderTabs();render();updateCSV();
+</script>
+</body>
+</html>
