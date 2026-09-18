@@ -14,7 +14,7 @@
     .hdr h1 { margin: 0; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
     .hdr p { margin: 4px 0 0; font-size: 0.8rem; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
 
-    .hdr-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--rd); color: #fff; font-size: 1.25rem; font-weight: 900; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.25); z-index: 10; }
+    .hdr-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--rd); color: #fff; font-size: 1.25rem; font-weight: 900; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.25); z-index: 100; }
     .hdr-close:active { transform: scale(0.92); }
 
     .card { background: #fff; border: 2px solid var(--bl); border-radius: 10px; padding: 16px; margin-top: 12px; }
@@ -51,11 +51,17 @@
     .edit-toggle-btn.active { background: var(--bl); color: #fff; }
     
     #savedTabsBox { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 10px; }
-    .saved-tab { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--lt-bl); border: 1.5px solid var(--bl); border-radius: 8px; padding: 8px 6px; min-height: 56px; cursor: pointer; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-    .saved-tab .saved-tab-label { font-weight: 900; font-size: 0.78rem; color: var(--bl); line-height: 1.2; white-space: normal; word-break: break-word; }
-    .saved-tab .saved-tab-sub { display: block; font-weight: 700; font-size: 0.62rem; color: #556; margin-top: 3px; text-transform: none; letter-spacing: 0; }
-    .saved-tab .saved-tab-del { display: none; position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%; border: none; background: var(--rd); color: #fff; font-weight: 900; font-size: 0.75rem; line-height: 1; align-items: center; justify-content: center; cursor: pointer; padding: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .saved-tab { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--lt-bl); border: 1.5px solid var(--bl); border-radius: 8px; padding: 8px 6px; min-height: 56px; cursor: pointer; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease; }
+    .saved-tab .saved-tab-label { font-weight: 900; font-size: 0.78rem; color: var(--bl); line-height: 1.2; white-space: normal; word-break: break-word; pointer-events: none; }
+    .saved-tab .saved-tab-sub { display: block; font-weight: 700; font-size: 0.62rem; color: #556; margin-top: 3px; text-transform: none; letter-spacing: 0; pointer-events: none; }
+    .saved-tab .saved-tab-del { display: none; position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%; border: none; background: var(--rd); color: #fff; font-weight: 900; font-size: 0.75rem; line-height: 1; align-items: center; justify-content: center; cursor: pointer; padding: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 5; }
     #savedTabsBox.edit-mode .saved-tab .saved-tab-del { display: flex; }
+    
+    /* Reordering Styles */
+    #savedTabsBox.edit-mode .saved-tab { cursor: grab; user-select: none; -webkit-user-select: none; touch-action: none; }
+    #savedTabsBox.edit-mode .saved-tab:active { cursor: grabbing; }
+    .saved-tab.dragging { opacity: 0.4; border-style: dashed; transform: scale(0.95); }
+    .saved-tab.drag-over { border-color: var(--rd); background: #fde8e8; transform: scale(1.05); }
 
     #printArea h1.sheet-title { font-size: 15pt; font-weight: 900; margin: 12px 0 2px; text-transform: uppercase; }
     #printArea p.sheet-sub { font-size: 10pt; font-weight: 700; margin: 0 0 12px; color: #333; }
@@ -145,11 +151,7 @@
 let CITY_CONFIG = {};
 
 function exitToMainApp() {
-    if (document.referrer && document.referrer !== window.location.href) {
-        window.history.back();
-    } else {
-        window.location.href = './index.html';
-    }
+    window.location.href = 'index.html';
 }
 
 async function fetchCityConfigFromIndex() {
@@ -190,7 +192,6 @@ async function initActiveCity() {
         return;
     }
 
-    // Lock to city passed via URL param, or default to the first city in index.html
     if (requestedCity && CITY_CONFIG[requestedCity]) {
         currentCityKey = requestedCity;
     } else {
@@ -411,7 +412,7 @@ function backToPicker() {
 }
 
 // ==========================================================================
-// SAVED SHEETS
+// SAVED SHEETS & REORDERING
 // ==========================================================================
 const SAVED_SHEETS_KEY = 'routeSheetHistory';
 const MAX_SAVED_SHEETS = 15;
@@ -446,6 +447,7 @@ function saveSheetToHistory(cityName, zipLine, html) {
 }
 
 let editTabsMode = false;
+let draggedIdx = null;
 
 function renderSavedTabs() {
     const card = document.getElementById('savedSheetsCard');
@@ -461,14 +463,131 @@ function renderSavedTabs() {
 
     card.style.display = 'block';
     box.className = editTabsMode ? 'edit-mode' : '';
-    box.innerHTML = history.map(entry => {
+    box.innerHTML = history.map((entry, index) => {
         const d = new Date(entry.savedAt);
         const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        return `<div class="saved-tab" onclick="handleTabClick('${entry.id}')">
+        return `<div class="saved-tab" data-index="${index}" onclick="handleTabClick('${entry.id}')">
             <button class="saved-tab-del" type="button" aria-label="Delete" title="Delete" onclick="deleteSavedSheet(event, '${entry.id}')">&times;</button>
             <span class="saved-tab-label">${escapeHtml(entry.zipLine)}<span class="saved-tab-sub">${escapeHtml(dateStr)}</span></span>
         </div>`;
     }).join('');
+
+    enableTabReordering();
+}
+
+function enableTabReordering() {
+    const tabs = document.querySelectorAll('.saved-tab');
+    tabs.forEach((tab, index) => {
+        if (!editTabsMode) {
+            tab.removeAttribute('draggable');
+            return;
+        }
+
+        tab.setAttribute('draggable', 'true');
+
+        // Mouse Drag Events
+        tab.addEventListener('dragstart', (e) => {
+            draggedIdx = index;
+            tab.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+
+        tab.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        });
+
+        tab.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            if (index !== draggedIdx) tab.classList.add('drag-over');
+        });
+
+        tab.addEventListener('dragleave', () => {
+            tab.classList.remove('drag-over');
+        });
+
+        tab.addEventListener('drop', (e) => {
+            e.preventDefault();
+            tab.classList.remove('drag-over');
+            if (draggedIdx !== null && draggedIdx !== index) {
+                reorderSavedSheets(draggedIdx, index);
+            }
+        });
+
+        tab.addEventListener('dragend', () => {
+            tab.classList.remove('dragging');
+            draggedIdx = null;
+        });
+
+        // Mobile Touch Hold & Drag Events
+        let touchTimer = null;
+        let isTouchDragging = false;
+
+        tab.addEventListener('touchstart', (e) => {
+            if (e.target.classList.contains('saved-tab-del')) return;
+            touchTimer = setTimeout(() => {
+                isTouchDragging = true;
+                draggedIdx = index;
+                tab.classList.add('dragging');
+                if (navigator.vibrate) navigator.vibrate(40);
+            }, 180);
+        }, { passive: true });
+
+        tab.addEventListener('touchmove', (e) => {
+            if (!isTouchDragging) {
+                clearTimeout(touchTimer);
+                return;
+            }
+            e.preventDefault();
+            const touch = e.touches[0];
+            const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+            const targetTab = targetEl ? targetEl.closest('.saved-tab') : null;
+
+            tabs.forEach(t => t.classList.remove('drag-over'));
+            if (targetTab && targetTab !== tab) {
+                targetTab.classList.add('drag-over');
+            }
+        }, { passive: false });
+
+        tab.addEventListener('touchend', (e) => {
+            clearTimeout(touchTimer);
+            if (isTouchDragging) {
+                isTouchDragging = false;
+                tab.classList.remove('dragging');
+                const touch = e.changedTouches[0];
+                const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+                const targetTab = targetEl ? targetEl.closest('.saved-tab') : null;
+
+                if (targetTab) {
+                    const targetIndex = parseInt(targetTab.getAttribute('data-index'), 10);
+                    if (!isNaN(targetIndex) && draggedIdx !== null && draggedIdx !== targetIndex) {
+                        reorderSavedSheets(draggedIdx, targetIndex);
+                    }
+                }
+                tabs.forEach(t => t.classList.remove('drag-over'));
+                draggedIdx = null;
+            }
+        });
+
+        tab.addEventListener('touchcancel', () => {
+            clearTimeout(touchTimer);
+            isTouchDragging = false;
+            tab.classList.remove('dragging');
+            tabs.forEach(t => t.classList.remove('drag-over'));
+            draggedIdx = null;
+        });
+    });
+}
+
+function reorderSavedSheets(fromIndex, toIndex) {
+    let history = loadHistory();
+    if (fromIndex < 0 || fromIndex >= history.length || toIndex < 0 || toIndex >= history.length) return;
+    const [movedItem] = history.splice(fromIndex, 1);
+    history.splice(toIndex, 0, movedItem);
+    try {
+        localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history));
+    } catch (e) {}
+    renderSavedTabs();
 }
 
 function toggleEditTabs() {
