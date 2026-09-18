@@ -18,12 +18,11 @@
     .hdr-close:active { transform: scale(0.92); }
 
     .card { background: #fff; border: 2px solid var(--bl); border-radius: 10px; padding: 16px; margin-top: 12px; }
-    .card h2 { margin: 0 0 12px; font-size: 1.05rem; color: var(--bl); text-transform: uppercase; letter-spacing: 0.5px; }
+    .card h2 { margin: 0 0 10px; font-size: 1.05rem; color: var(--bl); text-transform: uppercase; letter-spacing: 0.5px; }
 
-    label.field-label { display: block; font-size: 0.8rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-    select#citySelect { width: 100%; padding: 10px; font-size: 1rem; border: 1px solid #aaa; border-radius: 6px; margin-bottom: 4px; }
+    .active-city-badge { font-size: 1.15rem; font-weight: 900; color: #111; margin: 0 0 14px; padding: 10px 12px; background: var(--lt-bl); border: 1.5px solid var(--bl); border-radius: 6px; }
 
-    #zipScrollBox { max-height: 260px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px; }
+    #zipScrollBox { max-height: 260px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; margin-top: 8px; }
     .zip-item { display: flex; align-items: center; padding: 10px 14px; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid #e2e2e2; }
     .zip-item:last-child { border-bottom: none; }
     .zip-item input { width: 20px; height: 20px; margin-right: 12px; accent-color: var(--bl); flex-shrink: 0; }
@@ -120,11 +119,10 @@
     </div>
 
     <div class="card no-print" id="pickerView">
-        <h2>1. City</h2>
-        <label class="field-label" for="citySelect">Select city</label>
-        <select id="citySelect" onchange="onCityChange()"></select>
+        <h2>Export Location</h2>
+        <div class="active-city-badge" id="activeCityName">Loading city...</div>
 
-        <h2 style="margin-top:18px;">2. ZIP Code(s)</h2>
+        <h2>Select ZIP Code(s)</h2>
         <div id="zipScrollBox"></div>
 
         <div class="toggle-row">
@@ -183,34 +181,29 @@ const params = new URLSearchParams(window.location.search);
 const requestedCity = params.get('city');
 
 // ==========================================================================
-// INIT
+// INIT ACTIVE CITY
 // ==========================================================================
-function populateCityDropdown() {
-    const sel = document.getElementById('citySelect');
-    const keys = Object.keys(CITY_CONFIG).sort((a, b) => {
-        const nameA = CITY_CONFIG[a]?.name || a;
-        const nameB = CITY_CONFIG[b]?.name || b;
-        return nameA.localeCompare(nameB);
-    });
-
+async function initActiveCity() {
+    const keys = Object.keys(CITY_CONFIG);
     if (keys.length === 0) {
-        sel.innerHTML = '<option value="">No cities available</option>';
+        document.getElementById('activeCityName').textContent = 'No city configuration found.';
         return;
     }
 
-    sel.innerHTML = keys.map(k => `<option value="${k}">${escapeHtml(CITY_CONFIG[k].name || k)}</option>`).join('');
+    // Lock to city passed via URL param, or default to the first city in index.html
     if (requestedCity && CITY_CONFIG[requestedCity]) {
-        sel.value = requestedCity;
+        currentCityKey = requestedCity;
     } else {
-        sel.value = keys[0];
+        currentCityKey = keys[0];
     }
+
+    const cfg = CITY_CONFIG[currentCityKey];
+    document.getElementById('activeCityName').textContent = cfg ? cfg.name : currentCityKey;
+
+    await loadCityData(currentCityKey);
 }
 
-async function onCityChange() {
-    const key = document.getElementById('citySelect').value;
-    if (!key || !CITY_CONFIG[key]) return;
-    
-    currentCityKey = key;
+async function loadCityData(key) {
     const statusEl = document.getElementById('statusMsg');
     statusEl.textContent = 'Loading route data...';
     document.getElementById('zipScrollBox').innerHTML = '';
@@ -514,8 +507,7 @@ function deleteSavedSheet(event, id) {
 // ==========================================================================
 window.addEventListener('DOMContentLoaded', async () => {
     CITY_CONFIG = await fetchCityConfigFromIndex();
-    populateCityDropdown();
-    await onCityChange();
+    await initActiveCity();
     renderSavedTabs();
 });
 </script>
