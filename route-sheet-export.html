@@ -14,8 +14,8 @@
     .hdr h1 { margin: 0; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
     .hdr p { margin: 4px 0 0; font-size: 0.8rem; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
 
-    .hdr-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--rd); color: #fff; font-size: 1.25rem; font-weight: 900; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.25); z-index: 100; }
-    .hdr-close:active { transform: scale(0.92); }
+    .hdr-close { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border-radius: 50%; border: 2px solid #fff; background: var(--rd); color: #fff; font-size: 1.35rem; font-weight: 900; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3); z-index: 999; }
+    .hdr-close:active { transform: scale(0.90); }
 
     .card { background: #fff; border: 2px solid var(--bl); border-radius: 10px; padding: 16px; margin-top: 12px; }
     .card h2 { margin: 0 0 10px; font-size: 1.05rem; color: var(--bl); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -151,7 +151,7 @@
 let CITY_CONFIG = {};
 
 function exitToMainApp() {
-    window.location.href = 'index.html';
+    window.location.href = './index.html';
 }
 
 async function fetchCityConfigFromIndex() {
@@ -447,7 +447,8 @@ function saveSheetToHistory(cityName, zipLine, html) {
 }
 
 let editTabsMode = false;
-let draggedIdx = null;
+let touchDraggedIdx = null;
+let touchActive = false;
 
 function renderSavedTabs() {
     const card = document.getElementById('savedSheetsCard');
@@ -476,8 +477,10 @@ function renderSavedTabs() {
 }
 
 function enableTabReordering() {
-    const tabs = document.querySelectorAll('.saved-tab');
-    tabs.forEach((tab, index) => {
+    const box = document.getElementById('savedTabsBox');
+    const tabs = box.querySelectorAll('.saved-tab');
+
+    tabs.forEach((tab) => {
         if (!editTabsMode) {
             tab.removeAttribute('draggable');
             return;
@@ -485,11 +488,12 @@ function enableTabReordering() {
 
         tab.setAttribute('draggable', 'true');
 
-        // Mouse Drag Events
+        // --- DESKTOP DRAG EVENTS ---
         tab.addEventListener('dragstart', (e) => {
-            draggedIdx = index;
-            tab.classList.add('dragging');
+            const idx = parseInt(tab.getAttribute('data-index'), 10);
+            e.dataTransfer.setData('text/plain', idx.toString());
             e.dataTransfer.effectAllowed = 'move';
+            tab.classList.add('dragging');
         });
 
         tab.addEventListener('dragover', (e) => {
@@ -499,7 +503,7 @@ function enableTabReordering() {
 
         tab.addEventListener('dragenter', (e) => {
             e.preventDefault();
-            if (index !== draggedIdx) tab.classList.add('drag-over');
+            tab.classList.add('drag-over');
         });
 
         tab.addEventListener('dragleave', () => {
@@ -509,36 +513,31 @@ function enableTabReordering() {
         tab.addEventListener('drop', (e) => {
             e.preventDefault();
             tab.classList.remove('drag-over');
-            if (draggedIdx !== null && draggedIdx !== index) {
-                reorderSavedSheets(draggedIdx, index);
+            const fromIdx = parseInt(e.dataTransfer.getData('text/plain'), 10);
+            const toIdx = parseInt(tab.getAttribute('data-index'), 10);
+            if (!isNaN(fromIdx) && !isNaN(toIdx) && fromIdx !== toIdx) {
+                reorderSavedSheets(fromIdx, toIdx);
             }
         });
 
         tab.addEventListener('dragend', () => {
             tab.classList.remove('dragging');
-            draggedIdx = null;
+            tabs.forEach(t => t.classList.remove('drag-over'));
         });
 
-        // Mobile Touch Hold & Drag Events
-        let touchTimer = null;
-        let isTouchDragging = false;
-
+        // --- MOBILE TOUCH DRAG EVENTS ---
         tab.addEventListener('touchstart', (e) => {
             if (e.target.classList.contains('saved-tab-del')) return;
-            touchTimer = setTimeout(() => {
-                isTouchDragging = true;
-                draggedIdx = index;
-                tab.classList.add('dragging');
-                if (navigator.vibrate) navigator.vibrate(40);
-            }, 180);
+            touchActive = true;
+            touchDraggedIdx = parseInt(tab.getAttribute('data-index'), 10);
+            tab.classList.add('dragging');
         }, { passive: true });
 
         tab.addEventListener('touchmove', (e) => {
-            if (!isTouchDragging) {
-                clearTimeout(touchTimer);
-                return;
-            }
-            e.preventDefault();
+            if (!touchActive || touchDraggedIdx === null) return;
+            
+            if (e.cancelable) e.preventDefault();
+
             const touch = e.touches[0];
             const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
             const targetTab = targetEl ? targetEl.closest('.saved-tab') : null;
@@ -550,31 +549,34 @@ function enableTabReordering() {
         }, { passive: false });
 
         tab.addEventListener('touchend', (e) => {
-            clearTimeout(touchTimer);
-            if (isTouchDragging) {
-                isTouchDragging = false;
-                tab.classList.remove('dragging');
-                const touch = e.changedTouches[0];
-                const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
-                const targetTab = targetEl ? targetEl.closest('.saved-tab') : null;
+            if (!touchActive) return;
+            
+            const touch = e.changedTouches[0];
+            const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+            const targetTab = targetEl ? targetEl.closest('.saved-tab') : null;
 
-                if (targetTab) {
-                    const targetIndex = parseInt(targetTab.getAttribute('data-index'), 10);
-                    if (!isNaN(targetIndex) && draggedIdx !== null && draggedIdx !== targetIndex) {
-                        reorderSavedSheets(draggedIdx, targetIndex);
-                    }
+            if (targetTab) {
+                const toIdx = parseInt(targetTab.getAttribute('data-index'), 10);
+                if (!isNaN(toIdx) && touchDraggedIdx !== null && touchDraggedIdx !== toIdx) {
+                    reorderSavedSheets(touchDraggedIdx, toIdx);
                 }
-                tabs.forEach(t => t.classList.remove('drag-over'));
-                draggedIdx = null;
             }
+
+            touchActive = false;
+            touchDraggedIdx = null;
+            tabs.forEach(t => {
+                t.classList.remove('dragging');
+                t.classList.remove('drag-over');
+            });
         });
 
         tab.addEventListener('touchcancel', () => {
-            clearTimeout(touchTimer);
-            isTouchDragging = false;
-            tab.classList.remove('dragging');
-            tabs.forEach(t => t.classList.remove('drag-over'));
-            draggedIdx = null;
+            touchActive = false;
+            touchDraggedIdx = null;
+            tabs.forEach(t => {
+                t.classList.remove('dragging');
+                t.classList.remove('drag-over');
+            });
         });
     });
 }
@@ -582,8 +584,12 @@ function enableTabReordering() {
 function reorderSavedSheets(fromIndex, toIndex) {
     let history = loadHistory();
     if (fromIndex < 0 || fromIndex >= history.length || toIndex < 0 || toIndex >= history.length) return;
-    const [movedItem] = history.splice(fromIndex, 1);
+    if (fromIndex === toIndex) return;
+
+    const movedItem = history[fromIndex];
+    history.splice(fromIndex, 1);
     history.splice(toIndex, 0, movedItem);
+
     try {
         localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history));
     } catch (e) {}
