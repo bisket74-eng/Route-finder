@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Route Finder tools menu build: 2026-08-06 calendars -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -104,6 +105,16 @@
         .drawer-back-btn { background: #4a6b82; color: white; border-color: #344e61; font-weight: 900; text-align: center; }
         .drawer-back-btn:hover { background: #3b5669; }
 
+        .drawer-split-row { display: flex; gap: 8px; width: 100%; flex-shrink: 0; }
+        .drawer-split-btn { flex: 1; padding: 12px 10px; background: #4a6b82; color: white; border: 2px solid #344e61; border-radius: 6px; font-size: 0.9rem; font-weight: 900; cursor: pointer; text-transform: uppercase; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.1); box-sizing: border-box; transition: background 0.15s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .drawer-split-btn:hover { background: #3b5669; }
+        .drawer-split-btn.add-city-btn { background: var(--bl); border-color: var(--bl); color: var(--yl); }
+        .drawer-split-btn.add-city-btn:hover { background: #003a6a; }
+
+        #addCityModal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 18px; box-sizing: border-box; background: rgba(0,0,0,0.62); z-index: 46000; }
+        body.add-city-open #addCityModal { display: flex; }
+        .add-city-box { position: relative; width: 90%; max-width: 360px; padding: 22px 18px 20px; box-sizing: border-box; border: 4px solid var(--bl); border-radius: 12px; background: var(--lt-bl); box-shadow: 0 14px 38px rgba(0,0,0,0.48); text-align: center; }
+
         .hdr .line-1 { font-family: 'Arial Black', -apple-system, sans-serif; font-size: 3.5rem; font-weight: 900; font-style: italic; letter-spacing: -3px; display: block; line-height: 0.85; color: #ffffff; text-transform: uppercase; filter: drop-shadow(0px 1px 0px var(--dr-rd)); paint-order: stroke fill; -webkit-text-stroke: 1.25px var(--dr-rd); }
         .hdr .line-2 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; display: block; margin-top: 6px; font-family: 'Segoe UI Semibold', sans-serif; color: var(--lt-bl); }
         .hdr .line-3 { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--yl); display: block; margin-top: 6px; margin-bottom: 4px; }
@@ -142,40 +153,42 @@
 
         .btn-circle { height: 52px; width: 52px; border-radius: 50%; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.65rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-shrink: 0; display: flex; align-items: center; justify-content: center; line-height: 1; box-sizing: border-box; }
         .btn-red { background-color: var(--dr-rd); color: white; }
-        .btn-yel { background-color: var(--yl); color: #000; }
+        .btn-yel { background-color: var(--bl); color: var(--yl); border: none; box-sizing: border-box; }
+        .btn-del-action.btn-yel { background-color: var(--bl); color: var(--yl); border: none; }
         .btn-blu { background-color: var(--bl); color: white; }
         .btn-grn { background-color: var(--gr); color: white; }
 
         /* Synchronized Bottom Floating Action Buttons */
-        .btn-round-tk, .btn-round-upd, .btn-round-rate, .btn-round-apps { position: absolute; bottom: 100px; width: 72px; height: 72px; color: white; border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 5px 14px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; font-size: 0.52rem; z-index: 50; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); text-shadow: 0 1px 2px rgba(0,0,0,0.3); text-transform: uppercase; box-sizing: border-box; letter-spacing: 0.3px; }
-        .btn-round-tk span, .btn-round-upd span, .btn-round-apps span { font-size: 1.15rem; margin-bottom: 1px; display: block; }
+        .btn-round-tk, .btn-round-upd, .btn-round-export, .btn-round-rate, .btn-round-apps { position: absolute; bottom: 100px; width: 72px; height: 72px; color: var(--yl); border-radius: 50%; border: none; font-weight: 900; cursor: pointer; box-shadow: 0 5px 14px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; font-size: 0.52rem; z-index: 50; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); text-shadow: 0 1px 2px rgba(0,0,0,0.3); text-transform: uppercase; box-sizing: border-box; letter-spacing: 0.3px; }
+        .btn-round-tk span, .btn-round-upd span, .btn-round-export span, .btn-round-apps span { font-size: 1.15rem; margin-bottom: 1px; display: block; color: var(--yl); }
         
-        .btn-round-upd { left: 24px; background: var(--rd); border-bottom: 3.5px solid #a3140b; padding: 2px; }
+        .btn-round-export { left: 24px; background: var(--bl); color: var(--yl); border: none; padding: 2px; text-shadow: none; }
+        .btn-round-upd { left: 24px; background: var(--bl); color: var(--yl); border: none; padding: 2px; text-shadow: none; }
         .btn-round-rate { left: 50%; margin-left: -36px; background: var(--bl); border-bottom: 3.5px solid #002c52; padding: 0; font-family: Arial, Helvetica, sans-serif; font-size: 2.35rem; line-height: 1; }
         .btn-round-tk { right: 24px; background: var(--gr); border-bottom: 3.5px solid #007037; padding: 2px; }
-        .btn-round-apps { right: 24px; background: var(--bl); border-bottom: 3.5px solid #002c52; padding: 2px; }
+        .btn-round-apps { right: 24px; background: var(--bl); color: var(--yl); border: none; padding: 2px; }
         
-        .btn-round-upd:disabled { pointer-events: none; opacity: 0.8; }
+        .btn-round-export:disabled, .btn-round-upd:disabled { pointer-events: none; opacity: 0.8; }
 
-        /* Rate It Up stays isolated inside its own full-screen iframe. */
-        #rateItUpModal { position: fixed; inset: 0; display: none; align-items: stretch; justify-content: center; background: rgba(0,0,0,0.82); z-index: 1000000000; }
-        body.rate-it-up-open #rateItUpModal { display: flex; }
-        .rate-it-up-shell { position: relative; width: 100%; max-width: 500px; height: 100vh; height: 100dvh; overflow: hidden; background: #ffffff; box-shadow: 0 0 40px rgba(0,0,0,0.55); }
-        #rateItUpFrame { display: block; width: 100%; height: 100%; border: 0; background: #ffffff; }
-        .rate-it-up-close { position: absolute; top: max(10px, env(safe-area-inset-top)); right: 10px; width: 46px; height: 46px; padding: 0; border: 3px solid #ffffff; border-radius: 50%; background: var(--dr-rd); color: #ffffff; font-size: 29px; font-weight: 900; line-height: 1; cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.38); }
-
+        /* Linked postal apps stay isolated inside full-screen iframes. */
+        #rateItUpModal, #barcodeBuddyModal, #calendarsModal, #uspsSearchModal { position: fixed; inset: 0; display: none; align-items: stretch; justify-content: center; background: rgba(0,0,0,0.82); z-index: 1000000000; }
+        body.rate-it-up-open #rateItUpModal, body.barcode-buddy-open #barcodeBuddyModal, body.calendars-open #calendarsModal, body.usps-search-open #uspsSearchModal { display: flex; }
+        .linked-app-shell { position: relative; width: 100%; max-width: 500px; height: 100vh; height: 100dvh; overflow: hidden; background: #ffffff; box-shadow: 0 0 40px rgba(0,0,0,0.55); }
+        .linked-app-frame { display: block; width: 100%; height: 100%; border: 0; background: #ffffff; }
+        .linked-app-close { position: absolute; top: max(10px, env(safe-area-inset-top)); right: 10px; width: 46px; height: 46px; padding: 0; border: 3px solid #ffffff; border-radius: 50%; background: var(--dr-rd); color: #ffffff; font-size: 29px; font-weight: 900; line-height: 1; cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.38); }
 
         /* Small Route Finder-styled launcher for postal tools. */
         #appsModal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 18px; box-sizing: border-box; background: rgba(0,0,0,0.58); z-index: 40000; }
         body.apps-menu-open #appsModal { display: flex; }
-        .apps-box { position: relative; width: 84%; max-width: 320px; padding: 24px 18px 18px; box-sizing: border-box; border: 4px solid var(--bl); border-radius: 12px; background: var(--lt-bl); box-shadow: 0 14px 38px rgba(0,0,0,0.48); text-align: center; }
+        .apps-box { position: relative; width: 86%; max-width: 330px; padding: 24px 18px 20px; box-sizing: border-box; border: 4px solid var(--bl); border-radius: 12px; background: var(--lt-bl); box-shadow: 0 14px 38px rgba(0,0,0,0.48); text-align: center; }
         .apps-box h2 { margin: 0 50px 5px; color: var(--bl); font-size: 1.55rem; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; }
-        .apps-box p { margin: 0 0 16px; color: #4d6475; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.35px; text-transform: uppercase; }
-        .apps-launch-list { display: grid; gap: 10px; }
-        .apps-launch-btn { width: 100%; min-height: 56px; padding: 8px 14px; border: 2px solid var(--bl); border-radius: 8px; background: #ffffff; color: var(--bl); box-shadow: 0 3px 7px rgba(0,0,0,0.12); cursor: pointer; display: flex; align-items: center; justify-content: flex-start; gap: 12px; box-sizing: border-box; font-family: inherit; font-size: 1rem; font-weight: 900; letter-spacing: 0.35px; text-transform: uppercase; text-align: left; }
-        .apps-launch-btn:active { transform: translateY(1px); box-shadow: 0 1px 4px rgba(0,0,0,0.16); }
-        .apps-launch-icon { width: 36px; height: 36px; flex: 0 0 36px; border-radius: 50%; background: var(--bl); color: #ffffff; display: flex; align-items: center; justify-content: center; font-family: Arial, Helvetica, sans-serif; font-size: 1.25rem; font-weight: 900; line-height: 1; }
-        .apps-launch-note { display: block; margin-top: 2px; color: #667a89; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.2px; text-transform: none; }
+        .apps-box p { margin: 0 0 17px; color: #405a6e; font-size: 0.8rem; font-weight: 900; letter-spacing: 0.45px; text-transform: uppercase; }
+        .apps-launch-list { display: grid; gap: 15px; }
+        .apps-launch-btn { width: 100%; min-height: 68px; padding: 10px 14px; border: 3px solid var(--bl); border-radius: 10px; background: #ffffff; color: var(--bl); box-shadow: 0 4px 9px rgba(0,0,0,0.18); cursor: pointer; display: flex; align-items: center; justify-content: flex-start; gap: 14px; box-sizing: border-box; font-family: inherit; font-size: 1.08rem; font-weight: 900; letter-spacing: 0.4px; text-transform: uppercase; text-align: left; }
+        .apps-launch-btn:active { transform: translateY(1px); background: #f5f9fc; box-shadow: 0 2px 5px rgba(0,0,0,0.18); }
+        .apps-launch-icon { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 50%; background: var(--bl); color: var(--yl); display: flex; align-items: center; justify-content: center; font-family: Arial, Helvetica, sans-serif; font-size: 1.55rem; font-weight: 900; line-height: 1; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2); }
+        .apps-launch-copy { display: block; min-width: 0; line-height: 1.05; }
+        .apps-launch-note { display: block; margin-top: 5px; color: #536c7e; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.2px; line-height: 1.15; text-transform: none; }
 
         #zipList { position: absolute; top: 96px; left: 15px; right: 77px; background: #fff; border: 3px solid var(--bl); z-index: 9999999; display: none; border-radius: 8px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); max-height: 340px; height: auto; flex-direction: column; overflow: hidden; }
         .zip-scroll-area { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; background: #f9f9f9; height: auto; }
@@ -356,9 +369,9 @@
         .s-item span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; display: block; }
         .s-item .zip-badge-blue { background: #004b87 !important; color: white; padding: 4px 10px; border-radius: 4px; font-size: 1rem; font-weight: 800; font-family: 'Times New Roman', serif; font-style: italic; letter-spacing: 0.5px; flex-shrink: 0; }
 
-        body.zip-open .btn-round-tk, body.zip-open .btn-round-upd, body.zip-open .btn-round-rate, body.zip-open .btn-round-apps,
-        body.sug-active .btn-round-tk, body.sug-active .btn-round-upd, body.sug-active .btn-round-rate, body.sug-active .btn-round-apps,
-        body.cards-active .btn-round-tk, body.cards-active .btn-round-upd, body.cards-active .btn-round-rate, body.cards-active .btn-round-apps { transform: translateY(200px); }
+        body.zip-open .btn-round-tk, body.zip-open .btn-round-upd, body.zip-open .btn-round-export, body.zip-open .btn-round-rate, body.zip-open .btn-round-apps,
+        body.sug-active .btn-round-tk, body.sug-active .btn-round-upd, body.sug-active .btn-round-export, body.sug-active .btn-round-rate, body.sug-active .btn-round-apps,
+        body.cards-active .btn-round-tk, body.cards-active .btn-round-upd, body.cards-active .btn-round-export, body.cards-active .btn-round-rate, body.cards-active .btn-round-apps { transform: translateY(200px); }
         
         #backToListBtn { 
             display: none; 
@@ -389,41 +402,142 @@
             letter-spacing: 0.75px; 
         }
         .input-blocker { position: absolute; top: 25px; left: 0; right: 0; bottom: 0; z-index: 4; cursor: pointer; }
+
+        /* Help Button + Guide */
+        .help-hdr-btn { position: absolute; left: 12px; top: 12px; width: 34px; height: 34px; padding: 0; border-radius: 50%; background: var(--bl); color: var(--yl); border: none; font-family: 'Arial Black', Arial, sans-serif; font-size: 1.2rem; font-weight: 900; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1100; box-shadow: 0 3px 8px rgba(0,0,0,0.45); text-shadow: 0 1px 3px rgba(0,0,0,0.5); transition: background 0.2s ease; }
+        .help-hdr-btn:active { transform: translateY(1px); background: #003a6a; }
+        .export-hdr-btn { position: absolute; left: 12px; bottom: 12px; width: 34px; height: 34px; padding: 0; border-radius: 50%; background: var(--bl); color: var(--yl); border: none; font-size: 1.05rem; font-weight: 900; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1100; box-shadow: 0 3px 8px rgba(0,0,0,0.45); text-shadow: 0 1px 3px rgba(0,0,0,0.5); transition: background 0.2s ease; }
+        .export-hdr-btn:active { transform: translateY(1px); background: #003a6a; }
+
+        #helpModal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 12px; box-sizing: border-box; background: rgba(0,0,0,0.62); z-index: 45000; }
+        body.help-open #helpModal { display: flex; }
+        .help-box { position: relative; width: 100%; max-width: 470px; height: 93vh; max-height: 880px; background: var(--lt-bl); border: 4px solid var(--bl); border-radius: 14px; box-shadow: 0 18px 44px rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box; }
+        .help-top { background: linear-gradient(135deg, #003a6a 0%, #004b87 55%, #005fa3 100%); border-bottom: 3px solid var(--dr-rd); padding: 15px 62px 13px 18px; flex-shrink: 0; }
+        .help-top h2 { margin: 0; color: #ffffff; font-size: 1.45rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; line-height: 1.05; }
+        .help-top p { margin: 5px 0 0; color: var(--yl); font-size: 0.7rem; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; }
+        .help-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; padding: 15px 13px 28px; -webkit-overflow-scrolling: touch; }
+        .help-sec { background: #ffffff; border: 2px solid var(--bl); border-radius: 11px; padding: 13px 14px 14px; margin-bottom: 12px; box-shadow: 0 3px 7px rgba(0,0,0,0.12); }
+        .help-sec h3 { margin: 0 0 10px; color: var(--bl); font-size: 0.98rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; line-height: 1.15; }
+        .help-chip { width: 32px; height: 32px; flex: 0 0 32px; border-radius: 50%; background: var(--bl); color: #ffffff; display: flex; align-items: center; justify-content: center; font-family: Arial, Helvetica, sans-serif; font-size: 1rem; font-weight: 900; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.22); }
+        .help-chip.red { background: var(--rd); }
+        .help-chip.yel { background: var(--yl); color: var(--bl); }
+        .help-sec p { margin: 0 0 9px; color: #33475a; font-size: 0.88rem; font-weight: 600; line-height: 1.5; }
+        .help-sec p:last-child { margin-bottom: 0; }
+        .help-steps { margin: 0; padding: 0; list-style: none; counter-reset: helpstep; }
+        .help-steps li { position: relative; padding: 0 0 0 32px; margin-bottom: 11px; color: #33475a; font-size: 0.88rem; font-weight: 600; line-height: 1.45; counter-increment: helpstep; }
+        .help-steps li:last-child { margin-bottom: 0; }
+        .help-steps li::before { content: counter(helpstep); position: absolute; left: 0; top: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--yl); color: var(--bl); font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+        .help-key { display: inline-block; background: var(--bl); color: #ffffff; border-radius: 5px; padding: 1px 7px; font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+        .help-key.red { background: var(--rd); }
+        .help-key.grey { background: #64798a; }
+        .help-note { margin-top: 10px; background: #fff8d6; border-left: 5px solid var(--yl); border-radius: 7px; padding: 9px 11px; color: #4a3b00; font-size: 0.83rem; font-weight: 700; line-height: 1.45; }
+        .help-note.red-note { background: #fdeceb; border-left-color: var(--rd); color: #7a1710; }
+        .help-note.blue-note { background: #eaf2fa; border-left-color: var(--bl); color: #16354e; }
+        .help-demo-card { display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 2px solid var(--bl); border-radius: 10px; padding: 7px 11px; margin: 4px 0 10px; box-shadow: 0 3px 6px rgba(0,0,0,0.13); }
+        .help-demo-left { text-align: left; line-height: 1.05; }
+        .help-demo-range { font-family: 'Arial Narrow', Arial, sans-serif; font-size: 1.5rem; font-weight: 900; color: #111; letter-spacing: -0.5px; }
+        .help-demo-street { display: block; margin-top: 2px; font-size: 0.78rem; font-weight: 900; color: var(--bl); text-transform: uppercase; letter-spacing: 0.4px; }
+        .help-demo-right { display: flex; align-items: center; gap: 7px; }
+        .help-demo-oe { color: var(--rd); font-family: 'Arial Black', Arial, sans-serif; font-size: 1.15rem; font-weight: 900; }
+        .help-demo-rt { text-align: center; line-height: 1; }
+        .help-demo-num { display: block; font-family: 'Arial Narrow', Arial, sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--bl); }
+        .help-demo-zip { display: block; margin-top: 2px; font-size: 0.6rem; font-weight: 900; color: #64798a; }
+        .help-callout { display: grid; grid-template-columns: auto 1fr; gap: 5px 9px; margin-top: 8px; }
+        .help-callout b { color: var(--bl); font-size: 0.8rem; font-weight: 900; text-transform: uppercase; white-space: nowrap; }
+        .help-callout span { color: #33475a; font-size: 0.83rem; font-weight: 600; line-height: 1.35; }
+        .help-tool-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-top: 1px dashed #cfdbe5; }
+        .help-tool-row:first-of-type { border-top: none; padding-top: 2px; }
+        .help-tool-icon { width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%; background: var(--bl); color: #ffffff; display: flex; align-items: center; justify-content: center; font-family: Arial, Helvetica, sans-serif; font-size: 0.95rem; font-weight: 900; }
+        .help-tool-txt { font-size: 0.85rem; font-weight: 600; color: #33475a; line-height: 1.4; }
+        .help-tool-txt > b:first-child { display: block; color: var(--bl); font-size: 0.88rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3px; }
+        .help-tool-txt b { color: var(--bl); font-weight: 900; }
+        .help-foot { text-align: center; color: #64798a; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 4px 0 2px; }
     </style>
 </head>
 <body id="mainBody">
     <img src="https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/flag.jpg" alt="" class="bg-flag-surface" fetchpriority="high" loading="eager" onload="document.body.classList.add('app-ready')">
 
-    <div id="appsModal" role="dialog" aria-modal="true" aria-label="Postal apps" onclick="closeAppsMenuFromBackdrop(event)">
+    <div id="addCityModal" role="dialog" aria-modal="true" aria-label="Request a New City" onclick="closeAddCityFromBackdrop(event)">
+        <div class="add-city-box" onclick="event.stopPropagation()">
+            <button class="modal-x" type="button" aria-label="Close" onclick="closeAddCityModal()">×</button>
+            <h2 style="margin: 0 0 4px; color: var(--bl); font-size: 1.4rem; font-weight: 900; text-transform: uppercase; text-align: center;">Request a New City</h2>
+            <p style="margin: 0 0 16px; color: #536c7e; font-size: 0.78rem; font-weight: 800; text-align: center; text-transform: uppercase;">Submit details to add to Route Finder</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; text-align: left;">
+                <div>
+                    <label style="display: block; font-size: 0.8rem; font-weight: 900; color: var(--bl); margin-bottom: 4px; text-transform: uppercase;">City Name</label>
+                    <input type="text" id="reqCityName" placeholder="e.g. Bozeman" style="width: 100%; height: 44px; padding: 8px 12px; font-size: 1rem; border: 2px solid var(--bl); border-radius: 6px; box-sizing: border-box; font-weight: 700;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.8rem; font-weight: 900; color: var(--bl); margin-bottom: 4px; text-transform: uppercase;">State</label>
+                    <input type="text" id="reqStateName" placeholder="e.g. Montana" style="width: 100%; height: 44px; padding: 8px 12px; font-size: 1rem; border: 2px solid var(--bl); border-radius: 6px; box-sizing: border-box; font-weight: 700;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.8rem; font-weight: 900; color: var(--bl); margin-bottom: 4px; text-transform: uppercase;">ZIP Code(s)</label>
+                    <input type="text" id="reqZipCodes" placeholder="Type 5-digit numbers..." oninput="formatReqZips(this)" style="width: 100%; height: 44px; padding: 8px 12px; font-size: 1rem; border: 2px solid var(--bl); border-radius: 6px; box-sizing: border-box; font-weight: 700;">
+                    <span style="display: block; font-size: 0.68rem; font-weight: 700; color: #666; margin-top: 3px;">Just type digits — ZIPs format automatically.</span>
+                </div>
+                
+                <button type="button" class="btn-main" onclick="submitNewCityRequest()" style="width: 100%; height: 48px; margin-top: 8px; background: var(--bl); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 900; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">Send Request</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="appsModal" role="dialog" aria-modal="true" aria-label="Postal tools" onclick="closeAppsMenuFromBackdrop(event)">
         <div class="apps-box" onclick="event.stopPropagation()">
-            <button class="modal-x" type="button" aria-label="Close Apps" onclick="closeAppsMenuFromButton()">×</button>
-            <h2>Apps</h2>
-            <p>Postal tools</p>
+            <button class="modal-x" type="button" aria-label="Close Tools" onclick="closeAppsMenuFromButton()">×</button>
+            <h2>Tools</h2>
+            <p>Select a postal tool</p>
             <div class="apps-launch-list">
                 <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('rate')">
                     <span class="apps-launch-icon" aria-hidden="true">$</span>
-                    <span>Rate It Up<span class="apps-launch-note">Postage due calculator</span></span>
+                    <span class="apps-launch-copy">Rate It Up<span class="apps-launch-note">Postage due calculator</span></span>
                 </button>
-                <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('time')">
-                    <span class="apps-launch-icon" aria-hidden="true">◷</span>
-                    <span>Timekeeper<span class="apps-launch-note">Open the built-in time log</span></span>
+                <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('calendars')">
+                    <span class="apps-launch-icon" aria-hidden="true">31</span>
+                    <span class="apps-launch-copy">Calendars<span class="apps-launch-note">Carrier and clerk rotations</span></span>
                 </button>
                 <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('barcode')">
                     <span class="apps-launch-icon" aria-hidden="true">▥</span>
-                    <span>Barcode Buddy<span class="apps-launch-note">Open in a separate tab</span></span>
+                    <span class="apps-launch-copy">Barcode Buddy<span class="apps-launch-note">Barcode and label tools</span></span>
                 </button>
-                <button id="vancouverParkingAppBtn" class="apps-launch-btn" type="button" style="display:none" onclick="chooseAppFromMenu('vancouverParking')">
-                    <span class="apps-launch-icon" aria-hidden="true">P</span>
-                    <span>Vancouver PO Parking<span class="apps-launch-note">Vancouver, WA parking reference</span></span>
+                <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('time')">
+                    <span class="apps-launch-icon" aria-hidden="true">◷</span>
+                    <span class="apps-launch-copy">Timekeeper<span class="apps-launch-note">Open the built-in time log</span></span>
+                </button>
+                <button class="apps-launch-btn" type="button" onclick="chooseAppFromMenu('uspssearch')">
+                    <span class="apps-launch-icon" aria-hidden="true">&#128269;</span>
+                    <span class="apps-launch-copy">USPS Search<span class="apps-launch-note">Manuals, tracking, and union sites</span></span>
                 </button>
             </div>
         </div>
     </div>
 
     <div id="rateItUpModal" role="dialog" aria-modal="true" aria-label="Rate It Up postage calculator">
-        <div class="rate-it-up-shell">
-            <iframe id="rateItUpFrame" src="https://bisket74-eng.github.io/RateItUp/" title="Rate It Up postage calculator"></iframe>
-            <button class="rate-it-up-close" type="button" aria-label="Close Rate It Up" onclick="closeRateItUpFromButton()">×</button>
+        <div class="linked-app-shell">
+            <iframe id="rateItUpFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/RateItUp/" title="Rate It Up postage calculator"></iframe>
+            <button class="linked-app-close" type="button" aria-label="Close Rate It Up and return to Route Finder" onclick="closeRateItUpFromButton()">×</button>
+        </div>
+    </div>
+
+    <div id="calendarsModal" role="dialog" aria-modal="true" aria-label="Perpetual rotation calendars">
+        <div class="linked-app-shell">
+            <iframe id="calendarsFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/calendars/" title="Perpetual rotation calendars"></iframe>
+            <button class="linked-app-close" type="button" aria-label="Close Calendars and return to Route Finder" onclick="closeCalendarsFromButton()">×</button>
+        </div>
+    </div>
+
+    <div id="barcodeBuddyModal" role="dialog" aria-modal="true" aria-label="Barcode Buddy">
+        <div class="linked-app-shell">
+            <iframe id="barcodeBuddyFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/BarcodeBuddy/" title="Barcode Buddy"></iframe>
+            <button class="linked-app-close" type="button" aria-label="Close Barcode Buddy and return to Route Finder" onclick="closeBarcodeBuddyFromButton()">×</button>
+        </div>
+    </div>
+
+    <div id="uspsSearchModal" role="dialog" aria-modal="true" aria-label="USPS Search">
+        <div class="linked-app-shell">
+            <iframe id="uspsSearchFrame" class="linked-app-frame" src="https://bisket74-eng.github.io/uspssearch/" title="USPS Search"></iframe>
+            <button class="linked-app-close" type="button" aria-label="Close USPS Search and return to Route Finder" onclick="closeUspsSearchFromButton()">×</button>
         </div>
     </div>
 
@@ -431,7 +545,7 @@
         <div class="time-box" id="timeScrollContainer">
             <div class="time-fixed-top">
                 <button class="btn-clear-log" onclick="triggerClearLog()">Clear<br>Log</button>
-                <button class="modal-x" onclick="closeTime()">×</button>
+                <button class="modal-x" type="button" aria-label="Close Timekeeper and return to Route Finder" onclick="closeTime()">×</button>
                 <h2 style="color:var(--bl); margin:0 0 20px; font-size: 2.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">Timekeeper</h2>
                 <div id="t-day-display" class="static-day-label">DAY</div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left;">
@@ -444,7 +558,7 @@
                     <span style="font-weight:900; color:var(--bl); font-size:1.1rem; text-transform:uppercase;">8 Hour Day ET Goal:</span>
                     <span id="t-target" style="font-size:1.4rem; font-weight:900; color:var(--dr-rd);">--:--</span>
                 </div>
-                <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; border:none; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
+                <button class="btn-yel" style="margin:15px auto 5px; font-size: 0.9rem; font-weight:900; text-transform:uppercase; width: 140px; height: 45px; border-radius: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor:pointer; display:block;" onclick="addToLog()">Add To Log</button>
                 <div class="log-hdr"><span>DAY</span><span>BT</span><span>OL</span><span>IL</span><span>ET</span><span>HOURS</span></div>
             </div>
             <div class="time-log-scroll-wrapper" id="logScrollFrame">
@@ -525,9 +639,180 @@
         </div>
     </div>
 
+    <div id="helpModal" role="dialog" aria-modal="true" aria-label="How to use Route Finder" onclick="closeHelpFromBackdrop(event)">
+        <div class="help-box" onclick="event.stopPropagation()">
+            <button class="modal-x" type="button" aria-label="Close help" onclick="closeHelpFromButton()">×</button>
+            <div class="help-top">
+                <h2>How To Use</h2>
+                <p>USPS Route Finder</p>
+            </div>
+            <div class="help-scroll" id="helpScrollArea">
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">1</span>Set Your City</h3>
+                    <div class="help-note red-note">The app opens on <b>Vancouver, Washington</b>. That's just the default. Change it to yours.</div>
+                    <ol class="help-steps" style="margin-top:12px;">
+                        <li>Tap the yellow <span class="help-key">City</span> strip on the right of the header.</li>
+                        <li>Pick your state.</li>
+                        <li>Pick your city.</li>
+                    </ol>
+                    <p style="margin-top:11px;">It remembers. You only do this once.</p>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">2</span>Find A Route</h3>
+                    <ol class="help-steps">
+                        <li>Tap <span class="help-key">Zip Code</span>, check your ZIPs, tap <span class="help-key">Apply</span>.</li>
+                        <li>Type the street name. <b>No house numbers.</b></li>
+                        <li>Tap the street in the list.</li>
+                        <li>The route cards come up.</li>
+                    </ol>
+                    <div class="help-note">Pick a ZIP first, or the street box stays locked.</div>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">3</span>Reading A Card</h3>
+                    <div class="help-demo-card">
+                        <div class="help-demo-left">
+                            <span class="help-demo-range">1500 &mdash; 1698</span>
+                            <span class="help-demo-street">NE 88TH AVE</span>
+                        </div>
+                        <div class="help-demo-right">
+                            <span class="help-demo-oe">E</span>
+                            <span class="help-demo-rt">
+                                <span class="help-demo-num">C-024</span>
+                                <span class="help-demo-zip">ZIP 98665</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="help-callout">
+                        <b>Left</b><span>The house number range.</span>
+                        <b>O / E</b><span>Odd side only. Even side only. No letter means both.</span>
+                        <b>Right</b><span>The route and the ZIP.</span>
+                    </div>
+                    <p style="margin-top:10px;">Several cards means the street is split between routes.</p>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">4</span>Search Tips</h3>
+                    <p>Type a few letters and the list narrows.</p>
+                    <p><b>Avenue</b> or <b>AVE</b> — either works. Same with <b>Northeast</b> and <b>NE</b>.</p>
+                    <p><b>NE 88th</b> or <b>88th NE</b> — either works.</p>
+                    <p><span class="help-key">Return to Street Results</span> goes back to the list. <span class="help-key">Clear</span> empties the box.</p>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">&#11014;&#65039;</span>Export / Print Sheet</h3>
+                    <p>The blue <span class="help-key">EXPORT</span> button, bottom left.</p>
+                    <p>Opens a separate print-sheet tool in a new tab, already set to your current city.</p>
+                    <ol class="help-steps" style="margin-top:12px;">
+                        <li>Check off the ZIP(s) to include (or <span class="help-key">ALL ZIPs</span>).</li>
+                        <li>Flip on <span class="help-key">Color-code by route</span> if you want each route to get its own color.</li>
+                        <li>Tap <span class="help-key">Generate Print Sheet</span>.</li>
+                        <li>Tap <span class="help-key">Print / Save as PDF</span> &mdash; your phone's print dialog can save it as a PDF or send it to a printer.</li>
+                    </ol>
+                    <div class="help-note">This is its own separate page, so it never touches your live search data.</div>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">&#127897;&#65039;</span>Voice Search</h3>
+                    <p>Tap the mic and say the street name.</p>
+                    <div class="help-note">Needs a ZIP picked and a signal.</div>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">&#9646;</span>Tools</h3>
+                    <p>The blue <span class="help-key">Tools</span> button, bottom right:</p>
+                    <div class="help-tool-row">
+                        <span class="help-tool-icon">$</span>
+                        <span class="help-tool-txt"><b>Rate It Up</b>Postage due calculator.</span>
+                    </div>
+                    <div class="help-tool-row">
+                        <span class="help-tool-icon">31</span>
+                        <span class="help-tool-txt"><b>Calendars</b>Carrier and clerk rotations.</span>
+                    </div>
+                    <div class="help-tool-row">
+                        <span class="help-tool-icon">&#9637;</span>
+                        <span class="help-tool-txt"><b>Barcode Buddy</b>Rebuilds a barcode that won't scan.</span>
+                    </div>
+                    <div class="help-tool-row">
+                        <span class="help-tool-icon">&#9719;</span>
+                        <span class="help-tool-txt"><b>Timekeeper</b>Your clock ring log.</span>
+                    </div>
+                    <div class="help-tool-row">
+                        <span class="help-tool-icon">&#128269;</span>
+                        <span class="help-tool-txt"><b>USPS Search</b>Manuals, tracking, and union sites in one search.</span>
+                    </div>
+                    <div class="help-note">The red &times; or your back button brings you right back here.</div>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">$</span>Rate It Up</h3>
+                    <p>Works out the postage still owed on a short-paid piece.</p>
+                    <div class="help-note blue-note">First time only, it asks for your <b>Local ZIP</b> &mdash; your own office. It saves it.</div>
+                    <ol class="help-steps" style="margin-top:12px;">
+                        <li><b>ZIP</b> &mdash; where the piece came from. The zone fills in on its own.</li>
+                        <li><b>Mailpiece</b> &mdash; Letter, Nonmach, Flat, or Parcel.</li>
+                        <li><b>Weight</b> &mdash; punch it in, pick ounces or pounds.</li>
+                        <li><b>Affixed</b> &mdash; what's already on the piece.</li>
+                    </ol>
+                    <p style="margin-top:11px;">The big red <b>Postage Due</b> number is what you collect. <span class="help-key grey">Reset</span> clears it for the next one.</p>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">&#9637;</span>Barcode Buddy</h3>
+                    <p>For a label that's too beat up to scan.</p>
+                    <div class="help-tool-row">
+                        <span class="help-tool-icon">&#9635;</span>
+                        <span class="help-tool-txt"><b>Scan Photo</b>Take a picture of the label.</span>
+                    </div>
+                    <div class="help-tool-row">
+                        <span class="help-tool-icon">123</span>
+                        <span class="help-tool-txt"><b>Enter Number</b>Type it in on the keypad.</span>
+                    </div>
+                    <div class="help-note">Can't read a digit? Put a <b>?</b> in its spot and it builds every barcode it could be.</div>
+                    <p style="margin-top:11px;">Tap a barcode to open it full screen, then scan it off the phone.</p>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip">&#9719;</span>Timekeeper</h3>
+                    <p>Your clock rings for the pay period.</p>
+                    <div class="help-callout">
+                        <b>BT</b><span>Begin Tour</span>
+                        <b>OL</b><span>Out to Lunch</span>
+                        <b>IL</b><span>In from Lunch</span>
+                        <b>ET</b><span>End Tour</span>
+                    </div>
+                    <p style="margin-top:11px;">Punch the times in the way the clock reads them &mdash; 24 hour, in tenths.</p>
+                    <p><span class="help-key">Add To Log</span> saves the day. The log holds two weeks. Tap a row to change or delete it.</p>
+                    <div class="help-note">It all stays on your phone.</div>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip red">&#128260;</span>Update Scheme</h3>
+                    <p>Use it when something's wrong &mdash; a street that's missing, or a range on the wrong route.</p>
+                    <p>It shows when your city was last updated. Tap the small <span class="help-key">&#128260;</span> button in the header under Help to send the request.</p>
+                    <div class="help-note red-note">Nothing changes on your phone right away. It just sends the message. Once the file gets fixed, your app picks it up on its own.</div>
+                    <p style="margin-top:11px;">Tap it once and give it a few days.</p>
+                </div>
+
+                <div class="help-sec">
+                    <h3><span class="help-chip yel">&#9733;</span>Good To Know</h3>
+                    <p>In Chrome, tap the three dots and pick <b>Add to Home screen</b> to run it like a regular app.</p>
+                    <p>It works offline once your city has loaded.</p>
+                    <p>Your back button closes whatever popup is open.</p>
+                </div>
+
+                <div class="help-foot">Tap the red × to get back to work</div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <div id="banner-wrap">
             <div class="hdr" onclick="secretKnock()">
+                <button class="help-hdr-btn" type="button" aria-label="How to use this app" title="Help" onclick="openHelpModal(event)">?</button>
+                <button id="reportSchemeBtn" class="export-hdr-btn" type="button" aria-label="Request scheme update" title="Update Scheme" onclick="sendUpdateRequest(event)">🔄</button>
                 <button class="city-sidebar-btn" onclick="toggleCityPortalDrawer(event)">
                     <span>C</span><span>I</span><span>T</span><span>Y</span>
                 </button>
@@ -585,8 +870,8 @@
             <input type="hidden" id="formspree-timestamp" name="Submitted At (Pacific Time)">
         </form>
 
-        <button id="reportSchemeBtn" class="btn-round-upd" onclick="sendUpdateRequest(event)"><span>🔄</span>UPDATE<br>SCHEME</button>
-        <button id="appsBtn" class="btn-round-apps" type="button" aria-label="Open postal apps" title="Apps" onclick="openAppsMenu(event)"><span aria-hidden="true">▦</span>APPS</button>
+        <button id="exportRouteBtn" class="btn-round-export" type="button" aria-label="Export route sheet" title="Export" onclick="window.open('route-sheet-export.html?city=' + encodeURIComponent(currentCityKey), '_blank')"><span>⬆</span>EXPORT</button>
+        <button id="appsBtn" class="btn-round-apps" type="button" aria-label="Open postal tools" title="Tools" onclick="openAppsMenu(event)"><span aria-hidden="true">▦</span>TOOLS</button>
 
         <div class="city-drawer-container" onclick="event.stopPropagation()">
             <div class="drawer-content-scroll" id="city-btn-list"></div>
@@ -644,14 +929,20 @@
                 "87144": "87144 (Rio Rancho Branch)"
             }
         },
-       
         "alice": {
             name: "Alice, Texas",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/alice.xlsx",
             stationMOU: ["78332"],
             stationDCU: []
         },
-
+        "allen": {
+            name: "Allen, Texas",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/allen.xlsx",
+            stationMOU: ["75013", "75002"],
+            stationDCU: [],
+            mouName: "Allen Main Post Office",
+            dcuName: ""
+        },
         "alliance": {
             name: "Alliance, Nebraska",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/alliance.xlsx",
@@ -737,7 +1028,6 @@
                 "25545": "25545 (Ona)"
             }
         },
-
         "battle_ground": {
             name: "Battle Ground, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/battle_ground.xlsx",
@@ -746,7 +1036,7 @@
             mouName: "Battle Ground 98604",
             dcuName: ""
         },
-       "bay_city": {
+        "bay_city": {
             name: "Bay City, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bay_city.xlsx",
             stationMOU: ["48706", "48708"],
@@ -784,6 +1074,14 @@
             mouName: "All Bozeman Zips",
             dcuName: ""
         },
+        "bradley": {
+            name: "Bradley, Illinois",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bradley.xlsx",
+            stationMOU: ["60915"],
+            stationDCU: [],
+            mouName: "Bradley Main Post Office",
+            dcuName: ""
+        },
         "brodhead": {
             name: "Brodhead, Kentucky",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/broadhead.xlsx",
@@ -792,7 +1090,6 @@
             mouName: "Brodhead Main",
             dcuName: ""
         },
-
         "butte": {
             name: "Butte, Montana",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/butte.xlsx",
@@ -801,7 +1098,6 @@
             mouName: "Butte 59701",
             dcuName: ""
         },
-
         "camas": {
             name: "Camas, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/camas.xlsx",
@@ -882,7 +1178,7 @@
             mouName: "Dixon 61021",
             dcuName: ""
         },
-         "des_moines": {
+        "des_moines": {
             name: "Des Moines, Iowa",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/des_moines.xlsx",
             stationMOU: ["50309", "50314", "50316", "50317"],
@@ -904,7 +1200,6 @@
                 "50322": "50322 (Urbandale)"
             }
         },
-
         "donalds": {
             name: "Donalds, South Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/donalds.xlsx",
@@ -927,7 +1222,18 @@
             stationMOU: ["68733"],
             stationDCU: []
         },
-
+        "encinitas": {
+            name: "Encinitas, California",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/encinitas.xlsx",
+            stationMOU: ["92024", "92007"],
+            stationDCU: [],
+            mouName: "Encinitas Main Post Office",
+            dcuName: "",
+            zipLabels: {
+                "92024": "92024 (Encinitas)",
+                "92007": "92007 (Cardiff-by-the-Sea)"
+            }
+        },
         "essexville": {
             name: "Essexville, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/essexville.xlsx",
@@ -936,7 +1242,6 @@
             mouName: "Essexville 48732",
             dcuName: ""
         },
-
         "eudora": {
             name: "Eudora, Arkansas",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/eudora.xlsx",
@@ -961,7 +1266,6 @@
             mouName: "Forsyth 31029",
             dcuName: ""
         },
-
         "gilbert": {
             name: "Gilbert, Iowa",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/gilbert.xlsx",
@@ -978,7 +1282,6 @@
             mouName: "Packerland Main Post Office",
             dcuName: "Cofrin East Station"
         },
-
         "greenwood": {
             name: "Greenwood, South Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/greenwood.xlsx",
@@ -1011,7 +1314,6 @@
             mouName: "Highland Main",
             dcuName: ""
         },
-
         "honea_path": {
             name: "Honea Path, South Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/honea_path.xlsx",
@@ -1028,7 +1330,6 @@
             mouName: "Hot Springs 71901",
             dcuName: ""
         },
-
         "hudson": {
             name: "Hudson, New Hampshire",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/hudson.xlsx",
@@ -1045,7 +1346,7 @@
             mouName: "Ipswich 57451",
             dcuName: ""
         },
-         "jefferson_city": {
+        "jefferson_city": {
             name: "Jefferson City, Missouri",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/jefferson_city.xlsx",
             stationMOU: ["65101", "65109"],
@@ -1053,14 +1354,13 @@
             mouName: "Jefferson City Main",
             dcuName: ""
         },
-       
         "jenkintown": {
             name: "Jenkintown, Pennsylvania",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/jenkintown.xlsx",
             stationMOU: ["19046"],
             stationDCU: []
         },
-               "kalama": {
+        "kalama": {
             name: "Kalama, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kalama.xlsx",
             stationMOU: ["98625"],
@@ -1068,21 +1368,18 @@
             mouName: "Kalama Main Post Office",
             dcuName: ""
         },
-
-         "kearny": {
+        "kearny": {
             name: "Kearny, New Jersey",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kearny.xlsx",
             stationMOU: ["07032"],
             stationDCU: []
         },
-       
         "kenyon": {
             name: "Kenyon, Minnesota",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kenyon.xlsx",
             stationMOU: ["55946"],
             stationDCU: []
         },
-
         "kingston": {
             name: "Kingston, Tennessee",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kingston.xlsx",
@@ -1115,12 +1412,28 @@
             mouName: "Lakewood 98499",
             dcuName: ""
         },
+        "libertyville": {
+            name: "Libertyville, Illinois",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/libertyville.xlsx",
+            stationMOU: ["60048"],
+            stationDCU: [],
+            mouName: "Libertyville Main Post Office",
+            dcuName: ""
+        },
         "longview": {
             name: "Longview, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/longview.xlsx",
             stationMOU: ["98632"],
             stationDCU: [],
             mouName: "Longview 98632",
+            dcuName: ""
+        },
+        "losaltos": {
+            name: "Los Altos, California",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/losaltos.xlsx",
+            stationMOU: ["94024", "94022"],
+            stationDCU: [],
+            mouName: "Los Altos Main Post Office",
             dcuName: ""
         },
         "loudon": {
@@ -1131,7 +1444,7 @@
             mouName: "Loudon 37774",
             dcuName: ""
         },
-               "louisville": {
+        "louisville": {
             name: "Louisville, Colorado",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/louisville.xlsx",
             stationMOU: ["80027"],
@@ -1139,7 +1452,6 @@
             mouName: "Louisville Main Post Office",
             dcuName: ""
         },
-
         "lowell": {
             name: "Lowell, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lowell.xlsx",
@@ -1156,7 +1468,6 @@
             mouName: "Mabank 75147",
             dcuName: ""
         },
-
         "maitland": {
             name: "Maitland, Florida",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/maitland.xlsx",
@@ -1165,7 +1476,6 @@
             mouName: "Maitland 32751",
             dcuName: ""
         },
-
         "mansfield": {
             name: "Mansfield, Ohio",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/mansfield.xlsx",
@@ -1210,13 +1520,28 @@
             mouName: "Mitchellville 50169",
             dcuName: ""
         },
+        "monterey": {
+            name: "Monterey, California",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/monterey.xlsx",
+            stationMOU: ["93940", "93944"],
+            stationDCU: [],
+            mouName: "Monterey Main Post Office",
+            dcuName: ""
+        },
+        "mountairy": {
+            name: "Mount Airy, North Carolina",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/mountairy.xlsx",
+            stationMOU: ["27030"],
+            stationDCU: [],
+            mouName: "Mount Airy Main Post Office",
+            dcuName: ""
+        },
         "nebo": {
             name: "Nebo, North Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/nebo.xlsx",
             stationMOU: ["28761"],
             stationDCU: []
         },
-
         "nederland": {
             name: "Nederland, Texas",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/nederland.xlsx",
@@ -1233,8 +1558,7 @@
             mouName: "New England 58647",
             dcuName: ""
         },
-
-         "newport": {
+        "newport": {
             name: "Newport, North Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/newport.xlsx",
             stationMOU: ["28570"],
@@ -1242,7 +1566,6 @@
             mouName: "Newport 28570",
             dcuName: ""
         },
-
         "newport_news": {
             name: "Newport News, Virginia",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/newport_news.xlsx",
@@ -1259,14 +1582,12 @@
             mouName: "Newton 50208",
             dcuName: ""
         },
-
-         "north_arlington": {
+        "north_arlington": {
             name: "North Arlington, New Jersey",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/north_arlington.xlsx",
             stationMOU: ["07031"],
             stationDCU: []
         },
-       
         "northfield": {
             name: "Northfield, Minnesota",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/northfield.xlsx",
@@ -1299,8 +1620,7 @@
             mouName: "Ormond Beach Main",
             dcuName: ""
         },
-       
-       "panama_city": {
+        "panama_city": {
              name: "Panama City & Beach, Florida",
              url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/panama_city.xlsx",
              stationMOU: ["32401", "32404", "32405", "32408", "32409"],
@@ -1311,8 +1631,7 @@
              "32461": "32461 (Rosemary/Inlet)"
              }
          },
-
-       "pelzer": {
+        "pelzer": {
             name: "Pelzer, South Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/pelzer.xlsx",
             stationMOU: ["29669"],
@@ -1328,7 +1647,6 @@
             mouName: "Pierre Part 70339",
             dcuName: ""
         },
-
         "port_angeles": {
             name: "Port Angeles, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/port_angeles.xlsx",
@@ -1385,7 +1703,7 @@
             mouName: "All Punta Gorda Zips",
             dcuName: ""
         },
-                "reno_central": {
+        "reno_central": {
             name: "Reno Central, Nevada",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/reno_central.xlsx",
             stationMOU: ["89502", "89509", "89510", "89515", "89570", "89519"],
@@ -1409,8 +1727,6 @@
             mouName: "Sparks Main",
             dcuName: "Sun Valley / Vista"
         },
-
-
         "rockwood": {
             name: "Rockwood, Tennessee",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/rockwood.xlsx",
@@ -1435,7 +1751,7 @@
             mouName: "Ruth 48470",
             dcuName: ""
         },
-               "saluda": {
+        "saluda": {
             name: "Saluda, South Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/saluda.xlsx",
             stationMOU: ["29138"],
@@ -1443,7 +1759,6 @@
             mouName: "Saluda Main Post Office",
             dcuName: ""
         },
-
         "sanford": {
             name: "Sanford, Florida",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/sanford.xlsx",
@@ -1452,7 +1767,6 @@
             mouName: "Sanford Delivery Zips",
             dcuName: ""
         },
-
         "st_marys": {
             name: "St. Marys, Ohio",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/st_marys.xlsx",
@@ -1493,7 +1807,7 @@
             mouName: "Springfield 37172",
             dcuName: ""
         },
-                               "springfield": {
+        "springfield": {
             name: "Springfield Area, Missouri",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/springfield_area.xlsx",
             stationMOU: ["65802", "65803", "65804", "65807", "65810", "65619"],
@@ -1507,9 +1821,7 @@
                 "65610": "65610 (Billings)"
             }
         },
-
-
-               "statesville": {
+        "statesville": {
             name: "Statesville, North Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/statesville.xlsx",
             stationMOU: ["28625", "28677"],
@@ -1517,7 +1829,6 @@
             mouName: "Statesville Main Post Office",
             dcuName: ""
         },
-
         "steilacoom": {
             name: "Steilacoom, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/steilacoom.xlsx",
@@ -1550,7 +1861,29 @@
             mouName: "Twentynine Palms 92277",
             dcuName: ""
         },
-
+        "toledo": {
+            name: "Toledo, Ohio",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/toledo.xlsx",
+            stationMOU: ["43604", "43608"], 
+            stationDCU: ["43605", "43606", "43610", "43611", "43612", "43613", "43620"], 
+            mouName: "Toledo Main Post Office",
+            dcuName: "Toledo West",
+            zipLabels: {
+                "43604": "43604 (Main Office)",
+                "43608": "43608 (Main Office)",
+                "43605": "43605 (Station A)",
+                "43606": "43606 (West Toledo)",
+                "43607": "43607 (Reynolds Corners)",
+                "43609": "43609 (South Toledo)",
+                "43610": "43610 (Central)",
+                "43611": "43611 (Point Place)",
+                "43612": "43612 (West Toledo)",
+                "43613": "43613 (Miracle Mile)",
+                "43614": "43614 (South Toledo)",
+                "43615": "43615 (Reynolds Corners)",
+                "43620": "43620 (Old West End)"
+            }
+        },
         "ubly": {
             name: "Ubly, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/ubly.xlsx",
@@ -1559,7 +1892,7 @@
             mouName: "Ubly 48475",
             dcuName: ""
         },
-               "urbana": {
+        "urbana": {
             name: "Urbana, Illinois",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/urbana.xlsx",
             stationMOU: ["61801"],
@@ -1567,7 +1900,6 @@
             mouName: "Urbana 61801",
             dcuName: ""
         },
-
         "vancouver": {
             name: "Vancouver, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/data.xlsx",
@@ -1584,13 +1916,12 @@
             mouName: "All Waco Zips",
             dcuName: ""
         },
-         "wakefield": {
+        "wakefield": {
             name: "Wakefield, Nebraska",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/wakefield.xlsx",
             stationMOU: ["68784"],
             stationDCU: []
         },
-
         "watertown": {
             name: "Watertown, New York",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/watertown.xlsx",
@@ -1628,13 +1959,12 @@
             mouName: "Waupun 53963",
             dcuName: ""
         },
-               "west_concord": {
+        "west_concord": {
             name: "West Concord, Minnesota",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/west_concord.xlsx",
             stationMOU: ["55985"],
             stationDCU: []
         },
-
         "williamsburg": {
             name: "Williamsburg, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/williamsburg.xlsx",
@@ -1643,13 +1973,13 @@
             mouName: "Williamsburg 49690",
             dcuName: ""
         },   
-         "yuma": {
+        "yuma": {
             name: "Yuma, Arizona",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/yuma.xlsx",
             stationMOU: ["85364", "85365", "85367"],
             stationDCU: []
         },
-       "woodland": {
+        "woodland": {
             name: "Woodland, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/woodland.xlsx",
             stationMOU: ["98674"],
@@ -1657,7 +1987,6 @@
             mouName: "Woodland 98674",
             dcuName: ""
         }
-
     };
     
     let currentCityKey = "vancouver";
@@ -1710,10 +2039,11 @@
         const currentCityData = CITY_CONFIG[currentCityKey];
         const btn = document.getElementById('reportSchemeBtn');
         
-        btn.disabled = true;
-        btn.style.background = "var(--gr)"; 
+        if (btn) {
+            btn.disabled = true;
+            btn.style.background = "var(--gr)"; 
+        }
 
-        // Generate forced, dynamic Pacific Standard/Daylight string timestamp right on click execution
         const exactMoment = new Date();
         const localizedPacificTimestamp = new Intl.DateTimeFormat("en-US", {
             timeZone: "America/Los_Angeles",
@@ -1726,7 +2056,6 @@
             hour12: true
         }).format(exactMoment);
 
-        // Map data tokens directly to hidden payload element wrappers
         document.getElementById('formspree-cityKey').value = currentCityKey;
         document.getElementById('formspree-cityName').value = currentCityData.name;
         document.getElementById('formspree-message').value = "Carrier confirmed and requested a scheme layout update map.";
@@ -1749,11 +2078,13 @@
             }
         } catch (err) {
             openStyledAlert("TRANSMISSION ERROR");
-            btn.style.background = "var(--rd)";
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.style.background = "";
-            }, 3000);
+            if (btn) {
+                btn.style.background = "var(--rd)";
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.style.background = "";
+                }, 3000);
+            }
         }
     }
 
@@ -1784,6 +2115,14 @@
         targetContainer.innerHTML = "";
         
         if (!selectedStateFilter) {
+            const splitRow = document.createElement('div');
+            splitRow.className = "drawer-split-row";
+            splitRow.innerHTML = `
+                <button type="button" class="drawer-split-btn" onclick="closeCityPortal()">← Back</button>
+                <button type="button" class="drawer-split-btn add-city-btn" onclick="openAddCityModal()">+ Add City</button>
+            `;
+            targetContainer.appendChild(splitRow);
+
             const stateSet = new Set();
             Object.keys(CITY_CONFIG).forEach(key => {
                 const parts = CITY_CONFIG[key].name.split(',');
@@ -1853,12 +2192,82 @@
         document.getElementById('mainBody').classList.remove('drawer-active');
     }
 
+    function openAddCityModal() {
+        closeCityPortal();
+        document.getElementById('reqCityName').value = '';
+        document.getElementById('reqStateName').value = '';
+        document.getElementById('reqZipCodes').value = '';
+        document.body.classList.add('add-city-open');
+    }
+
+    function closeAddCityModal() {
+        document.body.classList.remove('add-city-open');
+    }
+
+    function closeAddCityFromBackdrop(e) {
+        if (e && e.target && e.target.id === 'addCityModal') {
+            closeAddCityModal();
+        }
+    }
+
+    function formatReqZips(input) {
+        let raw = input.value.replace(/\D/g, '');
+        let chunks = raw.match(/.{1,5}/g) || [];
+        input.value = chunks.join(', ');
+    }
+
+    async function submitNewCityRequest() {
+        const city = document.getElementById('reqCityName').value.trim();
+        const state = document.getElementById('reqStateName').value.trim();
+        const zips = document.getElementById('reqZipCodes').value.trim();
+
+        if (!city || !state || !zips) {
+            openStyledAlert("PLEASE FILL IN CITY, STATE, AND ZIP CODE(S)");
+            return;
+        }
+
+        closeAddCityModal();
+
+        const exactMoment = new Date();
+        const localizedPacificTimestamp = new Intl.DateTimeFormat("en-US", {
+            timeZone: "America/Los_Angeles",
+            year: "numeric", month: "2-digit", day: "2-digit",
+            hour: "2-digit", minute: "2-digit", second: "2-digit",
+            hour12: true
+        }).format(exactMoment);
+
+        const formShell = document.getElementById('payloadTimeShell');
+        const fd = new FormData();
+        fd.append('requestType', 'New City Request');
+        fd.append('cityName', `${city}, ${state} (ZIPs: ${zips})`);
+        fd.append('cityKey', 'new_city_request');
+        fd.append('message', `Request to add new city to Route Finder:\nCity: ${city}\nState: ${state}\nZIPs: ${zips}`);
+        fd.append('Submitted At (Pacific Time)', localizedPacificTimestamp);
+
+        try {
+            const actionUrl = formShell ? formShell.action : "https://formspree.io/f/xredreev";
+            const response = await fetch(actionUrl, {
+                method: "POST",
+                body: fd,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                openStyledAlert("NEW CITY REQUEST SUBMITTED");
+            } else {
+                openStyledAlert("FAILED TO SEND REQUEST. PLEASE TRY AGAIN.");
+            }
+        } catch (err) {
+            console.error("Formspree error:", err);
+            openStyledAlert("TRANSMISSION ERROR. PLEASE TRY AGAIN.");
+        }
+    }
+
     async function switchCityTarget(key) {
         if (key === currentCityKey && isDataLive) { closeCityPortal(); return; }
         closeCityPortal();
         currentCityKey = key;
         localStorage.setItem('usps_active_city_key', key);
-        updateVancouverParkingAppVisibility();
         
         const reportBtn = document.getElementById('reportSchemeBtn');
         if(reportBtn) {
@@ -2359,7 +2768,7 @@
     function openViewer(url) { document.getElementById('viewer-img').src = url; document.body.classList.add('modal-open-view'); }
     function closeViewer() { document.body.classList.remove('modal-open-view'); }
     function openTime() { document.body.classList.add('modal-open-tk'); document.getElementById('logScrollFrame').scrollTop = 0; }
-    function closeTime() { document.body.classList.remove('modal-open-tk'); }
+    function closeTime() { document.body.classList.remove('modal-open-tk', 'apps-menu-open'); pendingAppsAction = null; }
     
     function saveTempEntries() { const data = { bt: document.getElementById('t-in').value, ol: document.getElementById('l-out').value, il: document.getElementById('l-in').value, et: document.getElementById('t-actual').value, date: new Date().toDateString() }; localStorage.setItem('usps_temp_entries', JSON.stringify(data)); }
     function loadTempEntries() { 
@@ -2436,9 +2845,6 @@
     }
     window.onclick = function(e) { if (document.getElementById('zipList') && !document.getElementById('zipList').contains(e.target) && e.target !== document.getElementById('zipTrig')) { document.getElementById('zipList').style.display = 'none'; document.body.classList.remove('zip-open'); validateZipCheck(); } }
 
-    // ==========================================
-    // PROGRESSIVE WEB APP INSTALLATION RUNTIME
-    // ==========================================
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('service-worker.js')
@@ -2446,10 +2852,6 @@
                 .catch(err => console.log('App activation profile failure: ', err));
         });
     }
-
-// ==========================================================================
-// SAFE PATCH: RETAINS NATIVE BUTTONS & ADDS CLEAN STACKED DATE (NO UGLY ALERTS)
-// ==========================================================================
 
 async function getLatestExcelTimestampPatch() {
     try {
@@ -2467,7 +2869,6 @@ async function getLatestExcelTimestampPatch() {
         const commits = await response.json();
         if (commits && commits.length > 0) {
             const utcDateStr = commits[0].commit.committer.date;
-            // Clean date format (e.g., "Jun 4, 2026")
             return new Date(utcDateStr).toLocaleDateString("en-US", {
                 month: "short", day: "numeric", year: "numeric"
             });
@@ -2481,22 +2882,21 @@ async function getLatestExcelTimestampPatch() {
 window.sendUpdateRequest = async function(event) {
     if (event) event.preventDefault();
     
-const activeKey = typeof currentCityKey !== 'undefined' ? currentCityKey : 'unknown';
-let cityName = "Selected City";
-let cityFullName = "Selected City";
-let cityZips = "";
-if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
-    cityFullName = CITY_CONFIG[activeKey].name;
-    cityName = CITY_CONFIG[activeKey].name.split(',')[0].trim();
-    
-    const allZips = [
-        ...(CITY_CONFIG[activeKey].stationMOU || []),
-        ...(CITY_CONFIG[activeKey].stationDCU || [])
-    ];
-    cityZips = allZips.join(', ');
-}
+    const activeKey = typeof currentCityKey !== 'undefined' ? currentCityKey : 'unknown';
+    let cityName = "Selected City";
+    let cityFullName = "Selected City";
+    let cityZips = "";
+    if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
+        cityFullName = CITY_CONFIG[activeKey].name;
+        cityName = CITY_CONFIG[activeKey].name.split(',')[0].trim();
+        
+        const allZips = [
+            ...(CITY_CONFIG[activeKey].stationMOU || []),
+            ...(CITY_CONFIG[activeKey].stationDCU || [])
+        ];
+        cityZips = allZips.join(', ');
+    }
 
-    // Opens the native modal immediately with a loading state so it feels instant
     const msgBox = document.getElementById('confirmMsg');
     if (msgBox) {
         msgBox.innerHTML = "SCHEME UPDATE REQUEST<br><br><span style='font-size:0.85rem; color:#666;'>Loading date...</span>";
@@ -2505,12 +2905,10 @@ if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
     document.getElementById('confirmBtns').style.display = 'flex';
     document.getElementById('confirmModal').style.display = 'flex';
 
-    // Fetch the public date from GitHub quietly in the background
     const fileLastUpdatedDate = await getLatestExcelTimestampPatch();
     
-    // Generate the full Pacific Time stamp for your private Formspree logs
     const pacificTimestampFull = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles", dateStyle: "medium", timeStyle: "short" });
-   const cleanMessageText = `Someone requested a scheme update in ${cityFullName} (ZIPs: ${cityZips}) at ${pacificTimestampFull}`;
+    const cleanMessageText = `Someone requested a scheme update in ${cityFullName} (ZIPs: ${cityZips}) at ${pacificTimestampFull}`;
     const inputKey = document.getElementById('formspree-cityKey');
     const inputName = document.getElementById('formspree-cityName');
     const inputMsg = document.getElementById('formspree-message');
@@ -2521,7 +2919,6 @@ if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
     if (inputMsg) inputMsg.value = cleanMessageText;
     if (inputTime) inputTime.value = pacificTimestampFull;
 
-    // Inject the perfectly formatted text directly into your native title element
     if (msgBox) {
         msgBox.innerHTML = 
             `SCHEME UPDATE REQUEST` +
@@ -2533,7 +2930,6 @@ if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
             `</div>`;
     }
 
-    // Hook up your original layout buttons securely
     const greenBtn = document.querySelector("#confirmBtns .btn-grn");
     const redBtn = document.getElementById("executeBtn");
 
@@ -2559,7 +2955,6 @@ if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
                     headers: { 'Accept': 'application/json' }
                 });
                 
-                // === CHANGED TO USE YOUR APP'S BEAUTIFUL CUSTOM ALERTS ===
                 if (response.ok) {
                     openStyledAlert("UPDATE REQUEST SUBMITTED SUCCESSFULLY");
                 } else {
@@ -2573,20 +2968,57 @@ if (typeof CITY_CONFIG !== 'undefined' && CITY_CONFIG[activeKey]) {
     }
 };
 
+let helpHistoryEntryActive = false;
 
+function openHelpModal(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
 
-// =====================================================================
-// POSTAL APPS MENU — SMALL, ISOLATED LAUNCHER
-// Back closes this menu before leaving Route Finder.
-// =====================================================================
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || bodyNode.classList.contains('help-open')) return;
+
+    closeCityPortal();
+    hideAppsMenu();
+    pendingAppsAction = null;
+
+    const scrollArea = document.getElementById('helpScrollArea');
+    if (scrollArea) scrollArea.scrollTop = 0;
+
+    bodyNode.classList.add('help-open');
+    history.pushState({ helpOpen: true }, document.title, window.location.href);
+    helpHistoryEntryActive = true;
+}
+
+function hideHelpModal() {
+    const bodyNode = document.getElementById('mainBody');
+    if (bodyNode) bodyNode.classList.remove('help-open');
+}
+
+function closeHelpFromButton() {
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || !bodyNode.classList.contains('help-open')) return;
+
+    if (helpHistoryEntryActive) {
+        helpHistoryEntryActive = false;
+        history.back();
+        setTimeout(() => {
+            if (bodyNode.classList.contains('help-open')) hideHelpModal();
+        }, 350);
+    } else {
+        hideHelpModal();
+    }
+}
+
+function closeHelpFromBackdrop(event) {
+    if (event && event.target && event.target.id === 'helpModal') {
+        closeHelpFromButton();
+    }
+}
+
 let appsMenuHistoryEntryActive = false;
 let pendingAppsAction = null;
-
-function updateVancouverParkingAppVisibility() {
-    const btn = document.getElementById('vancouverParkingAppBtn');
-    if (!btn) return;
-    btn.style.display = (typeof currentCityKey !== 'undefined' && currentCityKey === 'vancouver') ? 'flex' : 'none';
-}
 
 function openAppsMenu(event) {
     if (event) {
@@ -2597,7 +3029,6 @@ function openAppsMenu(event) {
     const bodyNode = document.getElementById('mainBody');
     if (!bodyNode || bodyNode.classList.contains('apps-menu-open')) return;
 
-    updateVancouverParkingAppVisibility();
     closeCityPortal();
     bodyNode.classList.add('apps-menu-open');
     history.pushState({ appsMenuOpen: true }, document.title, window.location.href);
@@ -2657,20 +3088,92 @@ function runPendingAppsAction() {
     } else if (action === 'time') {
         openTime();
     } else if (action === 'barcode') {
-        const barcodeUrl = 'https://bisket74-eng.github.io/BarcodeBuddy/';
-        const opened = window.open(barcodeUrl, '_blank', 'noopener,noreferrer');
-        if (!opened) window.location.href = barcodeUrl;
-    } else if (action === 'vancouverParking') {
-        const parkingUrl = 'vancouver-parking.html';
-        const opened = window.open(parkingUrl, '_blank', 'noopener,noreferrer');
-        if (!opened) window.location.href = parkingUrl;
+        openBarcodeBuddy();
+    } else if (action === 'calendars') {
+        openCalendars();
+    } else if (action === 'uspssearch') {
+        openUspsSearch();
     }
 }
 
-// =====================================================================
-// RATE IT UP POPUP — ISOLATED FROM ROUTE FINDER
-// The phone/browser Back button closes this popup before leaving the app.
-// =====================================================================
+let calendarsHistoryEntryActive = false;
+
+function openCalendars(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || bodyNode.classList.contains('calendars-open')) return;
+
+    closeCityPortal();
+    bodyNode.classList.add('calendars-open');
+    history.pushState({ calendarsOpen: true }, document.title, window.location.href);
+    calendarsHistoryEntryActive = true;
+}
+
+function hideCalendars() {
+    const bodyNode = document.getElementById('mainBody');
+    if (bodyNode) bodyNode.classList.remove('calendars-open');
+}
+
+function closeCalendarsFromButton() {
+    hideAppsMenu();
+    pendingAppsAction = null;
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || !bodyNode.classList.contains('calendars-open')) return;
+
+    if (calendarsHistoryEntryActive) {
+        calendarsHistoryEntryActive = false;
+        history.back();
+        setTimeout(() => {
+            if (bodyNode.classList.contains('calendars-open')) hideCalendars();
+        }, 350);
+    } else {
+        hideCalendars();
+    }
+}
+
+let barcodeBuddyHistoryEntryActive = false;
+
+function openBarcodeBuddy(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || bodyNode.classList.contains('barcode-buddy-open')) return;
+
+    closeCityPortal();
+    bodyNode.classList.add('barcode-buddy-open');
+    history.pushState({ barcodeBuddyOpen: true }, document.title, window.location.href);
+    barcodeBuddyHistoryEntryActive = true;
+}
+
+function hideBarcodeBuddy() {
+    const bodyNode = document.getElementById('mainBody');
+    if (bodyNode) bodyNode.classList.remove('barcode-buddy-open');
+}
+
+function closeBarcodeBuddyFromButton() {
+    hideAppsMenu();
+    pendingAppsAction = null;
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || !bodyNode.classList.contains('barcode-buddy-open')) return;
+
+    if (barcodeBuddyHistoryEntryActive) {
+        barcodeBuddyHistoryEntryActive = false;
+        history.back();
+        setTimeout(() => {
+            if (bodyNode.classList.contains('barcode-buddy-open')) hideBarcodeBuddy();
+        }, 350);
+    } else {
+        hideBarcodeBuddy();
+    }
+}
+
 let rateItUpHistoryEntryActive = false;
 
 function openRateItUp(event) {
@@ -2695,14 +3198,14 @@ function hideRateItUp() {
 }
 
 function closeRateItUpFromButton() {
+    hideAppsMenu();
+    pendingAppsAction = null;
     const bodyNode = document.getElementById('mainBody');
     if (!bodyNode || !bodyNode.classList.contains('rate-it-up-open')) return;
 
     if (rateItUpHistoryEntryActive) {
         rateItUpHistoryEntryActive = false;
         history.back();
-
-        // Fallback for uncommon embedded-browser history behavior.
         setTimeout(() => {
             if (bodyNode.classList.contains('rate-it-up-open')) hideRateItUp();
         }, 350);
@@ -2711,38 +3214,75 @@ function closeRateItUpFromButton() {
     }
 }
 
-window.addEventListener('popstate', () => {
+let uspsSearchHistoryEntryActive = false;
+
+function openUspsSearch(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || bodyNode.classList.contains('usps-search-open')) return;
+
+    closeCityPortal();
+    bodyNode.classList.add('usps-search-open');
+
+    history.pushState({ uspsSearchOpen: true }, document.title, window.location.href);
+    uspsSearchHistoryEntryActive = true;
+}
+
+function hideUspsSearch() {
+    const bodyNode = document.getElementById('mainBody');
+    if (bodyNode) bodyNode.classList.remove('usps-search-open');
+}
+
+function closeUspsSearchFromButton() {
+    hideAppsMenu();
+    pendingAppsAction = null;
+    const bodyNode = document.getElementById('mainBody');
+    if (!bodyNode || !bodyNode.classList.contains('usps-search-open')) return;
+
+    if (uspsSearchHistoryEntryActive) {
+        uspsSearchHistoryEntryActive = false;
+        history.back();
+        setTimeout(() => {
+            if (bodyNode.classList.contains('usps-search-open')) hideUspsSearch();
+        }, 350);
+    } else {
+        hideUspsSearch();
+    }
+}
+
+window.addEventListener('popstate', function (event) {
     const bodyNode = document.getElementById('mainBody');
     if (!bodyNode) return;
 
+    if (bodyNode.classList.contains('help-open')) {
+        helpHistoryEntryActive = false;
+        hideHelpModal();
+    }
     if (bodyNode.classList.contains('apps-menu-open')) {
         appsMenuHistoryEntryActive = false;
         hideAppsMenu();
-        return;
     }
-
-    if (pendingAppsAction) {
-        runPendingAppsAction();
-        return;
+    if (bodyNode.classList.contains('calendars-open')) {
+        calendarsHistoryEntryActive = false;
+        hideCalendars();
     }
-
+    if (bodyNode.classList.contains('barcode-buddy-open')) {
+        barcodeBuddyHistoryEntryActive = false;
+        hideBarcodeBuddy();
+    }
     if (bodyNode.classList.contains('rate-it-up-open')) {
         rateItUpHistoryEntryActive = false;
         hideRateItUp();
     }
-});
-
-window.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape') return;
-
-    if (document.body.classList.contains('apps-menu-open')) {
-        closeAppsMenuFromButton();
-    } else if (document.body.classList.contains('rate-it-up-open')) {
-        closeRateItUpFromButton();
+    if (bodyNode.classList.contains('usps-search-open')) {
+        uspsSearchHistoryEntryActive = false;
+        hideUspsSearch();
     }
 });
-
-
 </script>
 </body>
 </html>
