@@ -14,7 +14,7 @@
     .hdr h1 { margin: 0; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
     .hdr p { margin: 4px 0 0; font-size: 0.8rem; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
 
-    .hdr-close { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border-radius: 50%; border: 2px solid #fff; background: var(--rd); color: #fff; font-size: 1.35rem; font-weight: 900; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3); z-index: 999; }
+    .hdr-close { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%; border: 2px solid #fff; background: var(--rd); color: #fff; font-size: 1.4rem; font-weight: 900; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3); z-index: 9999; -webkit-tap-highlight-color: transparent; }
     .hdr-close:active { transform: scale(0.90); }
 
     .card { background: #fff; border: 2px solid var(--bl); border-radius: 10px; padding: 16px; margin-top: 12px; }
@@ -60,8 +60,8 @@
     /* Reordering Styles */
     #savedTabsBox.edit-mode .saved-tab { cursor: grab; user-select: none; -webkit-user-select: none; touch-action: none; }
     #savedTabsBox.edit-mode .saved-tab:active { cursor: grabbing; }
-    .saved-tab.dragging { opacity: 0.4; border-style: dashed; transform: scale(0.95); }
-    .saved-tab.drag-over { border-color: var(--rd); background: #fde8e8; transform: scale(1.05); }
+    .saved-tab.dragging { opacity: 0.35; border-style: dashed; transform: scale(0.94); }
+    .saved-tab.drag-over { border-color: var(--rd); background: #fde8e8; transform: scale(1.06); }
 
     #printArea h1.sheet-title { font-size: 15pt; font-weight: 900; margin: 12px 0 2px; text-transform: uppercase; }
     #printArea p.sheet-sub { font-size: 10pt; font-weight: 700; margin: 0 0 12px; color: #333; }
@@ -102,7 +102,7 @@
 <body>
 
 <div class="hdr">
-    <button class="hdr-close no-print" type="button" aria-label="Close" title="Back to Route Finder" onclick="exitToMainApp()">&times;</button>
+    <button class="hdr-close no-print" type="button" aria-label="Close" title="Close Page" onclick="exitToMainApp()">&times;</button>
     <h1>Route Sheet Export</h1>
     <p>USPS Route Finder</p>
 </div>
@@ -151,7 +151,22 @@
 let CITY_CONFIG = {};
 
 function exitToMainApp() {
-    window.location.href = './index.html';
+    try {
+        window.close();
+    } catch (e) {}
+    try {
+        self.close();
+    } catch (e) {}
+    try {
+        window.open('', '_self', '');
+        window.close();
+    } catch (e) {}
+
+    setTimeout(() => {
+        if (!window.closed) {
+            window.location.href = './index.html';
+        }
+    }, 100);
 }
 
 async function fetchCityConfigFromIndex() {
@@ -447,6 +462,7 @@ function saveSheetToHistory(cityName, zipLine, html) {
 }
 
 let editTabsMode = false;
+let draggedIdx = null;
 let touchDraggedIdx = null;
 let touchActive = false;
 
@@ -491,6 +507,7 @@ function enableTabReordering() {
         // --- DESKTOP DRAG EVENTS ---
         tab.addEventListener('dragstart', (e) => {
             const idx = parseInt(tab.getAttribute('data-index'), 10);
+            draggedIdx = idx;
             e.dataTransfer.setData('text/plain', idx.toString());
             e.dataTransfer.effectAllowed = 'move';
             tab.classList.add('dragging');
@@ -513,7 +530,7 @@ function enableTabReordering() {
         tab.addEventListener('drop', (e) => {
             e.preventDefault();
             tab.classList.remove('drag-over');
-            const fromIdx = parseInt(e.dataTransfer.getData('text/plain'), 10);
+            const fromIdx = draggedIdx !== null ? draggedIdx : parseInt(e.dataTransfer.getData('text/plain'), 10);
             const toIdx = parseInt(tab.getAttribute('data-index'), 10);
             if (!isNaN(fromIdx) && !isNaN(toIdx) && fromIdx !== toIdx) {
                 reorderSavedSheets(fromIdx, toIdx);
@@ -523,6 +540,7 @@ function enableTabReordering() {
         tab.addEventListener('dragend', () => {
             tab.classList.remove('dragging');
             tabs.forEach(t => t.classList.remove('drag-over'));
+            draggedIdx = null;
         });
 
         // --- MOBILE TOUCH DRAG EVENTS ---
@@ -531,7 +549,7 @@ function enableTabReordering() {
             touchActive = true;
             touchDraggedIdx = parseInt(tab.getAttribute('data-index'), 10);
             tab.classList.add('dragging');
-        }, { passive: true });
+        }, { passive: false });
 
         tab.addEventListener('touchmove', (e) => {
             if (!touchActive || touchDraggedIdx === null) return;
@@ -550,7 +568,7 @@ function enableTabReordering() {
 
         tab.addEventListener('touchend', (e) => {
             if (!touchActive) return;
-            
+
             const touch = e.changedTouches[0];
             const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
             const targetTab = targetEl ? targetEl.closest('.saved-tab') : null;
