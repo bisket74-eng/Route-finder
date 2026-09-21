@@ -10,12 +10,14 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--lt-bl); color: #111; }
     .wrap { max-width: 640px; margin: 0 auto; padding: 16px; }
-    .hdr { position: relative; background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); color: #fff; padding: 18px 16px; text-align: center; border-bottom: 3px solid var(--rd); }
+    
+    .hdr { background: linear-gradient(135deg, #003a6a 0%, #004b87 50%, #005fa3 100%); color: #fff; padding: 18px 16px; border-bottom: 3px solid var(--rd); }
+    .hdr-inner { max-width: 640px; margin: 0 auto; position: relative; text-align: center; }
     .hdr h1 { margin: 0; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
     .hdr p { margin: 4px 0 0; font-size: 0.8rem; font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
 
-    .hdr-close { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%; border: 2px solid #fff; background: var(--rd); color: #fff; font-size: 1.4rem; font-weight: 900; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3); z-index: 9999; -webkit-tap-highlight-color: transparent; }
-    .hdr-close:active { transform: scale(0.90); }
+    .hdr-close { position: absolute; top: 50%; right: 0; transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; border: 2px solid #fff; background: var(--rd); color: #fff; font-size: 1.4rem; font-weight: 900; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3); z-index: 9999; -webkit-tap-highlight-color: transparent; }
+    .hdr-close:active { transform: translateY(-50%) scale(0.90); }
 
     .card { background: #fff; border: 2px solid var(--bl); border-radius: 10px; padding: 16px; margin-top: 12px; }
     .card h2 { margin: 0 0 10px; font-size: 1.05rem; color: var(--bl); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -102,9 +104,11 @@
 <body>
 
 <div class="hdr">
-    <button class="hdr-close no-print" type="button" aria-label="Close" title="Close Page" onclick="exitToMainApp()">&times;</button>
-    <h1>Route Sheet Export</h1>
-    <p>USPS Route Finder</p>
+    <div class="hdr-inner">
+        <h1>Route Sheet Export</h1>
+        <p>USPS Route Finder</p>
+        <button class="hdr-close no-print" type="button" aria-label="Close" title="Close Page" onclick="exitToMainApp()">&times;</button>
+    </div>
 </div>
 
 <div class="wrap">
