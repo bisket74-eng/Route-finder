@@ -2401,14 +2401,23 @@
             mouName: "Winter Haven",
             dcuName: ""
         },
-       "wilkes_barre": {
-            name: "Wilkes-Barre Pennsylvania",
-            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/wilkesbarre.xlsx",
-            stationMOU: ["18701"],
-            stationDCU: [],
-            mouName: "Wilkes Barre 18701",
-            dcuName: ""
+               "wilkes_barre": {
+            name: "Wilkes-Barre, Pennsylvania",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/wilkes_barre.xlsx",
+            stationMOU: ["18701", "18702", "18705", "18706"],
+            stationDCU: ["18704", "18707"],
+            mouName: "Wilkes-Barre S&DC (Main)",
+            dcuName: "Surrounding Stations (Kingston / Mountain Top)",
+            zipLabels: {
+                "18701": "18701 (Downtown / Main Office)",
+                "18702": "18702 (Wilkes-Barre / Heights)",
+                "18704": "18704 (Kingston)",
+                "18705": "18705 (North End)",
+                "18706": "18706 (Hanover / Ashley)",
+                "18707": "18707 (Mountain Top)"
+            }
         },
+
        "winterpark": {
             name: "Winter Park, Florida",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/winterpark.xlsx",
