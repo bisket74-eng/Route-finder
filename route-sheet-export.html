@@ -176,7 +176,6 @@ async function fetchCityConfigFromIndex() {
         if (resp.ok) {
             const htmlText = await resp.text();
             
-            // Matches const CITY_CONFIG = { ... }; across multiline string
             const startIdx = htmlText.indexOf('CITY_CONFIG');
             if (startIdx !== -1) {
                 const braceIdx = htmlText.indexOf('{', startIdx);
@@ -396,7 +395,7 @@ function generateSheet() {
     const cfg = CITY_CONFIG[currentCityKey];
     const cityName = cfg ? cfg.name : 'Route Sheet';
     
-    // Clean 5-digit ZIP codes only (removes station names/parentheses)
+    // Extract raw 5-digit ZIP numbers only
     const zipLine = checked.map(z => {
         const m = z.match(/\b\d{5}\b/);
         return m ? m[0] : z;
@@ -443,6 +442,7 @@ function generateSheet() {
 function backToPicker() {
     document.getElementById('sheetView').style.display = 'none';
     document.getElementById('pickerView').style.display = 'block';
+    renderSavedTabs();
 }
 
 // ==========================================================================
@@ -469,11 +469,17 @@ function saveSheetToHistory(cityName, zipLine, html) {
         savedAt: new Date().toISOString(),
         html
     };
+    
+    // Prevent exact duplicates
+    history = history.filter(item => !(item.cityName === cityName && item.zipLine === zipLine));
     history.unshift(entry);
+    
     if (history.length > MAX_SAVED_SHEETS) history = history.slice(0, MAX_SAVED_SHEETS);
+    
     try {
         localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history));
     } catch (e) {
+        // Handle quota errors safely
         history = history.slice(0, Math.ceil(history.length / 2));
         try { localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history)); } catch (e2) {}
     }
@@ -488,9 +494,11 @@ let touchActive = false;
 function renderSavedTabs() {
     const card = document.getElementById('savedSheetsCard');
     const box = document.getElementById('savedTabsBox');
+    if (!card || !box) return;
+    
     const history = loadHistory();
 
-    if (history.length === 0) {
+    if (!history || history.length === 0) {
         card.style.display = 'none';
         box.innerHTML = '';
         editTabsMode = false;
@@ -499,12 +507,14 @@ function renderSavedTabs() {
 
     card.style.display = 'block';
     box.className = editTabsMode ? 'edit-mode' : '';
+    
     box.innerHTML = history.map((entry, index) => {
-        const d = new Date(entry.savedAt);
+        const d = new Date(entry.savedAt || Date.now());
         const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         
-        // Clean zip display for tab buttons
-        const cleanTabZip = (entry.zipLine || '').replace(/\s*\([^)]*\)/g, '');
+        // Sanitize ZIP code line to extract digits only
+        let cleanTabZip = (entry.zipLine || '').replace(/\s*\([^)]*\)/g, '');
+        if (!cleanTabZip) cleanTabZip = 'ZIPs';
         
         return `<div class="saved-tab" data-index="${index}" onclick="handleTabClick('${entry.id}')">
             <button class="saved-tab-del" type="button" aria-label="Delete" title="Delete" onclick="deleteSavedSheet(event, '${entry.id}')">&times;</button>
@@ -517,6 +527,7 @@ function renderSavedTabs() {
 
 function enableTabReordering() {
     const box = document.getElementById('savedTabsBox');
+    if (!box) return;
     const tabs = box.querySelectorAll('.saved-tab');
 
     tabs.forEach((tab) => {
@@ -640,8 +651,10 @@ function reorderSavedSheets(fromIndex, toIndex) {
 function toggleEditTabs() {
     editTabsMode = !editTabsMode;
     const btn = document.getElementById('editTabsBtn');
-    btn.textContent = editTabsMode ? 'Done' : 'Edit';
-    btn.classList.toggle('active', editTabsMode);
+    if (btn) {
+        btn.textContent = editTabsMode ? 'Done' : 'Edit';
+        btn.classList.toggle('active', editTabsMode);
+    }
     renderSavedTabs();
 }
 
