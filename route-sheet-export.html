@@ -155,21 +155,12 @@
 let CITY_CONFIG = {};
 
 function exitToMainApp() {
-    try {
-        window.close();
-    } catch (e) {}
-    try {
-        self.close();
-    } catch (e) {}
-    try {
-        window.open('', '_self', '');
-        window.close();
-    } catch (e) {}
+    try { window.close(); } catch (e) {}
+    try { self.close(); } catch (e) {}
+    try { window.open('', '_self', ''); window.close(); } catch (e) {}
 
     setTimeout(() => {
-        if (!window.closed) {
-            window.location.href = './index.html';
-        }
+        if (!window.closed) { window.location.href = './index.html'; }
     }, 100);
 }
 
@@ -346,7 +337,7 @@ function colorForRouteIndex(index) {
         { s: 72, l: 70 }
     ];
     const band = bands[index % bands.length];
-    return `hsl(${hue.toFixed(0)}, ${band.s}%, ${band.l}%)`;
+    return `hsl(${hue.toFixed(0)}, ${band.s}\%,${band.l}%)`;
 }
 
 function buildRouteColorMap(records) {
@@ -387,8 +378,12 @@ function generateSheet() {
     const cfg = CITY_CONFIG[currentCityKey];
     const cityName = cfg ? cfg.name : 'Route Sheet';
     
-    // Output clean 5-digit ZIP codes in the header line
-    const zipLine = checked.join(', ');
+    // Clean 5-digit ZIP codes only (removes station names/parentheses)
+    const zipLine = checked.map(z => {
+        const m = z.match(/\b\d{5}\b/);
+        return m ? m[0] : z;
+    }).join(', ');
+    
     const todayStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
     let bodyRows = '';
@@ -400,265 +395,4 @@ function generateSheet() {
             <td class="c-plain">${escapeHtml(r.directional)}</td>
             <td class="c-bold">${escapeHtml(r.street)}</td>
             <td class="c-plain">${escapeHtml(r.suffix)}</td>
-            <td class="c-plain">${escapeHtml(r.low)}</td>
-            <td class="c-plain">${escapeHtml(r.high)}</td>
-            <td class="c-plain">${escapeHtml(r.oeb)}</td>
-            <td class="c-bold">${escapeHtml(r.route)}</td>
-            ${showZipColumn ? `<td class="c-plain">${escapeHtml(r.zip)}</td>` : ``}
-        </tr>`;
-    });
-
-    const zipHeaderCell = showZipColumn ? `<th>ZIP</th>` : ``;
-
-    const sheetHtml = `
-        <h1 class="sheet-title">${escapeHtml(cityName)}</h1>
-        <p class="sheet-sub">ZIP(s): ${escapeHtml(zipLine)} &bull; Generated ${todayStr}</p>
-        <table class="sheet-table">
-            <thead><tr><th>Dir</th><th>Street</th><th>Suffix</th><th>Low</th><th>High</th><th>O/E/B</th><th>Route</th>${zipHeaderCell}</tr></thead>
-            <tbody>${bodyRows}</tbody>
-        </table>
-    `;
-
-    document.getElementById('printArea').innerHTML = sheetHtml;
-    saveSheetToHistory(cityName, zipLine, sheetHtml);
-
-    document.getElementById('pickerView').style.display = 'none';
-    document.getElementById('sheetView').style.display = 'block';
-    window.scrollTo(0, 0);
-}
-
-function backToPicker() {
-    document.getElementById('sheetView').style.display = 'none';
-    document.getElementById('pickerView').style.display = 'block';
-}
-
-// ==========================================================================
-// SAVED SHEETS & REORDERING
-// ==========================================================================
-const SAVED_SHEETS_KEY = 'routeSheetHistory';
-const MAX_SAVED_SHEETS = 15;
-
-function loadHistory() {
-    try {
-        const raw = localStorage.getItem(SAVED_SHEETS_KEY);
-        return raw ? JSON.parse(raw) : [];
-    } catch (e) {
-        return [];
-    }
-}
-
-function saveSheetToHistory(cityName, zipLine, html) {
-    let history = loadHistory();
-    const entry = {
-        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-        cityName,
-        zipLine,
-        savedAt: new Date().toISOString(),
-        html
-    };
-    history.unshift(entry);
-    if (history.length > MAX_SAVED_SHEETS) history = history.slice(0, MAX_SAVED_SHEETS);
-    try {
-        localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history));
-    } catch (e) {
-        history = history.slice(0, Math.ceil(history.length / 2));
-        try { localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history)); } catch (e2) {}
-    }
-    renderSavedTabs();
-}
-
-let editTabsMode = false;
-let draggedIdx = null;
-let touchDraggedIdx = null;
-let touchActive = false;
-
-function renderSavedTabs() {
-    const card = document.getElementById('savedSheetsCard');
-    const box = document.getElementById('savedTabsBox');
-    const history = loadHistory();
-
-    if (history.length === 0) {
-        card.style.display = 'none';
-        box.innerHTML = '';
-        editTabsMode = false;
-        return;
-    }
-
-    card.style.display = 'block';
-    box.className = editTabsMode ? 'edit-mode' : '';
-    box.innerHTML = history.map((entry, index) => {
-        const d = new Date(entry.savedAt);
-        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        return `<div class="saved-tab" data-index="${index}" onclick="handleTabClick('${entry.id}')">
-            <button class="saved-tab-del" type="button" aria-label="Delete" title="Delete" onclick="deleteSavedSheet(event, '${entry.id}')">&times;</button>
-            <span class="saved-tab-label">${escapeHtml(entry.zipLine)}<span class="saved-tab-sub">${escapeHtml(dateStr)}</span></span>
-        </div>`;
-    }).join('');
-
-    enableTabReordering();
-}
-
-function enableTabReordering() {
-    const box = document.getElementById('savedTabsBox');
-    const tabs = box.querySelectorAll('.saved-tab');
-
-    tabs.forEach((tab) => {
-        if (!editTabsMode) {
-            tab.removeAttribute('draggable');
-            return;
-        }
-
-        tab.setAttribute('draggable', 'true');
-
-        // --- DESKTOP DRAG EVENTS ---
-        tab.addEventListener('dragstart', (e) => {
-            const idx = parseInt(tab.getAttribute('data-index'), 10);
-            draggedIdx = idx;
-            e.dataTransfer.setData('text/plain', idx.toString());
-            e.dataTransfer.effectAllowed = 'move';
-            tab.classList.add('dragging');
-        });
-
-        tab.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-        });
-
-        tab.addEventListener('dragenter', (e) => {
-            e.preventDefault();
-            tab.classList.add('drag-over');
-        });
-
-        tab.addEventListener('dragleave', () => {
-            tab.classList.remove('drag-over');
-        });
-
-        tab.addEventListener('drop', (e) => {
-            e.preventDefault();
-            tab.classList.remove('drag-over');
-            const fromIdx = draggedIdx !== null ? draggedIdx : parseInt(e.dataTransfer.getData('text/plain'), 10);
-            const toIdx = parseInt(tab.getAttribute('data-index'), 10);
-            if (!isNaN(fromIdx) && !isNaN(toIdx) && fromIdx !== toIdx) {
-                reorderSavedSheets(fromIdx, toIdx);
-            }
-        });
-
-        tab.addEventListener('dragend', () => {
-            tab.classList.remove('dragging');
-            tabs.forEach(t => t.classList.remove('drag-over'));
-            draggedIdx = null;
-        });
-
-        // --- MOBILE TOUCH DRAG EVENTS ---
-        tab.addEventListener('touchstart', (e) => {
-            if (e.target.classList.contains('saved-tab-del')) return;
-            touchActive = true;
-            touchDraggedIdx = parseInt(tab.getAttribute('data-index'), 10);
-            tab.classList.add('dragging');
-        }, { passive: false });
-
-        tab.addEventListener('touchmove', (e) => {
-            if (!touchActive || touchDraggedIdx === null) return;
             
-            if (e.cancelable) e.preventDefault();
-
-            const touch = e.touches[0];
-            const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
-            const targetTab = targetEl ? targetEl.closest('.saved-tab') : null;
-
-            tabs.forEach(t => t.classList.remove('drag-over'));
-            if (targetTab && targetTab !== tab) {
-                targetTab.classList.add('drag-over');
-            }
-        }, { passive: false });
-
-        tab.addEventListener('touchend', (e) => {
-            if (!touchActive) return;
-
-            const touch = e.changedTouches[0];
-            const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
-            const targetTab = targetEl ? targetEl.closest('.saved-tab') : null;
-
-            if (targetTab) {
-                const toIdx = parseInt(targetTab.getAttribute('data-index'), 10);
-                if (!isNaN(toIdx) && touchDraggedIdx !== null && touchDraggedIdx !== toIdx) {
-                    reorderSavedSheets(touchDraggedIdx, toIdx);
-                }
-            }
-
-            touchActive = false;
-            touchDraggedIdx = null;
-            tabs.forEach(t => {
-                t.classList.remove('dragging');
-                t.classList.remove('drag-over');
-            });
-        });
-
-        tab.addEventListener('touchcancel', () => {
-            touchActive = false;
-            touchDraggedIdx = null;
-            tabs.forEach(t => {
-                t.classList.remove('dragging');
-                t.classList.remove('drag-over');
-            });
-        });
-    });
-}
-
-function reorderSavedSheets(fromIndex, toIndex) {
-    let history = loadHistory();
-    if (fromIndex < 0 || fromIndex >= history.length || toIndex < 0 || toIndex >= history.length) return;
-    if (fromIndex === toIndex) return;
-
-    const movedItem = history[fromIndex];
-    history.splice(fromIndex, 1);
-    history.splice(toIndex, 0, movedItem);
-
-    try {
-        localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history));
-    } catch (e) {}
-    renderSavedTabs();
-}
-
-function toggleEditTabs() {
-    editTabsMode = !editTabsMode;
-    const btn = document.getElementById('editTabsBtn');
-    btn.textContent = editTabsMode ? 'Done' : 'Edit';
-    btn.classList.toggle('active', editTabsMode);
-    renderSavedTabs();
-}
-
-function handleTabClick(id) {
-    if (editTabsMode) return;
-    loadSavedSheet(id);
-}
-
-function loadSavedSheet(id) {
-    const history = loadHistory();
-    const entry = history.find(e => e.id === id);
-    if (!entry) return;
-    document.getElementById('printArea').innerHTML = entry.html;
-    document.getElementById('pickerView').style.display = 'none';
-    document.getElementById('sheetView').style.display = 'block';
-    window.scrollTo(0, 0);
-}
-
-function deleteSavedSheet(event, id) {
-    event.stopPropagation();
-    let history = loadHistory();
-    history = history.filter(e => e.id !== id);
-    try { localStorage.setItem(SAVED_SHEETS_KEY, JSON.stringify(history)); } catch (e) {}
-    renderSavedTabs();
-}
-
-// ==========================================================================
-// BOOT
-// ==========================================================================
-window.addEventListener('DOMContentLoaded', async () => {
-    CITY_CONFIG = await fetchCityConfigFromIndex();
-    await initActiveCity();
-    renderSavedTabs();
-});
-</script>
-</body>
-</html>
