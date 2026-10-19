@@ -386,7 +386,9 @@ function generateSheet() {
 
     const cfg = CITY_CONFIG[currentCityKey];
     const cityName = cfg ? cfg.name : 'Route Sheet';
-    const zipLine = checked.map(z => (cfg && cfg.zipLabels && cfg.zipLabels[z]) ? cfg.zipLabels[z] : z).join(', ');
+    
+    // Output clean 5-digit ZIP codes in the header line
+    const zipLine = checked.join(', ');
     const todayStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
     let bodyRows = '';
