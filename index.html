@@ -898,7 +898,15 @@
             stationMOU: ["87101", "87102", "87103"], 
             stationDCU: ["87105", "87106", "87110"], 
             mouName: "Main Post Office",
-            dcuName: "Uptown Station"
+            dcuName: "Uptown Station",
+            zipLabels: {
+                "87101": "87101",
+                "87102": "87102",
+                "87103": "87103",
+                "87105": "87105",
+                "87106": "87106",
+                "87110": "87110"
+            }
         },
         "albuquerque_north": {
             name: "Albuquerque - North & East, New Mexico",
@@ -908,6 +916,9 @@
             mouName: "North Valley Station",
             dcuName: "Standalone Stations",
             zipLabels: {
+                "87104": "87104",
+                "87107": "87107",
+                "87113": "87113",
                 "87109": "87109 (Academy Station)",
                 "87111": "87111 (Steve Schiff Station)",
                 "87112": "87112 (Manzano Station)"
@@ -921,10 +932,13 @@
             mouName: "Richard J. Pino Station",
             dcuName: "Standalone Stations",
             zipLabels: {
-                "87122": "87122 (Foothills)",
-                "87123": "87123 (Foothills)",
-                "87124": "87124 (Rio Rancho)",
-                "87144": "87144 (Rio Rancho)"
+                "87114": "87114",
+                "87120": "87120",
+                "87121": "87121",
+                "87122": "87122 (Foothills Station)",
+                "87123": "87123 (Foothills Station)",
+                "87124": "87124 (Rio Rancho Branch)",
+                "87144": "87144 (Rio Rancho Branch)"
             }
         },
         "alice": {
@@ -932,15 +946,13 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/alice.xlsx",
             stationMOU: ["78332"],
             stationDCU: []
-            mouName: "Alice 78332",
-            dcuName: ""
         },
         "allen": {
             name: "Allen, Texas",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/allen.xlsx",
             stationMOU: ["75013", "75002"],
             stationDCU: [],
-            mouName: "Allen Zips",
+            mouName: "Allen Main Post Office",
             dcuName: ""
         },
         "alliance": {
@@ -1015,36 +1027,40 @@
             mouName: "West City Stations",
             dcuName: "West County DCUs"
         },
-        "ball": {
+       "ball": {
             name: "Ball, Louisiana",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/ball.xlsx",
             stationMOU: ["71405"],
             stationDCU: [],
-            mouName: "Ball 71405",
+            mouName: "Ball",
             dcuName: ""
          },
-         "bamberg": {
+               "bamberg": {
             name: "Bamberg, South Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bamberg.xlsx",
             stationMOU: ["29003"],
             stationDCU: [],
-            mouName: "Bamberg 29003",
-            dcuName: ""
-          },
-          "barboursville": {
-             name: "Barboursville, West Virginia",
-             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/barboursville.xlsx",
-             stationMOU: ["25504", "25537", "25545"],
-             stationDCU: [],
-             mouName: "Barboursville Area Zips",
-             dcuName: "",
-             zipLabels: {
+            mouName: "Bamberg Main Post Office",
+            dcuName: "",
+            zipLabels: {
+                "29003": "29003 (Bamberg Main / City & Rural Routes)"
+            }
+        },
+
+        "barboursville": {
+            name: "Barboursville, West Virginia",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/barboursville.xlsx",
+            stationMOU: ["25504", "25537", "25545"],
+            stationDCU: [],
+            mouName: "",
+            dcuName: "",
+            zipLabels: {
                 "25504": "25504 (Barboursville)",
                 "25537": "25537 (LeSage)",
                 "25545": "25545 (Ona)"
-             }
+            }
         },
-        "battle_ground": {
+       "battle_ground": {
             name: "Battle Ground, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/battle_ground.xlsx",
             stationMOU: ["98604"],
@@ -1057,8 +1073,6 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bay_city.xlsx",
             stationMOU: ["48706", "48708"],
             stationDCU: []
-            mouName: "Bay City Zips",
-            dcuName: ""
         },
         "belgrade": {
             name: "Belgrade, Montana",
@@ -1076,7 +1090,7 @@
             mouName: "Belton 29027",
             dcuName: ""
         },
-        "benzonia": {
+       "benzonia": {
             name: "Benzonia, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/benzonia.xlsx",
             stationMOU: ["49616"],
@@ -1084,7 +1098,7 @@
             mouName: "Benzonia 49616",
             dcuName: ""
          },
-         "bigelow": {
+        "bigelow": {
             name: "Bigelow, Arkansas",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bigelow.xlsx",
             stationMOU: ["72016"],
@@ -1100,14 +1114,18 @@
             mouName: "Barnwell 29812",
             dcuName: ""
         },
-        "blackville": {
+               "blackville": {
             name: "Blackville, South Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/blackville.xlsx",
             stationMOU: ["29817"],
             stationDCU: [],
-            mouName: "Blackville 29817",
-            dcuName: ""
+            mouName: "Blackville Main Post Office",
+            dcuName: "",
+            zipLabels: {
+                "29817": "29817 (Blackville Main / City & Rural Routes)"
+            }
         },
+
         "bozeman": {
             name: "Bozeman, Montana",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bozeman.xlsx",
@@ -1121,18 +1139,25 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bradley.xlsx",
             stationMOU: ["60915"],
             stationDCU: [],
-            mouName: "Bradley 60915",
+            mouName: "Bradley Main Post Office",
             dcuName: ""
         },
-        "bremerton": {
+               "bremerton": {
             name: "Bremerton, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/bremerton.xlsx",
             stationMOU: ["98310", "98311", "98312", "98337"],
             stationDCU: [],
-            mouName: "Bremerton Zips",
-            dcuName: ""           
+            mouName: "Bremerton Main Office & Stations",
+            dcuName: "",
+            zipLabels: {
+                "98310": "98310 (East Bremerton)",
+                "98311": "98311 (Tracyton / Silverdale border)",
+                "98312": "98312 (West Bremerton)",
+                "98337": "98337 (Downtown Bremerton)"
+            }
         },
-        "brockton": {
+
+       "brockton": {
             name: "Brockton, Massachusetts",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/brockton.xlsx",
             stationMOU: ["02301"],
@@ -1145,10 +1170,10 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/broadhead.xlsx",
             stationMOU: ["40409"],
             stationDCU: [],
-            mouName: "Brodhead 40409",
+            mouName: "Brodhead Main",
             dcuName: ""
         },
-        "brooklyn": {
+               "brooklyn": {
             name: "Brooklyn, New York",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/brooklyn.xlsx",
             stationMOU: [
@@ -1161,45 +1186,46 @@
             mouName: "Brooklyn Stations & Carrier Annexes",
             dcuName: "",
             zipLabels: {
-                "11201": "11201 (Brooklyn Main / DT)",
-                "11203": "11203 (Rugby)",
-                "11204": "11204 (Blythebourne)",
-                "11205": "11205 (Pratt)",
-                "11206": "11206 (Metropolitan)",
-                "11207": "11207 (East New York)",
-                "11208": "11208 (Cypress Hills)",
-                "11209": "11209 (Fort Hamilton)",
-                "11210": "11210 (Vanderveer)",
-                "11211": "11211 (Williamsburg)",
-                "11212": "11212 (Brownsville)",
-                "11213": "11213 (St.Johns Place)",
-                "11214": "11214 (Bath Beach)",
-                "11215": "11215 (Park Slope)",
-                "11216": "11216 (Brevoort)",
-                "11217": "11217 (Times Plaza)",
-                "11218": "11218 (Flatbush)",
-                "11219": "11219 (Parkville)",
-                "11220": "11220 (Sunset Park)",
-                "11221": "11221 (Bushwick)",
-                "11222": "11222 (Greenpoint)",
-                "11223": "11223 (Gravesend)",
-                "11224": "11224 (Coney Island)",
-                "11225": "11225 (Crown Heights)",
-                "11226": "11226 (Flatbush)",
-                "11228": "11228 (Dyker Heights)",
-                "11229": "11229 (Homecrest)",
-                "11230": "11230 (Midwood)",
-                "11231": "11231 (Red Hook)",
-                "11232": "11232 (Bush Terminal",
-                "11233": "11233 (Bedford-Stuyvesant)",
-                "11234": "11234 (Canarsie / Flatlands)",
-                "11235": "11235 (Sheepshead Bay)",
-                "11236": "11236 (Canarsie)",
-                "11237": "11237 (Wyckoff Heights)",
-                "11238": "11238 (Adelphi)",
-                "11239": "11239 (Spring Creek)"
+                "11201": "11201 (Brooklyn Main / Downtown)",
+                "11203": "11203 (Rugby Station)",
+                "11204": "11204 (Blythebourne Station)",
+                "11205": "11205 (Pratt Station)",
+                "11206": "11206 (Metropolitan Station)",
+                "11207": "11207 (East New York Station)",
+                "11208": "11208 (Cypress Hills Station)",
+                "11209": "11209 (Fort Hamilton Station)",
+                "11210": "11210 (Vanderveer Station)",
+                "11211": "11211 (Williamsburg Station)",
+                "11212": "11212 (Brownsville Station)",
+                "11213": "11213 (St. Johns Place Station)",
+                "11214": "11214 (Bath Beach Station)",
+                "11215": "11215 (Park Slope Station)",
+                "11216": "11216 (Brevoort Station)",
+                "11217": "11217 (Times Plaza Station)",
+                "11218": "11218 (Flatbush Station)",
+                "11219": "11219 (Parkville Station)",
+                "11220": "11220 (Sunset Park Station)",
+                "11221": "11221 (Bushwick Station)",
+                "11222": "11222 (Greenpoint Station)",
+                "11223": "11223 (Gravesend Station)",
+                "11224": "11224 (Coney Island Station)",
+                "11225": "11225 (Crown Heights Station)",
+                "11226": "11226 (Flatbush Station)",
+                "11228": "11228 (Dyker Heights Station)",
+                "11229": "11229 (Homecrest Station)",
+                "11230": "11230 (Midwood Station)",
+                "11231": "11231 (Red Hook Station)",
+                "11232": "11232 (Bush Terminal Station)",
+                "11233": "11233 (Bedford-Stuyvesant Station)",
+                "11234": "11234 (Canarsie / Flatlands Station)",
+                "11235": "11235 (Sheepshead Bay Station)",
+                "11236": "11236 (Canarsie Station)",
+                "11237": "11237 (Wyckoff Heights Station)",
+                "11238": "11238 (Adelphi Station)",
+                "11239": "11239 (Spring Creek Station)"
             }
         },
+
         "butte": {
             name: "Butte, Montana",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/butte.xlsx",
@@ -1277,10 +1303,10 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/conway.xlsx",
             stationMOU: ["72032", "72033", "72034"],
             stationDCU: [],
-            mouName: "Conway Zips",
+            mouName: "Conway Carrier Zips",
             dcuName: ""
         },
-        "copperas_cove": {
+       "copperas_cove": {
             name: "Copperas Cove, Texas",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/copperascove.xlsx",
             stationMOU: ["76522"],
@@ -1288,12 +1314,12 @@
             mouName: "Copperas Cove 76522",
             dcuName: ""
         },
-        "corpus_christi": {
+       "corpus_christi": {
            name: "Corpus Christi, Texas",
            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/corpuschristi.xlsx",
            stationMOU: ["78401", "78402", "78407", "78408"],
            stationDCU: ["78410", "78409", "78406"],
-           mouName: "DT Corpus Christi",
+           mouName: "Downtown Corpus Christi",
            dcuName: "Stonewall",
         zipLabels: {
         "78404": "78404 (Six Points)",
@@ -1309,7 +1335,7 @@
         "78419": "78419 (Flour Bluff)"
           }
          },
-         "cougar": {
+        "cougar": {
             name: "Cougar, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/cougar.xlsx",
             stationMOU: ["98616"],
@@ -1317,7 +1343,7 @@
             mouName: "Cougar 98616",
             dcuName: ""
         },
-        "coulterville": {
+       "coulterville": {
             name: "Coulterville, Illinois",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/coulterville.xlsx",
             stationMOU: ["62237"],
@@ -1325,7 +1351,7 @@
             mouName: "Coulterville 62237",
             dcuName: ""
         },
-        "councibluff": {
+       "councibluff": {
             name: "Council Bluff, Iowa",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/councilbluff.xlsx",
             stationMOU: ["51501"],
@@ -1341,14 +1367,19 @@
             mouName: "Creswell 97426",
             dcuName: ""
         },
-        "crystal_river": {
+               "crystal_river": {
             name: "Crystal River, Florida",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/crystal_river.xlsx",
             stationMOU: ["34428", "34429"],
             stationDCU: [],
-            mouName: "Crystal River Zips",
-            dcuName: ""           
+            mouName: "Crystal River Main Post Office",
+            dcuName: "",
+            zipLabels: {
+                "34428": "34428 (Crystal River Main / City & Rural Routes)",
+                "34429": "34429 (Crystal River South / Homosassa Springs border)"
+            }
         },
+
         "delton": {
             name: "Delton, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/delton.xlsx",
@@ -1378,12 +1409,12 @@
                 "50316": "50316 (East Side)",
                 "50317": "50317 (East Side)",
                 "50310": "50310 (Beaverdale)",
-                "50311": "50311 (University)",
+                "50311": "50311 (University Stn)",
                 "50312": "50312 (West Side)",
                 "50313": "50313 (North Side)",
                 "50315": "50315 (South Side)",
                 "50320": "50320 (Southeast)",
-                "50321": "50321 (Airport/SW)",
+                "50321": "50321 (Airport/Southwest)",
                 "50322": "50322 (Urbandale)"
             }
         },
@@ -1408,8 +1439,6 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/emerson.xlsx",
             stationMOU: ["68733"],
             stationDCU: []
-            mouName: "Emerson 68733",
-            dcuName: ""
         },
         "encinitas": {
             name: "Encinitas, California",
@@ -1480,7 +1509,7 @@
             mouName: "Gilbert 50105",
             dcuName: ""
         },
-        "grantsville": {
+       "grantsville": {
             name: "Granstville, Maryland",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/grantsville.xlsx",
             stationMOU: ["21536"],
@@ -1509,7 +1538,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/greenwood.xlsx",
             stationMOU: ["29646", "29648", "29649"],
             stationDCU: [],
-            mouName: "Greenwood Main",
+            mouName: "Greenwood Carrier Zips",
             dcuName: ""
         },
         "hardin": {
@@ -1533,7 +1562,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/highland.xlsx",
             stationMOU: ["46322"],
             stationDCU: [],
-            mouName: "Highland 46322",
+            mouName: "Highland Main",
             dcuName: ""
         },
        "hillsboro": {
@@ -1581,10 +1610,10 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/jackson.xlsx",
             stationMOU: ["49201","49202","49203"],
             stationDCU: [],
-            mouName: "Jackson Zips",
+            mouName: "Jackson Main Office",
             dcuName: ""
         },
-        "jacksonville": {
+               "jacksonville": {
             name: "Jacksonville, Florida",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/jacksonville.xlsx",
             stationMOU: [
@@ -1597,43 +1626,44 @@
             mouName: "Jacksonville Stations & Carrier Annexes",
             dcuName: "",
             zipLabels: {
-                "32202": "32202 (Downtown JV)",
-                "32204": "32204 (Riverside)",
-                "32205": "32205 (Murray Hill)",
-                "32206": "32206 (Springfield)",
-                "32207": "32207 (Southside/San Marco)",
-                "32208": "32208 (Lake Forest)",
-                "32209": "32209 (West JV/Kings Road)",
-                "32210": "32210 (Westside)",
-                "32211": "32211 (Arlington)",
-                "32212": "32212 (NAS JV)",
-                "32216": "32216 (Southpoint)",
-                "32217": "32217 (Mandarin East)",
-                "32218": "32218 (North JV/Oceanway)",
-                "32219": "32219 (Dinsmore)",
-                "32220": "32220 (Whitehouse)",
-                "32221": "32221 (Hammond)",
-                "32222": "32222 (Argyle)",
-                "32223": "32223 (Mandarin Main)",
-                "32224": "32224 (Intracoastal)",
-                "32225": "32225 (Monument)",
-                "32226": "32226 (Northside/Dames Point)",
-                "32227": "32227 (Mayport)",
-                "32228": "32228 (Mayport Naval)",
+                "32202": "32202 (Downtown Jacksonville)",
+                "32204": "32204 (Riverside Station)",
+                "32205": "32205 (Murray Hill Station)",
+                "32206": "32206 (Springfield Station)",
+                "32207": "32207 (Southside / San Marco Station)",
+                "32208": "32208 (Lake Forest Station)",
+                "32209": "32209 (West Jacksonville / Kings Road)",
+                "32210": "32210 (Westside Station)",
+                "32211": "32211 (Arlington Station)",
+                "32212": "32212 (NAS Jacksonville)",
+                "32216": "32216 (Southpoint Station)",
+                "32217": "32217 (Mandarin Station East)",
+                "32218": "32218 (North Jacksonville / Oceanway)",
+                "32219": "32219 (Dinsmore Station)",
+                "32220": "32220 (Whitehouse Station)",
+                "32221": "32221 (Hammond Station)",
+                "32222": "32222 (Argyle Station)",
+                "32223": "32223 (Mandarin Station Main)",
+                "32224": "32224 (Intracoastal Station)",
+                "32225": "32225 (Monument Station)",
+                "32226": "32226 (Northside / Dames Point)",
+                "32227": "32227 (Mayport Station)",
+                "32228": "32228 (Mayport Naval Station)",
                 "32233": "32233 (Atlantic Beach)",
-                "32234": "32234 (Baldwin)",
-                "32244": "32244 (Ortega / Westside)",
-                "32246": "32246 (Pottsburg)",
-                "32250": "32250 (JV Beach)",
-                "32254": "32254 (West Central)",
-                "32256": "32256 (Baymeadows)",
-                "32257": "32257 (Sunbeam / Mandarin)",
-                "32258": "32258 (Julington Creek/Bartram)",
+                "32234": "32234 (Baldwin Station)",
+                "32244": "32244 (Ortega / Westside Station)",
+                "32246": "32246 (Pottsburg Station)",
+                "32250": "32250 (Jacksonville Beach)",
+                "32254": "32254 (West Central Station)",
+                "32256": "32256 (Baymeadows Station)",
+                "32257": "32257 (Sunbeam / Mandarin Station)",
+                "32258": "32258 (Julington Creek / Bartram)",
                 "32266": "32266 (Neptune Beach)",
                 "32277": "32277 (Arlington Annex)"
             }
         },
-        "jamaica": {
+
+                       "jamaica": {
             name: "Jamaica, New York",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/jamaica.xlsx",
             stationMOU: ["11432", "11433", "11434", "11435", "11436"],
@@ -1641,19 +1671,21 @@
             mouName: "Jamaica Stations & Carrier Annexes",
             dcuName: "",
             zipLabels: {
-                "11432": "11432 (Jamaica Main/DT)",
-                "11433": "11433 (South Jamaica)",
-                "11434": "11434 (Rochdale Village)",
-                "11435": "11435 (Briarwood / Archer)",
-                "11436": "11436 (Baisley Park)"
+                "11432": "11432 (Jamaica Main / Downtown)",
+                "11433": "11433 (South Jamaica Station)",
+                "11434": "11434 (Rochdale Village Station)",
+                "11435": "11435 (Briarwood / Archer Station)",
+                "11436": "11436 (Baisley Park Station)"
             }
         },
+
+
         "jefferson_city": {
             name: "Jefferson City, Missouri",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/jefferson_city.xlsx",
             stationMOU: ["65101", "65109"],
             stationDCU: [],
-            mouName: "Jefferson City Zips",
+            mouName: "Jefferson City Main",
             dcuName: ""
         },
         "jenkintown": {
@@ -1661,15 +1693,13 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/jenkintown.xlsx",
             stationMOU: ["19046"],
             stationDCU: []
-            mouName: "Jenkintown 19046",
-            dcuName: ""
         },
         "kalama": {
             name: "Kalama, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kalama.xlsx",
             stationMOU: ["98625"],
             stationDCU: [],
-            mouName: "Kalama 98625",
+            mouName: "Kalama Main Post Office",
             dcuName: ""
         },
         "kearny": {
@@ -1677,8 +1707,6 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kearny.xlsx",
             stationMOU: ["07032"],
             stationDCU: []
-            mouName: "Kearny 07032",
-            dcuName: ""
         },
        "kearneysville": {
             name: "Kearneysville, West Virginia",
@@ -1693,17 +1721,19 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kenyon.xlsx",
             stationMOU: ["55946"],
             stationDCU: []
-            mouName: "Kenyon 55946",
-            dcuName: ""
         },
                "kingstonpa": {
             name: "Kingston, Pennsylvania",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kingstonpa.xlsx",
             stationMOU: ["18704"],
             stationDCU: [],
-            mouName: "Kingston 18704",
-            dcuName: ""
+            mouName: "Kingston Branch",
+            dcuName: "",
+            zipLabels: {
+                "18704": "18704 (Kingston)"
+            }
         },
+
         "kingston": {
             name: "Kingston, Tennessee",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kingston.xlsx",
@@ -1712,7 +1742,7 @@
             mouName: "Kingston 37763",
             dcuName: ""
         },
-        "kingsburg": {
+       "kingsburg": {
            name: "Kingsburg, California",
            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/kingsburg.xlsx",
            stationMOU: ["93631"],
@@ -1720,7 +1750,7 @@
            mouName: "Kingsburg 93631",
            dcuName: ""
          },
-         "lafayette": {
+        "lafayette": {
             name: "Lafayette, Alabama",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lafayette.xlsx",
             stationMOU: ["36862"],
@@ -1735,16 +1765,24 @@
             stationDCU: [],
             mouName: "Lakeville 55044",
             dcuName: ""
-        },        
+        },
+        "lakewood": {
+            name: "Lakewood, Washington",
+            url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lakewood.xlsx",
+            stationMOU: ["98499"],
+            stationDCU: [],
+            mouName: "Lakewood 98499",
+            dcuName: ""
+        },
        "lakewood": {
             name: "Lakewood, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/lakewoodwa.xlsx",
             stationMOU: ["98439", "98498", "98499"],
             stationDCU: [],
-            mouName: "Lakewood Zips",
+            mouName: "Lakewood Branch",
             dcuName: ""
         },
-        "laplata": {
+       "laplata": {
             name: "La Plata, Maryland",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/laplata.xlsx",
             stationMOU: ["20646"],
@@ -1765,16 +1803,19 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/libertyville.xlsx",
             stationMOU: ["60048"],
             stationDCU: [],
-            mouName: "Libertyville 60048",
+            mouName: "Libertyville Main Post Office",
             dcuName: ""
         },
-        "livingston": {
+               "livingston": {
             name: "Livingston, Montana",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/livingston.xlsx",
             stationMOU: ["59047"],
             stationDCU: [],
-            mouName: "Livingston 59047",
-            dcuName: ""
+            mouName: "Livingston Main Post Office",
+            dcuName: "",
+            zipLabels: {
+                "59047": "59047 (Livingston Main / City & Rural Routes)"
+            }
         },
 
         "longview": {
@@ -1922,7 +1963,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/mobridge.xlsx",
             stationMOU: ["57601"],
             stationDCU: [],
-            mouName: "Mobridge 57601",
+            mouName: "Mobridge, 57601",
             dcuName: ""
         },
         "monterey": {
@@ -1939,7 +1980,10 @@
             stationMOU: ["07960"],
             stationDCU: [],
             mouName: "Morristown Main Post Office",
-            dcuName: ""
+            dcuName: "",
+            zipLabels: {
+                "07960": "07960 (Morristown Main / Township)"
+            }
         },
 
         "mountairy": {
@@ -1956,8 +2000,10 @@
             stationMOU: ["18707"],
             stationDCU: [],
             mouName: "Mountain Top Branch",
-            dcuName: ""
-           
+            dcuName: "",
+            zipLabels: {
+                "18707": "18707 (Mountain Top)"
+            }
         },
 
         "mullinville": {
@@ -1973,8 +2019,6 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/nebo.xlsx",
             stationMOU: ["28761"],
             stationDCU: []
-            mouName: "Nebo 28761",
-            dcuName: ""
         },
         "nederland": {
             name: "Nederland, Texas",
@@ -2021,8 +2065,6 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/north_arlington.xlsx",
             stationMOU: ["07031"],
             stationDCU: []
-            nameMou: "North Arlington 07031"
-            nameDcu: ""
         },
         "northfield": {
             name: "Northfield, Minnesota",
@@ -2055,15 +2097,22 @@
             stationMOU: ["29115", "29118"],
             stationDCU: [],
             mouName: "Orangeburg Main Post Office",
-            dcuName: ""
+            dcuName: "",
+            zipLabels: {
+                "29115": "29115 (Orangeburg Main / City)",
+                "29118": "29118 (Orangeburg East / Rural Routes)"
+            }
         },
    "orchard": {
             name: "Orchard, Nebraska",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/orchard.xlsx",
             stationMOU: ["68764"],
             stationDCU: [],
-            mouName: "Orchard 68764",
+            mouName: "Orchard Main Post Office",
             dcuName: "",
+            zipLabels: {
+                "68764": "68764 (Orchard Main / City & Rural Routes)"
+            }
         },
 
         "ormond_beach": {
@@ -2071,7 +2120,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/ormond_beach.xlsx",
             stationMOU: ["32174"],
             stationDCU: [],
-            mouName: "Ormond Beach 32174",
+            mouName: "Ormond Beach Main",
             dcuName: ""
         },
        "owensboro": {
@@ -2130,23 +2179,23 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/pineville.xlsx",
             stationMOU: ["71360"],
             stationDCU: [],
-            mouName: "Pineville 71360",
+            mouName: "Pineville",
             dcuName: ""
          },
         "port_angeles": {
             name: "Port Angeles, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/port_angeles.xlsx",
-            stationMOU: ["98362","98363"],
-            stationDCU: [],
-            mouName: "Port Angeles zips",
-            dcuName: ""
+            stationMOU: ["98362"],
+            stationDCU: ["98363"],
+            mouName: "Port Angeles 98362",
+            dcuName: "Port Angeles 98363"
         },
         "port_charlotte": {
             name: "Port Charlotte, Florida",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/port_charlotte.xlsx",
             stationMOU: ["33948", "33952", "33953", "33954", "33981"],
             stationDCU: [],
-            mouName: "Port Charlotte Zips",
+            mouName: "All Port Charlotte Zips",
             dcuName: ""
         },
                "port_orchard": {
@@ -2154,8 +2203,12 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/port_orchard.xlsx",
             stationMOU: ["98366", "98367"],
             stationDCU: [],
-            mouName: "Port Orchard Zips",
-            dcuName: ""
+            mouName: "Port Orchard Main Office",
+            dcuName: "",
+            zipLabels: {
+                "98366": "98366 (East Port Orchard)",
+                "98367": "98367 (West Port Orchard)"
+            }
         },
 
         "portland_central": {
@@ -2203,7 +2256,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/punta_gorda.xlsx",
             stationMOU: ["33950", "33955", "33980", "33982", "33983"],
             stationDCU: [],
-            mouName: "Punta Gorda Zips",
+            mouName: "All Punta Gorda Zips",
             dcuName: ""
         },
                "queens_village": {
@@ -2211,35 +2264,43 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/queens_village.xlsx",
             stationMOU: ["11428", "11429"],
             stationDCU: [],
-            mouName: "Queens Village Zips",
-            dcuName: ""
+            mouName: "Queens Village Post Office",
+            dcuName: "",
+            zipLabels: {
+                "11428": "11428 (Queens Village Main)",
+                "11429": "11429 (Queens Village East)"
+            }
         },
-        "raleigh": {
+
+               "raleigh": {
             name: "Raleigh, North Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/raleigh.xlsx",
-            stationMOU: ["27601", "27603", "27604", "27605", "27606", "27607", "27608", "27609", 
-                "27610", "27612", "27613", "27614", "27615", "27616", "27617"],
+            stationMOU: [
+                "27601", "27603", "27604", "27605", "27606", "27607", "27608", "27609", 
+                "27610", "27612", "27613", "27614", "27615", "27616", "27617"
+            ],
             stationDCU: [],
             mouName: "Raleigh Stations & Carrier Annexes",
             dcuName: "",
             zipLabels: {
-                "27601": "27601 (DT Raleigh/Century)",
-                "27603": "27603 (S Raleigh/Garner Road)",
-                "27604": "27604 (Sunnybrook)",
-                "27605": "27605 (Five Points/Oberlin)",
-                "27606": "27606 (Method/W Raleigh)",
-                "27607": "27607 (W Raleigh/NC State)",
-                "27608": "27608 (Five Points)",
-                "27609": "27609 (N Raleigh)",
-                "27610": "27610 (E Raleigh/New Bern Ave)",
-                "27612": "27612 (Crabtree Valley)",
-                "27613": "27613 (Brookfield/NW Raleigh)",
-                "27614": "27614 (Falls/N Raleigh)",
-                "27615": "27615 (Millbrook)",
-                "27616": "27616 (Neuse/NE Raleigh)",
-                "27617": "27617 (Brier Creek)"
+                "27601": "27601 (Downtown Raleigh / Century Station)",
+                "27603": "27603 (South Raleigh / Garner Road)",
+                "27604": "27604 (Sunnybrook Station)",
+                "27605": "27605 (Five Points / Oberlin Station)",
+                "27606": "27606 (Method Station / West Raleigh)",
+                "27607": "27607 (West Raleigh / NC State)",
+                "27608": "27608 (Five Points Station)",
+                "27609": "27609 (North Raleigh Station)",
+                "27610": "27610 (East Raleigh / New Bern Ave)",
+                "27612": "27612 (Crabtree Valley Station)",
+                "27613": "27613 (Brookfield Station / NW Raleigh)",
+                "27614": "27614 (Falls Station / North Raleigh)",
+                "27615": "27615 (Millbrook Station)",
+                "27616": "27616 (Neuse Station / NE Raleigh)",
+                "27617": "27617 (Brier Creek Station)"
             }
         },
+
         "reno_central": {
             name: "Reno Central, Nevada",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/reno_central.xlsx",
@@ -2262,7 +2323,10 @@
             stationMOU: ["45167"],
             stationDCU: [],
             mouName: "Ripley Main Post Office",
-            dcuName: ""
+            dcuName: "",
+            zipLabels: {
+                "45167": "45167 (Ripley Main / Village & Rural Routes)"
+            }
         },
 
         "sparks": {
@@ -2302,7 +2366,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/saluda.xlsx",
             stationMOU: ["29138"],
             stationDCU: [],
-            mouName: "Saluda 29138",
+            mouName: "Saluda Main Post Office",
             dcuName: ""
         },
         "sanford": {
@@ -2310,7 +2374,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/sanford.xlsx",
             stationMOU: ["32771", "32773"],
             stationDCU: [],
-            mouName: "Sanford Zips",
+            mouName: "Sanford Delivery Zips",
             dcuName: ""
         },
        "saugatuck": {
@@ -2321,7 +2385,7 @@
             mouName: "Saugatuck 49453",
             dcuName: ""
          },
-         "st_marys": {
+        "st_marys": {
             name: "St. Marys, Ohio",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/st_marys.xlsx",
             stationMOU: ["45885"],
@@ -2334,34 +2398,38 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/seattle_central.xlsx",
             stationMOU: ["98101", "98102", "98104", "98109", "98121"],
             stationDCU: ["98112", "98119", "98122", "98199"],
-            mouName: "Downtown/Core",
-            dcuName: "Queen Anne/Magnolia/Capitol Hill"
+            mouName: "Downtown / Core Core",
+            dcuName: "Queen Anne / Magnolia / Capitol Hill"
         },
         "seattle_north": {
             name: "Seattle North Stations, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/seattle_north.xlsx",
             stationMOU: ["98103", "98105", "98107", "98115"],
             stationDCU: ["98117", "98125", "98133", "98177"],
-            mouName: "Ballard/Green Lake/ U-Dist",
-            dcuName: "Northgate/Lake City/Shoreline"
+            mouName: "Ballard / Green Lake / U-Dist",
+            dcuName: "Northgate / Lake City / Shoreline"
         },
         "seattle_south": {
             name: "Seattle South Stations, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/seattle_south.xlsx",
             stationMOU: ["98106", "98116", "98126", "98134"],
             stationDCU: ["98108", "98118", "98144", "98178"],
-            mouName: "W Seattle/Industrial",
-            dcuName: "Beacon Hill/Rainier Valley"
+            mouName: "West Seattle / Industrial",
+            dcuName: "Beacon Hill / Rainier Valley"
         },
-        "silverdale": {
+               "silverdale": {
             name: "Silverdale, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/silverdale.xlsx",
             stationMOU: ["98383"],
             stationDCU: [],
-            mouName: "Silverdale 98383",
-            dcuName: ""
+            mouName: "Silverdale Post Office",
+            dcuName: "",
+            zipLabels: {
+                "98383": "98383 (Silverdale)"
+            }
         },
-        "southpoint": {
+
+       "southpoint": {
             name: "South Point, Ohio",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/southpoint.xlsx",
             stationMOU: ["45680"],
@@ -2391,20 +2459,24 @@
                 "65610": "65610 (Billings)"
             }
         },
-        "st_albans": {
+               "st_albans": {
             name: "St Albans, New York",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/st_albans.xlsx",
             stationMOU: ["11412"],
             stationDCU: [],
-            mouName: "St Albans 11412",
-            dcuName: ""
+            mouName: "St Albans Station",
+            dcuName: "",
+            zipLabels: {
+                "11412": "11412 (St Albans Main)"
+            }
         },
+
         "statesville": {
             name: "Statesville, North Carolina",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/statesville.xlsx",
             stationMOU: ["28625", "28677"],
             stationDCU: [],
-            mouName: "Statesville Zips",
+            mouName: "Statesville Main Post Office",
             dcuName: ""
         },
         "steilacoom": {
@@ -2431,7 +2503,7 @@
             mouName: "Stillwater 12170",
             dcuName: ""
         },
-        "stowe": {
+       "stowe": {
             name: "Stowe, Vermont",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/stowe.xlsx",
             stationMOU: ["05672"],
@@ -2439,32 +2511,32 @@
             mouName: "Stowe 05672",
             dcuName: ""
         },
-        "tacoma": {
+       "tacoma": {
             name: "Tacoma, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/tacoma.xlsx",
             stationMOU: ["98402", "98403", "98406", "98407", "98418", "98421", "98444", "98445", "98446"],
             stationDCU: ["98404", "98405", "98408", "98409", "98422", "98443"],
             mouName: "Tacoma Stations & Branches",
-            dcuName: "TCCF",
+            dcuName: "Tacoma Central Carrier Facility (TCCF)",
             zipLabels: {
-                "98402": "98402 (DT Tacoma)",
-                "98403": "98403 (DT Tacoma)",
+                "98402": "98402 (Downtown Tacoma)",
+                "98403": "98403 (Downtown Tacoma)",
                 "98404": "98404 (TCCF2)",
                 "98405": "98405 (TCCF1)",
                 "98406": "98406 (Proctor)",
                 "98407": "98407 (Proctor)",
                 "98408": "98408 (TCCF2)",
-                "98409": "98409 (TCCF3)",
+                "98409": "98409 (TCCF3 / TCCF East)",
                 "98418": "98418 (Lincoln)",
-                "98421": "98421 (DT Tacoma)",
-                "98422": "98422 (TCCF3)",
-                "98443": "98443 (TCCF3)",
+                "98421": "98421 (Downtown Tacoma)",
+                "98422": "98422 (TCCF3 / TCCF East)",
+                "98443": "98443 (TCCF3 / TCCF East)",
                 "98444": "98444 (Parkland)",
                 "98445": "98445 (Parkland)",
                 "98446": "98446 (Parkland)"
             }
         },
-        "thompsonville": {
+       "thompsonville": {
             name: "Thompsonville, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/thompsonville.xlsx",
             stationMOU: ["49683"],
@@ -2472,7 +2544,7 @@
             mouName: "Thompsonville 49683",
             dcuName: ""
          },
-         "twentynine_palms": {
+        "twentynine_palms": {
             name: "Twentynine Palms, California",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/twentynine_palms.xlsx",
             stationMOU: ["92277"],
@@ -2511,14 +2583,15 @@
             mouName: "Ubly 48475",
             dcuName: ""
         },
-        "universityplace": {
+               "universityplace": {
             name: "University Place, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/university_place.xlsx",
             stationMOU: ["98465", "98466", "98467"],
             stationDCU: [],
-            mouName: "University Place Zips",
+            mouName: "University Place Station",
             dcuName: ""
         },
+
         "urbana": {
             name: "Urbana, Illinois",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/urbana.xlsx",
@@ -2548,7 +2621,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/waco.xlsx",
             stationMOU: ["76701", "76705", "76706", "76707", "76708", "76710", "76711", "76712"],
             stationDCU: [],
-            mouName: "Waco Zips",
+            mouName: "All Waco Zips",
             dcuName: ""
         },
         "wakefield": {
@@ -2556,8 +2629,6 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/wakefield.xlsx",
             stationMOU: ["68784"],
             stationDCU: []
-            mouName: "Wakefield 68784",
-                dcu:""
         },
         "watertown": {
             name: "Watertown, New York",
@@ -2585,7 +2656,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/washougal.xlsx",
             stationMOU: ["98671"],
             stationDCU: [],
-            mouName: "Washougal 98671",
+            mouName: "Washougal",
             dcuName: ""
         },
         "waupun": {
@@ -2593,7 +2664,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/waupun.xlsx",
             stationMOU: ["53963"],
             stationDCU: [],
-            mouName: "Waupun 53963",
+            mouName: "Waupun",
             dcuName: ""
         },
          "wellsburg": {
@@ -2601,7 +2672,7 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/wellsburg.xlsx",
             stationMOU: ["26070"],
             stationDCU: [],
-            mouName: "Wellsburg 26070",
+            mouName: "Wellsburg",
             dcuName: ""
         },      
         "west_concord": {
@@ -2609,47 +2680,46 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/west_concord.xlsx",
             stationMOU: ["55985"],
             stationDCU: []
-            mouName: "West Concord 55985",
-            dcuName: ""
         },
         "williamsburg": {
             name: "Williamsburg, Michigan",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/williamsburg.xlsx",
             stationMOU: ["49690"],
             stationDCU: [],
-            mouName: "Williamsburg 49690",
+            mouName: "Williamsburg",
             dcuName: ""
         },   
-        "winter_haven": {
+       "winter_haven": {
             name: "Winter Haven, Florida",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/winterhaven.xlsx",
             stationMOU: ["33880", "33881", "33884"],
             stationDCU: [],
-            mouName: "Winter Haven Zips",
+            mouName: "Winter Haven",
             dcuName: ""
         },
-       "wilkes_barre": {
+               "wilkes_barre": {
             name: "Wilkes-Barre, Pennsylvania",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/wilkesbarre.xlsx",
             stationMOU: ["18701", "18702", "18705", "18706"],
             stationDCU: ["18704", "18707"],
-            mouName: "Wilkes-Barre S&DC",
-            dcuName: "Surrounding Stations",
+            mouName: "Wilkes-Barre S&DC (Main)",
+            dcuName: "Surrounding Stations (Kingston / Mountain Top)",
             zipLabels: {
-                "18701": "18701 (DT/Main Office)",
-                "18702": "18702 (Wilkes-Barre/Heights)",
+                "18701": "18701 (Downtown / Main Office)",
+                "18702": "18702 (Wilkes-Barre / Heights)",
                 "18704": "18704 (Kingston)",
                 "18705": "18705 (North End)",
                 "18706": "18706 (Hanover / Ashley)",
                 "18707": "18707 (Mountain Top)"
             }
         },
-        "winterpark": {
+
+       "winterpark": {
             name: "Winter Park, Florida",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/winterpark.xlsx",
             stationMOU: ["32789", "32792"],
             stationDCU: [],
-            mouName: "Winter Park Zips",
+            mouName: "Winter Park",
             dcuName: ""
         },
         "yuma": {
@@ -2657,15 +2727,13 @@
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/yuma.xlsx",
             stationMOU: ["85364", "85365", "85367"],
             stationDCU: []
-            mouName: "Yuma Zips",
-            ducName: ""
         },
         "woodland": {
             name: "Woodland, Washington",
             url: "https://raw.githubusercontent.com/bisket74-eng/Route-finder/main/woodland.xlsx",
             stationMOU: ["98674"],
             stationDCU: [],
-            mouName: "Woodland 98674",
+            mouName: "Woodland",
             dcuName: ""
         }
     };
